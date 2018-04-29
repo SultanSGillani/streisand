@@ -157,11 +157,11 @@ CACHES = {
 }
 
 DATABASES = {
-    'jumpcut': dj_database_url.parse(DATABASE_URL)
+    'default': dj_database_url.parse(DATABASE_URL)
 }
 
 if PRODUCTION:
-    DATABASES['jumpcut']['CONN_MAX_AGE'] = None
+    DATABASES['default']['CONN_MAX_AGE'] = None
 
 SITE_NAME = env('SITE_NAME', 'jumpcut')
 SITE_URL = env('SITE_URL', 'http://localhost:8000/')
