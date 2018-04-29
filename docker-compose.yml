@@ -34,7 +34,7 @@ services:
         environment:
             DATABASE_URL: postgres://postgres:password@db:5432/jumpcut
             REDIS_URL: redis://redis:6379
-            DJANGO_SETTINGS_MODULE: streisand.settings.tracker_settings
+            DJANGO_SETTINGS_MODULE: jumpcut.settings.tracker_settings
         ports:
             - "7070:8000"
     frontend:
