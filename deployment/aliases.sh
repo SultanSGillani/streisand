@@ -1,4 +1,4 @@
-alias _cd_deployment='cd /code/JumpCut/deployment'
+alias _cd_deployment='cd /code/jumpjut/deployment'
 alias start_containers='(_cd_deployment && docker-compose up -d)'
 alias stop_containers='(_cd_deployment && docker-compose down)'
 alias pull_containers='(_cd_deployment && docker-compose pull)'
