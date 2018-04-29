@@ -18,11 +18,7 @@ COPY backend .
 COPY deployment/frontend_out/bundle.js src/static/frontend/dist/
 COPY deployment/frontend_out/bundle.js.map src/static/frontend/dist/
 
-RUN src/manage.py collectstatic -c --noinput \
- && src/manage.py makemigrations users \
- && src/manage.py makemigrations \
- && export PYTHONPATH=$PYTHONPATH:/code/src \
- && export DJANGO_SETTINGS_MODULE=jumpcut.settings.www_settings
+RUN src/manage.py collectstatic -c --noinput
 
 EXPOSE 8000 7070
 ENV PYTHONPATH /code/src
