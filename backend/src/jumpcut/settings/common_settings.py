@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 """
 Django settings for jumpcut project.
 
@@ -136,7 +135,7 @@ USE_TZ = True
 TIME_ZONE = 'UTC'
 
 REDIS_URL = env('REDIS_URL', 'redis://localhost:6379')
-DATABASE_URL = env('DATABASE_URL', 'postgres://postgres:password@db:5432/jumpcut')
+DATABASE_URL = env('DATABASE_URL', 'sqlite:///{base_dir}/db.sqlite3'.format(base_dir=BASE_DIR))
 
 CELERY_ALWAYS_EAGER = DEBUG
 CELERY_IGNORE_RESULT = True
