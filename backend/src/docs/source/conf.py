@@ -26,7 +26,7 @@ os.chdir(project_path)
 application = get_wsgi_application()
 # -- Project information -----------------------------------------------------
 
-project = 'JumpCut.to'
+project = 'jumpcut.to'
 copyright = '2018, dude'
 author = 'Some Dude'
 
@@ -112,7 +112,7 @@ html_theme_path = [sphinx_rtd_theme.get_html_theme_path()]
 # -- Options for HTMLHelp output ---------------------------------------------
 
 # Output file base name for HTML help builder.
-htmlhelp_basename = 'JumpCut_Docs'
+htmlhelp_basename = 'jumpcut_Docs'
 
 
 # -- Options for LaTeX output ------------------------------------------------
@@ -139,7 +139,7 @@ latex_elements = {
 # (source start file, target name, title,
 #  author, documentclass [howto, manual, or own class]).
 latex_documents = [
-    (master_doc, 'jumpcut.tex', 'JumpCut JumpCut',
+    (master_doc, 'jumpcut.tex', 'jumpcut jumpcut',
      'dude', 'manual'),
 ]
 
@@ -149,7 +149,7 @@ latex_documents = [
 # One entry per manual page. List of tuples
 # (source start file, name, description, authors, manual section).
 man_pages = [
-    (master_doc, 'JumpCut', 'JumpCut Documentation',
+    (master_doc, 'jumpcut', 'jumpcut Documentation',
      [author], 1)
 ]
 
@@ -160,8 +160,8 @@ man_pages = [
 # (source start file, target name, title, author,
 #  dir menu entry, description, category)
 texinfo_documents = [
-    (master_doc, 'JumpCut', 'JumpCut Documentation',
-     author, 'JumpCut', 'One line description of project.',
+    (master_doc, 'jumpcut', 'jumpcut Documentation',
+     author, 'jumpcut', 'One line description of project.',
      'Miscellaneous'),
 ]
 

@@ -15,7 +15,7 @@ urlpatterns = [
     url(r'^api/v1/', include('interfaces.api_site.urls')),
 
     # API Core-Schema Docs TODO: Update this when better Api Docs come out and work.
-    url(r'^docs/', include_docs_urls(title='JumpCut API v1', public=False)),
+    url(r'^docs/', include_docs_urls(title='jumpcut API v1', public=False)),
 
     # Docs that need updating. Made with Sphinx
     url(r'^model-docs/', include('docs.urls')),

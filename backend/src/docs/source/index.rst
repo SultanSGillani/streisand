@@ -1,9 +1,9 @@
-.. JumpCut documentation master file, created by
+.. jumpcut documentation master file, created by
    sphinx-quickstart on Sat Mar 31 16:17:46 2018.
    You can adapt this file completely to your liking, but it should at least
    contain the root `toctree` directive.
 
-Welcome to JumpCut's documentation!
+Welcome to jumpcut's documentation!
 =====================================
 
 .. toctree::

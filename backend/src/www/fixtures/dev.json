@@ -241,7 +241,7 @@
         "old_id": null,
         "sort_order": 1,
         "name": "Staff Announcements",
-        "description": "JumpCut Announcements for Staff",
+        "description": "jumpcut Announcements for Staff",
         "group": 1
     }
 },
@@ -252,7 +252,7 @@
         "old_id": null,
         "sort_order": 2,
         "name": "Staff Discussions",
-        "description": "JumpCut Discussions for Staff",
+        "description": "jumpcut Discussions for Staff",
         "group": 1
     }
 },
@@ -263,7 +263,7 @@
         "old_id": null,
         "sort_order": 1,
         "name": "Announcements",
-        "description": "JumpCut Announcements",
+        "description": "jumpcut Announcements",
         "group": 2,
         "number_of_threads": 1,
         "number_of_posts": 1,

@@ -163,7 +163,7 @@ DATABASES = {
 if PRODUCTION:
     DATABASES['default']['CONN_MAX_AGE'] = None
 
-SITE_NAME = env('SITE_NAME', 'JumpCut')
+SITE_NAME = env('SITE_NAME', 'jumpcut')
 SITE_URL = env('SITE_URL', 'http://localhost:8000/')
 TRACKER_URL = env('TRACKER_URL', 'http://localhost:7070/')
 TRACKER_ANNOUNCE_INTERVAL = timedelta(minutes=40)
