@@ -68,16 +68,12 @@ TEST_RUNNER = 'jumpcut.test_utils.CustomTestSuiteRunner'
 # SECURITY WARNING: keep the secret key used in production secret!
 SECRET_KEY = env('JUMPCUT_SECRET_KEY', 'changeme')
 
+if os.getenv('DJANGO_ENV') == 'DEBUG':
+ALLOWED_HOSTS = ['*']
 
-ALLOWED_HOSTS = [
-    # Adding this for development
-    'localhost',
-    '.jumpcut.to',
-]
-
-if DEBUG:
-    ALLOWED_HOSTS = ['*']
-
+else:
+    DEBUG = False
+    ALLOWED_HOSTS = ['localhost', '.jumpcut.to']
 
 HOST_DOMAIN = env('HOST_DOMAIN', '')
 if HOST_DOMAIN:
@@ -135,7 +131,24 @@ USE_TZ = True
 TIME_ZONE = 'UTC'
 
 REDIS_URL = env('REDIS_URL', 'redis://localhost:6379')
-DATABASE_URL = env('DATABASE_URL', 'sqlite:///{base_dir}/db.sqlite3'.format(base_dir=BASE_DIR))
+
+if os.getenv('DOCKER_CONTAINER'):
+    POSTGRES_HOST = 'db'
+else:
+    POSTGRES_HOST = '127.0.0.1'
+
+DATABASES = {
+    'default': {
+        'ENGINE': 'django.db.backends.postgresql',
+        'NAME': 'jumpcut',
+        'USER': 'postgres',
+        'PASSWORD': 'password',
+        'HOST': POSTGRES_HOST,
+        'PORT': '5432',
+    }
+}
+
+# DATABASE_URL = env('DATABASE_URL', 'sqlite:///{base_dir}/db.sqlite3'.format(base_dir=BASE_DIR))
 
 CELERY_ALWAYS_EAGER = DEBUG
 CELERY_IGNORE_RESULT = True
@@ -155,7 +168,7 @@ CACHES = {
     }
 }
 
-DATABASES = {
+# DATABASES = {
     'default': dj_database_url.parse(DATABASE_URL)
 }
 

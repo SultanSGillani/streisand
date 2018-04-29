@@ -180,19 +180,18 @@ if DEBUG:
 
 SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
 
-"""
-CORS_URL_REGEX = r'^/api/v1/.*$'
-
-CORS_ORIGIN_WHITELIST = [
-    subdomain + '.' + HOST_DOMAIN
-    for subdomain
-    in ('api', 'dev', 'static', 'www')
-]
-"""
-
-# For now allow all
-CORS_ORIGIN_ALLOW_ALL = True
-
+if os.getenv('DJANGO_ENV') == 'PROD':
+    DEBUG = False
+    CORS_URL_REGEX = r'^/api/v1/.*$'
+    CORS_ORIGIN_WHITELIST = [
+        subdomain + '.' + HOST_DOMAIN
+        for subdomain
+        in ('api', 'dev', 'static', 'www')
+    ]
+else:
+    DEBUG - True
+    CORS_ORIGIN_ALLOW_ALL = True
+    
 RT_API_KEY = os.environ.get('RT_API_KEY', '')
 OLD_SITE_SECRET_KEY = os.environ.get('OLD_SITE_HASH', '')
 

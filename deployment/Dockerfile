@@ -18,8 +18,10 @@ COPY backend .
 COPY deployment/frontend_out/bundle.js src/static/frontend/dist/
 COPY deployment/frontend_out/bundle.js.map src/static/frontend/dist/
 
-RUN src/manage.py collectstatic -c --noinput
+ENV DOCKER_CONTAINER=1
+ENV DJANGO_ENV=DEBUG
 
+RUN src/manage.py collectstatic -c --noinput
 EXPOSE 8000 7070
 ENV PYTHONPATH /code/src
 ENV DJANGO_SETTINGS_MODULE jumpcut.settings.www_settings
