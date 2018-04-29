@@ -13,6 +13,10 @@ function delete_migrations() {
     (_cd_deployment && docker-compose run --rm www rm -f src/*/migrations/[0-9]*.py )
 }
 
+alias docker_shell='docker exec -it deployment_www_1 /bin/bash'
+alias docker_shell_api='docker exec -it jumpcut_api_1 /bin/bash'
+alias start_www='docker start deployment_www_1'
+alias stop_www='docker stop deployment_www_1'
 alias shell='m shell_plus'
-alias clean_slate='delete_migrations && m reset_db --noinput && m migrate && m loaddata foundation'
-alias fixtures='m loaddata dev'
+alias clean_slate='delete_migrations && m reset_db --noinput && m makemigrations && m migrate && m loaddata foundation'
+alias fixtures='m loaddata dev && m loaddata wikis'
