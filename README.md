@@ -1,5 +1,5 @@
 [![pipeline status](https://git.ronzertnert.me/jumpcut/jumpcut/badges/master/pipeline.svg?private_token=ce7CRXw_YsYzvC_ZwNfQ)](https://git.ronzertnert.me/jumpcut/jumpcut/commits/master)
-[![coverage Report](https://git.ronzertnert.me/jumpcut/jumpcut/badges/develop/coverage.svg?private_token=ce7CRXw_YsYzvC_ZwNfQ)](https://git.ronzertnert.me/jumpcut/jumpcut/commits/master)
+[![coverage Report](https://git.ronzertnert.me/jumpcut/jumpcut/badges/master/coverage.svg?private_token=ce7CRXw_YsYzvC_ZwNfQ)](https://git.ronzertnert.me/jumpcut/jumpcut/commits/master)
 [![codecov](https://codecov.io/gh/TheSaltman/JumpCut/branch/develop/graph/badge.svg?token=2iFWjpDJjw)](https://codecov.io/gh/TheSaltman/JumpCut)
 [![Build Status](https://travis-ci.com/TheSaltman/JumpCut.svg?token=omojFLEmKUq3bYx2FWE8&branch=develop)](https://travis-ci.com/TheSaltman/JumpCut)
 
