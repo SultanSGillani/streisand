@@ -34,7 +34,6 @@ python_linter:
   stage: test
   script:
     - invoke run-python-linter
-  when: manual
 
 python_tests:
   stage: test
