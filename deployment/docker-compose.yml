@@ -30,7 +30,7 @@ services:
         restart: always
     celery:
         image: registry.ronzertnert.me/jumpcut/jumpcut:latest
-        command: celery worker --workdir /code/src -A streisand -l info
+        command: celery worker --workdir /code/src -A jumpcut -l info
         depends_on:
             - db
             - redis
