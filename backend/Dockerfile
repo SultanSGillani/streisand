@@ -5,7 +5,8 @@ RUN apt-get update \
         postgresql-client netcat \
     && rm -rf /var/lib/apt/lists/*
 
-COPY entrypoint.sh /
+COPY entrypoint.sh /usr/local/bin
+RUN chmod +x /usr/local/bin/entrypoint.sh
 WORKDIR /code
 COPY requirements.txt ./
 COPY requirements.txt /
@@ -18,5 +19,5 @@ COPY . .
 
 EXPOSE 8000
 ENV JUMPCUT_DEBUG True
-ENTRYPOINT ["sh", "/entrypoint.sh"]
+ENTRYPOINT ["entrypoint.sh"]
 CMD ["python", "src/manage.py", "runserver_plus", "0.0.0.0:8000"]
