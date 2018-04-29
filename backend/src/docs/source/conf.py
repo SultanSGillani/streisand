@@ -19,7 +19,7 @@ import sphinx_rtd_theme
 
 sys.path.insert(0, os.path.abspath('../..'))
 project_path = os.path.abspath('../..')
-os.environ.setdefault("DJANGO_SETTINGS_MODULE", "streisand.settings.www_settings")
+os.environ.setdefault("DJANGO_SETTINGS_MODULE", "jumpcut.settings.www_settings")
 
 sys.path.append(project_path)
 os.chdir(project_path)
@@ -139,7 +139,7 @@ latex_elements = {
 # (source start file, target name, title,
 #  author, documentclass [howto, manual, or own class]).
 latex_documents = [
-    (master_doc, 'streisand.tex', 'JumpCut JumpCut',
+    (master_doc, 'jumpcut.tex', 'JumpCut JumpCut',
      'dude', 'manual'),
 ]
 

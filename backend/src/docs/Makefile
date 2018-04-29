@@ -4,7 +4,7 @@
 # You can set these variables from the command line.
 SPHINXOPTS    =
 SPHINXBUILD   = sphinx-build
-SPHINXPROJ    = streisand
+SPHINXPROJ    = jumpcut
 SOURCEDIR     = source
 BUILDDIR      = build
 

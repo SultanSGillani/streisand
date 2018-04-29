@@ -2,8 +2,8 @@ import invoke
 
 
 MANAGE_PATH = 'src/manage.py'
-WWW_SETTINGS = 'streisand.settings.www_settings'
-TRACKER_SETTINGS = 'streisand.settings.tracker_settings'
+WWW_SETTINGS = 'jumpcut.settings.www_settings'
+TRACKER_SETTINGS = 'jumpcut.settings.tracker_settings'
 
 
 def _manage_run(ctx, command, settings=None):

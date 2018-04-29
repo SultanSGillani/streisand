@@ -13,7 +13,7 @@ class Command(BaseCommand):
 
     def handle(self, *args, **options):
 
-        backup_path = now().strftime('%Y-%m-%d_%H-%M-%S_streisand.dump')
+        backup_path = now().strftime('%Y-%m-%d_%H-%M-%S_jumpcut.dump')
 
         self.stdout.write("Dumping backup to {backup_path}".format(backup_path=backup_path))
         subprocess.call(

@@ -1,4 +1,4 @@
-streisand package
+jumpcut package
 =================
 
 Subpackages
@@ -6,39 +6,39 @@ Subpackages
 
 .. toctree::
 
-    streisand.settings
+    jumpcut.settings
 
 Submodules
 ----------
 
-streisand.celery module
+jumpcut.celery module
 -----------------------
 
-.. automodule:: streisand.celery
+.. automodule:: jumpcut.celery
     :members:
     :undoc-members:
     :show-inheritance:
 
-streisand.test\_utils module
+jumpcut.test\_utils module
 ----------------------------
 
-.. automodule:: streisand.test_utils
+.. automodule:: jumpcut.test_utils
     :members:
     :undoc-members:
     :show-inheritance:
 
-streisand.tracker\_wsgi module
+jumpcut.tracker\_wsgi module
 ------------------------------
 
-.. automodule:: streisand.tracker_wsgi
+.. automodule:: jumpcut.tracker_wsgi
     :members:
     :undoc-members:
     :show-inheritance:
 
-streisand.www\_wsgi module
+jumpcut.www\_wsgi module
 --------------------------
 
-.. automodule:: streisand.www_wsgi
+.. automodule:: jumpcut.www_wsgi
     :members:
     :undoc-members:
     :show-inheritance:
@@ -47,7 +47,7 @@ streisand.www\_wsgi module
 Module contents
 ---------------
 
-.. automodule:: streisand
+.. automodule:: jumpcut
     :members:
     :undoc-members:
     :show-inheritance:

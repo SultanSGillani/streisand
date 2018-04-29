@@ -204,7 +204,7 @@ AUTHENTICATION_BACKENDS = [
 
 SESSION_ENGINE = 'django.contrib.sessions.backends.cached_db'
 
-WSGI_APPLICATION = 'streisand.www_wsgi.application'
+WSGI_APPLICATION = 'jumpcut.www_wsgi.application'
 
 
 TEMPLATES = [
@@ -291,7 +291,7 @@ LOGGING = {
             'level': 'ERROR',
             'propagate': True,
         },
-        'streisand': {
+        'jumpcut': {
             'handlers': ['console'],
             'level': 'INFO',
             'propagate': True

@@ -134,7 +134,7 @@ class RegistrationView(View):
     def log_potential_dupers(request, form):
 
         if request.user.is_authenticated:
-            log = logging.getLogger('streisand.security')
+            log = logging.getLogger('jumpcut.security')
             log.warning(
                 'New user "{new_user}" registered while logged in as '
                 'existing user "{existing_user}".'.format(

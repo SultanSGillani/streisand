@@ -1,29 +1,29 @@
-streisand.settings package
+jumpcut.settings package
 ==========================
 
 Submodules
 ----------
 
-streisand.settings.common\_settings module
+jumpcut.settings.common\_settings module
 ------------------------------------------
 
-.. automodule:: streisand.settings.common_settings
+.. automodule:: jumpcut.settings.common_settings
     :members:
     :undoc-members:
     :show-inheritance:
 
-streisand.settings.tracker\_settings module
+jumpcut.settings.tracker\_settings module
 -------------------------------------------
 
-.. automodule:: streisand.settings.tracker_settings
+.. automodule:: jumpcut.settings.tracker_settings
     :members:
     :undoc-members:
     :show-inheritance:
 
-streisand.settings.www\_settings module
+jumpcut.settings.www\_settings module
 ---------------------------------------
 
-.. automodule:: streisand.settings.www_settings
+.. automodule:: jumpcut.settings.www_settings
     :members:
     :undoc-members:
     :show-inheritance:
@@ -32,7 +32,7 @@ streisand.settings.www\_settings module
 Module contents
 ---------------
 
-.. automodule:: streisand.settings
+.. automodule:: jumpcut.settings
     :members:
     :undoc-members:
     :show-inheritance:

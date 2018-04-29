@@ -5,7 +5,7 @@ from .common_settings import *
 
 ROOT_URLCONF = 'tracker.urls'
 
-WSGI_APPLICATION = 'streisand.tracker_wsgi.application'
+WSGI_APPLICATION = 'jumpcut.tracker_wsgi.application'
 
 if DEBUG:
     MIDDLEWARE = [

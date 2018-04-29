@@ -7,5 +7,5 @@ import logging
 from .celery import app as celery_app
 
 
-logger = logging.getLogger('streisand')
+logger = logging.getLogger('jumpcut')
 logger.debug('Loaded {celery_app}'.format(celery_app=celery_app))

@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 """
-Django settings for streisand project.
+Django settings for jumpcut project.
 
 For more information on this file, see
 https://docs.djangoproject.com/en/dev/topics/settings/
@@ -61,13 +61,13 @@ AUTH_USER_MODEL = 'users.User'
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.dirname(__file__)))
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = env_bool('STREISAND_DEBUG', False)
+DEBUG = env_bool('JUMPCUT_DEBUG', False)
 PRODUCTION = not DEBUG
 TESTING = 'test' in sys.argv
-TEST_RUNNER = 'streisand.test_utils.CustomTestSuiteRunner'
+TEST_RUNNER = 'jumpcut.test_utils.CustomTestSuiteRunner'
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = env('STREISAND_SECRET_KEY', 'changeme')
+SECRET_KEY = env('JUMPCUT_SECRET_KEY', 'changeme')
 
 
 ALLOWED_HOSTS = [
@@ -126,8 +126,8 @@ EMAIL_PORT = env_int('EMAIL_PORT', 587)
 EMAIL_HOST = env('EMAIL_HOST', '')
 EMAIL_HOST_USER = env('EMAIL_HOST_USER', '')
 EMAIL_HOST_PASSWORD = env('EMAIL_HOST_PASSWORD', '')
-DEFAULT_FROM_EMAIL = env('DEFAULT_FROM_EMAIL', 'streisand.tracker@gmail.com')
-DEFAULT_REPLY_TO_EMAIL = env('DEFAULT_REPLY_TO_EMAIL', 'streisand.tracker@gmail.com')
+DEFAULT_FROM_EMAIL = env('DEFAULT_FROM_EMAIL', 'jumpcut.tracker@gmail.com')
+DEFAULT_REPLY_TO_EMAIL = env('DEFAULT_REPLY_TO_EMAIL', 'jumpcut.tracker@gmail.com')
 
 LANGUAGE_CODE = 'en-us'
 USE_I18N = True
