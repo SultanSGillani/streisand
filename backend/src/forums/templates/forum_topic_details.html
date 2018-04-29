@@ -1,0 +1,22 @@
+{% extends 'base.html' %}
+{% load timestamp_formatting pagination %}
+
+{% block title %}{{ topic }}{% endblock %}
+
+{% block main %}
+    <div class="page-header">
+      <h1>{{ topic }}</h1>
+      <span class="small">{{ topic.description }}</span>
+    </div>
+
+    <h2>Threads</h2>
+    <ul>
+      {% for thread in threads %}
+        <li>
+          <a href="{{ thread.get_absolute_url }}">{{ thread }}</a>
+        </li>
+      {% endfor %}
+    </ul>
+
+    {% pagination threads %}
+{% endblock %}

@@ -1,0 +1,16 @@
+{% extends 'base.html' %}
+{% load timestamp_formatting bbcode %}
+
+{% block title %}{% if new %}New{% else %}Edit{% endif %} Wiki Article{% endblock %}
+
+{% block main %}
+    <div class="page-header">
+      <h1>{% if new %}New{% else %}Edit{% endif %} Wiki Article</h1>
+    </div>
+
+    <form method="post">
+      {% csrf_token %}
+      {{ form.as_p }}
+      <input type="submit" />
+    </form>
+{% endblock %}

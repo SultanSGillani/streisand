@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <title>Phoenix</title>
+
+    <!-- https://www.bootstrapcdn.com/bootswatch/ -->
+    <script type="text/javascript">
+        var defaultTheme = window['__defaultTheme'] = 'https://maxcdn.bootstrapcdn.com/bootswatch/3.3.7/darkly/bootstrap.min.css';
+        var url = (typeof localStorage !== 'undefined' && localStorage['app.theme.url']) || defaultTheme;
+        var link = document.createElement('link');
+        link.href = url;
+        link.type = 'text/css';
+        link.rel = 'stylesheet';
+        link.media = 'screen,print';
+        link.id = 'theme';
+        document.getElementsByTagName('head')[0].appendChild(link);
+    </script>
+
+    <!-- Dependencies -->
+    <script name="react" src="/node_modules/react/umd/react.production.min.js"></script>
+    <script name="react-dom" src="/node_modules/react-dom/umd/react-dom.production.min.js"></script>
+    <script name="redux" src="/node_modules/redux/dist/redux.min.js"></script>
+    <script name="react-bootstrap" src="/node_modules/react-bootstrap/dist/react-bootstrap.min.js"></script>
+    <link rel="stylesheet" href="https://use.fontawesome.com/f6e7af6507.css">
+</head>
+
+<body>
+    <div id="index" style="overflow: hidden"></div>
+
+    <!-- Main -->
+    <script src="/dist/bundle.js"></script>
+</body>
+</html>

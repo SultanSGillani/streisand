@@ -1,0 +1,19 @@
+{% extends 'base.html' %}
+
+{% block title %}Torrent Upload{% endblock %}
+
+{% block main %}
+    <div class="page-header">
+      <h1>Torrent Upload</h1>
+    </div>
+
+    {% if 'torrents.can_upload' not in perms %}
+        <h2>You do not have torrent upload privileges.</h2>
+    {% else %}
+        <form method="post">
+            {% csrf_token %}
+            {{ form.as_p }}
+            <p><input type="submit" value="Upload" /></p>
+        </form>
+    {% endif %}
+{% endblock %}

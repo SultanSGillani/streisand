@@ -1,0 +1,14 @@
+[flake8]
+ignore =
+
+        # line too long (> 79 characters)
+        E501,
+
+        # line break before binary operator
+        W503,
+
+        # star imports confuse undefined name detection
+        F403, F405
+
+include = kinetic, setup.py
+exclude = migrations, static, provision, .git, .idea, .vagrant, __pycache__, *.pyc, *.gz

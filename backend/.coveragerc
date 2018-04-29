@@ -1,0 +1,31 @@
+[run]
+
+source = streisand
+branch = True
+
+
+[report]
+
+omit =
+    manage.py
+    */__init__.py
+    */tests.py
+    */migrations/*
+    */urls.py
+    */import_scripts/*
+    */www/management/*
+    */www_wsgi.py
+    */tracker_wsgi.py*
+    */settings/*
+    */apps.py
+    */forms.py
+	
+exclude_lines =
+    pragma: no cover
+    def __repr__
+    if self.debug:
+    if settings.DEBUG
+    raise AssertionError
+    raise NotImplementedError
+    if 0:
+    if __name__ == .__main__.:

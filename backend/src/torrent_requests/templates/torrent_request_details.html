@@ -1,0 +1,42 @@
+{% extends 'base.html' %}
+
+{% load timestamp_formatting bbcode %}
+
+{% block title %}Requests - {{ torrent_request.film.title }}{% endblock %}
+
+{% block main %}
+    <div class="page-header">
+      <h1>{{ torrent_request.film_title }} ({{ torrent_request.film_year }})</h1>
+      <h2>Total Bounty: {{ torrent_request.total_bounty_in_bytes|filesizeformat }}</h2>
+    </div>
+
+    <p>{{ torrent_request.description|bbcode }}</p>
+
+    <h2>Votes</h2>
+    {% for vote in torrent_request.votes.all %}
+        <p>{{ vote.author }} - {{ vote.bounty_in_bytes|filesizeformat }}</p>
+    {% endfor %}
+
+    {% if 'torrent_requests.can_vote' in perms %}
+        <form method="post">
+            {% csrf_token %}
+            {{ vote_form.as_p }}
+            <p><input type="submit" value="Vote" /></p>
+        </form>
+    {% endif %}
+
+    <h2>Comments</h2>
+    <div class="col-sm-8">
+      <div class="list-group">
+        {% for comment in torrent_request.comments.all %}
+          <div class="list-group-item">
+            <h4 class="list-group-item-heading">
+              <a href="{{ comment.author.get_absolute_url }}">{{ comment.author.username }}</a>
+              {{ comment.created_at|timestamp }}
+            </h4>
+            <p class="list-group-item-text">{{ comment.text|bbcode }}</p>
+          </div>
+        {% endfor %}
+      </div>
+    </div>
+{% endblock %}

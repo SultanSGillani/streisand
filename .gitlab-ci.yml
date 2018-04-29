@@ -1,0 +1,66 @@
+image: python:3.6
+
+services:
+ - postgres
+ - docker:dind
+ - redis:3.2
+
+stages:
+ - test
+ - release
+#  - deploy
+
+
+variables:
+  PIP_CACHE_DIR: "$CI_PROJECT_DIR/.cache"
+  DATABASE_URL: "postgres://postgres:postgres@postgres:5432/ci"
+  STREISAND_DEBUG: "True"
+  REDIS_URL: "redis://redis:6379"
+
+cache:
+  paths:
+    - .cache/
+    - venv/
+
+before_script:
+  - pip install virtualenv
+  - virtualenv venv
+  - source venv/bin/activate
+  - cd backend
+  - pip install -r requirements.txt
+  - pip install -r testing_requirements.txt
+
+python_linter:
+  stage: test
+  script:
+    - invoke run-python-linter
+  when: manual
+
+python_tests:
+  stage: test
+  script:
+    - invoke clean-slate
+    - invoke run-python-tests --coverage
+    - invoke fixtures
+
+## TODO frontend linter/tests?
+#
+release_develop:
+  image: docker:stable
+  stage: release
+  before_script:
+    - docker login -u gitlab-ci-token -p $CI_PASS $CI_REGISTRY
+  script:
+    - deployment/docker_build.sh $CI_REGISTRY_IMAGE:$CI_COMMIT_REF_NAME
+    - docker push $CI_REGISTRY_IMAGE:$CI_COMMIT_REF_NAME
+  only:
+    - master
+ 
+# deploy-develop:
+#   stage: deploy
+#   before_script:
+#     - docker login -u gitlab-ci-token -p $CI_PASS $CI_REGISTRY
+#   script:
+#     - echo hi # will be the deploy script
+#   only:
+#     - develop

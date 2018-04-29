@@ -1,0 +1,44 @@
+{% extends 'base.html' %}
+{% load humanize timestamp_formatting bbcode %}
+
+{% block title %}{{ film }}{% endblock %}
+
+{% block main %}
+    <div class="page-header">
+      <h1>{{ film }}</h1>
+      <img src="{{ film.poster_url }}" width="250px" />
+    </div>
+    {% for tag in film.tags.all %}
+      <span class="label label-default">{{ tag }}</span>
+    {% endfor %}
+    <p></p>
+    <div class="well">
+      {% if film.rotten_tomatoes %}
+        <p>RT critics rating: <strong>{{ film.rotten_tomatoes.critics_rating }}</strong> ({{ film.rotten_tomatoes.critics_rating_string }})</p>
+        <p>RT audience rating: <strong>{{ film.rotten_tomatoes.audience_rating }}</strong> ({{ film.rotten_tomatoes.audience_rating_string }})</p>
+      {% endif %}
+      <p>IMDb rating: <strong>{{ film.imdb.rating }}</strong> ({{ film.imdb.rating_vote_count|intcomma }} votes)</p>
+    </div>
+
+    <h2>Torrents</h2>
+    <div class="list-group">
+      {% for torrent in torrents %}
+        {% include 'fragments/torrent_details.html' %}
+      {% endfor %}
+      </div>
+
+    <h2>Comments</h2>
+    <div class="col-sm-8">
+      <div class="list-group">
+        {% for comment in comments %}
+          <div class="list-group-item">
+            <h4 class="list-group-item-heading">
+              <a href="{{ comment.author.get_absolute_url }}">{{ comment.author.username }}</a>
+              {{ comment.created_at|timestamp }}
+            </h4>
+            <p class="list-group-item-text">{{ comment.text|bbcode }}</p>
+          </div>
+        {% endfor %}
+      </div>
+    </div>
+{% endblock %}

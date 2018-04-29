@@ -1,0 +1,23 @@
+{% extends 'base.html' %}
+{% load timestamp_formatting bbcode %}
+
+{% block title %}{{ article.title }}{% endblock %}
+
+{% block main %}
+    <div class="page-header">
+      <h1>{{ article.title }}</h1>
+      {% if request.user.is_superuser or article.write_access_minimum_user_class.rank <= request.user.user_class.rank %}
+        <p>
+          <a href="{% url 'edit_wiki_article' wiki_article_id=article.id %}">Edit</a>
+          |
+          <a href="{% url 'delete_wiki_article' wiki_article_id=article.id %}">Delete</a>
+        </p>
+      {% endif %}
+      <p>Last modified {{ article.modified_at|timestamp }} by <a href="{{ article.modified_by.get_absolute_url }}">{{ article.modified_by }}</a></p>
+    </div>
+
+    <div class="col-sm-8">
+      {{ article.body|bbcode }}
+    </div>
+
+{% endblock %}

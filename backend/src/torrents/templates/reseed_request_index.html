@@ -1,0 +1,29 @@
+{% extends 'base.html' %}
+{% load timestamp_formatting pagination %}
+
+{% block title %}Reseed Requests{% endblock %}
+
+{% block main %}
+    <div class="page-header">
+      <h1>Reseed Requests</h1>
+    </div>
+
+    <table class="table">
+      <thead>
+        <tr>
+          <th>Film</th>
+          <th>Format</th>
+          <th>Reseed Requested</th>
+        </tr>
+      </thead>
+      {% for r in reseed_requests %}
+        <tr>
+          <td><a href="{{ r.torrent.get_absolute_url }}">{{ r.torrent.film }}</a></td>
+          <td>{{ r.torrent.format }}</td>
+          <td>{{ r.created_at|timestamp }}</td>
+        </tr>
+      {% endfor %}
+    </table>
+
+    {% pagination reseed_requests %}
+{% endblock %}

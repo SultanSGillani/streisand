@@ -1,0 +1,24 @@
+sudo: false
+language: python
+cache: pip
+python:
+    - 3.6
+env:
+  - DJANGO=2.0.4
+  
+install:
+    - pip install -r ./backend/requirements.txt
+    - pip install -r ./backend/testing_requirements.txt
+    - pip install codecov
+
+script:
+  - flake8 backend
+  - backend/src/manage.py makemigrations
+  - backend/src/manage.py migrate
+  - coverage run backend/src/manage.py test backend/src
+  - coverage report --include=backend/*.*
+
+after_success:
+    - coverage report --include=backend/*.*
+    - codecov --token=$CODECOV_TOKEN
+ 

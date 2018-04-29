@@ -1,0 +1,22 @@
+{% extends 'base.html' %}
+
+{% block title %}Forums{% endblock %}
+
+{% block main %}
+    <div class="page-header">
+      <h1>Forums</h1>
+    </div>
+
+    <ul>
+      {% for forum_group, topics in forum_groups.items %}
+        <li>{{ forum_group }}</li>
+        <ul>
+          {% for topic in topics %}
+            <li>
+              <a href="{{ topic.get_absolute_url }}">{{ topic }}</a>
+            </li>
+          {% endfor %}
+        </ul>
+      {% endfor %}
+    </ul>
+{% endblock %}

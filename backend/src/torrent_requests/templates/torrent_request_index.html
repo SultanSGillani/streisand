@@ -1,0 +1,35 @@
+{% extends 'base.html' %}
+{% load timestamp_formatting pagination %}
+
+{% block title %}Requests{% endblock %}
+
+{% block main %}
+    <div class="page-header">
+      <h1>Requests</h1>
+    </div>
+
+    <p>Don't see what you're looking for?  <a href="{% url 'new_torrent_request' %}">Make a new request</a>.</p>
+
+    <table class="table">
+      <thead>
+        <tr>
+          <th>Request</th>
+          <th>Format</th>
+          <th><a href="?order_by=bounty">Bounty</a></th>
+          <th>Author</th>
+          <th><a href="?order_by=created_at">Created</a></th>
+        </tr>
+      </thead>
+      {% for torrent_request in torrent_requests %}
+        <tr>
+          <td><a href="{{ torrent_request.get_absolute_url }}">{{ torrent_request.film_title }} ({{ torrent_request.film_year }})</a></td>
+          <td>{{ torrent_request.format }}</td>
+          <td>{{ torrent_request.total_bounty_in_bytes|filesizeformat }}</td>
+          <td><a href="{{ torrent_request.created_by.get_absolute_url }}">{{ torrent_request.created_by }}</a></td>
+          <td>{{ torrent_request.created_at|timestamp }}</td>
+        </tr>
+      {% endfor %}
+    </table>
+
+    {% pagination torrent_requests %}
+{% endblock %}

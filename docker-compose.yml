@@ -1,0 +1,47 @@
+version: '3'
+
+services:
+
+    db:
+        image: postgres
+        environment:
+            POSTGRES_PASSWORD: password
+        volumes:
+            - dbdata:/var/lib/postgresql/data
+    redis:
+        image: redis:3.2
+    api:
+        command: python src/manage.py runserver_plus 0.0.0.0:8000
+        build: backend
+        volumes:
+            - ./backend:/code
+        depends_on:
+            - db
+            - redis
+        environment:
+            DATABASE_URL: postgres://postgres:password@db:5432/jumpcut
+            REDIS_URL: redis://redis:6379
+        ports:
+            - "8000:8000"
+    tracker:
+        command: python src/manage.py runserver_plus 0.0.0.0:8000
+        build: backend
+        volumes:
+            - ./backend:/code
+        depends_on:
+            - db
+            - redis
+        environment:
+            DATABASE_URL: postgres://postgres:password@db:5432/jumpcut
+            REDIS_URL: redis://redis:6379
+            DJANGO_SETTINGS_MODULE: streisand.settings.tracker_settings
+        ports:
+            - "7070:8000"
+    frontend:
+        build: frontend
+        ports:
+            - "8001:3000"
+        volumes:
+            - ./frontend/src:/code/src
+volumes:
+    dbdata:

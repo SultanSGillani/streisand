@@ -1,0 +1,43 @@
+### This file is sourced when you run vagrant ssh
+
+### Change to the project directory
+cd /var/www/streisand
+
+### Activate project virtualenv
+. /home/vagrant/.venv/bin/activate
+
+### Ignore PendingDeprecation warnings
+export PYTHONWARNINGS="ignore::PendingDeprecationWarning"
+
+### Make sure all requirements are installed
+echo "Installing requirements.txt in the background"
+pip install -r requirements.txt > /dev/null &
+
+
+### Aliases
+
+alias start_tracker_uwsgi='uwsgi --ini /var/www/streisand/uwsgi-tracker.ini'
+alias stop_tracker_uwsgi='uwsgi --stop /tmp/streisand-tracker-master.pid'
+alias reload_tracker_uwsgi='uwsgi --reload /tmp/streisand-tracker-master.pid'
+
+alias start_www_uwsgi='uwsgi --ini /var/www/streisand/uwsgi-www.ini'
+alias stop_www_uwsgi='uwsgi --stop /tmp/streisand-www-master.pid'
+alias reload_www_uwsgi='uwsgi --reload /tmp/streisand-www-master.pid'
+
+alias start_celery='screen -dmS celery bash -c "cd /var/www/streisand/streisand && STREISAND_DEBUG=False celery worker -A streisand -l info"'
+alias stop_celery='sudo killall celery'
+
+alias m='/var/www/streisand/streisand/manage.py'
+alias shell='m shell_plus --settings=streisand.settings.www_settings'
+alias runserver='m runserver_plus 0.0.0.0:8000 --settings=streisand.settings.www_settings'
+alias runtracker='m runserver_plus 0.0.0.0:7070 --settings=streisand.settings.tracker_settings'
+alias delete_migrations='rm -f /var/www/streisand/streisand/*/migrations/[0-9]*.py'
+alias make_migrations='m makemigrations users && m makemigrations'
+alias clean_slate='m reset_db --noinput && delete_migrations && make_migrations && m migrate && m loaddata foundation'
+alias fixtures='m loaddata dev'
+
+
+### Environment
+
+export STREISAND_DEBUG=True
+export DATABASE_URL=postgres://streisand:streisand@localhost:5432/streisand

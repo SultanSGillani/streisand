@@ -1,0 +1,16 @@
+{% extends 'base.html' %}
+
+{% block title %}Wiki{% endblock %}
+
+{% block main %}
+    <div class="page-header">
+      <h1>Wiki</h1>
+      <a href="{% url 'new_wiki_article' %}">Create</a>
+    </div>
+
+    <ul>
+      {% for article in wiki_articles %}
+        <li><a href="{{ article.get_absolute_url }}">{{ article.title }}</a></li>
+      {% endfor %}
+    </ul>
+{% endblock %}

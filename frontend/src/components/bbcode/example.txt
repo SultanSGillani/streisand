@@ -1,0 +1,91 @@
+[hide]Instructions on how to use bbcode[/hide]
+[hr]
+[h1]Header 1[/h1]
+[h2]Header 2[/h2]
+[h3]Header 3[/h3]
+[h4]Header 4[/h4]
+[h5]Header 5[/h5]
+[h6]Header 6[/h6]
+[hr][/hr]
+[b]Bold[/b]
+[i]Italic[/i]
+[u]Underline[/u]
+[s]Strikethrough[/s]
+[size=32]Text size in pixels[/size]
+[color=red]Text color[/color]
+[color=#000000]Text color[/color]
+[size=24][color=red][b]Combined text[/b][/color][/size]
+[center]Align center[/center]
+[right]Align right[/right]
+[hr]
+[url]https://example.com[/url]
+[url=https://example.com]Link[/url]
+[email]my.email@domain.com[/email]
+[url=https://github.com/JimLiu/bbcode-to-react][img width="150" height="100"]https://img00.deviantart.net/0687/i/2011/340/3/6/bear_dragon_by_zombiegnu-d4idhlo.png[/img][/url]
+[img]https://img00.deviantart.net/0687/i/2011/340/3/6/bear_dragon_by_zombiegnu-d4idhlo.png[/img]
+[img width="150" height="100"]https://img00.deviantart.net/0687/i/2011/340/3/6/bear_dragon_by_zombiegnu-d4idhlo.png[/img]
+[hr]
+[quote]Quote[/quote]
+[quote="Mr. Blobby"]The text Mr. Blobby wrote would go here[/quote]
+[hr]
+[code]Code[/code]
+[code][b]strong[/b][/code]
+[code=inline][b]strong[/b][/code]
+[pre]Hello,  I  am  a  sentence  constructed  entirely  from  preformatted  text.
+
+   Look,
+
+      I
+
+         see
+
+            a
+
+               boat![/pre]
+[hr]
+[list]
+[*]The first possible answer
+[*]The second possible answer
+[*]The third possible answer
+[/list]
+[list=a]
+[*]The first possible answer
+[*]The second possible answer
+[*]The third possible answer
+[/list]
+[list=A]
+[*]The first possible answer
+[*]The second possible answer
+[*]The third possible answer
+[/list]
+[list=i]
+[*]The first possible answer
+[*]The second possible answer
+[*]The third possible answer
+[/list]
+[list=I]
+[*]The first possible answer
+[*]The second possible answer
+[*]The third possible answer
+[/list]
+[list=1]
+[*]The first possible answer
+[*]The second possible answer
+[*]The third possible answer
+[/list]
+[*]The first possible answer
+[*]The second possible answer
+[*]The third possible answer
+[hr]
+[table]
+  [thead]
+    [th]first column       [/th]
+    [th]second column[/th]
+  [/thead]
+  [tbody]
+    [tr]
+      [td]1.1[/td]
+      [td]1.2[/td]
+    [/tr]
+  [/tbody]
+[/table]

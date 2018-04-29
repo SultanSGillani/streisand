@@ -1,0 +1,23 @@
+{
+    "compilerOptions": {
+        "outDir": "./dist/",
+        "module": "commonjs",
+        "sourceMap": true,
+        "noEmitOnError": true,
+        "target": "es5",
+        "lib": ["es5", "dom", "es2015.promise"],
+        "jsx": "react",
+        "allowJs": true,
+        "noUnusedLocals": true,
+        "noUnusedParameters": false,
+        "noFallthroughCasesInSwitch": true,
+        "strictNullChecks": true,
+        "typeRoots": [
+            "./node_modules/@types",
+            "./typings"
+        ]
+    },
+    "include": [
+        "./src/**/*"
+    ]
+}

@@ -1,0 +1,48 @@
+Django[argon2]==2.0.4
+Markdown==2.6.11
+Pillow==5.1.0
+Pygments==2.2.0
+Werkzeug==0.14.1
+anyjson==0.3.3
+amqp==2.2.2
+bbcode==1.0.31
+beautifulsoup4==4.6.0
+billiard==3.5.0.3
+celery==4.1.0
+cffi==1.11.2
+dj-database-url==0.4.2
+django-debug-toolbar==1.9.1
+django-extensions==2.0.7
+django-picklefield==1.0.0
+django-ratelimit==1.1.0
+django-redis==4.8.0
+django-su==0.6.0
+djangorestframework==3.8.2
+kombu==4.1.0
+psycopg2>=2.7,<2.8 --no-binary psycopg2
+pycparser==2.18
+pytz==2017.2
+redis==2.10.6
+requests==2.18.4
+six==1.11.0
+sqlparse==0.2.4
+tqdm==4.19.5
+uWSGI==2.0.17
+django-cors-headers==2.2.0
+django-filter==2.0.0.dev1
+coreschema==0.0.4
+coreapi==2.3.3
+Sphinx==1.7.3
+# django-docs==0.2.1
+# Updated Version
+https://github.com/TheSaltman/django-docs/archive/master.zip
+sphinx_rtd_theme==0.3.0
+djangorestframework-camel-case>=1.0b1
+https://github.com/philipn/django-rest-framework-filters/archive/master.zip
+# djangorestframework-filters
+https://github.com/darklow/django-suit/tarball/v2
+djangorestframework-jwt>=1.11.0
+drf-yasg>=1.6.1
+graphene==2.1
+graphene-django>=2.0.dev
+graphene-django-extras==0.3.5
