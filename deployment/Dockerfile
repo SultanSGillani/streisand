@@ -9,8 +9,10 @@ RUN apt-get update \
 
 WORKDIR /code
 COPY backend/requirements.txt ./
+COPY backend/testing_requirements.txt ./
 
 RUN pip install -r requirements.txt
+RUN pip install -r testing_requirements.txt
 
 COPY deployment/uwsgi ./uwsgi
 COPY backend .
