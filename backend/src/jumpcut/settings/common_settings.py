@@ -32,7 +32,7 @@ def env_bool(key, default=False):
     value = env(key, '')
     if value == '':
         return default
-    result = {'true': True, 'talse': False}.get(value.lower())
+    result = {'true': True, 'false': False}.get(value.lower())
     if result is None:
         raise exceptions.ImproperlyConfigured(
             'Invalid environment variable {}: {} (Expected true/false)'.format(key, value)
@@ -135,22 +135,21 @@ REDIS_URL = env('REDIS_URL', 'redis://localhost:6379')
 if os.getenv('DOCKER_CONTAINER'):
     POSTGRES_HOST = 'db'
 else:
-    POSTGRES_HOST = '127.0.0.1'
+    POSTGRES_HOST = 'localhost'
 
-if DEBUG and not TESTING:
     DATABASES = {
-     'default': {
-         'ENGINE': 'django.db.backends.postgresql',
-         'NAME': 'jumpcut',
-         'USER': 'postgres',
-         'PASSWORD': 'password',
-         'HOST': POSTGRES_HOST,
-         'PORT': '5432',
+        'default': {
+            'ENGINE': 'django.db.backends.postgresql',
+            'NAME': 'jumpcut',
+            'USER': 'postgres',
+            'PASSWORD': 'password',
+            'HOST': POSTGRES_HOST,
+            'PORT': '5432',
+            'TEST': {
+                'NAME': 'ci',
+            }
+        }
     }
-}
-
-if TESTING:
-    DATABASE_URL = env('DATABASE_URL', 'sqlite:///{base_dir}/db.sqlite3'.format(base_dir=BASE_DIR))
 
 CELERY_ALWAYS_EAGER = DEBUG
 CELERY_IGNORE_RESULT = True
@@ -171,12 +170,13 @@ CACHES = {
 }
 
 if TESTING:
+    DATABASE_URL = env('DATABASE_URL', 'postgres://postgres:postgres@postgres:5432/ci')
     DATABASES = {
-       'default': dj_database_url.parse(DATABASE_URL)
+        'ci': dj_database_url.parse(DATABASE_URL)
     }
 
 # if PRODUCTION:
-    # DATABASES['default']['CONN_MAX_AGE'] = None
+#     DATABASES['default']['CONN_MAX_AGE'] = None
 
 SITE_NAME = env('SITE_NAME', 'jumpcut')
 SITE_URL = env('SITE_URL', 'http://localhost:8000/')
