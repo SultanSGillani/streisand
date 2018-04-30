@@ -1,11 +1,13 @@
-from rest_framework.permissions import IsAuthenticated
-from rest_framework.viewsets import ModelViewSet, GenericViewSet
+from django.db.models import OuterRef, Subquery
 from django_filters import rest_framework as filters
+from forums.models import ForumGroup, ForumTopic, ForumThread, ForumPost, ForumThreadSubscription
 from rest_framework import mixins
 from rest_framework.mixins import Response
-from django.db.models import OuterRef, Subquery
+from rest_framework.permissions import IsAuthenticated
+from rest_framework.viewsets import ModelViewSet, GenericViewSet
 from www.pagination import ForumsPageNumberPagination
-from forums.models import ForumGroup, ForumTopic, ForumThread, ForumPost, ForumThreadSubscription
+
+from .filters import ForumTopicFilter, ForumThreadFilter, ForumPostFilter
 from .serializers import (
     ForumGroupSerializer,
     ForumTopicSerializer,
@@ -14,7 +16,6 @@ from .serializers import (
     ForumThreadIndexSerializer,
     ForumThreadSubscriptionSerializer,
 )
-from .filters import ForumTopicFilter, ForumThreadFilter, ForumPostFilter
 
 
 class ForumGroupViewSet(ModelViewSet):
@@ -193,7 +194,7 @@ class ForumPostViewSet(ModelViewSet):
         'topic_latest__latest_post',
         'author',
         'author__user_class',
-    ).order_by('-created_at').distinct('created_at')
+    ).order_by('created_at').distinct('created_at')
     filter_backends = (filters.DjangoFilterBackend,)
     filter_class = ForumPostFilter
     pagination_class = ForumsPageNumberPagination
