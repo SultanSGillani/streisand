@@ -137,18 +137,20 @@ if os.getenv('DOCKER_CONTAINER'):
 else:
     POSTGRES_HOST = '127.0.0.1'
 
-DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.postgresql',
-        'NAME': 'jumpcut',
-        'USER': 'postgres',
-        'PASSWORD': 'password',
-        'HOST': POSTGRES_HOST,
-        'PORT': '5432',
+if DEBUG AND NOT TESTING:
+    DATABASES = {
+     'default': {
+         'ENGINE': 'django.db.backends.postgresql',
+         'NAME': 'jumpcut',
+         'USER': 'postgres',
+         'PASSWORD': 'password',
+         'HOST': POSTGRES_HOST,
+         'PORT': '5432',
     }
 }
 
-# DATABASE_URL = env('DATABASE_URL', 'sqlite:///{base_dir}/db.sqlite3'.format(base_dir=BASE_DIR))
+if TESTING:
+    DATABASE_URL = env('DATABASE_URL', 'sqlite:///{base_dir}/db.sqlite3'.format(base_dir=BASE_DIR))
 
 CELERY_ALWAYS_EAGER = DEBUG
 CELERY_IGNORE_RESULT = True
@@ -168,8 +170,10 @@ CACHES = {
     }
 }
 
- # DATABASES = {
-  #  'default': dj_database_url.parse(DATABASE_URL)
+if TESTING:
+    DATABASES = {
+       'default': dj_database_url.parse(DATABASE_URL)
+    }
 
 if PRODUCTION:
     DATABASES['default']['CONN_MAX_AGE'] = None
