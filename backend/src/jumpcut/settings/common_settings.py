@@ -132,23 +132,16 @@ TIME_ZONE = 'UTC'
 
 REDIS_URL = env('REDIS_URL', 'redis://localhost:6379')
 
-if os.getenv('DOCKER_CONTAINER'):
-    POSTGRES_HOST = 'db'
-else:
-    POSTGRES_HOST = 'localhost'
 
+if TESTING:
+    DATABASE_URL = env('DATABASE_URL', 'postgres://postgres:postgres@postgres:5432/ci')
     DATABASES = {
-        'default': {
-            'ENGINE': 'django.db.backends.postgresql',
-            'NAME': 'jumpcut',
-            'USER': 'postgres',
-            'PASSWORD': 'password',
-            'HOST': POSTGRES_HOST,
-            'PORT': '5432',
-            'TEST': {
-                'NAME': 'ci',
-            }
-        }
+        'ci': dj_database_url.parse(DATABASE_URL)
+    }
+else:
+    DATABASE_URL = env('DATABASE_URL', 'postgres://postgres:password@postgres:5432/jumpcut')
+    DATABASES = {
+        'jumpcut': dj_database_url.parse(DATABASE_URL)
     }
 
 CELERY_ALWAYS_EAGER = DEBUG
@@ -169,11 +162,6 @@ CACHES = {
     }
 }
 
-if TESTING:
-    DATABASE_URL = env('DATABASE_URL', 'postgres://postgres:postgres@postgres:5432/ci')
-    DATABASES = {
-        'ci': dj_database_url.parse(DATABASE_URL)
-    }
 
 # if PRODUCTION:
 #     DATABASES['default']['CONN_MAX_AGE'] = None
