@@ -137,7 +137,7 @@ if os.getenv('DOCKER_CONTAINER'):
 else:
     POSTGRES_HOST = '127.0.0.1'
 
-if DEBUG AND NOT TESTING:
+if DEBUG and not TESTING:
     DATABASES = {
      'default': {
          'ENGINE': 'django.db.backends.postgresql',
