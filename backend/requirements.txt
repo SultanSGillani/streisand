@@ -45,4 +45,4 @@ djangorestframework-jwt>=1.11.0
 drf-yasg>=1.6.1
 graphene==2.1
 graphene-django>=2.0.dev
-graphene-django-extras==0.3.5
+graphene-django-extras==0.3.6
