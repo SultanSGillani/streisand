@@ -56,7 +56,7 @@ To start all the services and the development servers for the frontend and backe
 This will bring up everything
 
 You can find the api/django-admin server on <localhost:8000>, the frontend server on
-<localhost:8080> and the tracker server on <localhost:7070>.
+<localhost:8001> and the tracker server on <localhost:7070>.
 
 ## Rebuilding containers
 
