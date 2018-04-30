@@ -69,7 +69,7 @@ TEST_RUNNER = 'jumpcut.test_utils.CustomTestSuiteRunner'
 SECRET_KEY = env('JUMPCUT_SECRET_KEY', 'changeme')
 
 if os.getenv('DJANGO_ENV') == 'DEBUG':
-ALLOWED_HOSTS = ['*']
+    ALLOWED_HOSTS = ['*']
 
 else:
     DEBUG = False
@@ -168,7 +168,7 @@ CACHES = {
     }
 }
 
-# DATABASES = {
+ # DATABASES = {
     'default': dj_database_url.parse(DATABASE_URL)
 }
 
