@@ -67,7 +67,6 @@ dump.rdb
 *.log
 *.pot
 jumpcut/db.sqlite3
-wikis.json
 
 # Sockets
 *.sock
