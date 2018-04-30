@@ -10,7 +10,7 @@ import IUser, { IUserResponse } from '../../models/IUser';
 type UserAction =
     { type: 'FETCHING_USER', id: number } |
     { type: 'RECEIVED_USER', user: IUser } |
-    { type: 'USER_FAILURE', id: number };
+    { type: 'FAILED_USER', id: number };
 export default UserAction;
 type Action = UserAction | ErrorAction;
 
@@ -26,7 +26,7 @@ function received(id: number, response: IUserResponse): Action {
 }
 
 function failure(id: number): Action {
-    return { type: 'USER_FAILURE', id };
+    return { type: 'FAILED_USER', id };
 }
 
 export function getUser(id: number): ThunkAction<Action> {

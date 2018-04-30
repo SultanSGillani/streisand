@@ -3,6 +3,7 @@ import * as redux from 'redux';
 import { connect } from 'react-redux';
 
 import Store from '../../store';
+import Empty from '../../components/Empty';
 import WikisView from '../../components/wikis/WikisView';
 import { getWikis } from '../../actions/wikis/WikisAction';
 
@@ -15,6 +16,8 @@ export type Props = {
 type ConnectedState = {
     page: number;
     loading: boolean;
+    loaded: boolean;
+    failed: boolean;
 };
 
 type ConnectedDispatch = {
@@ -30,12 +33,18 @@ class WikisPage extends React.Component<CombinedProps> {
     }
 
     public componentWillReceiveProps(props: CombinedProps) {
-        if (!props.loading && props.page !== this.props.page) {
+        const needPage = !props.loaded && !props.failed;
+        const pageChanged = props.page !== this.props.page;
+        if (!props.loading && (pageChanged || needPage)) {
             this.props.getWikis(props.page);
         }
     }
 
     public render() {
+        if (!this.props.loaded) {
+            return <Empty loading={this.props.loading} />;
+        }
+
         return (
             <WikisView page={this.props.page} />
         );
@@ -47,7 +56,9 @@ const mapStateToProps = (state: Store.All, ownProps: Props): ConnectedState => {
     const page = state.sealed.wikis.pages[pageNumber];
     return {
         page: pageNumber,
-        loading: page ? page.loading : false
+        loading: page ? page.loading : false,
+        loaded: page ? page.loaded : false,
+        failed: page ? page.failed : false
     };
 };
 

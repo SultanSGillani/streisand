@@ -33,7 +33,7 @@ function loading(state: boolean = false, action: Action): boolean {
     switch (action.type) {
         case 'FETCHING_FORUM_GROUPS':
             return true;
-        case 'FORUM_GROUPS_FAILURE':
+        case 'FAILED_FORUM_GROUPS':
         case 'RECEIVED_FORUM_GROUPS':
             return false;
         default:

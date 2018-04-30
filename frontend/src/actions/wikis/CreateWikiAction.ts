@@ -13,7 +13,7 @@ import ErrorAction, { handleError } from '../ErrorAction';
 type CreateWikiAction =
     { type: 'CREATING_WIKI', wiki: IWikiUpdate } |
     { type: 'CREATED_WIKI', id: number } |
-    { type: 'WIKI_CREATION_FAILURE' };
+    { type: 'FAILED_CREATING_WIKI' };
 export default CreateWikiAction;
 type Action = CreateWikiAction | WikiAction | ErrorAction;
 
@@ -33,7 +33,7 @@ function created(id: number): Action {
 }
 
 function failure(): Action {
-    return { type: 'WIKI_CREATION_FAILURE' };
+    return { type: 'FAILED_CREATING_WIKI' };
 }
 
 export function createWiki(wiki: IWikiUpdate): ThunkAction<Action> {

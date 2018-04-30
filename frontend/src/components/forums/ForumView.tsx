@@ -13,7 +13,7 @@ type ConnectedState = {
 type ConnectedDispatch = {};
 
 type CombinedProps = Props & ConnectedDispatch & ConnectedState;
-class ForumGroupsViewComponent extends React.Component<CombinedProps> {
+class ForumViewComponent extends React.Component<CombinedProps> {
     public render() {
         const groups = this.props.forumGroups.map((group: IForumGroup) => {
             return (<ForumGroup group={group} key={group.id} />);
@@ -33,6 +33,6 @@ const mapStateToProps = (state: Store.All, ownProps: Props): ConnectedState => {
     };
 };
 
-const ForumGroupsView: React.ComponentClass<Props> =
-    connect(mapStateToProps)(ForumGroupsViewComponent);
-export default ForumGroupsView;
+const ForumView: React.ComponentClass<Props> =
+    connect(mapStateToProps)(ForumViewComponent);
+export default ForumView;

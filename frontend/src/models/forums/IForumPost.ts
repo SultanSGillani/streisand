@@ -25,4 +25,9 @@ export interface IForumPost {
     modifiedBy?: number;
 }
 
+export interface IForumPostUpdate {
+    thread: number;
+    body: string;
+}
+
 export default IForumPost;
