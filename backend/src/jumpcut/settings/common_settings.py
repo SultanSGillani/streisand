@@ -169,8 +169,7 @@ CACHES = {
 }
 
  # DATABASES = {
-    'default': dj_database_url.parse(DATABASE_URL)
-}
+  #  'default': dj_database_url.parse(DATABASE_URL)
 
 if PRODUCTION:
     DATABASES['default']['CONN_MAX_AGE'] = None
