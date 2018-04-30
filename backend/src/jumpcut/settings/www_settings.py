@@ -168,7 +168,6 @@ SWAGGER_SETTINGS = {
     'OPERATIONS_SORTER': 'alpha'
 }
 
-
 REDOC_SETTINGS = {
     'LAZY_RENDERING': True,
 }
@@ -180,18 +179,17 @@ if DEBUG:
 
 SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
 
-"""
-CORS_URL_REGEX = r'^/api/v1/.*$'
-
-CORS_ORIGIN_WHITELIST = [
-    subdomain + '.' + HOST_DOMAIN
-    for subdomain
-    in ('api', 'dev', 'static', 'www')
-]
-"""
-
-# For now allow all
-CORS_ORIGIN_ALLOW_ALL = True
+if os.getenv('DJANGO_ENV') == 'PROD':
+    DEBUG = False
+    CORS_URL_REGEX = r'^/api/v1/.*$'
+    CORS_ORIGIN_WHITELIST = [
+        subdomain + '.' + HOST_DOMAIN
+        for subdomain
+        in ('api', 'dev', 'static', 'www')
+    ]
+else:
+    DEBUG = True
+    CORS_ORIGIN_ALLOW_ALL = True
 
 RT_API_KEY = os.environ.get('RT_API_KEY', '')
 OLD_SITE_SECRET_KEY = os.environ.get('OLD_SITE_HASH', '')
@@ -207,7 +205,6 @@ AUTHENTICATION_BACKENDS = [
 SESSION_ENGINE = 'django.contrib.sessions.backends.cached_db'
 
 WSGI_APPLICATION = 'jumpcut.www_wsgi.application'
-
 
 TEMPLATES = [
     {
@@ -238,7 +235,6 @@ STATICFILES_DIRS = (
     os.path.join(BASE_DIR, 'static'),
 )
 STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
-
 
 STATICFILES_FINDERS = [
     'django.contrib.staticfiles.finders.AppDirectoriesFinder',

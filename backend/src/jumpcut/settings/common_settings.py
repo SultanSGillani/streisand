@@ -32,7 +32,7 @@ def env_bool(key, default=False):
     value = env(key, '')
     if value == '':
         return default
-    result = {'true': True, 'talse': False}.get(value.lower())
+    result = {'true': True, 'false': False}.get(value.lower())
     if result is None:
         raise exceptions.ImproperlyConfigured(
             'Invalid environment variable {}: {} (Expected true/false)'.format(key, value)
@@ -68,16 +68,11 @@ TEST_RUNNER = 'jumpcut.test_utils.CustomTestSuiteRunner'
 # SECURITY WARNING: keep the secret key used in production secret!
 SECRET_KEY = env('JUMPCUT_SECRET_KEY', 'changeme')
 
-
-ALLOWED_HOSTS = [
-    # Adding this for development
-    'localhost',
-    '.jumpcut.to',
-]
-
-if DEBUG:
+if os.getenv('DJANGO_ENV') == 'DEBUG':
     ALLOWED_HOSTS = ['*']
-
+else:
+    DEBUG = False
+    ALLOWED_HOSTS = ['localhost', '.jumpcut.to']
 
 HOST_DOMAIN = env('HOST_DOMAIN', '')
 if HOST_DOMAIN:
@@ -135,7 +130,18 @@ USE_TZ = True
 TIME_ZONE = 'UTC'
 
 REDIS_URL = env('REDIS_URL', 'redis://localhost:6379')
-DATABASE_URL = env('DATABASE_URL', 'sqlite:///{base_dir}/db.sqlite3'.format(base_dir=BASE_DIR))
+
+
+if TESTING:
+    DATABASE_URL = env('DATABASE_URL', 'sqlite:///{base_dir}/db.sqlite3'.format(base_dir=BASE_DIR))
+    DATABASES = {
+        'default': dj_database_url.parse(DATABASE_URL)
+    }
+else:
+    DATABASE_URL = env('DATABASE_URL', 'postgres://postgres:password@postgres:5432/jumpcut')
+    DATABASES = {
+        'default': dj_database_url.parse(DATABASE_URL)
+    }
 
 CELERY_ALWAYS_EAGER = DEBUG
 CELERY_IGNORE_RESULT = True
@@ -155,12 +161,9 @@ CACHES = {
     }
 }
 
-DATABASES = {
-    'default': dj_database_url.parse(DATABASE_URL)
-}
 
-if PRODUCTION:
-    DATABASES['default']['CONN_MAX_AGE'] = None
+# if PRODUCTION:
+#     DATABASES['default']['CONN_MAX_AGE'] = None
 
 SITE_NAME = env('SITE_NAME', 'jumpcut')
 SITE_URL = env('SITE_URL', 'http://localhost:8000/')
