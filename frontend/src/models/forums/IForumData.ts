@@ -2,7 +2,6 @@ import { IForumPost } from './IForumPost';
 import { IForumGroup } from './IForumGroup';
 import { IForumTopic } from './IForumTopic';
 import { IForumThread } from './IForumThread';
-import ILoadingItem from '../base/ILoadingItem';
 import { INestedPages } from '../base/IPagedItemSet';
 
 export type ForumGroupData = {
@@ -12,11 +11,11 @@ export type ForumGroupData = {
 };
 
 export type ForumTopicData = {
-    byId: { [id: number]: ILoadingItem | IForumTopic };
+    byId: { [id: number]: IForumTopic };
 };
 
 export type ForumThreadData = {
-    byId: { [id: number]: ILoadingItem | IForumThread };
+    byId: { [id: number]: IForumThread };
     byTopic: INestedPages<IForumThread>;
 };
 

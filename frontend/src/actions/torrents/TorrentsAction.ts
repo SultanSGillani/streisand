@@ -10,7 +10,7 @@ import IPagedResponse from '../../models/base/IPagedResponse';
 type TorrentsAction =
     { type: 'FETCHING_TORRENTS', page: number } |
     { type: 'RECEIVED_TORRENTS', page: number, count: number, torrents: ITorrent[] } |
-    { type: 'TORRENTS_FAILURE', page: number };
+    { type: 'FAILED_TORRENTS', page: number };
 export default TorrentsAction;
 type Action = TorrentsAction | ErrorAction;
 
@@ -28,7 +28,7 @@ function received(page: number, response: IPagedResponse<ITorrent>): Action {
 }
 
 function failure(page: number): Action {
-    return { type: 'TORRENTS_FAILURE', page };
+    return { type: 'FAILED_TORRENTS', page };
 }
 
 export function getTorrents(page: number = 1): ThunkAction<Action> {
