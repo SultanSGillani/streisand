@@ -134,14 +134,14 @@ REDIS_URL = env('REDIS_URL', 'redis://localhost:6379')
 
 
 if TESTING:
-    DATABASE_URL = env('DATABASE_URL', 'postgres://postgres:postgres@postgres:5432/ci')
+    DATABASE_URL = env('DATABASE_URL', 'sqlite:///{base_dir}/db.sqlite3'.format(base_dir=BASE_DIR))
     DATABASES = {
-        'ci': dj_database_url.parse(DATABASE_URL)
+        'default': dj_database_url.parse(DATABASE_URL)
     }
 else:
     DATABASE_URL = env('DATABASE_URL', 'postgres://postgres:password@postgres:5432/jumpcut')
     DATABASES = {
-        'jumpcut': dj_database_url.parse(DATABASE_URL)
+        'default': dj_database_url.parse(DATABASE_URL)
     }
 
 CELERY_ALWAYS_EAGER = DEBUG
