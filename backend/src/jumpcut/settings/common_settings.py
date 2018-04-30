@@ -70,7 +70,6 @@ SECRET_KEY = env('JUMPCUT_SECRET_KEY', 'changeme')
 
 if os.getenv('DJANGO_ENV') == 'DEBUG':
     ALLOWED_HOSTS = ['*']
-
 else:
     DEBUG = False
     ALLOWED_HOSTS = ['localhost', '.jumpcut.to']
