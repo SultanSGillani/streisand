@@ -189,7 +189,7 @@ if os.getenv('DJANGO_ENV') == 'PROD':
         in ('api', 'dev', 'static', 'www')
     ]
 else:
-    DEBUG - True
+    DEBUG = True
     CORS_ORIGIN_ALLOW_ALL = True
     
 RT_API_KEY = os.environ.get('RT_API_KEY', '')
