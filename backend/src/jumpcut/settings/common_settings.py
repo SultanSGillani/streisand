@@ -13,38 +13,21 @@ import sys
 from urllib.parse import urljoin
 from decouple import config
 
-import dj_database_url
 from django.utils.timezone import timedelta
-from django.core import exceptions
 
 AUTH_USER_MODEL = 'users.User'
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.dirname(__file__)))
 SECRET_KEY = config('SECRET_KEY')
+
 DEBUG = config('DEBUG', cast=bool)
-# SECURITY WARNING: don't run with debug turned on in production!
-<<<<<<< Updated upstream
-DEBUG = env_bool('JUMPCUT_DEBUG', True)
-PRODUCTION = not DEBUG
-=======
 PRODUCTION = config('PRODUCTION', cast=bool)
 
->>>>>>> Stashed changes
 TESTING = 'test' in sys.argv
 TEST_RUNNER = 'jumpcut.test_utils.CustomTestSuiteRunner'
 
 # SECURITY WARNING: keep the secret key used in production secret!
-<<<<<<< Updated upstream
-SECRET_KEY = os.environ['SECRET_KEY']
-
-if os.getenv('DJANGO_ENV') == 'DEBUG':
-    ALLOWED_HOSTS = ['*']
-else:
-    DEBUG = False
-    ALLOWED_HOSTS = ['localhost', '.jumpcut.to']
-=======
->>>>>>> Stashed changes
 
 ALLOWED_HOSTS = config('ALLOWED_HOSTS', cast=lambda v: [s.strip() for s in v.split(',')])
 
@@ -102,17 +85,16 @@ TIME_ZONE = 'UTC'
 
 REDIS_URL = config('REDIS_URL')
 
-
 DATABASES = {
-       'default': {
-           'ENGINE': 'django.db.backends.postgresql_psycopg2',
-           'NAME': config('DB_NAME'),
-           'USER': config('DB_USER'),
-           'PASSWORD': config('DB_PASS'),
-           'HOST': config('DB_HOST'),
-           'PORT': config('DB_PORT')
-        }
+    'default': {
+        'ENGINE': 'django.db.backends.postgresql_psycopg2',
+        'NAME': config('DB_NAME'),
+        'USER': config('DB_USER'),
+        'PASSWORD': config('DB_PASS'),
+        'HOST': config('DB_HOST'),
+        'PORT': config('DB_PORT')
     }
+}
 
 CELERY_ALWAYS_EAGER = DEBUG
 CELERY_IGNORE_RESULT = True
@@ -132,9 +114,9 @@ CACHES = {
     }
 }
 
-
 # if PRODUCTION:
 #     DATABASES['default']['CONN_MAX_AGE'] = None
+
 SITE_ID = 1
 SITE_NAME = config('SITE_NAME')
 SITE_URL = config('SITE_URL')

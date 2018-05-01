@@ -1,10 +1,5 @@
 #!/usr/bin/env python
-
-import os
-from celery import Celery
-from .common_settings import INSTALLED_APPS
 from decouple import config
-
 
 DEBUG = config('DEBUG', cast=bool)
 WSGI_APPLICATION = 'jumpcut.testing_wsgi.application'
@@ -12,15 +7,15 @@ WSGI_APPLICATION = 'jumpcut.testing_wsgi.application'
 SECRET_KEY = config('SECRET_KEY')
 
 DATABASES = {
-        'default': {
-            'ENGINE': 'django.db.backends.postgresql_psycopg2',
-            'NAME': config('TESTING_DB_NAME'),
-            'USER': config('TESTING_DB_USER'),
-            'PASSWORD': config('TESTING_DB_PASS'),
-            'HOST': config('TESTING_DB_HOST'),
-            'PORT': config('TESTING_DB_PORT')
-        }
+    'default': {
+        'ENGINE': 'django.db.backends.postgresql_psycopg2',
+        'NAME': config('TESTING_DB_NAME'),
+        'USER': config('TESTING_DB_USER'),
+        'PASSWORD': config('TESTING_DB_PASS'),
+        'HOST': config('TESTING_DB_HOST'),
+        'PORT': config('TESTING_DB_PORT')
     }
+}
 
 # http://django-dynamic-fixture.readthedocs.org/en/latest/data_fixtures.html#custom-field-fixture
 DDF_FIELD_FIXTURES = {
