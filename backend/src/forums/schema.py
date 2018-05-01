@@ -57,7 +57,7 @@ class Query(object):
     def resolve_all_threads(self, info, **kwargs):
         return ForumThread.objects.all()
 
-    def resolve_thread(self, args, info)
+    def resolve_thread(self, args, info):
         id = args.get('id')
         if id is not None:
             return ForumThread.objects.get(pk=id)
@@ -66,7 +66,7 @@ class Query(object):
     def resolve_all_posts(self, info, **kwargs):
         return ForumPost.objects.all()
 
-    def resolve_post(self, args, info)
+    def resolve_post(self, args, info):
         id = args.get('id')
         if id is not None:
             return ForumPost.objects.get(pk=id)
