@@ -11,17 +11,10 @@ import { IForumThreadResponse } from '../../models/forums/IForumThread';
 
 type Response = IPagedResponse<IForumThreadResponse>;
 
-export type ForumTopicReceivedAction = {
-    type: 'RECEIVED_FORUM_TOPIC',
-    id: number,
-    page: number,
-    count: number,
-    data: IForumGroupData
-};
 type ForumTopicAction =
     { type: 'FETCHING_FORUM_TOPIC', id: number, page: number } |
-    ForumTopicReceivedAction |
-    { type: 'FAILED_FORUM_TOPIC', id: number, page: number };
+    { type: 'RECEIVED_FORUM_TOPIC', id: number, page: number, count: number, data: IForumGroupData } |
+    { type: 'FORUM_TOPIC_FAILURE', id: number, page: number };
 export default ForumTopicAction;
 type Action = ForumTopicAction | ErrorAction;
 
@@ -45,7 +38,7 @@ function received(props: Props, response: Response): Action {
 }
 
 function failure(props: Props): Action {
-    return { type: 'FAILED_FORUM_TOPIC', id: props.id, page: props.page };
+    return { type: 'FORUM_TOPIC_FAILURE', id: props.id, page: props.page };
 }
 
 export function getThreads(id: number, page: number = 1): ThunkAction<Action> {

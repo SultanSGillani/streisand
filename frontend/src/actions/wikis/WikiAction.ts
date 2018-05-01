@@ -9,7 +9,7 @@ import { fetchData } from '../ActionHelper';
 type WikiAction =
     { type: 'FETCHING_WIKI', id: number } |
     { type: 'RECEIVED_WIKI', wiki: IWiki } |
-    { type: 'FAILED_WIKI', id: number };
+    { type: 'WIKI_FAILURE', id: number };
 export default WikiAction;
 type Action = WikiAction | ErrorAction;
 
@@ -25,7 +25,7 @@ function received(id: number, response: IWiki): Action {
 }
 
 function failure(id: number): Action {
-    return { type: 'FAILED_WIKI', id };
+    return { type: 'WIKI_FAILURE', id };
 }
 
 export function getWiki(id: number): ThunkAction<Action> {

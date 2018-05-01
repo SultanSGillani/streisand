@@ -5,7 +5,6 @@ import Pager from '../Pager';
 import Empty from '../Empty';
 import Store from '../../store';
 import ForumPost from './ForumPost';
-import ForumReply from './ForumReply';
 import IForumPost from '../../models/forums/IForumPost';
 import IForumThread from '../../models/forums/IForumThread';
 
@@ -22,7 +21,7 @@ type ConnectedState = {
 type ConnectedDispatch = {};
 
 type CombinedProps = Props & ConnectedDispatch & ConnectedState;
-class ForumThreadViewComponent extends React.Component<CombinedProps> {
+class ForumTopicViewComponent extends React.Component<CombinedProps> {
     public render() {
         const posts = this.props.posts;
         const uri = `/forum/thread/${this.props.thread.id}`;
@@ -36,7 +35,6 @@ class ForumThreadViewComponent extends React.Component<CombinedProps> {
             <div>
                 <Pager uri={uri} total={this.props.total} page={this.props.page} />
                 <div>{rows}</div>
-                <ForumReply thread={this.props.thread} />
                 <Pager uri={uri} total={this.props.total} page={this.props.page} />
             </div>
         );
@@ -53,6 +51,6 @@ const mapStateToProps = (state: Store.All, ownProps: Props): ConnectedState => {
     };
 };
 
-const ForumThreadView: React.ComponentClass<Props> =
-    connect(mapStateToProps)(ForumThreadViewComponent);
-export default ForumThreadView;
+const ForumTopicView: React.ComponentClass<Props> =
+    connect(mapStateToProps)(ForumTopicViewComponent);
+export default ForumTopicView;

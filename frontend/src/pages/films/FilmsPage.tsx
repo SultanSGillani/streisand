@@ -3,7 +3,6 @@ import * as redux from 'redux';
 import { connect } from 'react-redux';
 
 import Store from '../../store';
-import Empty from '../../components/Empty';
 import FilmsView from '../../components/films/FilmsView';
 import { getFilms } from '../../actions/films/FilmsAction';
 
@@ -16,8 +15,6 @@ export type Props = {
 type ConnectedState = {
     page: number;
     loading: boolean;
-    loaded: boolean;
-    failed: boolean;
 };
 
 type ConnectedDispatch = {
@@ -33,18 +30,12 @@ class FilmsPage extends React.Component<CombinedProps> {
     }
 
     public componentWillReceiveProps(props: CombinedProps) {
-        const needPage = !props.loaded && !props.failed;
-        const pageChanged = props.page !== this.props.page;
-        if (!props.loading && (pageChanged || needPage)) {
+        if (!props.loading && props.page !== this.props.page) {
             this.props.getFilms(props.page);
         }
     }
 
     public render() {
-        if (!this.props.loaded) {
-            return <Empty loading={this.props.loading} />;
-        }
-
         return (
             <FilmsView page={this.props.page} />
         );
@@ -56,9 +47,7 @@ const mapStateToProps = (state: Store.All, ownProps: Props): ConnectedState => {
     const page = state.sealed.films.pages[pageNumber];
     return {
         page: pageNumber,
-        loading: page ? page.loading : false,
-        loaded: page ? page.loaded : false,
-        failed: page ? page.failed : false
+        loading: page ? page.loading : false
     };
 };
 

@@ -9,7 +9,7 @@ import ITorrent from '../../models/ITorrent';
 type TorrentAction =
     { type: 'FETCHING_TORRENT', id: number } |
     { type: 'RECEIVED_TORRENT', torrent: ITorrent } |
-    { type: 'FAILED_TORRENT', id: number };
+    { type: 'TORRENT_FAILURE', id: number };
 export default TorrentAction;
 type Action = TorrentAction | ErrorAction;
 
@@ -25,7 +25,7 @@ function received(id: number, response: ITorrent): Action {
 }
 
 function failure(id: number): Action {
-    return { type: 'FAILED_TORRENT', id };
+    return { type: 'TORRENT_FAILURE', id };
 }
 
 export function getTorrent(id: number): ThunkAction<Action> {
