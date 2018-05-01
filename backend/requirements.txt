@@ -37,7 +37,7 @@ Sphinx==1.7.3
 # Updated Version
 https://github.com/TheSaltman/django-docs/archive/master.zip
 sphinx_rtd_theme==0.3.0
-djangorestframework-camel-case>=1.0b1
+djangorestframework-camel-case==1.0b1
 https://github.com/philipn/django-rest-framework-filters/archive/master.zip
 # djangorestframework-filters
 https://github.com/darklow/django-suit/tarball/v2
@@ -46,3 +46,4 @@ drf-yasg>=1.6.1
 graphene==2.1
 graphene-django>=2.0.dev
 graphene-django-extras==0.3.6
+python-decouple
