@@ -11,7 +11,7 @@ import { IForumGroupResponse, IForumGroupData } from '../../models/forums/IForum
 type ForumGroupsction =
     { type: 'FETCHING_FORUM_GROUPS' } |
     { type: 'RECEIVED_FORUM_GROUPS', data: IForumGroupData } |
-    { type: 'FAILED_FORUM_GROUPS' };
+    { type: 'FORUM_GROUPS_FAILURE' };
 export default ForumGroupsction;
 type Action = ForumGroupsction | ErrorAction;
 
@@ -27,7 +27,7 @@ function received(response: IPagedResponse<IForumGroupResponse>): Action {
 }
 
 function failure(): Action {
-    return { type: 'FAILED_FORUM_GROUPS' };
+    return { type: 'FORUM_GROUPS_FAILURE' };
 }
 
 export function getForumGroups(): ThunkAction<Action> {

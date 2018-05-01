@@ -3,15 +3,14 @@ import * as objectAssign from 'object-assign';
 import { combineReducers } from '../helpers';
 import ForumAction from '../../actions/forums';
 import NewsAction from '../../actions/NewsAction';
-import { getPageReducer } from '../utilities/reducers';
+import ILoadingItem from '../../models/base/ILoadingItem';
 import { INestedPages } from '../../models/base/IPagedItemSet';
 import { IForumThread } from '../../models/forums/IForumThread';
 import { ForumThreadData } from '../../models/forums/IForumData';
-import ForumTopicAction, { ForumTopicReceivedAction } from '../../actions/forums/ForumTopicAction';
 
 type Action = ForumAction | NewsAction;
 
-type ItemMap = { [id: number]: IForumThread };
+type ItemMap = { [id: number]: IForumThread | ILoadingItem };
 function byId(state: ItemMap = {}, action: Action): ItemMap {
     switch (action.type) {
         case 'RECEIVED_FORUM_GROUPS':
@@ -29,13 +28,31 @@ function byId(state: ItemMap = {}, action: Action): ItemMap {
 }
 
 type Items = INestedPages<IForumThread>;
-function byTopic(state: Items = {}, action: ForumTopicAction): Items {
+function byTopic(state: Items = {}, action: Action): Items {
     switch (action.type) {
-        case 'FAILED_FORUM_TOPIC':
+        case 'FORUM_TOPIC_FAILURE':
+            return processThreads({
+                state: state,
+                topicId: action.id,
+                loading: false,
+                pageNumber: action.page
+            });
         case 'FETCHING_FORUM_TOPIC':
-            return processThreads({ state , action });
+            return processThreads({
+                state: state,
+                topicId: action.id,
+                loading: true,
+                pageNumber: action.page
+            });
         case 'RECEIVED_FORUM_TOPIC':
-            return processThreads({ state, action, count: action.count });
+            return processThreads({
+                state: state,
+                topicId: action.id,
+                loading: false,
+                pageNumber: action.page,
+                count: action.count,
+                threads: action.data.threads
+            });
         default:
             return state;
     }
@@ -43,24 +60,24 @@ function byTopic(state: Items = {}, action: ForumTopicAction): Items {
 
 interface IThreadProcessingParams {
     state: Items;
-    action: ForumTopicAction;
+    topicId: number;
+    loading: boolean;
+    pageNumber: number;
     count?: number;
+    threads?: IForumThread[];
 }
 
-const pageReducer = getPageReducer<IForumThread>('FORUM_TOPIC', (action: ForumTopicReceivedAction) => {
-    return action.data.threads || [];
-});
-
 function processThreads(params: IThreadProcessingParams) {
-    const action = params.action;
     const count = params.count || 0;
-    const current = params.state[action.id] || { count, pages: {} };
-    const currentPage = current.pages[action.page];
+    const current = params.state[params.topicId] || { count, pages: {} };
     const itemSet = objectAssign({}, current.pages, {
-        [action.page]: pageReducer(currentPage, params.action)
+        [params.pageNumber]: {
+            loading: params.loading,
+            items: params.threads || []
+        }
     });
     return objectAssign({}, params.state, {
-        [action.id]: {
+        [params.topicId]: {
             count: count,
             pages: itemSet
         }

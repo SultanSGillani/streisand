@@ -18,7 +18,7 @@ function loading(state: boolean = false, action: Action): boolean {
     switch (action.type) {
         case 'FETCHING_NEWS_POST':
             return true;
-        case 'FAILED_NEWS_POST':
+        case 'NEWS_POST_FAILURE':
         case 'RECEIVED_NEWS_POST':
             return false;
         default:

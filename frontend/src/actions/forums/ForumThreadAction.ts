@@ -11,21 +11,12 @@ import { IForumPostResponse } from '../../models/forums/IForumPost';
 
 type Response = IPagedResponse<IForumPostResponse>;
 
-export type ForumThreadReceivedAction = {
-    type: 'RECEIVED_FORUM_THREAD',
-    id: number,
-    page: number,
-    count: number,
-    data: IForumGroupData
-};
-
-type ForumThreadAction =
+type ForumTopicAction =
     { type: 'FETCHING_FORUM_THREAD', id: number, page: number } |
-    ForumThreadReceivedAction |
-    { type: 'FAILED_FORUM_THREAD', id: number, page: number } |
-    { type: 'INVALIDATE_FORUM_THREAD', id: number, page: number };
-export default ForumThreadAction;
-type Action = ForumThreadAction | ErrorAction;
+    { type: 'RECEIVED_FORUM_THREAD', id: number, page: number, count: number, data: IForumGroupData } |
+    { type: 'FORUM_THREAD_FAILURE', id: number, page: number };
+export default ForumTopicAction;
+type Action = ForumTopicAction | ErrorAction;
 
 type Props = {
     id: number;
@@ -47,11 +38,7 @@ function received(props: Props, response: Response): Action {
 }
 
 function failure(props: Props): Action {
-    return { type: 'FAILED_FORUM_THREAD', id: props.id, page: props.page };
-}
-
-export function invalidate(props: Props) {
-    return { type: 'INVALIDATE_FORUM_THREAD', id: props.id, page: props.page };
+    return { type: 'FORUM_THREAD_FAILURE', id: props.id, page: props.page };
 }
 
 export function getPosts(id: number, page: number = 1): ThunkAction<Action> {
