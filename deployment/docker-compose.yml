@@ -4,26 +4,21 @@ version: '3'
 
 services:
     db:
-        image: postgres:9.5
-        environment:
-            POSTGRES_PASSWORD: password
-            POSTGRES_DB: jumpcut
+        image: postgres:latest
+        env_file: env
         volumes:
             - dbdata:/var/lib/postgresql/data
         restart: always
     redis:
-        image: redis:3.2
+        image: redis:latest
         restart: always
     www:
         image: registry.ronzertnert.me/jumpcut/jumpcut:latest
+        env_file: env
         depends_on:
             - db
             - redis
-        environment:
-            - DATABASE_URL=postgres://postgres:password@db:5432/jumpcut
-            - REDIS_URL=redis://redis:6379
-            - SECRET_KEY=changeme
-            - HOST_DOMAIN=ronzertnert.me
+        env_file: env
         ports:
             - "8000:8000"
             - "7070:7070"
@@ -34,10 +29,8 @@ services:
         depends_on:
             - db
             - redis
+        env_file: env
         environment:
-            - DATABASE_URL=postgres://postgres:password@db:5432/jumpcut
-            - REDIS_URL=redis://redis:6379
-            - SECRET_KEY=changeme
             - C_FORCE_ROOT=true
         restart: always
 volumes:
