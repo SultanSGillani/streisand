@@ -8,6 +8,7 @@ services:
 stages:
  - test
  - release
+ - mirror
 #  - deploy
 
 
@@ -43,6 +44,15 @@ python_tests:
     - invoke run-python-tests --coverage
     - invoke fixtures
 
+github_mirror:
+  stage: mirror
+  before_script:
+    - echo hi
+  script:
+    - git config --global push.default simple
+    - git checkout ${CI_COMMIT_REF_NAME}
+    - git push -q https://${GITHUB_USERNAME}:${GITHUB_TOKEN}@github.com/${GITHUB_REPO}.git
+
 ## TODO frontend linter/tests?
 #
 release_develop:
@@ -55,6 +65,7 @@ release_develop:
     - docker push $CI_REGISTRY_IMAGE:$CI_COMMIT_REF_NAME
   only:
     - master
+
  
 # deploy-develop:
 #   stage: deploy
