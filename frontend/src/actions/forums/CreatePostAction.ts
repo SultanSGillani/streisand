@@ -1,23 +1,23 @@
-import Store from '../../store';
-import globals from '../../utilities/globals';
-import { post } from '../../utilities/Requestor';
-import { ThunkAction, IDispatch } from '../ActionTypes';
-
-import { IUnkownError } from '../../models/base/IError';
-import ErrorAction, { handleError } from '../ErrorAction';
-import { IForumPostUpdate } from '../../models/forums/IForumPost';
-import { invalidate } from './ForumThreadAction';
 import { push } from 'react-router-redux';
 
-type CreateForumPostAction =
+import Store from '../../store';
+import globals from '../../utilities/globals';
+import { invalidate } from './ForumThreadAction';
+import { post } from '../../utilities/Requestor';
+import { IUnkownError } from '../../models/base/IError';
+import { ThunkAction, IDispatch } from '../ActionTypes';
+import ErrorAction, { handleError } from '../ErrorAction';
+import { IForumPostUpdate } from '../../models/forums/IForumPost';
+
+type CreatePostAction =
     { type: 'CREATING_FORUM_POST', thread: number, body: string } |
     { type: 'CREATED_FORUM_POST', id: number } |
     { type: 'FAILED_CREATING_FORUM_POST' };
-export default CreateForumPostAction;
-type Action = CreateForumPostAction | ErrorAction;
+export default CreatePostAction;
+type Action = CreatePostAction | ErrorAction;
 
-function creating(post: IForumPostUpdate) {
-    return { type: 'CREATING_WIKI', post };
+function creating(post: IForumPostUpdate): Action {
+    return { type: 'CREATING_FORUM_POST', thread: post.thread, body: post.body };
 }
 
 function created(id: number): Action {

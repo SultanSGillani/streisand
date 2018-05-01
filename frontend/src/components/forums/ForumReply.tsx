@@ -8,7 +8,7 @@ import IUser from '../../models/IUser';
 import Editor, { IEditorHandle } from '../bbcode/Editor';
 import { IForumThread } from '../../models/forums/IForumThread';
 import { IForumPostUpdate } from '../../models/forums/IForumPost';
-import { postReply } from '../../actions/forums/CreateForumPostAction';
+import { postReply } from '../../actions/forums/CreatePostAction';
 
 export type Props = {
     thread: IForumThread;
