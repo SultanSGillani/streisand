@@ -16,7 +16,7 @@ from decouple import config
 from django.utils.timezone import timedelta
 
 AUTH_USER_MODEL = 'users.User'
-
+TESTING = sys.argv[1:2] == ['test']
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.dirname(__file__)))
 SECRET_KEY = config('SECRET_KEY')
