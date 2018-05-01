@@ -60,13 +60,13 @@ AUTH_USER_MODEL = 'users.User'
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.dirname(__file__)))
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = env_bool('JUMPCUT_DEBUG', True)
+DEBUG = env_bool('JUMPCUT_DEBUG', False)
 PRODUCTION = not DEBUG
 TESTING = 'test' in sys.argv
 TEST_RUNNER = 'jumpcut.test_utils.CustomTestSuiteRunner'
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = os.environ['SECRET_KEY']
+SECRET_KEY = os.environ('SECRET_KEY')
 
 if os.getenv('DJANGO_ENV') == 'DEBUG':
     ALLOWED_HOSTS = ['*']
