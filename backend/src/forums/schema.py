@@ -26,23 +26,23 @@ class ForumPostType(DjangoObjectType):
 
 class Query(object):
     all_groups = graphene.List(ForumGroupType)
-    group = graphene.Field(ForumGroupType, 
+    group = graphene.Field(ForumGroupType,
                            id=graphene.Int(),
                            name=graphene.String())
-    
+
     all_topics = graphene.List(ForumTopicType)
-    topic = graphene.Field(ForumTopicType, 
+    topic = graphene.Field(ForumTopicType,
                            id=graphene.Int(),
                            name=graphene.String())
-    
+
     all_threads = graphene.List(ForumThreadType)
-    thread = graphene.Field(ForumThreadType, 
+    thread = graphene.Field(ForumThreadType,
                             id=graphene.Int(),
-                            title=graphene.String()
-    
+                            title=graphene.String())
+
     all_posts = graphene.List(ForumPostType)
     post = graphene.Field(ForumPostType, id=graphene.Int())
-                          
+
     debug = graphene.Field(DjangoDebug, name='__debug')
 
     def resolve_all_groups(self, info, **kwargs):
@@ -57,7 +57,7 @@ class Query(object):
 
         if name is not None:
             return ForumGroup.objects.get(name=name)
-        
+
         return None
 
     def resolve_all_topics(self, info, **kwargs):
@@ -72,7 +72,7 @@ class Query(object):
 
         if name is not None:
             return ForumTopic.objects.get(name=name)
-            
+
         return None
 
     def resolve_all_threads(self, info, **kwargs):
@@ -87,7 +87,7 @@ class Query(object):
 
         if title is not None:
             return ForumThread.objects.get(title=title)
-        
+
         return None
 
     def resolve_all_posts(self, info, **kwargs):
