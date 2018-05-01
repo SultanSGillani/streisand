@@ -60,13 +60,13 @@ AUTH_USER_MODEL = 'users.User'
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.dirname(__file__)))
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = env_bool('JUMPCUT_DEBUG', False)
+DEBUG = env_bool('JUMPCUT_DEBUG', True)
 PRODUCTION = not DEBUG
 TESTING = 'test' in sys.argv
 TEST_RUNNER = 'jumpcut.test_utils.CustomTestSuiteRunner'
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = env('JUMPCUT_SECRET_KEY', 'changeme')
+SECRET_KEY = os.environ['SECRET_KEY']
 
 if os.getenv('DJANGO_ENV') == 'DEBUG':
     ALLOWED_HOSTS = ['*']
@@ -138,9 +138,15 @@ if TESTING:
         'default': dj_database_url.parse(DATABASE_URL)
     }
 else:
-    DATABASE_URL = env('DATABASE_URL', 'postgres://postgres:password@postgres:5432/jumpcut')
     DATABASES = {
-        'default': dj_database_url.parse(DATABASE_URL)
+        'default': {
+            'ENGINE': 'django.db.backends.postgresql_psycopg2',
+            'NAME': os.environ['DB_NAME'],
+            'USER': os.environ['DB_USER'],
+            'PASSWORD': os.environ['DB_PASS'],
+            'HOST': os.environ['DB_SERVICE'],
+            'PORT': os.environ['DB_PORT']
+        }
     }
 
 CELERY_ALWAYS_EAGER = DEBUG
