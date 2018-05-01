@@ -24,27 +24,6 @@ SECRET_KEY = config('SECRET_KEY')
 DEBUG = config('DEBUG', cast=bool)
 PRODUCTION = config('PRODUCTION', cast=bool)
 
-<<<<<<< HEAD
-=======
-# SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = env_bool('JUMPCUT_DEBUG', False)
-PRODUCTION = not DEBUG
->>>>>>> 62621023bc206bc064a33e2ae086e7e0702fc775
-TESTING = 'test' in sys.argv
-TEST_RUNNER = 'jumpcut.test_utils.CustomTestSuiteRunner'
-
-# SECURITY WARNING: keep the secret key used in production secret!
-<<<<<<< HEAD
-=======
-SECRET_KEY = os.environ('SECRET_KEY')
-
-if os.getenv('DJANGO_ENV') == 'DEBUG':
-    ALLOWED_HOSTS = ['*']
-else:
-    DEBUG = False
-    ALLOWED_HOSTS = ['localhost', '.jumpcut.to']
->>>>>>> 62621023bc206bc064a33e2ae086e7e0702fc775
-
 ALLOWED_HOSTS = config('ALLOWED_HOSTS', cast=lambda v: [s.strip() for s in v.split(',')])
 
 INSTALLED_APPS = [
