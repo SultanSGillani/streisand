@@ -35,7 +35,7 @@ python_linter:
   stage: test
   script:
     - invoke run-python-linter
-  when: manual
+  allow_failure: true # for now
 
 python_tests:
   stage: test
@@ -52,6 +52,7 @@ github_mirror:
     - git config --global push.default simple
     - git checkout ${CI_COMMIT_REF_NAME}
     - git push -q https://${GITHUB_USERNAME}:${GITHUB_TOKEN}@github.com/${GITHUB_REPO}.git
+  allow_failure: true
 
 ## TODO frontend linter/tests?
 #
