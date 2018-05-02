@@ -9,7 +9,7 @@ import { fetchData } from '../ActionHelper';
 type FilmAction =
     { type: 'FETCHING_FILM', id: number } |
     { type: 'RECEIVED_FILM', film: IFilm } |
-    { type: 'FILM_FAILURE', id: number };
+    { type: 'FAILED_FILM', id: number };
 export default FilmAction;
 type Action = FilmAction | ErrorAction;
 
@@ -25,7 +25,7 @@ function received(id: number, response: IFilm): Action {
 }
 
 function failure(id: number): Action {
-    return { type: 'FILM_FAILURE', id };
+    return { type: 'FAILED_FILM', id };
 }
 
 export function getFilm(id: number): ThunkAction<Action> {

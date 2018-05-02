@@ -25,6 +25,7 @@ export function transformGroups(response: IPagedResponse<IForumGroupResponse>): 
                 id: topic.id,
                 title: topic.name,
                 group: group.id,
+                sortOrder: topic.sortOrder,
                 description: topic.description,
                 numberOfThreads: topic.numberOfThreads,
                 numberOfPosts: topic.numberOfPosts,
@@ -68,7 +69,7 @@ export function transformTopic(response: IPagedResponse<IForumThreadResponse>): 
         if (!addedCommon) {
             result.groups.push({
                 id: thread.groupId,
-                title: thread.groupName
+                title: thread.groupName || ''
             });
             result.topics.push({
                 id: thread.topic,
@@ -90,22 +91,26 @@ export function transformTopic(response: IPagedResponse<IForumThreadResponse>): 
             latestPost: thread.latestPost
         });
 
-        result.posts.push({
-            id: thread.latestPost,
-            thread: thread.id,
-            author: thread.latestPostAuthorId,
-            createdAt: thread.latestPostCreatedAt
-        });
+        if (thread.latestPost) {
+            result.posts.push({
+                id: thread.latestPost,
+                thread: thread.id,
+                author: thread.latestPostAuthorId || 0,
+                createdAt: thread.latestPostCreatedAt || ''
+            });
+        }
 
         result.users.push({
             id: thread.createdById,
             username: thread.createdByUsername
         });
 
-        result.users.push({
-            id: thread.latestPostAuthorId,
-            username: thread.latestPostAuthorUsername
-        });
+        if (thread.latestPostAuthorId) {
+            result.users.push({
+                id: thread.latestPostAuthorId,
+                username: thread.latestPostAuthorUsername || ''
+            });
+        }
     }
 
     return result;

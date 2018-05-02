@@ -129,7 +129,7 @@ USE_L10N = True
 USE_TZ = True
 TIME_ZONE = 'UTC'
 
-REDIS_URL = env('REDIS_URL', 'redis://localhost:6379')
+REDIS_URL = env('REDIS_URL', 'redis://redis:6379')
 
 
 if TESTING:
