@@ -14,7 +14,7 @@ const defaultValue: IAuthInfo = {
 function auth(state: IAuthInfo = defaultValue, action: Action): IAuthInfo {
     switch (action.type) {
         case 'LOGOUT':
-        case 'AUTHENTICATION_FAILED':
+        case 'FAILED_AUTHENTICATION':
             return {
                 isAuthenticated: false,
                 isAuthenticating: false,
