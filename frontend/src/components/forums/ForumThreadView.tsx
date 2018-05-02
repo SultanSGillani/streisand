@@ -2,7 +2,7 @@ import * as React from 'react';
 import { connect } from 'react-redux';
 
 import Pager from '../Pager';
-// import Empty from '../Empty';
+import Empty from '../Empty';
 import Store from '../../store';
 import ForumPost from './ForumPost';
 import IForumPost from '../../models/forums/IForumPost';
@@ -25,6 +25,9 @@ class ForumTopicViewComponent extends React.Component<CombinedProps> {
     public render() {
         const posts = this.props.posts;
         const uri = `/forum/thread/${this.props.thread.id}`;
+        if (!posts.length) {
+            return <Empty loading={this.props.loading} />;
+        }
         const rows = posts.map((post: IForumPost) => {
             return (<ForumPost post={post} key={post.id} />);
         });

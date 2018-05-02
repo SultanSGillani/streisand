@@ -9,13 +9,8 @@ import IPagedResponse from '../../models/base/IPagedResponse';
 
 type TorrentsAction =
     { type: 'FETCHING_TORRENTS', page: number } |
-<<<<<<< HEAD
     { type: 'RECEIVED_TORRENTS', page: number, count: number, torrents: ITorrent[] } |
     { type: 'TORRENTS_FAILURE', page: number };
-=======
-    { type: 'RECEIVED_TORRENTS', page: number, count: number, items: ITorrent[] } |
-    { type: 'FAILED_TORRENTS', page: number };
->>>>>>> unitPower/forums
 export default TorrentsAction;
 type Action = TorrentsAction | ErrorAction;
 
@@ -28,7 +23,7 @@ function received(page: number, response: IPagedResponse<ITorrent>): Action {
         page: page,
         count: response.count,
         type: 'RECEIVED_TORRENTS',
-        items: response.results
+        torrents: response.results
     };
 }
 

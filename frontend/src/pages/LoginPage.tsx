@@ -50,7 +50,9 @@ class LoginComponent extends React.Component<CombinedProps, State> {
                         </div>
                     </fieldset>
                 </form>
-                <button className="btn btn-primary" onClick={() => login()}>Login</button>
+                <div>
+                    <button className="btn btn-primary" onClick={() => login()}>Login</button>
+                </div>
             </div>
         );
     }

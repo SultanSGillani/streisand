@@ -18,7 +18,7 @@ function byId(state: ItemMap = {}, action: Action): ItemMap {
             return objectAssign({}, state, { [action.wiki.id]: action.wiki });
         case 'RECEIVED_WIKIS':
             let map: ItemMap = {};
-            for (const item of action.items) {
+            for (const item of action.wikis) {
                 map[item.id] = item;
             }
             return objectAssign({}, state, map);

@@ -6,12 +6,7 @@ import ILoadingItem from '../base/ILoadingItem';
 import { INestedPages } from '../base/IPagedItemSet';
 
 export type ForumGroupData = {
-    /* Whether there is a pending request for forum groups */
     loading: boolean;
-    /* Whether there has been at least one successful fetch of forum groups */
-    loaded: boolean;
-    /* Whether the most recent fetch of forum groups failed */
-    failed: boolean;
     items: IForumGroup[];
     byId: { [id: number]: IForumGroup };
 };
