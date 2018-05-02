@@ -18,6 +18,17 @@ type ConnectedState = {
 };
 type ConnectedDispatch = {};
 
+const styles: { [key: string]: any } = {
+    videoContainer: { height: '350px', position: 'relative' },
+    video: {
+        position: 'absolute',
+        top: 0,
+        left: 0,
+        width: '100%',
+        height: '100%'
+    }
+};
+
 type CombinedProps = Props & ConnectedDispatch & ConnectedState;
 class FilmViewComponent extends React.Component<CombinedProps> {
     public render() {
@@ -29,10 +40,10 @@ class FilmViewComponent extends React.Component<CombinedProps> {
         });
         return (
             <div>
-                <h1>{film.title}  [{film.year}]</h1>
+                <h1>{film.title} [{film.year}]</h1>
                 <div className="col-lg-8">
-                    <div className="row">
-                        <iframe width="620" height="350" src={youtubeUrl} frameBorder="0"></iframe>
+                    <div className="row" style={styles.videoContainer}>
+                        <iframe style={styles.video} src={youtubeUrl} frameBorder="0"></iframe>
                     </div>
                     <div className="row">
                         <h2>Description</h2>
