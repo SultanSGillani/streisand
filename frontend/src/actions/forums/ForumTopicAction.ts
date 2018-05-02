@@ -21,7 +21,8 @@ export type ForumTopicReceivedAction = {
 type ForumTopicAction =
     { type: 'FETCHING_FORUM_TOPIC', id: number, page: number } |
     ForumTopicReceivedAction |
-    { type: 'FAILED_FORUM_TOPIC', id: number, page: number };
+    { type: 'FAILED_FORUM_TOPIC', id: number, page: number } |
+    { type: 'INVALIDATE_FORUM_TOPIC', id: number, page: number };
 export default ForumTopicAction;
 type Action = ForumTopicAction | ErrorAction;
 
@@ -46,6 +47,10 @@ function received(props: Props, response: Response): Action {
 
 function failure(props: Props): Action {
     return { type: 'FAILED_FORUM_TOPIC', id: props.id, page: props.page };
+}
+
+export function invalidate(props: Props) {
+    return { type: 'INVALIDATE_FORUM_TOPIC', id: props.id, page: props.page };
 }
 
 export function getThreads(id: number, page: number = 1): ThunkAction<Action> {

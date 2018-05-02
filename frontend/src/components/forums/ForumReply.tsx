@@ -37,7 +37,9 @@ class ForumReplyComponent extends React.Component<CombinedProps> {
         };
         return (
             <div className="panel panel-primary">
-                <div className="panel-heading" />
+                <div className="panel-heading" >
+                    Post your reply
+                </div>
                 <div className="panel-body" style={{ display: 'flex' }}>
                     <Avatar />
                     <div style={{ flex: 'auto', marginLeft: '8px' }}>

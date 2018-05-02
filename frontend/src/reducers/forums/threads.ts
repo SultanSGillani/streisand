@@ -33,6 +33,7 @@ function byTopic(state: Items = {}, action: ForumTopicAction): Items {
     switch (action.type) {
         case 'FAILED_FORUM_TOPIC':
         case 'FETCHING_FORUM_TOPIC':
+        case 'INVALIDATE_FORUM_TOPIC':
             return processThreads({ state , action });
         case 'RECEIVED_FORUM_TOPIC':
             return processThreads({ state, action, count: action.count });
