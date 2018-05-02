@@ -6,7 +6,6 @@ import Store from '../../store';
 import Empty from '../../components/Empty';
 import { numericIdentifier } from '../../utilities/shim';
 import IForumThread from '../../models/forums/IForumThread';
-import { isLoadingItem } from '../../models/base/ILoadingItem';
 import { getPosts } from '../../actions/forums/ForumThreadAction';
 import ForumThreadView from '../../components/forums/ForumThreadView';
 
@@ -21,6 +20,8 @@ type ConnectedState = {
     page: number;
     threadId: number;
     loading: boolean;
+    loaded: boolean;
+    failed: boolean;
     thread?: IForumThread;
 };
 
@@ -37,15 +38,17 @@ class ForumThreadPageComponent extends React.Component<CombinedProps, void> {
     }
 
     public componentWillReceiveProps(props: CombinedProps) {
-        if (!props.loading && (!props.thread || props.page !== this.props.page)) {
+        const needPage = !props.loaded && !props.failed;
+        const pageChanged = props.page !== this.props.page || props.threadId !== this.props.threadId;
+        if (!props.loading && (pageChanged || needPage)) {
             this.props.getPosts(props.threadId, props.page);
         }
     }
 
     public render() {
         const thread = this.props.thread;
-        if (!thread) {
-            return <Empty loading={true} />;
+        if (!thread || !this.props.loaded) {
+            return <Empty loading={this.props.loading} />;
         }
 
         return (
@@ -60,13 +63,15 @@ const mapStateToProps = (state: Store.All, ownProps: Props): ConnectedState => {
     const threadPages = state.sealed.forums.posts.byThread[threadId];
     const page = threadPages && threadPages.pages[pageNumber];
     const item = state.sealed.forums.threads.byId[threadId];
-    const thread = !isLoadingItem(item) && item || undefined;
+    const thread = item || undefined;
 
     return {
         thread: thread,
         page: pageNumber,
         threadId: threadId,
-        loading: page ? page.loading : false
+        loading: page ? page.loading : false,
+        loaded: page ? page.loaded : false,
+        failed: page ? page.failed : false
     };
 };
 

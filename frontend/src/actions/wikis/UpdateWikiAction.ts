@@ -24,7 +24,7 @@ function received(id: number, response: IWiki): Action {
 }
 
 function failure(id: number): Action {
-    return { type: 'WIKI_FAILURE', id };
+    return { type: 'FAILED_WIKI', id };
 }
 
 export function updateWiki(id: number, wiki: IWikiUpdate): ThunkAction<Action> {

@@ -93,24 +93,3 @@ export default class Editor extends React.Component<Props, State> {
         );
     }
 }
-
-// function FakeForumPost(props: Props) {
-//     return (
-//         <div className="panel panel-default">
-//             <div className="panel-heading">
-//             </div>
-//             <div className="panel-body" style={{ display: 'flex' }}>
-//                 <div>
-//                     <img src="https://i.imgur.com/XxlIwUj.jpg" width="150" />
-//                 </div>
-//                 <div style={{ flex: 'auto', 'margin-left': '8px' }}>
-//                     <CommandBar />
-//                     <TextEditor
-//                         content={props.content}
-//                         startingHeight={400}
-//                         receiveHandle={props.receiveHandle} />
-//                 </div>
-//             </div>
-//         </div>
-//     );
-// }
