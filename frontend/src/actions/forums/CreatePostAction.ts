@@ -37,7 +37,7 @@ export function postReply(post: IForumPostUpdate): ThunkAction<Action> {
 
             // Ideally this response would include the position of the new post so
             // we don't have to guess which page it is going to be on.
-            const page = state.sealed.forums.threads.byTopic[post.thread];
+            const page = state.sealed.forums.posts.byThread[post.thread];
             const count = (page.count || 0) + 1;
             const lastPage = Math.ceil(count / globals.pageSize) || 1;
 
