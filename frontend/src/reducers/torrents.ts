@@ -19,7 +19,7 @@ function byId(state: ItemMap = {}, action: Action): ItemMap {
         case 'RECEIVED_TORRENTS':
         case 'RECEIVED_FILM_TORRENTS':
             let map: ItemMap = {};
-            for (const item of action.items) {
+            for (const item of action.torrents) {
                 map[item.id] = item;
             }
             return objectAssign({}, state, map);

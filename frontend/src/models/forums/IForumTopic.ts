@@ -19,7 +19,6 @@ export interface IForumTopic {
     id: number;
     title: string;
     group?: number;
-    sortOrder?: number;
     description?: string;
     numberOfThreads?: number;
     numberOfPosts?: number;

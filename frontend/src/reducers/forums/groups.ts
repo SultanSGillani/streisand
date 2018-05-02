@@ -41,26 +41,4 @@ function loading(state: boolean = false, action: Action): boolean {
     }
 }
 
-function loaded(state: boolean = false, action: any) {
-    switch (action.type) {
-        case 'RECEIVED_FORUM_GROUPS':
-            return true;
-        case 'INVALIDATE_FORUM_GROUPS':
-            return false;
-        default:
-            return state;
-    }
-}
-
-function failed(state: boolean = false, action: any) {
-    switch (action.type) {
-        case 'RECEIVED_FORUM_GROUPS':
-            return false;
-        case 'FAILED_FORUM_GROUPS':
-            return true;
-        default:
-            return state;
-    }
-}
-
-export default combineReducers<ForumGroupData>({ byId, loading, loaded, failed, items });
+export default combineReducers<ForumGroupData>({ byId, loading, items });

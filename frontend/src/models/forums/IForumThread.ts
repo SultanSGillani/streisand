@@ -12,10 +12,10 @@ export interface IForumThreadResponse {
     isLocked: boolean;
     isSticky: boolean;
     numberOfPosts: number;
-    latestPost?: number;
-    latestPostCreatedAt?: string; // Date
-    latestPostAuthorId?: number;
-    latestPostAuthorUsername?: string;
+    latestPost: number;
+    latestPostCreatedAt: string; // Date
+    latestPostAuthorId: number;
+    latestPostAuthorUsername: string;
 }
 
 export interface IForumThread {
