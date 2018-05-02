@@ -49,6 +49,10 @@ variables:
 
 mirror-github:
   stage: mirror
+  before_script:
+    - echo hey
+  tags:
+    - github
   cache: {}
   script:
     # Do a mirror clone of the repository
