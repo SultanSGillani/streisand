@@ -1,4 +1,5 @@
 import * as React from 'react';
+import { Link } from 'react-router';
 import { connect } from 'react-redux';
 
 import Store from '../../store';
@@ -16,13 +17,24 @@ type ConnectedState = {
 };
 type ConnectedDispatch = {};
 
+function EmptyThreadCell(props: Props) {
+    const thread = props.thread;
+    const threadLink = <Link to={'/forum/thread/' + thread.id} title={thread.title}>{thread.title}</Link>;
+    return (
+        <td>No posts in {threadLink}</td>
+    );
+}
+
 type CombinedProps = Props & ConnectedDispatch & ConnectedState;
 class ForumThreadRowComponent extends React.Component<CombinedProps> {
     public render() {
         const thread = this.props.thread;
+        const activity = thread.latestPost
+            ? <ForumPostCell id={thread.latestPost} />
+            : <EmptyThreadCell thread={thread} />;
         return (
             <tr>
-                <ForumPostCell id={thread.latestPost} />
+                {activity}
                 <td>{thread.numberOfPosts}</td>
                 <td><UserLink user={this.props.author} /></td>
             </tr>
@@ -33,9 +45,7 @@ class ForumThreadRowComponent extends React.Component<CombinedProps> {
 const mapStateToProps = (state: Store.All, ownProps: Props): ConnectedState => {
     const createdBy = ownProps.thread && ownProps.thread.createdBy;
     const author = createdBy && state.sealed.users.byId[createdBy] as IUser || undefined;
-    return {
-        author: author
-    };
+    return { author };
 };
 
 const ForumThreadRow: React.ComponentClass<Props> =

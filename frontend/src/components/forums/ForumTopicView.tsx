@@ -7,6 +7,7 @@ import Store from '../../store';
 import ForumThreadRow from './ForumThreadRow';
 import IForumTopic from '../../models/forums/IForumTopic';
 import IForumThread from '../../models/forums/IForumThread';
+import ForumThreadCreator from './ForumThreadCreator';
 
 export type Props = {
     page: number;
@@ -23,8 +24,9 @@ type ConnectedDispatch = {};
 type CombinedProps = Props & ConnectedDispatch & ConnectedState;
 class ForumTopicViewComponent extends React.Component<CombinedProps> {
     public render() {
+        const topic = this.props.topic;
         const threads = this.props.threads;
-        const uri = `/forum/topic/${this.props.topic.id}`;
+        const uri = `/forum/topic/${topic.id}`;
         if (!threads.length) {
             return <Empty loading={this.props.loading} />;
         }
@@ -33,6 +35,8 @@ class ForumTopicViewComponent extends React.Component<CombinedProps> {
         });
         return (
             <div>
+                <h1>{topic.title}</h1>
+                <p>{topic.description}</p>
                 <Pager uri={uri} total={this.props.total} page={this.props.page} />
                 <table className="table table-striped table-hover">
                     <thead>
@@ -47,6 +51,7 @@ class ForumTopicViewComponent extends React.Component<CombinedProps> {
                     </tbody>
                 </table>
                 <Pager uri={uri} total={this.props.total} page={this.props.page} />
+                <ForumThreadCreator topic={topic} />
             </div>
         );
     }

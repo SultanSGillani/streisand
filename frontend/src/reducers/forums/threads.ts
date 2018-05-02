@@ -38,12 +38,17 @@ function byTopic(state: Items = {}, action: Action): Items {
                 pageNumber: action.page
             });
         case 'FETCHING_FORUM_TOPIC':
+<<<<<<< HEAD
             return processThreads({
                 state: state,
                 topicId: action.id,
                 loading: true,
                 pageNumber: action.page
             });
+=======
+        case 'INVALIDATE_FORUM_TOPIC':
+            return processThreads({ state , action });
+>>>>>>> unitPower/forums
         case 'RECEIVED_FORUM_TOPIC':
             return processThreads({
                 state: state,
