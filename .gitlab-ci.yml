@@ -44,14 +44,20 @@ python_tests:
     - invoke run-python-tests --coverage
     - invoke fixtures
 
-github_mirror:
+variables:
+  MIRROR_REPOSITORY: "git@github.com:TheSaltman/jumpcut.git"
+
+mirror-github:
   stage: mirror
-  before_script:
-    - echo hi
+  cache: {}
   script:
-    - git config --global push.default simple
-    - git checkout $CI_COMMIT_REF_NAME
-    - git push -q https://$GITHUB_USERNAME:$GITHUB_TOKEN@github.com/$GITHUB_REPO.git
+    # Do a mirror clone of the repository
+    - git clone --mirror $CI_REPOSITORY_URL
+    # Mirror push it to the destination
+    - cd $CI_PROJECT_NAME.git
+    - git push --mirror $MIRROR_REPOSITORY
+    # Cleanup
+    - cd ..; rm -rf $CI_PROJECT_NAME.git
   allow_failure: true
 
 ## TODO frontend linter/tests?
