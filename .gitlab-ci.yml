@@ -14,7 +14,11 @@ stages:
 
 variables:
   PIP_CACHE_DIR: "$CI_PROJECT_DIR/.cache"
-  DATABASE_URL: "postgres://postgres:postgres@postgres:5432/ci"
+  DB_NAME: postgres
+  DB_USER: postgres
+  DB_HOST: postgres
+  DB_PASS: postgres
+  DB_PORT: 5432
   STREISAND_DEBUG: "True"
   REDIS_URL: "redis://redis:6379"
 
