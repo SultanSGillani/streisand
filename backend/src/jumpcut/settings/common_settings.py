@@ -11,20 +11,72 @@ https://docs.djangoproject.com/en/dev/ref/settings/
 import os
 import sys
 from urllib.parse import urljoin
-from decouple import config
 
+import dj_database_url
 from django.utils.timezone import timedelta
+from django.core import exceptions
+
+
+def env(key, default=None):
+    value = os.environ.get(key, default)
+    if value is None:
+        if default is not None:
+            return default
+        else:
+            raise exceptions.ImproperlyConfigured('Environment variable {} not set'.format(key))
+    else:
+        return value
+
+
+def env_bool(key, default=False):
+    value = env(key, '')
+    if value == '':
+        return default
+    result = {'true': True, 'false': False}.get(value.lower())
+    if result is None:
+        raise exceptions.ImproperlyConfigured(
+            'Invalid environment variable {}: {} (Expected true/false)'.format(key, value)
+        )
+    else:
+        return result
+
+
+def env_int(key, default=None):
+    value = env(key, '')
+    if value == '':
+        return default
+    else:
+        try:
+            return int(value)
+        except ValueError:
+            raise exceptions.ImproperlyConfigured(
+                'Invalid environment variable {}: {} (Expected integer)'.format(key, value)
+            )
+
 
 AUTH_USER_MODEL = 'users.User'
-TESTING = sys.argv[1:2] == ['test']
+
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.dirname(__file__)))
-SECRET_KEY = config('SECRET_KEY')
 
-DEBUG = config('DEBUG', cast=bool)
-PRODUCTION = config('PRODUCTION', cast=bool)
+# SECURITY WARNING: don't run with debug turned on in production!
+DEBUG = env_bool('JUMPCUT_DEBUG', False)
+PRODUCTION = not DEBUG
+TESTING = 'test' in sys.argv
+TEST_RUNNER = 'jumpcut.test_utils.CustomTestSuiteRunner'
 
-ALLOWED_HOSTS = config('ALLOWED_HOSTS', cast=lambda v: [s.strip() for s in v.split(',')])
+# SECURITY WARNING: keep the secret key used in production secret!
+SECRET_KEY = env('JUMPCUT_SECRET_KEY', 'changeme')
+
+if os.getenv('DJANGO_ENV') == 'DEBUG':
+    ALLOWED_HOSTS = ['*']
+else:
+    DEBUG = False
+    ALLOWED_HOSTS = ['localhost', '.jumpcut.to']
+
+HOST_DOMAIN = env('HOST_DOMAIN', '')
+if HOST_DOMAIN:
+    ALLOWED_HOSTS.append('.' + HOST_DOMAIN)
 
 INSTALLED_APPS = [
 
@@ -32,7 +84,6 @@ INSTALLED_APPS = [
     'django.contrib.auth',
     'django.contrib.contenttypes',
     'www.apps.SuitConfig',
-    'decouple',
 
     # Local apps
     'comments',
@@ -62,15 +113,15 @@ if DEBUG and not TESTING:
         'bandit',
     ]
     EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
-    BANDIT_EMAIL = config('BANDIT_EMAIL', '')
+    BANDIT_EMAIL = env('BANDIT_EMAIL', '')
 
-EMAIL_USE_TLS = config('EMAIL_USE_TLS', cast=bool)
-EMAIL_PORT = config('EMAIL_PORT', cast=int)
-EMAIL_HOST = config('EMAIL_HOST')
-EMAIL_HOST_USER = config('EMAIL_HOST_USER')
-EMAIL_HOST_PASSWORD = config('EMAIL_HOST_PASSWORD')
-DEFAULT_FROM_EMAIL = config('DEFAULT_FROM_EMAIL')
-DEFAULT_REPLY_TO_EMAIL = config('DEFAULT_REPLY_TO_EMAIL')
+EMAIL_USE_TLS = env_bool('EMAIL_USE_TLS', True)
+EMAIL_PORT = env_int('EMAIL_PORT', 587)
+EMAIL_HOST = env('EMAIL_HOST', '')
+EMAIL_HOST_USER = env('EMAIL_HOST_USER', '')
+EMAIL_HOST_PASSWORD = env('EMAIL_HOST_PASSWORD', '')
+DEFAULT_FROM_EMAIL = env('DEFAULT_FROM_EMAIL', 'jumpcut.tracker@gmail.com')
+DEFAULT_REPLY_TO_EMAIL = env('DEFAULT_REPLY_TO_EMAIL', 'jumpcut.tracker@gmail.com')
 
 LANGUAGE_CODE = 'en-us'
 USE_I18N = True
@@ -78,18 +129,19 @@ USE_L10N = True
 USE_TZ = True
 TIME_ZONE = 'UTC'
 
-REDIS_URL = config('REDIS_URL')
+REDIS_URL = env('REDIS_URL', 'redis://redis:6379')
 
-DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.postgresql_psycopg2',
-        'NAME': config('DB_NAME'),
-        'USER': config('DB_USER'),
-        'PASSWORD': config('DB_PASS'),
-        'HOST': config('DB_HOST'),
-        'PORT': config('DB_PORT')
+
+if TESTING:
+    DATABASE_URL = env('DATABASE_URL', 'sqlite:///{base_dir}/db.sqlite3'.format(base_dir=BASE_DIR))
+    DATABASES = {
+        'default': dj_database_url.parse(DATABASE_URL)
     }
-}
+else:
+    DATABASE_URL = env('DATABASE_URL', 'postgres://postgres:password@postgres:5432/jumpcut')
+    DATABASES = {
+        'default': dj_database_url.parse(DATABASE_URL)
+    }
 
 CELERY_ALWAYS_EAGER = DEBUG
 CELERY_IGNORE_RESULT = True
@@ -109,12 +161,12 @@ CACHES = {
     }
 }
 
+
 # if PRODUCTION:
 #     DATABASES['default']['CONN_MAX_AGE'] = None
 
-SITE_ID = 1
-SITE_NAME = config('SITE_NAME')
-SITE_URL = config('SITE_URL')
-TRACKER_URL = config('TRACKER_URL')
+SITE_NAME = env('SITE_NAME', 'jumpcut')
+SITE_URL = env('SITE_URL', 'http://localhost:8000/')
+TRACKER_URL = env('TRACKER_URL', 'http://localhost:7070/')
 TRACKER_ANNOUNCE_INTERVAL = timedelta(minutes=40)
 TRACKER_ANNOUNCE_URL_TEMPLATE = urljoin(TRACKER_URL, '{announce_key}/announce')
