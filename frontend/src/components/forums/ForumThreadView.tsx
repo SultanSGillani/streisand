@@ -24,17 +24,17 @@ type ConnectedDispatch = {};
 type CombinedProps = Props & ConnectedDispatch & ConnectedState;
 class ForumThreadViewComponent extends React.Component<CombinedProps> {
     public render() {
-        const posts = this.props.posts;
-        const uri = `/forum/thread/${this.props.thread.id}`;
+        const { page, posts, total, thread } = this.props;
+        const uri = `/forum/thread/${thread.id}`;
         const rows = posts.map((post: IForumPost) => {
-            return (<ForumPost post={post} key={post.id} />);
+            return (<ForumPost post={post} key={post.id} page={page} />);
         });
         return (
             <div>
-                <Pager uri={uri} total={this.props.total} page={this.props.page} />
+                <Pager uri={uri} total={total} page={page} />
                 <div>{rows}</div>
-                <ForumReply thread={this.props.thread} />
-                <Pager uri={uri} total={this.props.total} page={this.props.page} />
+                <ForumReply thread={thread} />
+                <Pager uri={uri} total={total} page={page} />
             </div>
         );
     }
