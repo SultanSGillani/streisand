@@ -49,7 +49,9 @@ class ForumThreadCreatorComponent extends React.Component<CombinedProps, State> 
                             </div>
                         </fieldset>
                     </form>
-                    <button className="btn btn-primary" onClick={() => createThread()}>Create thread</button>
+                    <div style={{ display: 'flex', flexFlow: 'row-reverse' }}>
+                        <button className="btn btn-primary" onClick={() => createThread()}>Create thread</button>
+                    </div>
                 </div>
             </div>
         );

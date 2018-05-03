@@ -1,10 +1,8 @@
 [![pipeline status](https://git.ronzertnert.me/jumpcut/jumpcut/badges/master/pipeline.svg?private_token=ce7CRXw_YsYzvC_ZwNfQ)](https://git.ronzertnert.me/jumpcut/jumpcut/commits/master)
 [![coverage Report](https://git.ronzertnert.me/jumpcut/jumpcut/badges/master/coverage.svg?private_token=ce7CRXw_YsYzvC_ZwNfQ)](https://git.ronzertnert.me/jumpcut/jumpcut/commits/master)
-[![codecov](https://codecov.io/gh/TheSaltman/jumpcut/branch/master/graph/badge.svg?token=2iFWjpDJjw)](https://codecov.io/gh/TheSaltman/jumpcut)
-[![Build Status](https://travis-ci.com/TheSaltman/jumpcut.svg?token=omojFLEmKUq3bYx2FWE8&branch=master)](https://travis-ci.com/TheSaltman/master)
+[![JumpCut](https://img.shields.io/badge/JumpCut-ComingSoon-blue.svg)](https://git.ronzertnert.me/jumpcut/jumpcut/commits/master)
 
-
-# Jumpcut
+![JumpCut](https://i.imgur.com/8UqIWFI.png)
 
 A private BitTorrent tracker backend written in python, django, and redis
 
