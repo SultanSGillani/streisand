@@ -74,7 +74,9 @@ class ForumTopicCreatorComponent extends React.Component<CombinedProps, State> {
                             </div>
                         </fieldset>
                     </form>
-                    <button className="btn btn-primary" onClick={() => createTopic()}>Create topic</button>
+                    <div style={{ display: 'flex', flexFlow: 'row-reverse' }}>
+                        <button className="btn btn-primary" onClick={() => createTopic()}>Create topic</button>
+                    </div>
                 </div>
             </div>
         );
