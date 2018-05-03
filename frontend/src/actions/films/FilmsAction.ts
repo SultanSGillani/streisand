@@ -9,8 +9,8 @@ import IPagedResponse from '../../models/base/IPagedResponse';
 
 type FilmsAction =
     { type: 'FETCHING_FILMS', page: number } |
-    { type: 'RECEIVED_FILMS', page: number, count: number, films: IFilm[] } |
-    { type: 'FILMS_FAILURE', page: number };
+    { type: 'RECEIVED_FILMS', page: number, count: number, items: IFilm[] } |
+    { type: 'FAILED_FILMS', page: number };
 export default FilmsAction;
 type Action = FilmsAction | ErrorAction;
 
@@ -23,12 +23,12 @@ function received(page: number, response: IPagedResponse<IFilm>): Action {
         page: page,
         count: response.count,
         type: 'RECEIVED_FILMS',
-        films: response.results
+        items: response.results
     };
 }
 
 function failure(page: number): Action {
-    return { type: 'FILMS_FAILURE', page };
+    return { type: 'FAILED_FILMS', page };
 }
 
 export function getFilms(page: number = 1): ThunkAction<Action> {

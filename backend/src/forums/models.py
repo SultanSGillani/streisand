@@ -99,7 +99,7 @@ class ForumThread(models.Model):
         to='forums.ForumTopic',
         related_name='threads',
         null=False,
-        on_delete=models.PROTECT,
+        on_delete=models.CASCADE,
     )
     number_of_posts = models.PositiveIntegerField(default=0)
     latest_post = models.OneToOneField(

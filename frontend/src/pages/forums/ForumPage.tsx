@@ -7,10 +7,12 @@ import Empty from '../../components/Empty';
 import ForumView from '../../components/forums/ForumView';
 import { getForumGroups } from '../../actions/forums/ForumGroupsAction';
 
-export type Props = { };
+export type Props = {};
 
 type ConnectedState = {
     loading: boolean;
+    loaded: boolean;
+    failed: boolean;
 };
 
 type ConnectedDispatch = {
@@ -21,6 +23,13 @@ type CombinedProps = ConnectedState & ConnectedDispatch & Props;
 class ForumPage extends React.Component<CombinedProps> {
     public componentWillMount() {
         if (!this.props.loading) {
+            this.props.getForumGroups();
+        }
+    }
+
+    public componentWillReceiveProps(props: CombinedProps) {
+        const needGroups = !props.loaded && !props.failed;
+        if (!props.loading && needGroups) {
             this.props.getForumGroups();
         }
     }
@@ -37,7 +46,9 @@ class ForumPage extends React.Component<CombinedProps> {
 }
 
 const mapStateToProps = (state: Store.All): ConnectedState => ({
-    loading: state.sealed.forums.groups.loading
+    loading: state.sealed.forums.groups.loading,
+    loaded: state.sealed.forums.groups.loaded,
+    failed: state.sealed.forums.groups.failed
 });
 
 const mapDispatchToProps = (dispatch: redux.Dispatch<Store.All>): ConnectedDispatch => ({

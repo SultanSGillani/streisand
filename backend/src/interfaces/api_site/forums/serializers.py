@@ -124,7 +124,8 @@ class ForumTopicSerializer(ModelSerializer):
         extra_kwargs = {
             'number_of_threads': {'read_only': True},
             'number_of_posts': {'read_only': True},
-            'latest_post': {'read_only': True}
+            'latest_post': {'read_only': True},
+            'threads': {'read_only': True}
         }
 
 

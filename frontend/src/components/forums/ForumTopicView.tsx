@@ -7,6 +7,7 @@ import Store from '../../store';
 import ForumThreadRow from './ForumThreadRow';
 import IForumTopic from '../../models/forums/IForumTopic';
 import IForumThread from '../../models/forums/IForumThread';
+import ForumThreadCreator from './ForumThreadCreator';
 
 export type Props = {
     page: number;
@@ -23,30 +24,36 @@ type ConnectedDispatch = {};
 type CombinedProps = Props & ConnectedDispatch & ConnectedState;
 class ForumTopicViewComponent extends React.Component<CombinedProps> {
     public render() {
+        const page = this.props.page;
+        const topic = this.props.topic;
         const threads = this.props.threads;
-        const uri = `/forum/topic/${this.props.topic.id}`;
+        const uri = `/forum/topic/${topic.id}`;
         if (!threads.length) {
             return <Empty loading={this.props.loading} />;
         }
         const rows = threads.map((thread: IForumThread) => {
-            return (<ForumThreadRow thread={thread} key={thread.id} />);
+            return (<ForumThreadRow thread={thread} key={thread.id} page={page} />);
         });
         return (
             <div>
-                <Pager uri={uri} total={this.props.total} page={this.props.page} />
+                <h1>{topic.title}</h1>
+                <p>{topic.description}</p>
+                <Pager uri={uri} total={this.props.total} page={page} />
                 <table className="table table-striped table-hover">
                     <thead>
                         <tr>
                             <th>Thread Activity</th>
                             <th>Posts</th>
                             <th>Author</th>
+                            <th></th>
                         </tr>
                     </thead>
                     <tbody>
                         {rows}
                     </tbody>
                 </table>
-                <Pager uri={uri} total={this.props.total} page={this.props.page} />
+                <Pager uri={uri} total={this.props.total} page={page} />
+                <ForumThreadCreator topic={topic} />
             </div>
         );
     }

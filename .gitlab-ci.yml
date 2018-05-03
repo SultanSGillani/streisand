@@ -7,9 +7,10 @@ services:
 
 stages:
  - test
+ - mirror
  - release
-#  - deploy
 
+#  - deploy
 
 variables:
   PIP_CACHE_DIR: "$CI_PROJECT_DIR/.cache"
@@ -34,6 +35,7 @@ python_linter:
   stage: test
   script:
     - invoke run-python-linter
+  allow_failure: true # for now
 
 python_tests:
   stage: test
@@ -41,6 +43,26 @@ python_tests:
     - invoke clean-slate
     - invoke run-python-tests --coverage
     - invoke fixtures
+
+variables:
+  MIRROR_REPOSITORY: "git@github.com:TheSaltman/jumpcut.git"
+
+mirror-github:
+  stage: mirror
+  before_script:
+    - echo hey
+  tags:
+    - github
+  cache: {}
+  script:
+    # Do a mirror clone of the repository
+    - git clone --mirror $CI_REPOSITORY_URL
+    # Mirror push it to the destination
+    - cd $CI_PROJECT_NAME.git
+    - git push --mirror $MIRROR_REPOSITORY
+    # Cleanup
+    - cd ..; rm -rf $CI_PROJECT_NAME.git
+  allow_failure: true
 
 ## TODO frontend linter/tests?
 #
@@ -54,6 +76,7 @@ release_develop:
     - docker push $CI_REGISTRY_IMAGE:$CI_COMMIT_REF_NAME
   only:
     - master
+
  
 # deploy-develop:
 #   stage: deploy

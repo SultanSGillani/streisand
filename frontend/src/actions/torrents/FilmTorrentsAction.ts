@@ -9,8 +9,8 @@ import IPagedResponse from '../../models/base/IPagedResponse';
 
 type FilmTorrentsAction =
     { type: 'FETCHING_FILM_TORRENTS', id: number, page: number } |
-    { type: 'RECEIVED_FILM_TORRENTS', id: number, page: number, count: number, torrents: ITorrent[] } |
-    { type: 'TORRENTS_FILM_FAILURE', id: number, page: number };
+    { type: 'RECEIVED_FILM_TORRENTS', id: number, page: number, count: number, items: ITorrent[] } |
+    { type: 'FAILED_FILM_TORRENTS', id: number, page: number };
 export default FilmTorrentsAction;
 type Action = FilmTorrentsAction | ErrorAction;
 
@@ -29,12 +29,12 @@ function received(props: Props, response: IPagedResponse<ITorrent>): Action {
         id: props.id,
         count: response.count,
         type: 'RECEIVED_FILM_TORRENTS',
-        torrents: response.results
+        items: response.results
     };
 }
 
 function failure(props: Props): Action {
-    return { type: 'TORRENTS_FILM_FAILURE', id: props.id, page: props.page };
+    return { type: 'FAILED_FILM_TORRENTS', id: props.id, page: props.page };
 }
 
 export function getTorrents(id: number, page: number = 1): ThunkAction<Action> {

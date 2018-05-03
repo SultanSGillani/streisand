@@ -18,7 +18,7 @@ function removed(id: number): Action {
 }
 
 function failure(id: number): Action {
-    return { type: 'WIKI_FAILURE', id };
+    return { type: 'FAILED_WIKI', id };
 }
 
 export function removeWiki(id: number): ThunkAction<Action> {

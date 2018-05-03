@@ -5,6 +5,7 @@ import IWiki from '../models/IWiki';
 import Action from '../actions/wikis';
 import { combineReducers } from './helpers';
 import { IPage } from '../models/base/IPagedItemSet';
+import { getPageReducer } from './utilities/reducers';
 import ILoadingItem from '../models/base/ILoadingItem';
 
 type ItemMap = { [id: number]: IWiki | ILoadingItem };
@@ -18,7 +19,7 @@ function byId(state: ItemMap = {}, action: Action): ItemMap {
             return objectAssign({}, state, { [action.wiki.id]: action.wiki });
         case 'RECEIVED_WIKIS':
             let map: ItemMap = {};
-            for (const item of action.wikis) {
+            for (const item of action.items) {
                 map[item.id] = item;
             }
             return objectAssign({}, state, map);
@@ -27,18 +28,14 @@ function byId(state: ItemMap = {}, action: Action): ItemMap {
     }
 }
 
+const pageReducer = getPageReducer<IWiki>('WIKIS');
 type Pages = { [page: number]: IPage<IWiki> };
 function pages(state: Pages = {}, action: Action): Pages {
-    let page: IPage<IWiki>;
     switch (action.type) {
         case 'FETCHING_WIKIS':
-            page = objectAssign({ items: [] }, state[action.page], { loading: true });
-            return objectAssign({}, state, { [action.page]: page });
         case 'RECEIVED_WIKIS':
-            page = { loading: false, items: action.wikis };
-            return objectAssign({}, state, { [action.page]: page });
-        case 'WIKIS_FAILURE':
-            page = objectAssign({ items: [] }, state[action.page], { loading: false });
+        case 'FAILED_WIKIS':
+            const page: IPage<IWiki> = pageReducer(state[action.page], action);
             return objectAssign({}, state, { [action.page]: page });
         default:
             return state;
@@ -59,11 +56,11 @@ function creating(state: boolean = false, action: Action): boolean {
         case 'CREATING_WIKI':
             return true;
         case 'CREATED_WIKI':
-        case 'WIKI_CREATION_FAILURE':
+        case 'FAILED_CREATING_WIKI':
             return false;
         default:
             return state;
     }
 }
 
-export default combineReducers<Store.Wikis>({ byId, count, pages, creating });
+export default combineReducers<Store.Wikis>({ byId, pages, count, creating });

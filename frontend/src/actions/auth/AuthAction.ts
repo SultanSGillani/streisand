@@ -11,9 +11,13 @@ import ErrorAction, { handleError } from '../ErrorAction';
 type AuthAction =
     { type: 'AUTHENTICATING' } |
     { type: 'AUTHENTICATED', token: string } |
-    { type: 'AUTHENTICATION_FAILED', message: string };
+    { type: 'FAILED_AUTHENTICATION', message: string };
 export default AuthAction;
 type Action = AuthAction | ErrorAction;
+
+type AuthResponse = {
+    token: string;
+};
 
 function authenticating(): Action {
     return { type: 'AUTHENTICATING' };
@@ -30,7 +34,7 @@ export function login(username: string, password: string): ThunkAction<Action> {
     return (dispatch: IDispatch<Action>, getState: () => Store.All) => {
         const state = getState();
         dispatch(authenticating());
-        return request(username, password).then((result: { token: string }) => {
+        return request(username, password).then((result: AuthResponse) => {
             storeAuthToken(result.token);
             const action = dispatch(authenticated(result.token));
             if (state.location.referrer) {
@@ -45,7 +49,7 @@ export function login(username: string, password: string): ThunkAction<Action> {
     };
 }
 
-function request(username: string, password: string): Promise<{ token: string }> {
+function request(username: string, password: string): Promise<AuthResponse> {
     const data = { username, password };
     return post({ data, url: `${globals.apiUrl}/login/` });
 }
