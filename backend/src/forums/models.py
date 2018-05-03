@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 from django.db import models
 from django.urls import reverse
-
+import math
 from .managers import ForumGroupQuerySet, ForumTopicQuerySet, ForumThreadQuerySet, ForumPostQuerySet
 
 
@@ -17,6 +17,31 @@ class ForumGroup(models.Model):
 
     def __str__(self):
         return '{name}'.format(name=self.name)
+
+
+    @property
+    def topics(self):
+        return ForumTopic.objects.filter(group__id=self.id)
+
+    @property
+    def threads(self):
+        return ForumThread.objects.filter(topic__id=self.id)
+
+    @property
+    def thread_count(self):
+        return self.threads.count()
+
+    @property
+    def posts(self):
+        return ForumPost.objects.filter(thread__id=self.id)
+
+    @property
+    def post_count(self):
+        return self.threads.posts.count()
+
+    @property
+    def last_thread(self):
+        return self.threads.order_by("-created_at").first()
 
 
 class ForumTopic(models.Model):
@@ -71,6 +96,18 @@ class ForumTopic(models.Model):
     @property
     def thread_count(self):
         return self.threads.count()
+
+    @property
+    def posts(self):
+        return ForumPost.objects.filter(thread__id=self.id)
+
+    @property
+    def post_count(self):
+        return self.threads.posts.count()
+
+    @property
+    def last_thread(self):
+        return self.threads.order_by("-created_at").first()
 
 
 class ForumThread(models.Model):
@@ -131,6 +168,19 @@ class ForumThread(models.Model):
         )
 
 
+    @property
+    def count(self):
+        return self.count()
+
+    @property
+    def posts_count(self):
+        return self.posts.count()
+
+    @property
+    def last_post(self):
+        return self.posts.order_by("created_at").first()
+
+
 class ForumPost(models.Model):
 
     old_id = models.PositiveIntegerField(null=True, db_index=True)
@@ -161,6 +211,16 @@ class ForumPost(models.Model):
 
     class Meta:
         get_latest_by = 'created_at'
+
+    @property
+    def post_number(self):
+        qs = self.thread.posts.order_by("created_at")
+        post_index = list(qs.values_list("id", flat=True)).index(self.id)
+        return post_index + 1
+
+    @property
+    def page_number(self, page_size=25):
+        return math.ceil(self.post_number / page_size)
 
     def __str__(self):
         return 'Forum post by {author} in thread {thread}'.format(
