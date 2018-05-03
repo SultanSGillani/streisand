@@ -29,8 +29,8 @@ export function deleteForumTopic(id: number): ThunkAction<Action> {
     return (dispatch: IDispatch<Action>, getState: () => Store.All) => {
         const state = getState();
         dispatch(deleting(id));
-        return deleteTopic(state.sealed.auth.token, id).then((response: any) => {
-            const action = dispatch(deleted(response.id));
+        return deleteTopic(state.sealed.auth.token, id).then(() => {
+            const action = dispatch(deleted(id));
             dispatch(invalidate());
             return action;
         }, (error: IUnkownError) => {
@@ -40,6 +40,6 @@ export function deleteForumTopic(id: number): ThunkAction<Action> {
     };
 }
 
-function deleteTopic(token: string, id: number): Promise<any> {
+function deleteTopic(token: string, id: number): Promise<void> {
     return remove({ token, url: `${globals.apiUrl}/forum-topics/${id}/` });
 }

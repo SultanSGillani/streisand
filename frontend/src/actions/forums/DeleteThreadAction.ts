@@ -35,8 +35,8 @@ export function deleteForumThread(props: IDeleteThreadProps): ThunkAction<Action
     return (dispatch: IDispatch<Action>, getState: () => Store.All) => {
         const state = getState();
         dispatch(deleting(props.thread));
-        return deleteThread(state.sealed.auth.token, props.thread).then((response: any) => {
-            const action = dispatch(deleted(response.id));
+        return deleteThread(state.sealed.auth.token, props.thread).then(() => {
+            const action = dispatch(deleted(props.thread));
             dispatch(invalidate({ id: props.topic, page: props.currentPage }));
             return action;
         }, (error: IUnkownError) => {
@@ -46,6 +46,6 @@ export function deleteForumThread(props: IDeleteThreadProps): ThunkAction<Action
     };
 }
 
-function deleteThread(token: string, id: number): Promise<any> {
+function deleteThread(token: string, id: number): Promise<void> {
     return remove({ token, url: `${globals.apiUrl}/forum-thread-index/${id}/` });
 }
