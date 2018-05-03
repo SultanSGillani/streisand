@@ -2,6 +2,8 @@
 
 from .common_settings import *
 import datetime
+from decouple import config
+
 
 INTERNAL_IPS = [
     '10.0.2.2',
@@ -58,9 +60,6 @@ MIDDLEWARE = [
 
 ]
 
-if PRODUCTION or TESTING:
-    INSTALLED_APPS.remove('debug_toolbar')
-    MIDDLEWARE.remove('debug_toolbar.middleware.DebugToolbarMiddleware')
 
 ROOT_URLCONF = 'www.urls'
 
@@ -172,27 +171,25 @@ REDOC_SETTINGS = {
     'LAZY_RENDERING': True,
 }
 
-if DEBUG:
-    REST_FRAMEWORK['DEFAULT_AUTHENTICATION_CLASSES'] += (
-        'rest_framework.authentication.SessionAuthentication',
-    )
 
 SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
 
-if os.getenv('DJANGO_ENV') == 'PROD':
-    DEBUG = False
-    CORS_URL_REGEX = r'^/api/v1/.*$'
-    CORS_ORIGIN_WHITELIST = [
-        subdomain + '.' + HOST_DOMAIN
-        for subdomain
-        in ('api', 'dev', 'static', 'www')
-    ]
-else:
-    DEBUG = True
-    CORS_ORIGIN_ALLOW_ALL = True
+CORS_URL_REGEX = config('CORS_URL_REGEX', cast=lambda v: [s.strip() for s in v.split(',')])
 
-RT_API_KEY = os.environ.get('RT_API_KEY', '')
-OLD_SITE_SECRET_KEY = os.environ.get('OLD_SITE_HASH', '')
+# if os.getenv('DJANGO_ENV') == 'PROD':
+#     DEBUG = False
+#     CORS_URL_REGEX = r'^/api/v1/.*$'
+#     CORS_ORIGIN_WHITELIST = [
+#         subdomain + '.' + HOST_DOMAIN
+#         for subdomain
+#         in ('api', 'dev', 'static', 'www')
+#     ]
+# else:
+#     DEBUG = True
+CORS_ORIGIN_ALLOW_ALL = config('CORS_ORIGIN_ALLOW_ALL', cast=bool)
+
+RT_API_KEY = config('RT_API_KEY')
+OLD_SITE_SECRET_KEY = config('OLD_SITE_HASH')
 
 AUTHENTICATION_BACKENDS = [
     # Case insensitive authentication, custom permissions
@@ -296,24 +293,3 @@ LOGGING = {
         }
     }
 }
-
-if TESTING:
-    # http://django-dynamic-fixture.readthedocs.org/en/latest/data_fixtures.html#custom-field-fixture
-    DDF_FIELD_FIXTURES = {
-        'picklefield.fields.PickledObjectField': {
-            'ddf_fixture': lambda: [],
-        },
-    }
-    DDF_FILL_NULLABLE_FIELDS = False
-
-    # Make the tests faster by using a fast, insecure hashing algorithm
-    PASSWORD_HASHERS = [
-        'django.contrib.auth.hashers.MD5PasswordHasher',
-    ]
-
-    CACHES = {
-        'default': {
-            'BACKEND': 'django.core.cache.backends.locmem.LocMemCache',
-            'TIMEOUT': None,
-        }
-    }
