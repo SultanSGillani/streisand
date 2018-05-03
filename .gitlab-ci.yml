@@ -19,7 +19,7 @@ variables:
   DB_HOST: postgres
   DB_PASS: postgres
   DB_PORT: 5432
-  STREISAND_DEBUG: "True"
+  DEBUG: "True"
   REDIS_URL: "redis://redis:6379"
 
 cache:
