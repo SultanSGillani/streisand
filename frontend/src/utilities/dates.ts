@@ -33,6 +33,7 @@ function dateDiff(past: Date, future: Date, levels: number) {
 
     const minutes = Math.floor(seconds / 60);
     seconds -= minutes * 60;
+    seconds = Math.round(seconds);
 
     let result = '';
     if (years > 0) {
@@ -80,7 +81,7 @@ function dateDiff(past: Date, future: Date, levels: number) {
         levels--;
     }
 
-    if (seconds > 0 && levels > 0) {
+    if (!result && seconds > 0 && levels > 0) {
         if (result) {
             result += ' and ';
         }

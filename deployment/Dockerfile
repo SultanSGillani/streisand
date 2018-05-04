@@ -1,7 +1,7 @@
 # Do not build this directly. Use the script docker_build.sh
 
 FROM python:3.6
-
+ENV PYTHONUNBUFFERED 1
 RUN apt-get update \
     && apt-get install -y --no-install-recommends \
         postgresql-client netcat screen vim \
@@ -9,8 +9,10 @@ RUN apt-get update \
 
 WORKDIR /code
 COPY backend/requirements.txt ./
+COPY backend/testing_requirements.txt ./
 
 RUN pip install -r requirements.txt
+RUN pip install -r testing_requirements.txt
 
 COPY deployment/uwsgi ./uwsgi
 COPY backend .
@@ -18,8 +20,10 @@ COPY backend .
 COPY deployment/frontend_out/bundle.js src/static/frontend/dist/
 COPY deployment/frontend_out/bundle.js.map src/static/frontend/dist/
 
-RUN src/manage.py collectstatic -c --noinput
+ENV DOCKER_CONTAINER=1
+ENV DJANGO_ENV=DEBUG
 
+RUN src/manage.py collectstatic -c --noinput
 EXPOSE 8000 7070
 ENV PYTHONPATH /code/src
 ENV DJANGO_SETTINGS_MODULE jumpcut.settings.www_settings

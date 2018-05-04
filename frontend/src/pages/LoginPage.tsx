@@ -50,7 +50,7 @@ class LoginComponent extends React.Component<CombinedProps, State> {
                         </div>
                     </fieldset>
                 </form>
-                <div>
+                <div style={{ display: 'flex', flexFlow: 'row-reverse' }}>
                     <button className="btn btn-primary" onClick={() => login()}>Login</button>
                 </div>
             </div>
