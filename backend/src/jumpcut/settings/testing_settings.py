@@ -1,8 +1,6 @@
-#!/usr/bin/env python
-
-import os
 from .common_settings import *
 from decouple import config
+
 
 WSGI_APPLICATION = 'jumpcut.testing_wsgi.application'
 
