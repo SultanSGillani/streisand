@@ -1,0 +1,11 @@
+# Add Environment Variables
+
+
+SECRET_KEY=pleasechangeme
+DB_NAME=jumpcut
+DB_USER=postgres
+DB_PASS=passsword
+DB_SERVICE=db
+DB_PORT=5432
+HOST_DOMAIN=ronzertnert.me
+REDIS_URL: redis://redis:6379
