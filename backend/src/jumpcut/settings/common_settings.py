@@ -71,22 +71,16 @@ LOCAL_APPS = (
     'www.apps.SuitConfig',
     'www',
 
-
-
 )
 
 INSTALLED_APPS = DJANGO_APPS + THIRD_PARTY_APPS + LOCAL_APPS
 
 ALLOWED_HOSTS = config('ALLOWED_HOSTS', cast=lambda v: [s.strip() for s in v.split(',')])
 
-
-
 if DEBUG and not TESTING:
-    INSTALLED_APPS = DJANGO_APPS + THIRD_PARTY_APPS + LOCAL_APPS + ('bandit', )
+    INSTALLED_APPS = DJANGO_APPS + THIRD_PARTY_APPS + LOCAL_APPS + ('bandit',)
     EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
     BANDIT_EMAIL = config('BANDIT_EMAIL', '')
-
-
 
 EMAIL_USE_TLS = config('EMAIL_USE_TLS', cast=bool)
 EMAIL_PORT = config('EMAIL_PORT', cast=int)
@@ -106,7 +100,7 @@ REDIS_URL = config('REDIS_URL')
 
 DATABASES = {
     'default': dj_database_url.config(
-      default = config('DATABASE_URL'))
+        default=config('DATABASE_URL'))
 }
 
 CELERY_ALWAYS_EAGER = config('CELERY_ALWAYS_EAGER', cast=bool)
@@ -127,7 +121,7 @@ CACHES = {
     }
 }
 if PRODUCTION:
-     DATABASES['default']['CONN_MAX_AGE'] = None
+    DATABASES['default']['CONN_MAX_AGE'] = None
 
 SITE_ID = 1
 SITE_NAME = config('SITE_NAME')
