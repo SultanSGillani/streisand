@@ -1,12 +1,12 @@
 from django.db.models import OuterRef, Subquery
 from django_filters import rest_framework as filters
-import forums
 from forums.models import ForumGroup, ForumTopic, ForumThread, ForumPost, ForumThreadSubscription
 from rest_framework import mixins
 from rest_framework.mixins import Response
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.viewsets import ModelViewSet, GenericViewSet
 from www.pagination import ForumsPageNumberPagination
+
 from .filters import ForumTopicFilter, ForumThreadFilter, ForumPostFilter
 from .serializers import (
     ForumGroupSerializer,
@@ -15,7 +15,6 @@ from .serializers import (
     ForumPostSerializer,
     ForumThreadIndexSerializer,
     ForumThreadSubscriptionSerializer,
-    ForumIndexSerializer,
 )
 
 
@@ -31,17 +30,6 @@ class ForumGroupViewSet(ModelViewSet):
         'topics__latest_post__thread',
     ).order_by('sort_order').distinct('sort_order')
     pagination_class = ForumsPageNumberPagination
-
-    def get_queryset(self):
-        return super().get_queryset().accessible_to_user(self.request.user)
-
-
-
-class ForumIndexViewSet(ModelViewSet):
-    permission_classes = [IsAuthenticated]
-    serializer_class = ForumIndexSerializer
-    pagination_class = ForumsPageNumberPagination
-    queryset = ForumGroup.objects.all()
 
     def get_queryset(self):
         return super().get_queryset().accessible_to_user(self.request.user)
@@ -113,11 +101,12 @@ class ForumThreadIndexViewSet(ModelViewSet):
         return queryset
 
 
-class ForumThreadViewSet(ModelViewSet):
+class ForumThreadWithAllPostsViewSet(mixins.ListModelMixin, GenericViewSet):
     """
     API endpoint that allows ForumThreads to be viewed only. This view shows all Forum Threads and associated posts.
     Please Note: Pagination is set to Page Number Pagination.
     """
+    permission_classes = [IsAuthenticated]
     serializer_class = ForumThreadSerializer
     queryset = ForumThread.objects.all().prefetch_related(
         'posts',
@@ -130,7 +119,8 @@ class ForumThreadViewSet(ModelViewSet):
         'topic__latest_post__author',
         'topic__latest_post__author__user_class',
         'topic__latest_post__thread',
-        'subscribed_users').order_by('-created_at').distinct('created_at')
+        'subscribed_users',
+    ).order_by('-created_at').distinct('created_at')
     filter_backends = (filters.DjangoFilterBackend,)
     filter_class = ForumThreadFilter
     pagination_class = ForumsPageNumberPagination
@@ -139,18 +129,11 @@ class ForumThreadViewSet(ModelViewSet):
 
         queryset = super().get_queryset().accessible_to_user(self.request.user)
 
-        topic_id = self.request.query_params.get('thread_id', None)
+        topic_id = self.request.query_params.get('topic_id', None)
         if topic_id is not None:
-            queryset = queryset.filter(thread_id=topic_id)
+            queryset = queryset.filter(topic_id=topic_id)
 
         return queryset
-
-    def perform_create(self, serializer):
-        serializer.save(author=self.request.user
-                        )
-
-    def perform_update(self, serializer):
-        serializer.save(modified_by=self.request.user)
 
 
 class ForumThreadItemViewSet(mixins.UpdateModelMixin, mixins.CreateModelMixin, mixins.DestroyModelMixin,
