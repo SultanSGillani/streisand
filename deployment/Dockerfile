@@ -1,7 +1,7 @@
 # Do not build this directly. Use the script docker_build.sh
 
 FROM python:3.6
-ENV PYTHONUNBUFFERED 1
+
 RUN apt-get update \
     && apt-get install -y --no-install-recommends \
         postgresql-client netcat screen vim \

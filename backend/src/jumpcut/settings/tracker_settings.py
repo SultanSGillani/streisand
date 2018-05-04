@@ -7,8 +7,6 @@ ROOT_URLCONF = 'tracker.urls'
 
 WSGI_APPLICATION = 'jumpcut.tracker_wsgi.application'
 
-DEBUG = config('DEBUG', cast=bool)
-
 if DEBUG:
     MIDDLEWARE = [
         'debug_toolbar.middleware.DebugToolbarMiddleware',
