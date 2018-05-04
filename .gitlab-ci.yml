@@ -44,7 +44,7 @@ python_linter:
 python_tests:
   stage: test
   script:
-    - invoke make_migrations
+    - invoke make-migrations
     - invoke migrate
     - invoke foundation
     - invoke fixtures
