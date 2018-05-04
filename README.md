@@ -25,6 +25,15 @@ It is highly recommended that you add the following lines or simillar to your `~
     alias jc_i="docker-compose run api invoke"
     alias jc_m="docker-compose run api src/manage.py"
     alias jc_f="docker-compose run frontend"
+    
+## New Make File:
+
+Now there is a make file you can use at the root of the project:
+
+View it to see the necessary commands.
+
+ ## TODO: make windows.bat file.
+ 
 
 ### Windows
 
@@ -44,6 +53,75 @@ instead of
     docker-compose run api src/manage.py
 
 in the following instructions.
+
+## Windows Instructions with No Docker 
+
+To start you need to install the following:
+
+ - Python 3.6.5: <https://www.python.org/ftp/python/3.6.5/python-3.6.5-amd64.exe>
+ 
+    make sure you edit your environment variables so you can call python, and pip.
+    
+I recommend using Windows PowerShell for most commands.
+
+ - Install Chocolatey for quick postgres install <https://chocolatey.org/>
+ 
+ Install Postgresql: `choco install postgresql`
+ 
+ Install Redis for windows: <https://github.com/MicrosoftArchive/redis/releases>
+ 
+ You should then have postgresql installed. Make sure you set the postgresql database to the new .env file you have.
+ Password, DB, etc.
+ 
+ - Virtual Env  `pip3 install virtualenvwrapper-win`
+ 
+ Now you can create a new virtual environment with the mkvirtualenv command. As this command runs you'll see the environment being set up (what you see is slightly platform specific). When the command completes the new virtual enviroment will be active — you can see this because the start of the prompt will be the name of the environment in brackets (as shown below).
+
+    `mkvirtualenv my_django_environment` 
+    `From now on in this README (and indeed the module) please assume that any commands are run within a Python virtual environment like the one we set up above.`
+    
+ - Install Requirements:
+ 
+  Now install the requirements, I have added a new folder at the root of the project.
+    
+    `cd backend`
+    `pip3 install -r windows_requirements.txt`
+    
+ - Run the Development Server
+ 
+  cd into the src folder and run the following before running the server:
+  
+  * Make Migrations:
+  
+  `python manage.py makemigrations`
+  
+  * Migrate:
+  
+  `python manage.py migrate`
+  
+  * Fixtures:
+  
+  `python manage.py loaddata foundation`
+  
+  `python manage.py loaddata dev`
+  
+  * Collect static files
+  
+  `python manage.py collectstatic --noinput`
+  
+  * Server:
+  
+  `python manage.py runserver_plus 0.0.0.0:8000`
+  
+ - I have updated the index.html file for it to work locally for everyone. Before you run "Collectstatic",
+    make sure and copy the index.html, and bundle files from the folder here:
+    
+    </backend/src/gulpfiles>
+    
+  Copy them to the folder in the src directory to the folder labelled: static/frontend.
+  You can overwrite these files in the directory currently.
+  
+ 
 
 ## Starting a dev server
 
@@ -79,7 +157,7 @@ There is no need to do this if you just change the source code for either the fr
 
 This command resets the db and loads the core fixtures to revert to a starting state.
 
-Currently the admin user password it creates is hashed and salted using argon2. It is reccomended 
+Currently the admin user password it creates is hashed and salted using argon2. It is recommended 
 that you use the function:
 
 - `jc_m change-password admin` or `docker-compose run web backend/manage.py changepassword ` without

@@ -20,7 +20,10 @@ shell-api:
 	docker exec -ti jumpcut_api_1 bash
 
 shell-db:
-	docker exec -ti jumpcut_db_1 bash
+	docker exec -ti jumpcut_postgres_1 bash
+	
+shell-frontend:
+	docker exec -ti jumpcut_frontend_1 bash
 
 log-api:
 	docker-compose logs api  

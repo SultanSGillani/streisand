@@ -40,12 +40,12 @@ def clean_slate(ctx):
 
 @invoke.task
 def fixtures(ctx):
-    _manage_run(ctx, 'loaddata foundation')
+    _manage_run(ctx, 'loaddata dev')
 
 
 @invoke.task
 def foundation(ctx):
-    _manage_run(ctx, 'loaddata dev')
+    _manage_run(ctx, 'loaddata foundation')
 
 
 @invoke.task
