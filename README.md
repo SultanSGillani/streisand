@@ -116,10 +116,11 @@ I recommend using Windows PowerShell for most commands.
  - I have updated the index.html file for it to work locally for everyone. Before you run "Collectstatic",
     make sure and copy the index.html, and bundle files from the folder here:
     
-    </backend/src/gulpfiles>
+    `/backend/src/gulpfiles`
     
-  Copy them to the folder in the src directory to the folder labelled: static/frontend.
-  You can overwrite these files in the directory currently.
+  Copy them to the folder labelled: `static/frontend`.
+  
+You can overwrite these files in the directory locally.
   
  
 
