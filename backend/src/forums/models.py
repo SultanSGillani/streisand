@@ -6,7 +6,6 @@ from .managers import ForumGroupQuerySet, ForumTopicQuerySet, ForumThreadQuerySe
 
 
 class ForumGroup(models.Model):
-
     old_id = models.PositiveIntegerField(null=True, db_index=True)
     sort_order = models.PositiveSmallIntegerField()
     name = models.CharField(max_length=256)
@@ -17,7 +16,6 @@ class ForumGroup(models.Model):
 
     def __str__(self):
         return '{name}'.format(name=self.name)
-
 
     @property
     def topics(self):
@@ -45,7 +43,6 @@ class ForumGroup(models.Model):
 
 
 class ForumTopic(models.Model):
-
     old_id = models.PositiveIntegerField(null=True, db_index=True)
 
     sort_order = models.PositiveSmallIntegerField()
@@ -111,7 +108,6 @@ class ForumTopic(models.Model):
 
 
 class ForumThread(models.Model):
-
     old_id = models.PositiveIntegerField(null=True, db_index=True)
 
     title = models.CharField(max_length=1024)
@@ -167,7 +163,6 @@ class ForumThread(models.Model):
             }
         )
 
-
     @property
     def count(self):
         return self.count()
@@ -182,7 +177,6 @@ class ForumThread(models.Model):
 
 
 class ForumPost(models.Model):
-
     old_id = models.PositiveIntegerField(null=True, db_index=True)
 
     author = models.ForeignKey(

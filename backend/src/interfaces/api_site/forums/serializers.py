@@ -2,9 +2,7 @@
 
 from rest_framework import serializers
 from rest_framework.serializers import ModelSerializer
-from graphene_django.rest_framework.mutation import SerializerMutation
 
-from www.templatetags.bbcode import bbcode as bbcode_to_html
 from forums.models import ForumGroup, ForumPost, ForumThread, ForumTopic, ForumThreadSubscription
 
 
@@ -33,7 +31,6 @@ class ForumPostSerializer(ModelSerializer):
             'modified_by_id',
             'modified_by_username',
         )
-
 
 
 class ForumPostForThreadSerializer(ModelSerializer):
@@ -200,14 +197,16 @@ class ForumThreadSubscriptionSerializer(ModelSerializer):
         model = ForumThreadSubscription
         fields = ('user', 'thread')
 
-class ForumThreadForIndexSerializer(ModelSerializer, serializers.PrimaryKeyRelatedField):
 
+class ForumThreadForIndexSerializer(ModelSerializer, serializers.PrimaryKeyRelatedField):
     class Meta:
         model = ForumThread
         fields = ('id', 'title', 'topic')
 
+
 class ForumPostForIndexSerializer(ModelSerializer):
     topic = serializers.PrimaryKeyRelatedField(read_only=True, source='thread.topic')
+
     class Meta:
         model = ForumPost
         fields = ('id',
@@ -219,8 +218,8 @@ class ForumPostForIndexSerializer(ModelSerializer):
                   'post_number'
                   )
 
-class ForumTopicIndexSerializer(ModelSerializer):
 
+class ForumTopicIndexSerializer(ModelSerializer):
     class Meta:
         model = ForumTopic
         fields = ('id',
@@ -232,6 +231,7 @@ class ForumTopicIndexSerializer(ModelSerializer):
                   'number_of_threads',
                   'number_of_posts'
                   )
+
 
 class ForumIndexSerializer(ModelSerializer):
     topics = ForumTopicIndexSerializer(read_only=True, many=True)
@@ -248,4 +248,3 @@ class ForumIndexSerializer(ModelSerializer):
                   'threads',
                   'posts',
                   )
-

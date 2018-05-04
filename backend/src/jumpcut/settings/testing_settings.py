@@ -1,6 +1,4 @@
 from .common_settings import *  # noqa
-import decouple
-
 
 WSGI_APPLICATION = config('TESTING_WSGI_APPLICATION'),
 FIXTURE_DIRS = ('/tests/fixtures/',)
@@ -18,8 +16,8 @@ if DEBUG:
 
 DATABASES = {
     'default': dj_database_url.config(
-      default = config('TESTING_DATABASE_URL'))
-}# CACHES
+        default=config('TESTING_DATABASE_URL'))
+}  # CACHES
 # ------------------------------------------------------------------------------
 # https://docs.djangoproject.com/en/dev/ref/settings/#caches
 CACHES = {

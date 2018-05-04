@@ -2,7 +2,6 @@ from django.core.management import call_command
 from django.test.runner import DiscoverRunner
 
 
-
 class CustomTestSuiteRunner(DiscoverRunner):
 
     def setup_databases(self):
