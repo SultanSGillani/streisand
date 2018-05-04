@@ -1,6 +1,5 @@
 import invoke
 
-
 MANAGE_PATH = 'src/manage.py'
 WWW_SETTINGS = 'jumpcut.settings.www_settings'
 TRACKER_SETTINGS = 'jumpcut.settings.tracker_settings'
@@ -26,6 +25,11 @@ def make_migrations(ctx):
 
 
 @invoke.task
+def migrate(ctx):
+    _manage_run(ctx, 'migrate')
+
+
+@invoke.task
 def clean_slate(ctx):
     _manage_run(ctx, 'reset_db --noinput')
     delete_migrations(ctx)
@@ -36,6 +40,11 @@ def clean_slate(ctx):
 
 @invoke.task
 def fixtures(ctx):
+    _manage_run(ctx, 'loaddata foundation')
+
+
+@invoke.task
+def foundation(ctx):
     _manage_run(ctx, 'loaddata dev')
 
 
@@ -52,7 +61,9 @@ def run_python_linter(ctx):
 @invoke.task
 def run_python_tests(ctx, coverage=False):
     if coverage:
-        ctx.run('coverage run --source=''.'' {} test torrents tracker interfaces --settings=jumpcut.settings.testing_settings -v 3'.format(MANAGE_PATH))
+        ctx.run(
+            'coverage run --source=''.'' {} test torrents tracker interfaces --settings=jumpcut.settings.testing_settings -v 3'.format(
+                MANAGE_PATH))
         ctx.run('coverage report -m')
     else:
         ctx.run('{} test src'.format(MANAGE_PATH))
