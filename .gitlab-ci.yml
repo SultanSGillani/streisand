@@ -45,8 +45,8 @@ python_tests:
   stage: test
   script:
     - invoke clean-slate
-    - invoke run-python-tests --coverage
     - invoke fixtures
+    - invoke run-python-tests --coverage
 
 variables:
   MIRROR_REPOSITORY: "git@github.com:TheSaltman/jumpcut.git"
