@@ -2,39 +2,13 @@
 
 from .common_settings import *
 import datetime
-from decouple import config
 
 
 INTERNAL_IPS = [
     '10.0.2.2',
 ]
 
-INSTALLED_APPS += [
-    'interfaces.api_site',
-    # Third party apps
-    'django_su',
-    'rest_framework',
-    'graphene_django',
-    'corsheaders',
-    'django_filters',
-    'rest_framework_filters',
-    'docs',
-    'drf_yasg',
 
-    # Contrib apps
-    'django.contrib.admin',
-    'django.contrib.sessions',
-    'django.contrib.humanize',
-    'django.contrib.staticfiles',
-    'django.contrib.messages',
-
-    # Debug Toolbar
-    'debug_toolbar',
-
-    # Import scripts
-    'import_scripts',
-
-]
 GRAPHENE = {
     'MIDDLEWARE': [
         'graphene_django.debug.DjangoDebugMiddleware',
@@ -113,6 +87,7 @@ REST_FRAMEWORK = {
     ),
     'DEFAULT_RENDERER_CLASSES': (
         'djangorestframework_camel_case.render.CamelCaseJSONRenderer',
+        'rest_framework.renderers.BrowsableAPIRenderer',
 
     ),
     'DEFAULT_PARSER_CLASSES': (
@@ -177,8 +152,6 @@ SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
 CORS_URL_REGEX = config('CORS_URL_REGEX', cast=lambda v: [s.strip() for s in v.split(',')])
 
 # if os.getenv('DJANGO_ENV') == 'PROD':
-#     DEBUG = False
-#     CORS_URL_REGEX = r'^/api/v1/.*$'
 #     CORS_ORIGIN_WHITELIST = [
 #         subdomain + '.' + HOST_DOMAIN
 #         for subdomain
@@ -233,10 +206,12 @@ STATICFILES_DIRS = (
 )
 STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
 
-STATICFILES_FINDERS = [
-    'django.contrib.staticfiles.finders.AppDirectoriesFinder',
+STATICFILES_FINDERS = (
     'django.contrib.staticfiles.finders.FileSystemFinder',
-]
+    'django.contrib.staticfiles.finders.AppDirectoriesFinder',
+)
+MEDIA_URL = '/media/'
+MEDIA_ROOT = os.path.join(BASE_DIR, 'mediafiles')
 
 ITEMS_PER_PAGE = 50
 

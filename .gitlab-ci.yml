@@ -44,7 +44,7 @@ python_linter:
 python_tests:
   stage: test
   script:
-    - invoke clean-slate
+ #  - invoke clean-slate
     - invoke fixtures
     - invoke run-python-tests --coverage
 

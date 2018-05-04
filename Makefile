@@ -30,3 +30,18 @@ log-postgres:
 
 log-frontend:
 	docker-compose logs frontend
+
+m:
+	docker-compose run --rm api python backend/src/manage.py
+
+i:
+	docker-compose run --rm api invoke
+
+runserver:
+	docker-compose up
+
+cleanslate:
+	docker-compose run --rm api invoke clean-slate
+
+test:
+	 docker-compose run --rm api invoke run-python-tests --coverage

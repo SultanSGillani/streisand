@@ -1,0 +1,388 @@
+[
+    {
+        "pk": "TS",
+        "model": "media_formats.container",
+        "fields": {}
+    },
+    {
+        "pk": "AVI",
+        "model": "media_formats.container",
+        "fields": {}
+    },
+    {
+        "pk": "MKV",
+        "model": "media_formats.container",
+        "fields": {}
+    },
+    {
+        "pk": "DVDR NTSC",
+        "model": "media_formats.container",
+        "fields": {}
+    },
+    {
+        "pk": "DVDR PAL",
+        "model": "media_formats.container",
+        "fields": {}
+    },
+    {
+        "pk": "Blu-ray",
+        "model": "media_formats.container",
+        "fields": {}
+    },
+    {
+        "pk": "HD-DVD",
+        "model": "media_formats.container",
+        "fields": {}
+    },
+    {
+        "pk": "Standard Def",
+        "model": "media_formats.resolution",
+        "fields": {}
+    },
+    {
+        "pk": "480p",
+        "model": "media_formats.resolution",
+        "fields": {}
+    },
+    {
+        "pk": "576p",
+        "model": "media_formats.resolution",
+        "fields": {}
+    },
+    {
+        "pk": "720p",
+        "model": "media_formats.resolution",
+        "fields": {}
+    },
+    {
+        "pk": "1080p",
+        "model": "media_formats.resolution",
+        "fields": {}
+    },
+    {
+        "pk": "1080i",
+        "model": "media_formats.resolution",
+        "fields": {}
+    },
+    {
+        "pk": "2160p",
+        "model": "media_formats.resolution",
+        "fields": {}
+    },
+    {
+        "pk": "x264",
+        "model": "media_formats.codec",
+        "fields": {}
+    },
+    {
+        "pk": "XviD",
+        "model": "media_formats.codec",
+        "fields": {}
+    },
+    {
+        "pk": "H.264",
+        "model": "media_formats.codec",
+        "fields": {}
+    },
+    {
+        "pk": "DivX",
+        "model": "media_formats.codec",
+        "fields": {}
+    },
+    {
+        "pk": "AVC",
+        "model": "media_formats.codec",
+        "fields": {}
+    },
+    {
+        "pk": "VC-1",
+        "model": "media_formats.codec",
+        "fields": {}
+    },
+    {
+        "pk": "MPEG-2",
+        "model": "media_formats.codec",
+        "fields": {}
+    },
+    {
+        "pk": "DVDR",
+        "model": "media_formats.codec",
+        "fields": {}
+    },
+    {
+        "pk": "Blu-ray",
+        "model": "media_formats.sourcemedia",
+        "fields": {}
+    },
+    {
+        "pk": "HD-DVD",
+        "model": "media_formats.sourcemedia",
+        "fields": {}
+    },
+    {
+        "pk": "HDTV",
+        "model": "media_formats.sourcemedia",
+        "fields": {}
+    },
+    {
+        "pk": "WEB-DL",
+        "model": "media_formats.sourcemedia",
+        "fields": {}
+    },
+    {
+        "pk": "DVD",
+        "model": "media_formats.sourcemedia",
+        "fields": {}
+    },
+    {
+        "pk": "R5",
+        "model": "media_formats.sourcemedia",
+        "fields": {}
+    },
+    {
+        "pk": "Screener",
+        "model": "media_formats.sourcemedia",
+        "fields": {}
+    },
+    {
+        "pk": "CAM (TS)",
+        "model": "media_formats.sourcemedia",
+        "fields": {}
+    },
+    {
+        "pk": "Other",
+        "model": "media_formats.sourcemedia",
+        "fields": {}
+    },
+    {
+        "pk": 1,
+        "model": "users.userclass",
+        "fields": {
+            "old_id": 23,
+            "name": "User",
+            "rank": 1
+        }
+    },
+    {
+        "pk": 2,
+        "model": "users.userclass",
+        "fields": {
+            "old_id": 3,
+            "name": "Member",
+            "rank": 2
+        }
+    },
+    {
+        "pk": 3,
+        "model": "users.userclass",
+        "fields": {
+            "old_id": 30,
+            "name": "mfer",
+            "rank": 2
+        }
+    },
+    {
+        "pk": 4,
+        "model": "users.userclass",
+        "fields": {
+            "old_id": 24,
+            "name": "Fanatic",
+            "rank": 3
+        }
+    },
+    {
+        "pk": 5,
+        "model": "users.userclass",
+        "fields": {
+            "old_id": 4,
+            "name": "Actor",
+            "rank": 4
+        }
+    },
+    {
+        "pk": 6,
+        "model": "users.userclass",
+        "fields": {
+            "old_id": 25,
+            "name": "Director",
+            "rank": 5
+        }
+    },
+    {
+        "pk": 7,
+        "model": "users.userclass",
+        "fields": {
+            "old_id": 20,
+            "name": "Producer",
+            "rank": 6
+        }
+    },
+    {
+        "pk": 8,
+        "model": "users.userclass",
+        "fields": {
+            "old_id": 33,
+            "name": "Archivist",
+            "rank": 7
+        }
+    },
+    {
+        "pk": 9,
+        "model": "users.userclass",
+        "fields": {
+            "old_id": 31,
+            "name": "Uploader",
+            "rank": 7
+        }
+    },
+    {
+        "pk": 10,
+        "model": "users.userclass",
+        "fields": {
+            "old_id": 8,
+            "name": "Encoder",
+            "rank": 7
+        }
+    },
+    {
+        "pk": 11,
+        "model": "users.userclass",
+        "fields": {
+            "old_id": 7,
+            "name": "Executive Producer",
+            "rank": 7
+        }
+    },
+    {
+        "pk": 12,
+        "model": "users.userclass",
+        "fields": {
+            "old_id": 5,
+            "name": "Legend",
+            "rank": 8
+        }
+    },
+    {
+        "pk": 13,
+        "model": "users.userclass",
+        "fields": {
+            "old_id": 9,
+            "name": "Community Staff",
+            "rank": 8
+        }
+    },
+    {
+        "pk": 14,
+        "model": "users.userclass",
+        "fields": {
+            "old_id": 26,
+            "name": "Director of Torrentography",
+            "rank": 9
+        }
+    },
+    {
+        "pk": 15,
+        "model": "users.userclass",
+        "fields": {
+            "old_id": 28,
+            "name": "Designer",
+            "rank": 9
+        }
+    },
+    {
+        "pk": 16,
+        "model": "users.userclass",
+        "fields": {
+            "old_id": 11,
+            "name": "Moderator",
+            "is_staff": true,
+            "rank": 10
+        }
+    },
+    {
+        "pk": 17,
+        "model": "users.userclass",
+        "fields": {
+            "old_id": 14,
+            "name": "Developer",
+            "is_staff": true,
+            "rank": 11
+        }
+    },
+    {
+        "pk": 18,
+        "model": "users.userclass",
+        "fields": {
+            "old_id": 21,
+            "name": "Administrator",
+            "is_staff": true,
+            "rank": 12
+        }
+    },
+    {
+        "pk": 19,
+        "model": "users.userclass",
+        "fields": {
+            "old_id": 1,
+            "name": "SiteOp",
+            "is_staff": true,
+            "rank": 13
+        }
+    },
+    {
+        "pk": 20,
+        "model": "users.userclass",
+        "fields": {
+            "old_id": 15,
+            "name": "SysAdmin",
+            "is_staff": true,
+            "rank": 14
+        }
+    },
+    {
+        "pk": "16fd2706-8baf-433b-82eb-8c7fada847da",
+        "model": "users.userannouncekey",
+        "fields": {
+            "user": 1,
+            "issued_at": "2014-09-18T14:52:58.484Z"
+        }
+    },
+{    "model": "users.user",
+    "pk": 1,
+    "fields": {
+        "password": "argon2$argon2i$v=19$m=512,t=2,p=2$R0VhZlE2ekdocUtq$gPpl0+Nk5+NRq6ni+YnXaw",
+        "last_login": "2018-04-15T12:58:23.736Z",
+        "is_superuser": true,
+        "username": "admin",
+        "first_name": "",
+        "last_name": "",
+        "email": "dolan@gooby.pls",
+        "is_staff": true,
+        "is_active": true,
+        "date_joined": "2014-09-18T14:52:58.484Z",
+        "old_id": null,
+        "user_class": 18,
+        "is_donor": false,
+        "account_status": "enabled",
+        "failed_login_attempts": 0,
+        "announce_key": "16fd2706-8baf-433b-82eb-8c7fada847da",
+        "torrent_download_key": null,
+        "avatar_url": null,
+        "custom_title": null,
+        "profile_description": "Admin User",
+        "staff_notes": null,
+        "irc_key": null,
+        "invited_by": null,
+        "invite_count": 0,
+        "bytes_uploaded": 0,
+        "bytes_downloaded": 0,
+        "log_successful_announces": false,
+        "last_seeded": null,
+        "average_seeding_size": 0,
+        "watch_queue": null,
+        "groups": [],
+        "user_permissions": []
+    }
+
+}
+]

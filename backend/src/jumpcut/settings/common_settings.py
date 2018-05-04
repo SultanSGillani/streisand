@@ -12,33 +12,51 @@ import os
 import sys
 from urllib.parse import urljoin
 from decouple import config
+import dj_database_url
 
 from django.utils.timezone import timedelta
 
 AUTH_USER_MODEL = 'users.User'
+BASE_DIR = os.path.dirname(os.path.dirname(os.path.dirname(__file__)))
+
 TESTING = sys.argv[1:2] == ['test']
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
-BASE_DIR = os.path.dirname(os.path.dirname(os.path.dirname(__file__)))
 SECRET_KEY = config('SECRET_KEY')
 
 DEBUG = config('DEBUG', cast=bool)
 PRODUCTION = config('PRODUCTION', cast=bool)
-
-ALLOWED_HOSTS = config('ALLOWED_HOSTS', cast=lambda v: [s.strip() for s in v.split(',')])
-
-INSTALLED_APPS = [
-
-    # Default apps
+DJANGO_APPS = (
+    'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
-    'www.apps.SuitConfig',
-    'decouple',
+    'django.contrib.sessions',
+    'django.contrib.messages',
+    'django.contrib.staticfiles',
 
-    # Local apps
+)
+
+THIRD_PARTY_APPS = (
+    'decouple',
+    'django_extensions',
+    'django_su',
+    'rest_framework',
+    'graphene_django',
+    'corsheaders',
+    'django_filters',
+    'rest_framework_filters',
+    'docs',
+    'drf_yasg',
+    'debug_toolbar',
+
+)
+
+LOCAL_APPS = (
     'comments',
     'films',
     'forums',
     'imdb',
+    'import_scripts',
+    'interfaces.api_site',
     'invites',
     'media_formats',
     'mediainfo',
@@ -50,19 +68,25 @@ INSTALLED_APPS = [
     'tracker',
     'users',
     'wiki',
+    'www.apps.SuitConfig',
     'www',
 
-    # Third party
-    'django_extensions',
 
-]
+
+)
+
+INSTALLED_APPS = DJANGO_APPS + THIRD_PARTY_APPS + LOCAL_APPS
+
+ALLOWED_HOSTS = config('ALLOWED_HOSTS', cast=lambda v: [s.strip() for s in v.split(',')])
+
+
 
 if DEBUG and not TESTING:
-    INSTALLED_APPS += [
-        'bandit',
-    ]
+    INSTALLED_APPS = DJANGO_APPS + THIRD_PARTY_APPS + LOCAL_APPS + ('bandit', )
     EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
     BANDIT_EMAIL = config('BANDIT_EMAIL', '')
+
+
 
 EMAIL_USE_TLS = config('EMAIL_USE_TLS', cast=bool)
 EMAIL_PORT = config('EMAIL_PORT', cast=int)
@@ -81,17 +105,11 @@ TIME_ZONE = 'UTC'
 REDIS_URL = config('REDIS_URL')
 
 DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.postgresql_psycopg2',
-        'NAME': config('DB_NAME'),
-        'USER': config('DB_USER'),
-        'PASSWORD': config('DB_PASS'),
-        'HOST': config('DB_HOST'),
-        'PORT': config('DB_PORT')
-    }
+    'default': dj_database_url.config(
+      default = config('DATABASE_URL'))
 }
 
-CELERY_ALWAYS_EAGER = DEBUG
+CELERY_ALWAYS_EAGER = config('CELERY_ALWAYS_EAGER', cast=bool)
 CELERY_IGNORE_RESULT = True
 CELERY_TASK_SERIALIZER = 'pickle'
 CELERY_ACCEPT_CONTENT = ['pickle']
@@ -108,9 +126,8 @@ CACHES = {
         }
     }
 }
-
-# if PRODUCTION:
-#     DATABASES['default']['CONN_MAX_AGE'] = None
+if PRODUCTION:
+     DATABASES['default']['CONN_MAX_AGE'] = None
 
 SITE_ID = 1
 SITE_NAME = config('SITE_NAME')
