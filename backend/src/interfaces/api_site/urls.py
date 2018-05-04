@@ -60,12 +60,14 @@ router.register(r'tracker-peers', viewset=tracker_views.PeerViewSet, base_name='
 router.register(r'forum-groups', viewset=forums_views.ForumGroupViewSet, base_name='forum-group')
 router.register(r'forum-topics', viewset=forums_views.ForumTopicViewSet, base_name='forum-topic')
 router.register(r'forum-thread-index', viewset=forums_views.ForumThreadIndexViewSet, base_name='forum-thread-index')
-router.register(r'forum-threads', viewset=forums_views.ForumThreadWithAllPostsViewSet, base_name='forum-thread')
+router.register(r'forum-threads', viewset=forums_views.ForumThreadViewSet, base_name='forum-thread')
 router.register(r'forum-thread-items', viewset=forums_views.ForumThreadItemViewSet, base_name='forum-thread-item')
 router.register(r'forum-thread-subscriptions', viewset=forums_views.ForumThreadSubscriptionViewSet,
                 base_name='forum-thread-subscription')
 router.register(r'forum-posts', viewset=forums_views.ForumPostViewSet, base_name='forum-post')
 router.register(r'news-posts', viewset=forums_views.NewsPostViewSet, base_name='news-post')
+router.register(r'forum-index', viewset=forums_views.ForumIndexViewSet, base_name='forum-index')
+
 
 # Wiki
 router.register(r'wikis', viewset=wiki_views.WikiArticleCreateUpdateDestroyViewSet, base_name='wiki')
