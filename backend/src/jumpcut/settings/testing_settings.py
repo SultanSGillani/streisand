@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 
 import os
-from .common_settings import AUTH_USER_MODEL
+from .common_settings import *
 from decouple import config
 
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.dirname(__file__)))
