@@ -6,7 +6,6 @@ from rest_framework.mixins import Response
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.viewsets import ModelViewSet, GenericViewSet
 from www.pagination import ForumsPageNumberPagination
-
 from .filters import ForumTopicFilter, ForumThreadFilter, ForumPostFilter
 from .serializers import (
     ForumGroupSerializer,
@@ -15,6 +14,7 @@ from .serializers import (
     ForumPostSerializer,
     ForumThreadIndexSerializer,
     ForumThreadSubscriptionSerializer,
+    ForumIndexSerializer,
 )
 
 
@@ -30,6 +30,16 @@ class ForumGroupViewSet(ModelViewSet):
         'topics__latest_post__thread',
     ).order_by('sort_order').distinct('sort_order')
     pagination_class = ForumsPageNumberPagination
+
+    def get_queryset(self):
+        return super().get_queryset().accessible_to_user(self.request.user)
+
+
+class ForumIndexViewSet(ModelViewSet):
+    permission_classes = [IsAuthenticated]
+    serializer_class = ForumIndexSerializer
+    pagination_class = ForumsPageNumberPagination
+    queryset = ForumGroup.objects.all()
 
     def get_queryset(self):
         return super().get_queryset().accessible_to_user(self.request.user)
@@ -55,7 +65,6 @@ class ForumTopicViewSet(ModelViewSet):
     pagination_class = ForumsPageNumberPagination
 
     def get_queryset(self):
-
         queryset = super().get_queryset().accessible_to_user(self.request.user)
 
         group_id = self.request.query_params.get('group_id', None)
@@ -63,6 +72,9 @@ class ForumTopicViewSet(ModelViewSet):
             queryset = queryset.filter(group_id=group_id)
 
         return queryset
+
+    def perform_create(self, serializer):
+        serializer.save(creator=self.request.user)
 
 
 class ForumThreadIndexViewSet(ModelViewSet):
@@ -91,7 +103,6 @@ class ForumThreadIndexViewSet(ModelViewSet):
     pagination_class = ForumsPageNumberPagination
 
     def get_queryset(self):
-
         queryset = super().get_queryset().accessible_to_user(self.request.user)
 
         topic_id = self.request.query_params.get('topic_id', None)
@@ -101,12 +112,11 @@ class ForumThreadIndexViewSet(ModelViewSet):
         return queryset
 
 
-class ForumThreadWithAllPostsViewSet(mixins.ListModelMixin, GenericViewSet):
+class ForumThreadViewSet(ModelViewSet):
     """
     API endpoint that allows ForumThreads to be viewed only. This view shows all Forum Threads and associated posts.
     Please Note: Pagination is set to Page Number Pagination.
     """
-    permission_classes = [IsAuthenticated]
     serializer_class = ForumThreadSerializer
     queryset = ForumThread.objects.all().prefetch_related(
         'posts',
@@ -119,14 +129,12 @@ class ForumThreadWithAllPostsViewSet(mixins.ListModelMixin, GenericViewSet):
         'topic__latest_post__author',
         'topic__latest_post__author__user_class',
         'topic__latest_post__thread',
-        'subscribed_users',
-    ).order_by('-created_at').distinct('created_at')
+        'subscribed_users').order_by('-created_at').distinct('created_at')
     filter_backends = (filters.DjangoFilterBackend,)
     filter_class = ForumThreadFilter
     pagination_class = ForumsPageNumberPagination
 
     def get_queryset(self):
-
         queryset = super().get_queryset().accessible_to_user(self.request.user)
 
         topic_id = self.request.query_params.get('topic_id', None)
@@ -134,6 +142,13 @@ class ForumThreadWithAllPostsViewSet(mixins.ListModelMixin, GenericViewSet):
             queryset = queryset.filter(topic_id=topic_id)
 
         return queryset
+
+    def perform_create(self, serializer):
+        serializer.save(created_by=self.request.user
+                        )
+
+    def perform_update(self, serializer):
+        serializer.save(modified_by=self.request.user)
 
 
 class ForumThreadItemViewSet(mixins.UpdateModelMixin, mixins.CreateModelMixin, mixins.DestroyModelMixin,
@@ -149,6 +164,7 @@ class ForumThreadItemViewSet(mixins.UpdateModelMixin, mixins.CreateModelMixin, m
         serializer.save(modified_by=self.request.user)
         serializer.is_valid(raise_exception=True)
         return Response(serializer.data)
+
     serializer_class = ForumThreadSerializer
     queryset = ForumThread.objects.all().prefetch_related(
         'created_by',
@@ -162,7 +178,6 @@ class ForumThreadItemViewSet(mixins.UpdateModelMixin, mixins.CreateModelMixin, m
     pagination_class = ForumsPageNumberPagination
 
     def get_queryset(self):
-
         queryset = super().get_queryset().accessible_to_user(self.request.user)
 
         topic_id = self.request.query_params.get('topic_id', None)
@@ -197,12 +212,11 @@ class ForumPostViewSet(ModelViewSet):
     pagination_class = ForumsPageNumberPagination
 
     def get_queryset(self):
-
         queryset = super().get_queryset().accessible_to_user(self.request.user)
 
-        thread_id = self.request.query_params.get('thread_id', None)
-        if thread_id is not None:
-            queryset = queryset.filter(thread_id=thread_id)
+        topic_id = self.request.query_params.get('topic_id', None)
+        if topic_id is not None:
+            queryset = queryset.filter(topic_id=topic_id)
 
         return queryset
 
@@ -215,7 +229,6 @@ class ForumPostViewSet(ModelViewSet):
 
 
 class ForumThreadSubscriptionViewSet(ModelViewSet):
-
     """
     API endpoint that allows ThreadSubscriptions to be viewed, or edited.
     Please Note: Pagination is set to Page Number Pagination.
@@ -243,7 +256,6 @@ class NewsPostViewSet(ModelViewSet):
     serializer_class = ForumPostSerializer
 
     def get_queryset(self):
-
         # Earliest post subquery
         earliest_post = ForumPost.objects.filter(
             thread=OuterRef('id'),

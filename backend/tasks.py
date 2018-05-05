@@ -1,9 +1,9 @@
 import invoke
 
-
 MANAGE_PATH = 'src/manage.py'
 WWW_SETTINGS = 'jumpcut.settings.www_settings'
 TRACKER_SETTINGS = 'jumpcut.settings.tracker_settings'
+TESTING_SETTINGS = 'jumpcut.settings.testing_settings'
 
 
 def _manage_run(ctx, command, settings=None):
@@ -11,6 +11,19 @@ def _manage_run(ctx, command, settings=None):
     if settings is not None:
         torun += ' --settings=' + settings
     ctx.run(torun)
+
+
+@invoke.task
+def setup_db(ctx):
+    migrate(ctx)
+    foundation(ctx)
+    fixtures(ctx)
+
+
+@invoke.task
+def reset_db(ctx):
+    _manage_run(ctx, 'reset_db')
+    setup_db(ctx)
 
 
 @invoke.task
@@ -25,17 +38,18 @@ def make_migrations(ctx):
 
 
 @invoke.task
-def clean_slate(ctx):
-    _manage_run(ctx, 'reset_db --noinput')
-    delete_migrations(ctx)
-    make_migrations(ctx)
+def migrate(ctx):
     _manage_run(ctx, 'migrate')
-    _manage_run(ctx, 'loaddata foundation')
 
 
 @invoke.task
 def fixtures(ctx):
     _manage_run(ctx, 'loaddata dev')
+
+
+@invoke.task
+def foundation(ctx):
+    _manage_run(ctx, 'loaddata foundation')
 
 
 @invoke.task
@@ -51,7 +65,9 @@ def run_python_linter(ctx):
 @invoke.task
 def run_python_tests(ctx, coverage=False):
     if coverage:
-        ctx.run('coverage run --source=''.'' {} test tests -v 3'.format(MANAGE_PATH))
+        ctx.run(
+            'coverage run --source=''.'' {} test torrents tracker interfaces --settings=jumpcut.settings.testing_settings -v 3'.format(
+                MANAGE_PATH))
         ctx.run('coverage report -m')
     else:
         ctx.run('{} test src'.format(MANAGE_PATH))
