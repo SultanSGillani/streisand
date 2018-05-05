@@ -3,7 +3,7 @@ DEBUG=True
 PRODUCTION=False
 ALLOWED_HOSTS=*
 
-DB_HOST=postgres
+DB_HOST=db
 DB_NAME=postgres
 DB_USER=postgres
 DB_PASS=postgres
