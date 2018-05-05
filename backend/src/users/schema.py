@@ -1,10 +1,10 @@
-from graphene_django.types import DjangoObjectType
-from .models import User
 import graphene
-from graphql_extensions.auth.decorators import (
-    login_required, staff_member_required,
-)
+from graphene_django.types import DjangoObjectType
 from graphql_extensions import mixins
+from graphql_extensions.auth.decorators import (
+    login_required, )
+
+from .models import User
 
 
 class UserType(DjangoObjectType):
