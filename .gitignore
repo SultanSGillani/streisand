@@ -1,6 +1,8 @@
 deployment/frontend_out
 backend/src/staticfiles
 deployment/.env
+deployment/env
+*.env
 
 # Byte-compiled / optimized / DLL files
 __pycache__/
