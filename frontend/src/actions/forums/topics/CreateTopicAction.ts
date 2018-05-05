@@ -1,10 +1,10 @@
-import Store from '../../store';
-import globals from '../../utilities/globals';
-import { post } from '../../utilities/Requestor';
-import { invalidate } from './ForumGroupsAction';
-import { IUnkownError } from '../../models/base/IError';
-import { ThunkAction, IDispatch } from '../ActionTypes';
-import ErrorAction, { handleError } from '../ErrorAction';
+import Store from '../../../store';
+import globals from '../../../utilities/globals';
+import { invalidate } from '../ForumGroupsAction';
+import { post } from '../../../utilities/Requestor';
+import { IUnkownError } from '../../../models/base/IError';
+import { ThunkAction, IDispatch } from '../../ActionTypes';
+import ErrorAction, { handleError } from '../../ErrorAction';
 
 export interface INewForumTopicPayload {
     group: number;

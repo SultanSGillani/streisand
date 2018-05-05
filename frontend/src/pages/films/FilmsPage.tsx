@@ -6,6 +6,7 @@ import Store from '../../store';
 import Empty from '../../components/Empty';
 import FilmsView from '../../components/films/FilmsView';
 import { getFilms } from '../../actions/films/FilmsAction';
+import ILoadingStatus, { defaultStatus } from '../../models/base/ILoadingStatus';
 
 export type Props = {
     params: {
@@ -15,9 +16,7 @@ export type Props = {
 
 type ConnectedState = {
     page: number;
-    loading: boolean;
-    loaded: boolean;
-    failed: boolean;
+    status: ILoadingStatus;
 };
 
 type ConnectedDispatch = {
@@ -27,22 +26,23 @@ type ConnectedDispatch = {
 type CombinedProps = ConnectedState & ConnectedDispatch & Props;
 class FilmsPage extends React.Component<CombinedProps> {
     public componentWillMount() {
-        if (!this.props.loading) {
+        if (!this.props.status.loading) {
             this.props.getFilms(this.props.page);
         }
     }
 
     public componentWillReceiveProps(props: CombinedProps) {
-        const needPage = !props.loaded && !props.failed;
+        const status = props.status;
+        const needPage = !status.failed && (!status.loaded || status.outdated);
         const pageChanged = props.page !== this.props.page;
-        if (!props.loading && (pageChanged || needPage)) {
+        if (!status.loading && (pageChanged || needPage)) {
             this.props.getFilms(props.page);
         }
     }
 
     public render() {
-        if (!this.props.loaded) {
-            return <Empty loading={this.props.loading} />;
+        if (!this.props.status.loaded) {
+            return <Empty loading={this.props.status.loading} />;
         }
 
         return (
@@ -56,9 +56,7 @@ const mapStateToProps = (state: Store.All, ownProps: Props): ConnectedState => {
     const page = state.sealed.films.pages[pageNumber];
     return {
         page: pageNumber,
-        loading: page ? page.loading : false,
-        loaded: page ? page.loaded : false,
-        failed: page ? page.failed : false
+        status: page ? page.status : defaultStatus
     };
 };
 

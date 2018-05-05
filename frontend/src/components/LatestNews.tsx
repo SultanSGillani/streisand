@@ -11,6 +11,7 @@ import UserLink from './links/UserLink';
 import { IForumPost } from '../models/forums/IForumPost';
 import IUser from '../models/IUser';
 import { IForumThread } from '../models/forums/IForumThread';
+import { getItem } from '../utilities/mapping';
 
 export type Props = {};
 
@@ -75,7 +76,7 @@ const mapStateToProps = (state: Store.All, ownProps: Props): ConnectedState => {
     const loading = state.sealed.news.loading;
     const loaded = !loading && !!state.sealed.news.latest;
     const post = state.sealed.news.latest ? state.sealed.forums.posts.byId[state.sealed.news.latest] : undefined;
-    const author = post && state.sealed.users.byId[post.author] as IUser;
+    const author = getItem({ id: post && post.author, byId: state.sealed.users.byId });
     const thread = post && state.sealed.forums.threads.byId[post.thread] as IForumThread;
 
     return { post, author, thread, loading, loaded };

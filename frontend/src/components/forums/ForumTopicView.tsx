@@ -2,7 +2,6 @@ import * as React from 'react';
 import { connect } from 'react-redux';
 
 import Pager from '../Pager';
-import Empty from '../Empty';
 import Store from '../../store';
 import ForumThreadRow from './ForumThreadRow';
 import IForumTopic from '../../models/forums/IForumTopic';
@@ -17,7 +16,6 @@ export type Props = {
 type ConnectedState = {
     total: number;
     threads: IForumThread[];
-    loading: boolean;
 };
 type ConnectedDispatch = {};
 
@@ -28,9 +26,6 @@ class ForumTopicViewComponent extends React.Component<CombinedProps> {
         const topic = this.props.topic;
         const threads = this.props.threads;
         const uri = `/forum/topic/${topic.id}`;
-        if (!threads.length) {
-            return <Empty loading={this.props.loading} />;
-        }
         const rows = threads.map((thread: IForumThread) => {
             return (<ForumThreadRow thread={thread} key={thread.id} page={page} />);
         });
@@ -62,10 +57,12 @@ class ForumTopicViewComponent extends React.Component<CombinedProps> {
 const mapStateToProps = (state: Store.All, ownProps: Props): ConnectedState => {
     const topicPages = state.sealed.forums.threads.byTopic[ownProps.topic.id];
     const page = topicPages && topicPages.pages[ownProps.page];
+    const threads = (page ? page.items : []).map((id: number) => {
+        return state.sealed.forums.threads.byId[id];
+    });
     return {
         total: topicPages ? topicPages.count : 0,
-        loading: page ? page.loading : false,
-        threads: page ? page.items : []
+        threads: threads
     };
 };
 

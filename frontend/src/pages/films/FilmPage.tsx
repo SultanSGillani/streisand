@@ -5,10 +5,10 @@ import { connect } from 'react-redux';
 import Store from '../../store';
 import IFilm from '../../models/IFilm';
 import Empty from '../../components/Empty';
+import { getNode } from '../../utilities/mapping';
 import FilmView from '../../components/films/FilmView';
 import { numericIdentifier } from '../../utilities/shim';
 import { getFilm } from '../../actions/films/FilmAction';
-import { isLoadingItem } from '../../models/base/ILoadingItem';
 import { getTorrents } from '../../actions/torrents/FilmTorrentsAction';
 
 export type Props = {
@@ -60,19 +60,10 @@ class FilmPageComponent extends React.Component<CombinedProps, void> {
 
 const mapStateToProps = (state: Store.All, ownProps: Props): ConnectedState => {
     const filmId = numericIdentifier(ownProps.params.filmId);
-    const item = state.sealed.films.byId[filmId];
-
-    let film: IFilm | undefined;
-    let loading = false;
-    if (isLoadingItem(item)) {
-        loading = item.loading;
-    } else if (item) {
-        film = item;
-    }
-
+    const node = getNode({ id: filmId, byId: state.sealed.films.byId });
     return {
-        loading: loading,
-        film: film,
+        film: node.item,
+        loading: node.status.loading,
         filmId: numericIdentifier(ownProps.params.filmId),
         torrentId: numericIdentifier(ownProps.params.torrentId)
     };

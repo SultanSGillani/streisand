@@ -17,7 +17,6 @@ export type Props = {
 type ConnectedState = {
     total: number;
     posts: IForumPost[];
-    loading: boolean;
 };
 type ConnectedDispatch = {};
 
@@ -43,10 +42,12 @@ class ForumThreadViewComponent extends React.Component<CombinedProps> {
 const mapStateToProps = (state: Store.All, ownProps: Props): ConnectedState => {
     const threadPages = state.sealed.forums.posts.byThread[ownProps.thread.id];
     const page = threadPages && threadPages.pages[ownProps.page];
+    const posts = (page ? page.items : []).map((id: number) => {
+        return state.sealed.forums.posts.byId[id];
+    });
     return {
         total: threadPages ? threadPages.count : 0,
-        loading: page ? page.loading : false,
-        posts: page ? page.items : []
+        posts: posts
     };
 };
 

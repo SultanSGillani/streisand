@@ -11,18 +11,6 @@ type Action = ForumAction | NewsAction;
 type ItemMap = { [id: number]: IForumTopic };
 function byId(state: ItemMap = {}, action: Action): ItemMap {
     switch (action.type) {
-        case 'FETCHING_FORUM_TOPIC':
-            return objectAssign({}, state, {
-                [action.id]: {
-                    loading: true
-                }
-            });
-        case 'FAILED_FORUM_TOPIC':
-            return objectAssign({}, state, {
-                [action.id]: {
-                    loading: false
-                }
-            });
         case 'RECEIVED_FORUM_GROUPS':
         case 'RECEIVED_FORUM_TOPIC':
         case 'RECEIVED_FORUM_THREAD':

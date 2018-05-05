@@ -1,4 +1,3 @@
-import * as objectAssign from 'object-assign';
 
 import Store from '../../store';
 import IUser from '../../models/IUser';
@@ -6,32 +5,28 @@ import { combineReducers } from '../helpers';
 import UserAction from '../../actions/users';
 import ForumAction from '../../actions/forums';
 import NewsAction from '../../actions/NewsAction';
-import { IPage } from '../../models/base/IPagedItemSet';
-import ILoadingItem from '../../models/base/ILoadingItem';
+import { IPage, INodeMap } from '../../models/base/IPagedItemSet';
+import { addLoadedNodes, addLoadedNode } from '../utilities/mutations';
 
 type Action = UserAction | ForumAction | NewsAction;
 
-type ItemMap = { [id: number]: IUser | ILoadingItem };
+type ItemMap = INodeMap<IUser>;
 function byId(state: ItemMap = {}, action: Action): ItemMap {
     switch (action.type) {
         case 'RECEIVED_FORUM_GROUPS':
         case 'RECEIVED_FORUM_TOPIC':
         case 'RECEIVED_FORUM_THREAD':
         case 'RECEIVED_NEWS_POST':
-            const map: ItemMap = {};
-            for (const item of action.data.users) {
-                map[item.id] = item;
-            }
-            return objectAssign({}, state, map);
+            return addLoadedNodes(state, action.data.users);
         case 'RECEIVED_USER':
         case 'RECEIVED_CURRENT_USER':
-            return objectAssign({}, state, { [action.user.id]: action.user });
+            return addLoadedNode(state, action.user);
         default:
             return state;
     }
 }
 
-type Pages = { [page: number]: IPage<IUser> };
+type Pages = { [page: number]: IPage };
 function pages(state: Pages = {}, action: Action): Pages {
     return state;
 }

@@ -1,13 +1,13 @@
-import { ThunkAction } from '../ActionTypes';
-import globals from '../../utilities/globals';
-import { get } from '../../utilities/Requestor';
 
-import ErrorAction from '../ErrorAction';
-import { fetchData } from '../ActionHelper';
-import { transformTopic } from './transforms';
-import IPagedResponse from '../../models/base/IPagedResponse';
-import { IForumGroupData } from '../../models/forums/IForumGroup';
-import { IForumThreadResponse } from '../../models/forums/IForumThread';
+import ErrorAction from '../../ErrorAction';
+import { transformTopic } from '../transforms';
+import { fetchData } from '../../ActionHelper';
+import { ThunkAction } from '../../ActionTypes';
+import globals from '../../../utilities/globals';
+import { get } from '../../../utilities/Requestor';
+import IPagedResponse from '../../../models/base/IPagedResponse';
+import { IForumGroupData } from '../../../models/forums/IForumGroup';
+import { IForumThreadResponse } from '../../../models/forums/IForumThread';
 
 type Response = IPagedResponse<IForumThreadResponse>;
 

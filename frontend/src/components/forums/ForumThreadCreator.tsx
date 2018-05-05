@@ -4,7 +4,7 @@ import { connect } from 'react-redux';
 
 import Store from '../../store';
 import { IForumTopic } from '../../models/forums/IForumTopic';
-import { INewForumThreadPayload, createForumThread } from '../../actions/forums/CreateThreadAction';
+import { INewForumThreadPayload, createForumThread } from '../../actions/forums/threads/CreateThreadAction';
 
 export type Props = {
     topic: IForumTopic;

@@ -6,8 +6,9 @@ import Store from '../../store';
 import Empty from '../../components/Empty';
 import { numericIdentifier } from '../../utilities/shim';
 import IForumThread from '../../models/forums/IForumThread';
-import { getPosts } from '../../actions/forums/ForumThreadAction';
 import ForumThreadView from '../../components/forums/ForumThreadView';
+import { getPosts } from '../../actions/forums/threads/ForumThreadAction';
+import ILoadingStatus, { defaultStatus } from '../../models/base/ILoadingStatus';
 
 export type Props = {
     params: {
@@ -19,9 +20,7 @@ export type Props = {
 type ConnectedState = {
     page: number;
     threadId: number;
-    loading: boolean;
-    loaded: boolean;
-    failed: boolean;
+    status: ILoadingStatus;
     thread?: IForumThread;
 };
 
@@ -32,23 +31,24 @@ type ConnectedDispatch = {
 type CombinedProps = ConnectedState & ConnectedDispatch & Props;
 class ForumThreadPageComponent extends React.Component<CombinedProps, void> {
     public componentWillMount() {
-        if (!this.props.loading) {
+        if (!this.props.status.loading) {
             this.props.getPosts(this.props.threadId, this.props.page);
         }
     }
 
     public componentWillReceiveProps(props: CombinedProps) {
-        const needPage = !props.loaded && !props.failed;
+        const status = props.status;
+        const needPage = !status.failed && (!status.loaded || status.outdated);
         const pageChanged = props.page !== this.props.page || props.threadId !== this.props.threadId;
-        if (!props.loading && (pageChanged || needPage)) {
+        if (!props.status.loading && (pageChanged || needPage)) {
             this.props.getPosts(props.threadId, props.page);
         }
     }
 
     public render() {
         const thread = this.props.thread;
-        if (!thread || !this.props.loaded) {
-            return <Empty loading={this.props.loading} />;
+        if (!thread || !this.props.status.loaded) {
+            return <Empty loading={this.props.status.loading} />;
         }
 
         return (
@@ -69,9 +69,7 @@ const mapStateToProps = (state: Store.All, ownProps: Props): ConnectedState => {
         thread: thread,
         page: pageNumber,
         threadId: threadId,
-        loading: page ? page.loading : false,
-        loaded: page ? page.loaded : false,
-        failed: page ? page.failed : false
+        status: page ? page.status : defaultStatus
     };
 };
 

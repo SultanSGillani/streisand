@@ -1,6 +1,7 @@
-import ForumTopicAction from './ForumTopicAction';
 import ForumGroupsAction from './ForumGroupsAction';
-import ForumThreadAction from './ForumThreadAction';
+import ForumTopicAction from './topics';
+import ForumThreadAction from './threads';
+import ForumPostAction from './posts';
 
-type Action = ForumGroupsAction | ForumTopicAction | ForumThreadAction;
+type Action = ForumGroupsAction | ForumTopicAction | ForumThreadAction | ForumPostAction;
 export default Action;

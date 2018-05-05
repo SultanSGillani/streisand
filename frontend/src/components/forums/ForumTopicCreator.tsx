@@ -4,7 +4,7 @@ import { connect } from 'react-redux';
 
 import Store from '../../store';
 import { IForumGroup } from '../../models/forums/IForumGroup';
-import { INewForumTopicPayload, createForumTopic } from '../../actions/forums/CreateTopicAction';
+import { INewForumTopicPayload, createForumTopic } from '../../actions/forums/topics/CreateTopicAction';
 
 export type Props = {
     groups: IForumGroup[];
