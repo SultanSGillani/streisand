@@ -4,6 +4,7 @@ from django.utils import timezone
 from django.urls import reverse
 import math
 from .managers import ForumGroupQuerySet, ForumTopicQuerySet, ForumThreadQuerySet, ForumPostQuerySet
+from django.db.models import F
 from users.models import User
 
 
