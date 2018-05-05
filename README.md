@@ -12,30 +12,65 @@ A private BitTorrent tracker backend written in python, django, and redis
   ([ubuntu](https://docs.docker.com/install/linux/docker-ce/ubuntu/),
   [mac](https://docs.docker.com/docker-for-mac/install/),
   [compose](https://docs.docker.com/compose/install/))
-- Run `docker-compose run api invoke clean-slate` to load up the default db data
-- Run `docker-compose run api python src/manage.py passwd admin` to set yourself a password for the admin
+- Run `./jc.sh build` to build the images
+- Run `./jc.sh i setup-db` to create the db tables and load in some development data
+- Run `./jc.sh m passwd admin` to set yourself a password for the admin
   user
-- Run `docker-compose run api invoke fixtures` to load up the development fixtures (see below)
 
 The `docker-compose` builds all the containers and sets up the database with our core fixtures.
-This may take a while, but afterwards subsequant commands will be much faster
+This may take a while, but afterwards subsequent commands will be much faster
 
-It is highly recommended that you add the following lines or simillar to your `~/.bashrc`:
+## Managing
 
-    alias jc_i="docker-compose run api invoke"
-    alias jc_m="docker-compose run api src/manage.py"
-    alias jc_f="docker-compose run frontend"
-    
-## New Make File:
+There are two ways of running common commands. The `jc.sh` script is responsible for things to do
+with docker (running, building images) and `invoke` (sort of like Make, for python) is used within
+the server to run commands. Django `manage.py` is also useful. Both invoke and manage.py are
+accessible from the `jc.sh` script.
 
-Now there is a make file you can use at the root of the project:
+To list `jc.sh` commands:
 
-View it to see the necessary commands.
+    ./jc.sh
+
+To list invoke commands:
+
+    ./jc.sh i -l
+    ./jc.sh i test
+
+To list manage.py commands:
+
+    ./jc.sh m
+    ./jc.sh m passwd admin
 
  ## TODO: make windows.bat file.
- 
 
-### Windows
+### Running the dev server
+
+    ./jc.sh runserver
+
+You can find the api/django-admin server on <localhost:8000>, the frontend server on
+<localhost:8001> and the tracker server on <localhost:7070>.
+
+For example, here is an announce request that will work with the fixture data that was loaded in
+by the `setup-db` command: <http://localhost:7070/16fd2706-8baf-433b-82eb-8c7fada847da/announce?info_hash=%89I%85%F9%7C%C2%5C%24n7%A0%7C%D7%C7%85%999%82%A7%CB&peer_id=-UT3400-111122221111&uploaded=721&downloaded=982&left=0&port=1337&ip=192.168.1.4>
+
+### Rebuilding containers
+
+If you change 
+
+a) The python requirements file in backend
+
+b) Any frontend files not in frontend/src/ including the javascript requirements file
+
+you need to rebuild your local containers
+by running:
+
+    ./jc.sh build
+
+There is no need to do this if you just change the source code for either the frontend or backend
+(they are on docker volumes and changes should be loaded immediately)
+
+
+## Windows
 
 Install Docker for Windows and set it up to use linux containers. You will probably have to [share
 the drive](https://docs.docker.com/docker-for-windows/#shared-drives) where you have the git
@@ -123,74 +158,15 @@ I recommend using Windows PowerShell for most commands.
 You can overwrite these files in the directory locally.
   
  
-
-## Starting a dev server
-
-To start all the services and the development servers for the frontend and backend run:
-
-    docker-compose up
-
-This will bring up everything
-
-You can find the api/django-admin server on <localhost:8000>, the frontend server on
-<localhost:8001> and the tracker server on <localhost:7070>.
-
-## Rebuilding containers
-
-If you change 
-
-a) The python requirements file in backend
-
-b) Any frontend files not in frontend/src/ (this is because the place node_modules is installed
-means we cannot mount the whole frontend directory as a volume)
-
-you need to rebuild your local containers
-by running:
-
-    docker-compose build
-
-There is no need to do this if you just change the source code for either the frontend or backend
-(they are on docker volumes and changes should be loaded immediately)
-
 ## Useful Commands
 
-- `jc_i clean-slate` or `docker-compose run web invoke clean-slate` without alias
+- `./jc.sh i reset-db`
 
 This command resets the db and loads the core fixtures to revert to a starting state.
 
 Currently the admin user password it creates is hashed and salted using argon2. It is recommended 
 that you use the function:
 
-- `jc_m change-password admin` or `docker-compose run web backend/manage.py changepassword ` without
-  alias
-
-To run the dev server, tracker and frontend and the services needed for it.
-
-`docker-compose up`
-
-The main backend site/api is accessible on `localhost:8000`.
+- `./jc.sh m passwd admin`
 
 To enter a new password for testing. 
-
-You may also add in fixtures to add in dummy forums, and 2 more users.
-
-you can do this by entering:
-
-- `jc_m loaddata dev` or `docker-compose run web backend/manage.py loaddata dev` (you should see
-  now why the aliases are useful).
-
-The users are api, and user1.
-
-## Out of date - todo change
-
-You will also need to start `celery` to coordinate background tasks (such as the handling of
-announces):
-
-- `start_celery`
-
-All of the `start_<thing>` aliases have `stop_<thing>` counterparts.  Once you have everything
-started up, you can visit <http://localhost:8000> in your browser to see the site, and you can
-make requests to the tracker at <http://localhost:7070>.
-
-For example, here is an announce request that will work with the fixture data that was loaded in
-by the `clean_slate` command: <http://localhost:7070/16fd2706-8baf-433b-82eb-8c7fada847da/announce?info_hash=%89I%85%F9%7C%C2%5C%24n7%A0%7C%D7%C7%85%999%82%A7%CB&peer_id=-UT3400-111122221111&uploaded=721&downloaded=982&left=0&port=1337&ip=192.168.1.4>

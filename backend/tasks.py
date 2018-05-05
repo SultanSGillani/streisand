@@ -14,6 +14,19 @@ def _manage_run(ctx, command, settings=None):
 
 
 @invoke.task
+def setup_db(ctx):
+    migrate(ctx)
+    foundation(ctx)
+    fixtures(ctx)
+
+
+@invoke.task
+def reset_db(ctx):
+    _manage_run(ctx, 'reset_db')
+    setup_db(ctx)
+
+
+@invoke.task
 def delete_migrations(ctx):
     ctx.run('rm -f src/*/migrations/[0-9]*.py')
 
@@ -27,15 +40,6 @@ def make_migrations(ctx):
 @invoke.task
 def migrate(ctx):
     _manage_run(ctx, 'migrate')
-
-
-@invoke.task
-def clean_slate(ctx):
-    _manage_run(ctx, 'reset_db --noinput')
-    delete_migrations(ctx)
-    make_migrations(ctx)
-    _manage_run(ctx, 'migrate')
-    _manage_run(ctx, 'loaddata foundation')
 
 
 @invoke.task

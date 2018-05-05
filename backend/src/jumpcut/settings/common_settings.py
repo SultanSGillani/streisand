@@ -32,7 +32,6 @@ DJANGO_APPS = (
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-
 )
 
 THIRD_PARTY_APPS = (
@@ -47,7 +46,6 @@ THIRD_PARTY_APPS = (
     'docs',
     'drf_yasg',
     'debug_toolbar',
-
 )
 
 LOCAL_APPS = (
@@ -70,7 +68,6 @@ LOCAL_APPS = (
     'wiki',
     'www.apps.SuitConfig',
     'www',
-
 )
 
 INSTALLED_APPS = DJANGO_APPS + THIRD_PARTY_APPS + LOCAL_APPS
