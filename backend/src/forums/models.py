@@ -1,12 +1,15 @@
 # -*- coding: utf-8 -*-
 from django.db import models
+from django.utils import timezone
 from django.urls import reverse
 import math
 from .managers import ForumGroupQuerySet, ForumTopicQuerySet, ForumThreadQuerySet, ForumPostQuerySet
+from users.models import User
 
 
 class ForumGroup(models.Model):
     old_id = models.PositiveIntegerField(null=True, db_index=True)
+    parent = models.ForeignKey('self', blank=True, null=True, on_delete=models.SET_NULL)
     sort_order = models.PositiveSmallIntegerField()
     name = models.CharField(max_length=256)
     objects = ForumGroupQuerySet.as_manager()
@@ -41,10 +44,17 @@ class ForumGroup(models.Model):
     def last_thread(self):
         return self.threads.order_by("-created_at").first()
 
+    @property
+    def is_group(self):
+        if self.parent_id:
+            return True
+        else:
+            return False
+
 
 class ForumTopic(models.Model):
     old_id = models.PositiveIntegerField(null=True, db_index=True)
-
+    creator = models.ForeignKey(User, null=True, blank=True, on_delete=models.SET_NULL)
     sort_order = models.PositiveSmallIntegerField()
     name = models.CharField(max_length=256)
     description = models.CharField(max_length=1024)
@@ -60,7 +70,9 @@ class ForumTopic(models.Model):
         null=True,
         on_delete=models.SET_NULL,
     )
+    is_archived = models.BooleanField(default=False)
     staff_only_thread_creation = models.BooleanField(default=False)
+    last_active = models.DateTimeField(default=timezone.now, blank=True, editable=False)
     number_of_threads = models.PositiveIntegerField(default=0)
     number_of_posts = models.PositiveIntegerField(default=0)
     latest_post = models.OneToOneField(
@@ -85,6 +97,10 @@ class ForumTopic(models.Model):
                 'topic_id': self.id,
             }
         )
+
+    @property
+    def main_topic(self):
+        return self.topic.parent or self.topic
 
     @property
     def threads(self):
@@ -122,6 +138,7 @@ class ForumThread(models.Model):
     )
     modified = models.BooleanField(default=False)
     modified_at = models.DateTimeField(auto_now=True, null=True)
+    modified_count = models.PositiveIntegerField(default=0, editable=False)
     modified_by = models.ForeignKey(
         to='users.User',
         related_name='modified_threads',
@@ -134,7 +151,7 @@ class ForumThread(models.Model):
         null=False,
         on_delete=models.CASCADE,
     )
-    number_of_posts = models.PositiveIntegerField(default=0)
+    number_of_posts = models.PositiveIntegerField(default=0, editable=False)
     latest_post = models.OneToOneField(
         to='forums.ForumPost',
         related_name='thread_latest',
@@ -175,6 +192,17 @@ class ForumThread(models.Model):
     def last_post(self):
         return self.posts.order_by("created_at").first()
 
+    def save(self, *args, **kwargs):
+        if self.pk:
+            self.modified = True
+            self.modified_count = F('modified_count') + 1
+
+        super(ForumThread, self).save(*args, **kwargs)
+
+        if self.pk:
+            # As we use F expression, its not possible to know modified_count until refresh from db
+            self.refresh_from_db()
+
 
 class ForumPost(models.Model):
     old_id = models.PositiveIntegerField(null=True, db_index=True)
@@ -189,6 +217,7 @@ class ForumPost(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
     modified = models.BooleanField(default=False)
     modified_at = models.DateTimeField(auto_now=True, null=True)
+    modified_count = models.PositiveIntegerField(default=0, editable=False)
     modified_by = models.ForeignKey(
         to='users.User',
         related_name='modified_posts',
@@ -227,6 +256,17 @@ class ForumPost(models.Model):
             thread_url=self.thread.get_absolute_url(),
             post_id=self.id,
         )
+
+    def save(self, *args, **kwargs):
+        if self.pk:
+            self.modified = True
+            self.modified_count = F('modified_count') + 1
+
+        super(ForumPost, self).save(*args, **kwargs)
+
+        if self.pk:
+            # As we use F expression, its not possible to know modified_count until refresh from db
+            self.refresh_from_db()
 
 
 class ForumReport(models.Model):

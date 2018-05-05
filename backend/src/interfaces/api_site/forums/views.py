@@ -73,6 +73,9 @@ class ForumTopicViewSet(ModelViewSet):
 
         return queryset
 
+    def perform_create(self, serializer):
+        serializer.save(creator=self.request.user)
+
 
 class ForumThreadIndexViewSet(ModelViewSet):
     """
@@ -134,14 +137,14 @@ class ForumThreadViewSet(ModelViewSet):
     def get_queryset(self):
         queryset = super().get_queryset().accessible_to_user(self.request.user)
 
-        topic_id = self.request.query_params.get('thread_id', None)
+        topic_id = self.request.query_params.get('topic_id', None)
         if topic_id is not None:
-            queryset = queryset.filter(thread_id=topic_id)
+            queryset = queryset.filter(topic_id=topic_id)
 
         return queryset
 
     def perform_create(self, serializer):
-        serializer.save(author=self.request.user
+        serializer.save(created_by=self.request.user
                         )
 
     def perform_update(self, serializer):
@@ -211,9 +214,9 @@ class ForumPostViewSet(ModelViewSet):
     def get_queryset(self):
         queryset = super().get_queryset().accessible_to_user(self.request.user)
 
-        thread_id = self.request.query_params.get('thread_id', None)
-        if thread_id is not None:
-            queryset = queryset.filter(thread_id=thread_id)
+        topic_id = self.request.query_params.get('topic_id', None)
+        if topic_id is not None:
+            queryset = queryset.filter(topic_id=topic_id)
 
         return queryset
 

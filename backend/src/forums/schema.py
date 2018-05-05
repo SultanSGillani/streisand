@@ -2,6 +2,7 @@ import graphene
 from graphene_django.types import DjangoObjectType
 from graphene_django.debug import DjangoDebug
 from forums.models import ForumGroup, ForumTopic, ForumThread, ForumPost
+from users.schema import UserType
 
 
 class ForumGroupType(DjangoObjectType):
@@ -24,7 +25,7 @@ class ForumPostType(DjangoObjectType):
         model = ForumPost
 
 
-class Query(object):
+class Query(graphene.ObjectType):
     all_groups = graphene.List(ForumGroupType)
     group = graphene.Field(ForumGroupType,
                            id=graphene.Int(),
@@ -61,7 +62,7 @@ class Query(object):
         return None
 
     def resolve_all_topics(self, info, **kwargs):
-        return ForumTopic.objects.all()
+        return ForumTopic.objects.select_related('group').all()
 
     def resolve_topic(self, info, **kwargs):
         id = kwargs.get('id')
@@ -76,7 +77,7 @@ class Query(object):
         return None
 
     def resolve_all_threads(self, info, **kwargs):
-        return ForumThread.objects.all()
+        return ForumThread.objects.select_related('topic').all()
 
     def resolve_thread(self, info, **kwargs):
         id = kwargs.get('id')
@@ -91,10 +92,79 @@ class Query(object):
         return None
 
     def resolve_all_posts(self, info, **kwargs):
-        return ForumPost.objects.all()
+        return ForumPost.objects.select_related('thread').all()
 
     def resolve_post(self, info, **kwargs):
         id = kwargs.get('id')
         if id is not None:
             return ForumPost.objects.get(pk=id)
         return None
+
+
+class CreateGroup(graphene.Mutation):
+    id = graphene.Int()
+    sort_order = graphene.Int()
+    name = graphene.String()
+
+    class Arguments:
+        name = graphene.String()
+        description = graphene.String()
+
+    def mutate(self, info, name, sort_order):
+        user = info.context.user or None
+
+        group = ForumGroup(
+            name=name,
+            sort_order=sort_order,
+            user=user,
+        )
+
+        group.save()
+
+        return CreateGroup(
+            id=group.id,
+            name=group.name,
+            description=group.sort_order,
+        )
+
+
+class Mutation(graphene.ObjectType):
+    create_group = CreateGroup.Field()
+
+
+class CreateTopic(graphene.Mutation):
+    id = graphene.Int()
+    sort_order = graphene.Int()
+    name = graphene.String()
+    description = graphene.String()
+    creator = graphene.Field(UserType)
+
+    class Arguments:
+        name = graphene.String()
+        sort_order = graphene.Int()
+        description = graphene.String()
+
+    def mutate(self, info, name, sort_order, description):
+        user = info.context.user or None
+
+        topic = ForumTopic(
+            name=name,
+            sort_order=sort_order,
+            description=description,
+            creator=user,
+        )
+
+        topic.save()
+
+        return CreateTopic(
+            id=topic.id,
+            name=topic.name,
+            sort_order=topic.sort_order,
+            description=topic.description,
+            creator=topic.creator,
+        )
+
+
+class Mutation(graphene.ObjectType):
+    create_group = CreateGroup.Field()
+    create_topic = CreateTopic.Field()

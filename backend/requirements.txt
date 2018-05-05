@@ -46,4 +46,5 @@ drf-yasg>=1.6.1
 graphene==2.1
 graphene-django>=2.0.dev
 graphene-django-extras==0.3.6
-python-decouple
+python-decouple==3.1
+django-graphql-extensions==0.0.4

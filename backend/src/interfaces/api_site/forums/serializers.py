@@ -152,6 +152,8 @@ class ForumThreadIndexSerializer(ModelSerializer):
     latest_post_author_id = serializers.PrimaryKeyRelatedField(source='latest_post.author', read_only=True)
     latest_post_created_at = serializers.DateTimeField(source='latest_post.created_at', read_only=True)
 
+
+
     class Meta:
         model = ForumThread
         fields = (
@@ -167,6 +169,7 @@ class ForumThreadIndexSerializer(ModelSerializer):
             'is_locked',
             'is_sticky',
             'number_of_posts',
+            'posts',
             'latest_post',
             'latest_post_created_at',
             'latest_post_author_id',
