@@ -26,12 +26,13 @@ urlpatterns = [
 
     # Authentication
     url(r'^su/', include('django_su.urls')),
-
-    # FrontEnd
-    re_path('.*', TemplateView.as_view(template_name='index.html')),
-
 ]
+
 if settings.DEBUG:
-    urlpatterns.append(
+    urlpatterns += [
         url(r'^__debug__/', include(debug_toolbar.urls)),
-    )
+        url(r'^dev/', TemplateView.as_view(template_name='dev.html')),
+    ]
+
+# Anything else gets passed to the frontend
+urlpatterns.append(re_path('.*', TemplateView.as_view(template_name='index.html')))
