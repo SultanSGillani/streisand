@@ -42,7 +42,7 @@ https://github.com/philipn/django-rest-framework-filters/archive/master.zip
 # djangorestframework-filters
 https://github.com/darklow/django-suit/tarball/v2
 djangorestframework-jwt>=1.11.0
-drf-yasg>=1.6.1
+drf-yasg>=1.7.1
 graphene==2.1
 graphene-django>=2.0.dev
 graphene-django-extras==0.3.6

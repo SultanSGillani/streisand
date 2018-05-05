@@ -26,6 +26,7 @@ SECRET_KEY = config('SECRET_KEY')
 DEBUG = config('DEBUG', cast=bool)
 PRODUCTION = config('PRODUCTION', cast=bool)
 DJANGO_APPS = (
+    'www.apps.SuitConfig',  # For admin site template
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -66,7 +67,6 @@ LOCAL_APPS = (
     'tracker',
     'users',
     'wiki',
-    'www.apps.SuitConfig',
     'www',
 )
 

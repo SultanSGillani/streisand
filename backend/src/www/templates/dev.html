@@ -4,7 +4,19 @@
 <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-    <title>JumpCut dev</title>
+    <title>Streisand dev</title>
+
+    <script type="text/javascript">
+        var defaultTheme = window['__defaultTheme'] = 'https://maxcdn.bootstrapcdn.com/bootswatch/3.3.7/darkly/bootstrap.min.css';
+        var url = (typeof localStorage !== 'undefined' && localStorage['app.theme.url']) || defaultTheme;
+        var link = document.createElement('link');
+        link.href = url;
+        link.type = 'text/css';
+        link.rel = 'stylesheet';
+        link.media = 'screen,print';
+        link.id = 'theme';
+        document.getElementsByTagName('head')[0].appendChild(link);
+    </script>
     <style>
         html, body {
             position: absolute;
@@ -80,7 +92,7 @@
             <li><a href="/admin/" target="if">Django Admin</a></li>
         </ul>
     </div>
-    <div id="container">
+    <div id="container" style="overflow: hidden">
         <iframe src="/home" name="if"></iframe>
     </div>
 </body>

@@ -8,10 +8,19 @@ INTERNAL_IPS = [
     '10.0.2.2',
 ]
 
+GRAPHENE_DJANGO_EXTRAS = {
+        'DEFAULT_PAGINATION_CLASS': 'graphene_django_extras.paginations.PageGraphqlPagination',
+        'DEFAULT_PAGE_SIZE': 25,
+        'MAX_PAGE_SIZE': 50,
+        'CACHE_ACTIVE': True,
+        'CACHE_TIMEOUT': 300    # seconds
+    }
 
 GRAPHENE = {
+    'SCHEMA_INDENT': 4,
     'MIDDLEWARE': [
         'graphene_django.debug.DjangoDebugMiddleware',
+        'graphene_django_extras.ExtraGraphQLDirectiveMiddleware',
     ],
     'SCHEMA': 'interfaces.api_site.schema.schema',
 }
@@ -37,7 +46,7 @@ MIDDLEWARE = [
 
 ROOT_URLCONF = 'www.urls'
 
-LOGIN_URL = '/'
+LOGIN_URL = '/api/v1/auth/login/'
 LOGIN_REDIRECT_URL = '/'
 LOGIN_EXEMPT_URL_PREFIXES = (
     '/__debug__/',

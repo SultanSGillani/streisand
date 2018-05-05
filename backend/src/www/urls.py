@@ -8,6 +8,9 @@ from django.urls import re_path
 from django.contrib import admin
 from django.views.generic import TemplateView
 from rest_framework.documentation import include_docs_urls
+from django.contrib.admin.views.decorators import staff_member_required
+from django.contrib.auth.decorators import login_required
+
 
 
 urlpatterns = [
@@ -29,10 +32,11 @@ urlpatterns = [
 ]
 
 if settings.DEBUG:
-    urlpatterns += [
+    urlpatterns += (
         url(r'^__debug__/', include(debug_toolbar.urls)),
-        url(r'^dev/', TemplateView.as_view(template_name='dev.html')),
-    ]
+        url(r'^dev/', staff_member_required(TemplateView.as_view(template_name='dev.html')),
+
+            ))
 
 # Anything else gets passed to the frontend
 urlpatterns.append(re_path('.*', TemplateView.as_view(template_name='index.html')))
