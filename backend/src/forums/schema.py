@@ -124,7 +124,7 @@ class CreateGroup(graphene.Mutation):
         return CreateGroup(
             id=group.id,
             name=group.name,
-            description=group.sort_order,
+            sort_order=group.sort_order,
         )
 
 
