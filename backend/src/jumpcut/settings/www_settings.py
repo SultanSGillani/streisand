@@ -46,7 +46,7 @@ MIDDLEWARE = [
 
 ROOT_URLCONF = 'www.urls'
 
-LOGIN_URL = '/api/v1/auth/login/'
+LOGIN_URL = '/'
 LOGIN_REDIRECT_URL = '/'
 LOGIN_EXEMPT_URL_PREFIXES = (
     '/__debug__/',
