@@ -128,10 +128,6 @@ class CreateGroup(graphene.Mutation):
         )
 
 
-class Mutation(graphene.ObjectType):
-    create_group = CreateGroup.Field()
-
-
 class CreateTopic(graphene.Mutation):
     id = graphene.Int()
     sort_order = graphene.Int()
