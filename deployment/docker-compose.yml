@@ -20,7 +20,7 @@ services:
     www:
         image: registry.ronzertnert.me/jumpcut/jumpcut:master
         depends_on:
-            - db
+            - postgres
             - redis
         env_file: .env
         ports:
@@ -31,11 +31,11 @@ services:
         image: registry.ronzertnert.me/jumpcut/jumpcut:master
         command: celery worker --workdir /code/src -A jumpcut -l info
         depends_on:
-            - db
+            - postgres
             - redis
         env_file: .env
         environment:
             - C_FORCE_ROOT=true
         restart: always
 volumes:
-    dbdata:
+    pgdata:
