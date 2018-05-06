@@ -4,11 +4,11 @@ import Store from '../store';
 import IWiki from '../models/IWiki';
 import Action from '../actions/wikis';
 import { combineReducers } from './helpers';
-import { IPage } from '../models/base/IPagedItemSet';
-import { getPageReducer } from './utilities/reducers';
-import ILoadingItem from '../models/base/ILoadingItem';
+import { getPageReducer } from './utilities/page';
+import { IPage, INodeMap } from '../models/base/IPagedItemSet';
+import { addLoadedNode, addLoadedNodes } from './utilities/mutations';
 
-type ItemMap = { [id: number]: IWiki | ILoadingItem };
+type ItemMap = INodeMap<IWiki>;
 function byId(state: ItemMap = {}, action: Action): ItemMap {
     switch (action.type) {
         case 'REMOVED_WIKI':
@@ -16,26 +16,22 @@ function byId(state: ItemMap = {}, action: Action): ItemMap {
             delete copy[action.id];
             return copy;
         case 'RECEIVED_WIKI':
-            return objectAssign({}, state, { [action.wiki.id]: action.wiki });
+            return addLoadedNode(state, action.wiki);
         case 'RECEIVED_WIKIS':
-            let map: ItemMap = {};
-            for (const item of action.items) {
-                map[item.id] = item;
-            }
-            return objectAssign({}, state, map);
+            return addLoadedNodes(state, action.items);
         default:
             return state;
     }
 }
 
-const pageReducer = getPageReducer<IWiki>('WIKIS');
-type Pages = { [page: number]: IPage<IWiki> };
+const pageReducer = getPageReducer('WIKIS');
+type Pages = { [page: number]: IPage };
 function pages(state: Pages = {}, action: Action): Pages {
     switch (action.type) {
         case 'FETCHING_WIKIS':
         case 'RECEIVED_WIKIS':
         case 'FAILED_WIKIS':
-            const page: IPage<IWiki> = pageReducer(state[action.page], action);
+            const page: IPage = pageReducer(state[action.page], action);
             return objectAssign({}, state, { [action.page]: page });
         default:
             return state;

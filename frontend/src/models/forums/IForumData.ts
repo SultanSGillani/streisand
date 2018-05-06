@@ -2,18 +2,14 @@ import { IForumPost } from './IForumPost';
 import { IForumGroup } from './IForumGroup';
 import { IForumTopic } from './IForumTopic';
 import { IForumThread } from './IForumThread';
+import ILoadingStatus from '../base/ILoadingStatus';
 import { INestedPages } from '../base/IPagedItemSet';
 
-export type ForumGroupData = {
-    /* Whether there is a pending request for forum groups */
-    loading: boolean;
-    /* Whether there has been at least one successful fetch of forum groups */
-    loaded: boolean;
-    /* Whether the most recent fetch of forum groups failed */
-    failed: boolean;
-    items: IForumGroup[];
+export interface IForumGroupData {
+    status: ILoadingStatus;
+    items: number[];
     byId: { [id: number]: IForumGroup };
-};
+}
 
 export type ForumTopicData = {
     byId: { [id: number]: IForumTopic };
@@ -21,16 +17,16 @@ export type ForumTopicData = {
 
 export type ForumThreadData = {
     byId: { [id: number]: IForumThread };
-    byTopic: INestedPages<IForumThread>;
+    byTopic: INestedPages;
 };
 
 export type ForumPostData = {
     byId: { [id: number]: IForumPost };
-    byThread: INestedPages<IForumPost>;
+    byThread: INestedPages;
 };
 
 interface IForumData {
-    groups: ForumGroupData;
+    groups: IForumGroupData;
     topics: ForumTopicData;
     threads: ForumThreadData;
     posts: ForumPostData;

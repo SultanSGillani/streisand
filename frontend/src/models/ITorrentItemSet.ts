@@ -2,7 +2,7 @@ import ITorrent from './ITorrent';
 import { IPagedItemSet, IPage } from './base/IPagedItemSet';
 
 interface ITorrentItemSet extends IPagedItemSet<ITorrent> {
-    byFilmId: { [id: number]: IPage<ITorrent> };
+    byFilmId: { [id: number]: IPage };
 }
 
 export default ITorrentItemSet;

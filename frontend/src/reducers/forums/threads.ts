@@ -3,11 +3,11 @@ import * as objectAssign from 'object-assign';
 import { combineReducers } from '../helpers';
 import ForumAction from '../../actions/forums';
 import NewsAction from '../../actions/NewsAction';
-import { getPageReducer } from '../utilities/reducers';
+import { getPageReducer } from '../utilities/page';
 import { INestedPages } from '../../models/base/IPagedItemSet';
 import { IForumThread } from '../../models/forums/IForumThread';
 import { ForumThreadData } from '../../models/forums/IForumData';
-import ForumTopicAction, { ForumTopicReceivedAction } from '../../actions/forums/ForumTopicAction';
+import ForumTopicAction, { ForumTopicReceivedAction } from '../../actions/forums/topics/ForumTopicAction';
 
 type Action = ForumAction | NewsAction;
 
@@ -28,7 +28,7 @@ function byId(state: ItemMap = {}, action: Action): ItemMap {
     }
 }
 
-type Items = INestedPages<IForumThread>;
+type Items = INestedPages;
 function byTopic(state: Items = {}, action: ForumTopicAction): Items {
     switch (action.type) {
         case 'FAILED_FORUM_TOPIC':
@@ -48,7 +48,7 @@ interface IThreadProcessingParams {
     count?: number;
 }
 
-const pageReducer = getPageReducer<IForumThread>('FORUM_TOPIC', (action: ForumTopicReceivedAction) => {
+const pageReducer = getPageReducer('FORUM_TOPIC', (action: ForumTopicReceivedAction) => {
     return action.data.threads || [];
 });
 

@@ -6,7 +6,7 @@ import { connect } from 'react-redux';
 import Store from '../../store';
 import ForumPostCell from './ForumPostCell';
 import IForumTopic from '../../models/forums/IForumTopic';
-import { deleteForumTopic } from '../../actions/forums/DeleteTopicAction';
+import { deleteForumTopic, IDeleteTopicProps } from '../../actions/forums/topics/DeleteTopicAction';
 
 export type Props = {
     topic: IForumTopic;
@@ -15,14 +15,19 @@ export type Props = {
 type ConnectedState = {};
 
 type ConnectedDispatch = {
-    deleteForumTopic: (id: number) => void;
+    deleteForumTopic: (props: IDeleteTopicProps) => void;
 };
 
 type CombinedProps = Props & ConnectedDispatch & ConnectedState;
 class ForumTopicRowComponent extends React.Component<CombinedProps> {
     public render() {
         const topic = this.props.topic;
-        const onDelete = () => { this.props.deleteForumTopic(topic.id); };
+        const onDelete = () => {
+            this.props.deleteForumTopic({
+                group: topic.group,
+                topic: topic.id
+            });
+        };
         return (
             <tr>
                 <td><Link to={'/forum/topic/' + topic.id} title={topic.title}>{topic.title}</Link></td>
@@ -40,7 +45,7 @@ class ForumTopicRowComponent extends React.Component<CombinedProps> {
 }
 
 const mapDispatchToProps = (dispatch: redux.Dispatch<Store.All>): ConnectedDispatch => ({
-    deleteForumTopic: (id: number) => dispatch(deleteForumTopic(id))
+    deleteForumTopic: (props: IDeleteTopicProps) => dispatch(deleteForumTopic(props))
 });
 
 const ForumTopicRow: React.ComponentClass<Props> =

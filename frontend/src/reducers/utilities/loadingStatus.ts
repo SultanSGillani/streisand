@@ -1,11 +1,11 @@
 import { Reducer } from 'redux';
 
 import { combineReducers } from '../helpers';
-import { IPage } from '../../models/base/IPagedItemSet';
+import ILoadingStatus from '../../models/base/ILoadingStatus';
 
 // WARNING: We are abadoning type safety here, so be very careful.
 // Ideally we wouldn't, but I don't know how to do this otherwise.
-export function getPageReducer<T>(id: string, getItems?: (action: any) => T[]): Reducer<IPage<T>> {
+export function getLoadingStatusReducer(id: string): Reducer<ILoadingStatus> {
     const fetchingType = `FETCHING_${id}`;
     const receivedType = `RECEIVED_${id}`;
     const failedType = `FAILED_${id}`;
@@ -27,8 +27,6 @@ export function getPageReducer<T>(id: string, getItems?: (action: any) => T[]): 
         switch (action.type) {
             case receivedType:
                 return true;
-            case invalidateType:
-                return false;
             default:
                 return state;
         }
@@ -45,14 +43,17 @@ export function getPageReducer<T>(id: string, getItems?: (action: any) => T[]): 
         }
     }
 
-    function items(state: T[] = [], action: any) {
+    function outdated(state: boolean = false, action: any) {
         switch (action.type) {
             case receivedType:
-                return getItems ? getItems(action) : action.items;
+                return false;
+            case failedType:
+            case invalidateType:
+                return true;
             default:
                 return state;
         }
     }
 
-    return combineReducers<IPage<T>>({ loading, loaded, failed, items });
+    return combineReducers<ILoadingStatus>({ loading, loaded, failed, outdated });
 }

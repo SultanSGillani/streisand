@@ -7,6 +7,7 @@ import { NavDropdown, MenuItem } from 'react-bootstrap';
 
 import Store from '../../store';
 import IUser from '../../models/IUser';
+import { getItem } from '../../utilities/mapping';
 import { logout } from '../../actions/auth/LogoutAction';
 import { getCurrentUser } from '../../actions/users/CurrentUserAction';
 
@@ -59,7 +60,10 @@ class CurrentUserLinkComponent extends React.Component<CombinedProps> {
 const mapStateToProps = (state: Store.All): ConnectedState => ({
     loading: state.sealed.currentUser.loading,
     isAuthenticated: state.sealed.auth.isAuthenticated,
-    currentUser: state.sealed.users.byId[state.sealed.currentUser.id as number] as IUser
+    currentUser: getItem({
+        id: state.sealed.currentUser.id,
+        byId: state.sealed.users.byId
+    })
 });
 
 const mapDispatchToProps = (dispatch: redux.Dispatch<Store.All>): ConnectedDispatch => ({

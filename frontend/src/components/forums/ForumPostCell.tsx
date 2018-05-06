@@ -8,6 +8,7 @@ import UserLink from '../links/UserLink';
 import { getDateDiff } from '../../utilities/dates';
 import IForumPost from '../../models/forums/IForumPost';
 import IForumThread from '../../models/forums/IForumThread';
+import { getItem } from '../../utilities/mapping';
 
 export type Props = {
     id?: number;
@@ -16,7 +17,7 @@ export type Props = {
 type ConnectedState = {
     post: IForumPost;
     thread: IForumThread;
-    author: IUser;
+    author?: IUser;
 };
 type ConnectedDispatch = {};
 
@@ -42,13 +43,15 @@ class ForumPostCellComponent extends React.Component<CombinedProps> {
 
 const mapStateToProps = (state: Store.All, ownProps: Props): ConnectedState => {
     const postId = ownProps.id || ownProps.id === 0 ? ownProps.id : -1;
-    const post = state.sealed.forums.posts.byId[postId] as IForumPost;
-    const author = post && state.sealed.users.byId[post.author] as IUser;
+    const post = state.sealed.forums.posts.byId[postId];
     const thread = post && state.sealed.forums.threads.byId[post.thread];
     return {
-        post: post,
+        post: post as IForumPost,
         thread: thread as IForumThread,
-        author: author
+        author: getItem({
+            id: post && post.author,
+            byId: state.sealed.users.byId
+        })
     };
 };
 

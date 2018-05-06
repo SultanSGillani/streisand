@@ -5,10 +5,10 @@ import { connect } from 'react-redux';
 import Store from '../../store';
 import IWiki from '../../models/IWiki';
 import Empty from '../../components/Empty';
+import { getNode } from '../../utilities/mapping';
 import WikiView from '../../components/wikis/WikiView';
 import { numericIdentifier } from '../../utilities/shim';
 import { getWiki } from '../../actions/wikis/WikiAction';
-import { isLoadingItem } from '../../models/base/ILoadingItem';
 
 export type Props = {
     params: {
@@ -56,20 +56,11 @@ class WikiPageComponent extends React.Component<CombinedProps, void> {
 
 const mapStateToProps = (state: Store.All, ownProps: Props): ConnectedState => {
     const wikiId = numericIdentifier(ownProps.params.wikiId);
-    const item = state.sealed.wikis.byId[wikiId];
-
-    let wiki: IWiki | undefined;
-    let loading = false;
-    if (isLoadingItem(item)) {
-        loading = item.loading;
-    } else if (item) {
-        wiki = item;
-    }
-
+    const node = getNode({ id: wikiId, byId: state.sealed.wikis.byId });
     return {
-        loading: loading,
-        wiki: wiki,
-        wikiId: wikiId
+        wikiId: wikiId,
+        wiki: node.item,
+        loading: node.status.loading
     };
 };
 

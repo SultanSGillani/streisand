@@ -5,17 +5,18 @@ import { connect } from 'react-redux';
 import Store from '../../store';
 import Avatar from '../users/Avatar';
 import IUser from '../../models/IUser';
+import { getItem } from '../../utilities/mapping';
 import Editor, { IEditorHandle } from '../bbcode/Editor';
 import { IForumThread } from '../../models/forums/IForumThread';
 import { IForumPostUpdate } from '../../models/forums/IForumPost';
-import { postReply } from '../../actions/forums/CreatePostAction';
+import { postReply } from '../../actions/forums/posts/CreatePostAction';
 
 export type Props = {
     thread: IForumThread;
 };
 
 type ConnectedState = {
-    author: IUser;
+    author?: IUser;
 };
 
 type ConnectedDispatch = {
@@ -58,9 +59,11 @@ class ForumReplyComponent extends React.Component<CombinedProps> {
 }
 
 const mapStateToProps = (state: Store.All, ownProps: Props): ConnectedState => {
-    const author = state.sealed.users.byId[state.sealed.currentUser.id as number] as IUser;
     return {
-        author: author
+        author: getItem({
+            id: state.sealed.currentUser.id,
+            byId: state.sealed.users.byId
+        })
     };
 };
 

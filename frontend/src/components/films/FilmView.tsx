@@ -4,8 +4,9 @@ import { connect } from 'react-redux';
 import Store from '../../store';
 import IFilm from '../../models/IFilm';
 import ITorrent from '../../models/ITorrent';
-import TorrentSection from '../torrents/TorrentSection';
+import { getItems } from '../../utilities/mapping';
 import TorrentModal from '../torrents/TorrentModal';
+import TorrentSection from '../torrents/TorrentSection';
 
 export type Props = {
     film: IFilm;
@@ -14,7 +15,6 @@ export type Props = {
 
 type ConnectedState = {
     torrents: ITorrent[];
-    loadingTorrents: boolean;
 };
 type ConnectedDispatch = {};
 
@@ -79,11 +79,13 @@ class FilmViewComponent extends React.Component<CombinedProps> {
 }
 
 const mapStateToProps = (state: Store.All, ownProps: Props): ConnectedState => {
-    const page = state.sealed.torrents.byFilmId[ownProps.film.id];
     return {
-        torrents: page ? page.items || [] : [],
-        loadingTorrents: page ? page.loading : false
-    };
+        torrents: getItems({
+            page: ownProps.film.id,
+            byId: state.sealed.torrents.byId,
+            pages: state.sealed.torrents.byFilmId
+        })
+     };
 };
 
 const FilmView: React.ComponentClass<Props> =

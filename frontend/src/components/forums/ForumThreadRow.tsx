@@ -7,8 +7,9 @@ import IUser from '../../models/IUser';
 import UserLink from '../links/UserLink';
 import ForumPostCell from './ForumPostCell';
 import EmptyThreadCell from './EmptyThreadCell';
+import { getItem } from '../../utilities/mapping';
 import IForumThread from '../../models/forums/IForumThread';
-import { IDeleteThreadProps, deleteForumThread } from '../../actions/forums/DeleteThreadAction';
+import { IDeleteThreadProps, deleteForumThread } from '../../actions/forums/threads/DeleteThreadAction';
 
 export type Props = {
     page: number;
@@ -52,9 +53,12 @@ class ForumThreadRowComponent extends React.Component<CombinedProps> {
 }
 
 const mapStateToProps = (state: Store.All, ownProps: Props): ConnectedState => {
-    const createdBy = ownProps.thread && ownProps.thread.createdBy;
-    const author = createdBy && state.sealed.users.byId[createdBy] as IUser || undefined;
-    return { author };
+    return {
+        author: getItem({
+            id: ownProps.thread && ownProps.thread.createdBy,
+            byId: state.sealed.users.byId
+        })
+     };
 };
 
 const mapDispatchToProps = (dispatch: redux.Dispatch<Store.All>): ConnectedDispatch => ({

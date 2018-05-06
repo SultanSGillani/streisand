@@ -1,10 +1,10 @@
-import Store from '../../store';
-import globals from '../../utilities/globals';
-import { invalidate } from './ForumThreadAction';
-import { remove } from '../../utilities/Requestor';
-import { IUnkownError } from '../../models/base/IError';
-import { ThunkAction, IDispatch } from '../ActionTypes';
-import ErrorAction, { handleError } from '../ErrorAction';
+import Store from '../../../store';
+import globals from '../../../utilities/globals';
+import { remove } from '../../../utilities/Requestor';
+import { invalidate } from '../threads/ForumThreadAction';
+import { IUnkownError } from '../../../models/base/IError';
+import { ThunkAction, IDispatch } from '../../ActionTypes';
+import ErrorAction, { handleError } from '../../ErrorAction';
 
 type DeletePostAction =
     { type: 'DELETING_FORUM_POST', id: number } |

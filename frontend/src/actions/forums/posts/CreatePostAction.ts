@@ -1,13 +1,13 @@
 import { push } from 'react-router-redux';
 
-import Store from '../../store';
-import globals from '../../utilities/globals';
-import { invalidate } from './ForumThreadAction';
-import { post } from '../../utilities/Requestor';
-import { IUnkownError } from '../../models/base/IError';
-import { ThunkAction, IDispatch } from '../ActionTypes';
-import ErrorAction, { handleError } from '../ErrorAction';
-import { IForumPostUpdate } from '../../models/forums/IForumPost';
+import Store from '../../../store';
+import globals from '../../../utilities/globals';
+import { post } from '../../../utilities/Requestor';
+import { invalidate } from '../threads/ForumThreadAction';
+import { IUnkownError } from '../../../models/base/IError';
+import { ThunkAction, IDispatch } from '../../ActionTypes';
+import ErrorAction, { handleError } from '../../ErrorAction';
+import { IForumPostUpdate } from '../../../models/forums/IForumPost';
 
 type CreatePostAction =
     { type: 'CREATING_FORUM_POST', thread: number, body: string } |

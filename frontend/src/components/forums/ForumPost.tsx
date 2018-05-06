@@ -7,9 +7,10 @@ import Avatar from '../users/Avatar';
 import IUser from '../../models/IUser';
 import UserLink from '../links/UserLink';
 import TextView from '../bbcode/TextView';
+import { getItem } from '../../utilities/mapping';
 import { getDateDiff } from '../../utilities/dates';
 import IForumPost from '../../models/forums/IForumPost';
-import { IDeletePostProps, deleteForumPost } from '../../actions/forums/DeletePostAction';
+import { IDeletePostProps, deleteForumPost } from '../../actions/forums/posts/DeletePostAction';
 
 export type Props = {
     page: number;
@@ -17,7 +18,7 @@ export type Props = {
 };
 
 type ConnectedState = {
-    author: IUser;
+    author?: IUser;
 };
 type ConnectedDispatch = {
     deleteForumPost: (props: IDeletePostProps) => void;
@@ -60,9 +61,11 @@ class ForumPostComponent extends React.Component<CombinedProps> {
 }
 
 const mapStateToProps = (state: Store.All, ownProps: Props): ConnectedState => {
-    const author = ownProps.post && state.sealed.users.byId[ownProps.post.author] as IUser;
     return {
-        author: author
+        author: getItem({
+            id: ownProps.post.author,
+            byId: state.sealed.users.byId
+        })
     };
 };
 
