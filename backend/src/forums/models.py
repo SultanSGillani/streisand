@@ -1,10 +1,11 @@
 # -*- coding: utf-8 -*-
-from django.db import models
-from django.utils import timezone
-from django.urls import reverse
 import math
-from .managers import ForumGroupQuerySet, ForumTopicQuerySet, ForumThreadQuerySet, ForumPostQuerySet
+
+from django.db import models
 from django.db.models import F
+from django.urls import reverse
+
+from .managers import ForumGroupQuerySet, ForumTopicQuerySet, ForumThreadQuerySet, ForumPostQuerySet
 
 
 class ForumGroup(models.Model):
@@ -31,7 +32,6 @@ class ForumGroup(models.Model):
     @property
     def thread_count(self):
         return self.threads.count()
-
 
     @property
     def is_group(self):

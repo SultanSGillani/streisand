@@ -3,18 +3,17 @@
 from .common_settings import *
 import datetime
 
-
 INTERNAL_IPS = [
     '10.0.2.2',
 ]
 
 GRAPHENE_DJANGO_EXTRAS = {
-        'DEFAULT_PAGINATION_CLASS': 'graphene_django_extras.paginations.PageGraphqlPagination',
-        'DEFAULT_PAGE_SIZE': 25,
-        'MAX_PAGE_SIZE': 50,
-        'CACHE_ACTIVE': True,
-        'CACHE_TIMEOUT': 300    # seconds
-    }
+    'DEFAULT_PAGINATION_CLASS': 'graphene_django_extras.paginations.PageGraphqlPagination',
+    'DEFAULT_PAGE_SIZE': 25,
+    'MAX_PAGE_SIZE': 50,
+    'CACHE_ACTIVE': True,
+    'CACHE_TIMEOUT': 300  # seconds
+}
 
 GRAPHENE = {
     'SCHEMA_INDENT': 4,
@@ -42,7 +41,6 @@ MIDDLEWARE = [
     'www.middleware.IPHistoryMiddleware',
 
 ]
-
 
 ROOT_URLCONF = 'www.urls'
 
@@ -154,7 +152,6 @@ SWAGGER_SETTINGS = {
 REDOC_SETTINGS = {
     'LAZY_RENDERING': True,
 }
-
 
 SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
 

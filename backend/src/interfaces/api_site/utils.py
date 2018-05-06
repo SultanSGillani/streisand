@@ -1,8 +1,5 @@
 from django.core.paginator import EmptyPage, PageNotAnInteger, Paginator
 
-# First we create a little helper function, because we will potentially have many PaginatedTypes
-# and we will potentially want to turn many querysets into paginated results:
-
 
 def get_paginator(qs, page_size, page, paginated_type, **kwargs):
     p = Paginator(qs, page_size)
@@ -19,4 +16,4 @@ def get_paginator(qs, page_size, page, paginated_type, **kwargs):
         has_prev=page_obj.has_previous(),
         objects=page_obj.object_list,
         **kwargs
-)
+    )

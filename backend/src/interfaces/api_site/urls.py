@@ -15,7 +15,6 @@ from drf_yasg.views import get_schema_view
 from drf_yasg import openapi
 from graphene_django.views import GraphQLView
 
-
 schema_view = get_schema_view(
 
     openapi.Info(
@@ -29,7 +28,6 @@ schema_view = get_schema_view(
     public=True,
     permission_classes=(permissions.AllowAny,),
 )
-
 
 router = routers.DefaultRouter()
 
@@ -73,8 +71,6 @@ router.register(r'forum-thread-subscriptions', viewset=forums_views.ForumThreadS
                 base_name='forum-thread-subscription')
 router.register(r'forum-posts', viewset=forums_views.ForumPostViewSet, base_name='forum-post')
 router.register(r'news-posts', viewset=forums_views.NewsPostViewSet, base_name='news-post')
-
-
 
 # Wiki
 router.register(r'wikis', viewset=wiki_views.WikiArticleCreateUpdateDestroyViewSet, base_name='wiki')
