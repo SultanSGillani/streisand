@@ -59,10 +59,11 @@ router.register(r'forum-groups', viewset=forums_views.ForumGroupViewSet, base_na
 router.register(r'forum-topics', viewset=forums_views.ForumTopicViewSet, base_name='forum-topic')
 
 # New Forum endpoints
-router.register(r'New-forum-index', viewset=forums_views.ForumIndexViewSet, base_name='new-forum-index')
-router.register(r'New-forum-topic-index', viewset=forums_views.ForumTopicListViewSet, base_name='new-topic-index')
-router.register(r'New-forum-topic-items', viewset=forums_views.ForumTopicCreateViewSet, base_name='new-topic-item')
-router.register(r'New forum-thread-index', viewset=forums_views.ForumThreadListViewSet, base_name='new-thread-index')
+router.register(r'new-forum-index', viewset=forums_views.ForumIndexViewSet, base_name='new-forum-index')
+router.register(r'new-topic-index', viewset=forums_views.ForumTopicListViewSet, base_name='new-topic-index')
+router.register(r'new-topic-items', viewset=forums_views.ForumTopicCreateViewSet, base_name='new-topic-item')
+router.register(r'new-thread-index', viewset=forums_views.ForumThreadListViewSet, base_name='new-thread-index')
+router.register(r'new-post-items', viewset=forums_views.ForumPostCreateViewSet, base_name='new-post-items')
 
 router.register(r'forum-thread-index', viewset=forums_views.ForumThreadIndexViewSet, base_name='forum-thread-index')
 router.register(r'forum-threads', viewset=forums_views.ForumThreadViewSet, base_name='forum-thread')

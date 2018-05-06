@@ -2,7 +2,7 @@
 
 from rest_framework import serializers
 from rest_framework.serializers import ModelSerializer
-from interfaces.api_site.users.serializers import DisplayUserProfileSerializer
+from interfaces.api_site.users.serializers import DisplayUserProfileSerializer, UserForForumSerializer
 from forums.models import ForumGroup, ForumPost, ForumThread, ForumTopic, ForumThreadSubscription
 
 
@@ -276,7 +276,6 @@ class ForumGroupTopicSerializer(ModelSerializer):
 
 
 class ForumPostTopicSerializer(ModelSerializer):
-
     topic = serializers.PrimaryKeyRelatedField(source='topic_latest', read_only=True)
 
     class Meta:
@@ -294,8 +293,7 @@ class ForumTopicListSerializer(ModelSerializer):
     groups = ForumGroupTopicSerializer(read_only=True, source='group')
     threads = ForumThreadTopicSerializer(read_only=True, many=True)
     posts = ForumPostTopicSerializer(read_only=True, many=True)
-    user_id = serializers.PrimaryKeyRelatedField(source='creator', read_only=True)
-    user_name = serializers.StringRelatedField(source='creator', read_only=True)
+    users = UserForForumSerializer(source='threads.created_by', read_only=True)
 
     class Meta:
         model = ForumTopic
@@ -308,8 +306,7 @@ class ForumTopicListSerializer(ModelSerializer):
             'minimum_user_class',
             'threads',
             'posts',
-            'user_id',
-            'user_name',
+            'users',
         )
 
 
@@ -362,7 +359,30 @@ class ForumPostThreadSerializer(ModelSerializer):
             'body',
             'modified_at',
             'modified_by',
+            'page_number',
+            'post_number',
         )
+
+
+class ForumPostCreateSerializer(ModelSerializer):
+    author = serializers.PrimaryKeyRelatedField(default=serializers.CurrentUserDefault(), read_only=True,
+                                                )
+
+    class Meta:
+        model = ForumPost
+        fields = (
+            'id',
+            'author',
+            'body',
+            'thread',
+            'page_number',
+            'post_number',
+        )
+
+        extra_kwargs = {
+            'page_number': {'read_only': True},
+            'post_number': {'read_only': True},
+        }
 
 
 class ForumThreadListSerializer(ModelSerializer):

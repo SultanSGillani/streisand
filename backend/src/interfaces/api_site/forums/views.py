@@ -4,6 +4,7 @@ from rest_framework import mixins
 from rest_framework.mixins import Response
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.viewsets import ModelViewSet, GenericViewSet
+from www.permissions import IsAccountOwner
 
 from forums.models import ForumGroup, ForumTopic, ForumThread, ForumPost, ForumThreadSubscription
 from www.pagination import ForumsPageNumberPagination
@@ -18,7 +19,8 @@ from .serializers import (
     ForumIndexSerializer,
     ForumTopicListSerializer,
     ForumTopicCreateSerializer,
-    ForumThreadListSerializer
+    ForumThreadListSerializer,
+    ForumPostCreateSerializer
 )
 
 
@@ -34,6 +36,17 @@ class ForumGroupViewSet(ModelViewSet):
         'topics__latest_post__thread',
     ).order_by('sort_order').distinct('sort_order')
     pagination_class = ForumsPageNumberPagination
+
+    def get_queryset(self):
+        return super().get_queryset().accessible_to_user(self.request.user)
+
+
+class ForumPostCreateViewSet(mixins.RetrieveModelMixin, mixins.CreateModelMixin, mixins.DestroyModelMixin,
+                             GenericViewSet):
+    permission_classes = [IsAccountOwner]
+    serializer_class = ForumPostCreateSerializer
+    pagination_class = ForumsPageNumberPagination
+    queryset = ForumPost.objects.all()
 
     def get_queryset(self):
         return super().get_queryset().accessible_to_user(self.request.user)
@@ -56,7 +69,13 @@ class ForumTopicListViewSet(ModelViewSet):
     queryset = ForumTopic.objects.all()
 
     def get_queryset(self):
-        return super().get_queryset().accessible_to_user(self.request.user)
+        queryset = super().get_queryset().accessible_to_user(self.request.user)
+
+        group_id = self.request.query_params.get('group_id', None)
+        if group_id is not None:
+            queryset = queryset.filter(group_id=group_id)
+
+        return queryset
 
 
 class ForumTopicCreateViewSet(mixins.UpdateModelMixin, mixins.CreateModelMixin, mixins.DestroyModelMixin,

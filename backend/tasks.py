@@ -53,6 +53,15 @@ def foundation(ctx):
 
 
 @invoke.task
+def clean_slate(ctx):
+    _manage_run(ctx, 'reset_db --noinput')
+    delete_migrations(ctx)
+    make_migrations(ctx)
+    _manage_run(ctx, 'migrate')
+    _manage_run(ctx, 'loaddata foundation')
+
+
+@invoke.task
 def shell(ctx):
     _manage_run(ctx, 'shell_plus')
 
