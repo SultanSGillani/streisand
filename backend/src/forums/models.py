@@ -5,7 +5,6 @@ from django.urls import reverse
 import math
 from .managers import ForumGroupQuerySet, ForumTopicQuerySet, ForumThreadQuerySet, ForumPostQuerySet
 from django.db.models import F
-from users.models import User
 
 
 class ForumGroup(models.Model):
@@ -33,17 +32,6 @@ class ForumGroup(models.Model):
     def thread_count(self):
         return self.threads.count()
 
-    @property
-    def posts(self):
-        return ForumPost.objects.filter(thread__id=self.id)
-
-    @property
-    def post_count(self):
-        return self.threads.posts.count()
-
-    @property
-    def last_thread(self):
-        return self.threads.order_by("-created_at").first()
 
     @property
     def is_group(self):
@@ -55,7 +43,12 @@ class ForumGroup(models.Model):
 
 class ForumTopic(models.Model):
     old_id = models.PositiveIntegerField(null=True, db_index=True)
-    creator = models.ForeignKey(User, null=True, blank=True, on_delete=models.SET_NULL)
+    creator = models.ForeignKey(
+        to='users.User',
+        related_name='topic_author',
+        null=True,
+        on_delete=models.SET_NULL,
+    )
     sort_order = models.PositiveSmallIntegerField()
     name = models.CharField(max_length=256)
     description = models.CharField(max_length=1024)
@@ -71,9 +64,8 @@ class ForumTopic(models.Model):
         null=True,
         on_delete=models.SET_NULL,
     )
-    is_archived = models.BooleanField(default=False)
+    is_archived = models.NullBooleanField(default=False)
     staff_only_thread_creation = models.BooleanField(default=False)
-    last_active = models.DateTimeField(default=timezone.now, blank=True, editable=False)
     number_of_threads = models.PositiveIntegerField(default=0)
     number_of_posts = models.PositiveIntegerField(default=0)
     latest_post = models.OneToOneField(
@@ -98,10 +90,6 @@ class ForumTopic(models.Model):
                 'topic_id': self.id,
             }
         )
-
-    @property
-    def main_topic(self):
-        return self.topic.parent or self.topic
 
     @property
     def threads(self):

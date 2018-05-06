@@ -1,10 +1,11 @@
 from django.db.models import OuterRef, Subquery
 from django_filters import rest_framework as filters
-from forums.models import ForumGroup, ForumTopic, ForumThread, ForumPost, ForumThreadSubscription
 from rest_framework import mixins
 from rest_framework.mixins import Response
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.viewsets import ModelViewSet, GenericViewSet
+
+from forums.models import ForumGroup, ForumTopic, ForumThread, ForumPost, ForumThreadSubscription
 from www.pagination import ForumsPageNumberPagination
 from .filters import ForumTopicFilter, ForumThreadFilter, ForumPostFilter
 from .serializers import (
@@ -15,6 +16,9 @@ from .serializers import (
     ForumThreadIndexSerializer,
     ForumThreadSubscriptionSerializer,
     ForumIndexSerializer,
+    ForumTopicListSerializer,
+    ForumTopicCreateSerializer,
+    ForumThreadListSerializer
 )
 
 
@@ -40,6 +44,33 @@ class ForumIndexViewSet(ModelViewSet):
     serializer_class = ForumIndexSerializer
     pagination_class = ForumsPageNumberPagination
     queryset = ForumGroup.objects.all()
+
+    def get_queryset(self):
+        return super().get_queryset().accessible_to_user(self.request.user)
+
+
+class ForumTopicListViewSet(ModelViewSet):
+    permission_classes = [IsAuthenticated]
+    serializer_class = ForumTopicListSerializer
+    pagination_class = ForumsPageNumberPagination
+    queryset = ForumTopic.objects.all()
+
+    def get_queryset(self):
+        return super().get_queryset().accessible_to_user(self.request.user)
+
+
+class ForumTopicCreateViewSet(mixins.UpdateModelMixin, mixins.CreateModelMixin, mixins.DestroyModelMixin,
+                              mixins.RetrieveModelMixin, GenericViewSet):
+    permission_classes = [IsAuthenticated]
+    serializer_class = ForumTopicCreateSerializer
+    queryset = ForumTopic.objects.all()
+
+
+class ForumThreadListViewSet(ModelViewSet):
+    permission_classes = [IsAuthenticated]
+    serializer_class = ForumThreadListSerializer
+    pagination_class = ForumsPageNumberPagination
+    queryset = ForumThread.objects.all()
 
     def get_queryset(self):
         return super().get_queryset().accessible_to_user(self.request.user)

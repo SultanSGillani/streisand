@@ -2,7 +2,7 @@
 
 from rest_framework import serializers
 from rest_framework.serializers import ModelSerializer
-
+from interfaces.api_site.users.serializers import DisplayUserProfileSerializer
 from forums.models import ForumGroup, ForumPost, ForumThread, ForumTopic, ForumThreadSubscription
 
 
@@ -84,7 +84,6 @@ class ForumThreadSerializer(ModelSerializer):
 
     extra_kwargs = {
         'number_of_posts': {'read_only': True},
-        'latest_post': {'read_only': True},
         'latest_post_author_id': {'read_only': True},
         'latest_post_author_username': {'read_only': True},
         'topic_title': {'read_only': True}
@@ -242,10 +241,148 @@ class ForumIndexSerializer(ModelSerializer):
 
     class Meta:
         model = ForumGroup
-        fields = ('id',
-                  'name',
-                  'sort_order',
-                  'topics',
-                  'threads',
-                  'posts',
-                  )
+        fields = (
+            'id',
+            'name',
+            'sort_order',
+            'topics',
+            'threads',
+            'posts',
+        )
+
+
+class ForumThreadTopicSerializer(ModelSerializer):
+    class Meta:
+        model = ForumThread
+        fields = (
+            'id',
+            'title',
+            'topic',
+            'is_locked',
+            'is_sticky',
+            'created_at',
+            'created_by',
+            'latest_post',
+        )
+
+
+class ForumGroupTopicSerializer(ModelSerializer):
+    class Meta:
+        model = ForumGroup
+        fields = (
+            'id',
+            'name',
+        )
+
+
+class ForumPostTopicSerializer(ModelSerializer):
+
+    topic = serializers.PrimaryKeyRelatedField(source='topic_latest', read_only=True)
+
+    class Meta:
+        model = ForumPost
+        fields = (
+            'id',
+            'thread',
+            'topic',
+            'author',
+            'created_at',
+        )
+
+
+class ForumTopicListSerializer(ModelSerializer):
+    groups = ForumGroupTopicSerializer(read_only=True, source='group')
+    threads = ForumThreadTopicSerializer(read_only=True, many=True)
+    posts = ForumPostTopicSerializer(read_only=True, many=True)
+    user_id = serializers.PrimaryKeyRelatedField(source='creator', read_only=True)
+    user_name = serializers.StringRelatedField(source='creator', read_only=True)
+
+    class Meta:
+        model = ForumTopic
+        fields = (
+            'groups',
+            'id',
+            'group',
+            'name',
+            'description',
+            'minimum_user_class',
+            'threads',
+            'posts',
+            'user_id',
+            'user_name',
+        )
+
+
+class ForumTopicCreateSerializer(ModelSerializer):
+    class Meta:
+        model = ForumTopic
+        fields = (
+            'id',
+            'group',
+            'sort_order',
+            'name',
+            'description',
+            'minimum_user_class',
+            'number_of_threads',
+            'number_of_posts',
+            'latest_post',
+        )
+
+        extra_kwargs = {
+            'sort_order': {'required': False},
+            'number_of_posts': {'read_only': True},
+            'number_of_threads': {'read_only': True},
+        }
+
+
+class ForumTopicThreadSerializer(ModelSerializer):
+    group = serializers.PrimaryKeyRelatedField(read_only=True)
+    name = serializers.StringRelatedField(read_only=True)
+
+    class Meta:
+        model = ForumThread
+        fields = (
+            'id',
+            'group',
+            'name',
+        )
+
+
+class ForumPostThreadSerializer(ModelSerializer):
+    topic = serializers.PrimaryKeyRelatedField(read_only=True, source='thread.topic')
+
+    class Meta:
+        model = ForumPost
+        fields = (
+            'id',
+            'thread',
+            'topic',
+            'author',
+            'created_at',
+            'body',
+            'modified_at',
+            'modified_by',
+        )
+
+
+class ForumThreadListSerializer(ModelSerializer):
+    topics = ForumTopicThreadSerializer(read_only=True, source='topic')
+    groups = ForumGroupTopicSerializer(read_only=True, source='topic.group')
+    posts = ForumPostThreadSerializer(read_only=True, many=True)
+    users = DisplayUserProfileSerializer(read_only=True, source='created_by')
+
+    class Meta:
+        model = ForumThread
+        fields = (
+            'groups',
+            'topics',
+            'id',
+            'title',
+            'topic',
+            'is_locked',
+            'is_sticky',
+            'created_at',
+            'created_by',
+            'posts',
+            'users',
+        )
