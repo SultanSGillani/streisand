@@ -1,43 +1,70 @@
 import * as React from 'react';
+import * as redux from 'redux';
 import { connect } from 'react-redux';
 
 import Store from '../../store';
 import IUser from '../../models/IUser';
 import UserLink from '../links/UserLink';
 import ForumPostCell from './ForumPostCell';
+import EmptyThreadCell from './EmptyThreadCell';
+import { getItem } from '../../utilities/mapping';
 import IForumThread from '../../models/forums/IForumThread';
+import { IDeleteThreadProps, deleteForumThread } from '../../actions/forums/threads/DeleteThreadAction';
 
 export type Props = {
+    page: number;
     thread: IForumThread;
 };
 
 type ConnectedState = {
     author?: IUser;
 };
-type ConnectedDispatch = {};
+type ConnectedDispatch = {
+    deleteForumThread: (props: IDeleteThreadProps) => void;
+};
 
 type CombinedProps = Props & ConnectedDispatch & ConnectedState;
 class ForumThreadRowComponent extends React.Component<CombinedProps> {
     public render() {
         const thread = this.props.thread;
+        const activity = thread.latestPost
+            ? <ForumPostCell id={thread.latestPost} />
+            : <EmptyThreadCell thread={thread} />;
+        const onDelete = () => {
+            this.props.deleteForumThread({
+                topic: thread.topic,
+                thread: thread.id,
+                currentPage: this.props.page
+            });
+        };
         return (
             <tr>
-                <ForumPostCell id={thread.latestPost} />
+                {activity}
                 <td>{thread.numberOfPosts}</td>
                 <td><UserLink user={this.props.author} /></td>
+                <td style={{ display: 'flex', flexFlow: 'row-reverse' }}>
+                    <button className="btn btn-sm btn-danger" onClick={onDelete}>
+                        <i className="fa fa-trash" style={{ fontSize: '14px' }} />
+                    </button>
+                </td>
             </tr>
         );
     }
 }
 
 const mapStateToProps = (state: Store.All, ownProps: Props): ConnectedState => {
-    const createdBy = ownProps.thread && ownProps.thread.createdBy;
-    const author = createdBy && state.sealed.users.byId[createdBy] as IUser || undefined;
     return {
-        author: author
-    };
+        author: getItem({
+            id: ownProps.thread && ownProps.thread.createdBy,
+            byId: state.sealed.users.byId
+        })
+     };
 };
 
+const mapDispatchToProps = (dispatch: redux.Dispatch<Store.All>): ConnectedDispatch => ({
+    deleteForumThread: (props: IDeleteThreadProps) => dispatch(deleteForumThread(props))
+});
+
 const ForumThreadRow: React.ComponentClass<Props> =
-    connect(mapStateToProps)(ForumThreadRowComponent);
+    connect(mapStateToProps, mapDispatchToProps)(ForumThreadRowComponent);
 export default ForumThreadRow;

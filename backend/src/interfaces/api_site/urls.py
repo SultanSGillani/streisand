@@ -15,7 +15,6 @@ from drf_yasg.views import get_schema_view
 from drf_yasg import openapi
 from graphene_django.views import GraphQLView
 
-
 schema_view = get_schema_view(
 
     openapi.Info(
@@ -29,7 +28,6 @@ schema_view = get_schema_view(
     public=True,
     permission_classes=(permissions.AllowAny,),
 )
-
 
 router = routers.DefaultRouter()
 
@@ -59,8 +57,16 @@ router.register(r'tracker-peers', viewset=tracker_views.PeerViewSet, base_name='
 # Forum
 router.register(r'forum-groups', viewset=forums_views.ForumGroupViewSet, base_name='forum-group')
 router.register(r'forum-topics', viewset=forums_views.ForumTopicViewSet, base_name='forum-topic')
+
+# New Forum endpoints
+router.register(r'new-forum-index', viewset=forums_views.ForumIndexViewSet, base_name='new-forum-index')
+router.register(r'new-topic-index', viewset=forums_views.ForumTopicListViewSet, base_name='new-topic-index')
+router.register(r'new-topic-items', viewset=forums_views.ForumTopicCreateViewSet, base_name='new-topic-item')
+router.register(r'new-thread-index', viewset=forums_views.ForumThreadListViewSet, base_name='new-thread-index')
+router.register(r'new-post-items', viewset=forums_views.ForumPostCreateViewSet, base_name='new-post-items')
+
 router.register(r'forum-thread-index', viewset=forums_views.ForumThreadIndexViewSet, base_name='forum-thread-index')
-router.register(r'forum-threads', viewset=forums_views.ForumThreadWithAllPostsViewSet, base_name='forum-thread')
+router.register(r'forum-threads', viewset=forums_views.ForumThreadViewSet, base_name='forum-thread')
 router.register(r'forum-thread-items', viewset=forums_views.ForumThreadItemViewSet, base_name='forum-thread-item')
 router.register(r'forum-thread-subscriptions', viewset=forums_views.ForumThreadSubscriptionViewSet,
                 base_name='forum-thread-subscription')

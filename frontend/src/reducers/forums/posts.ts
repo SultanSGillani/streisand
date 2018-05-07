@@ -3,9 +3,11 @@ import * as objectAssign from 'object-assign';
 import { combineReducers } from '../helpers';
 import ForumAction from '../../actions/forums';
 import NewsAction from '../../actions/NewsAction';
+import { getPageReducer } from '../utilities/page';
 import { IForumPost } from '../../models/forums/IForumPost';
 import { INestedPages } from '../../models/base/IPagedItemSet';
 import { ForumPostData } from '../../models/forums/IForumData';
+import ForumThreadAction, { ForumThreadReceivedAction } from '../../actions/forums/threads/ForumThreadAction';
 
 type Action = ForumAction | NewsAction;
 
@@ -25,32 +27,15 @@ function byId(state: ItemMap = {}, action: Action): ItemMap {
     }
 }
 
-type Items = INestedPages<IForumPost>;
-function byThread(state: Items = {}, action: Action): Items {
+type Items = INestedPages;
+function byThread(state: Items = {}, action: ForumThreadAction): Items {
     switch (action.type) {
-        case 'FORUM_THREAD_FAILURE':
-            return processPosts({
-                state: state,
-                threadId: action.id,
-                loading: false,
-                pageNumber: action.page
-            });
+        case 'FAILED_FORUM_THREAD':
         case 'FETCHING_FORUM_THREAD':
-            return processPosts({
-                state: state,
-                threadId: action.id,
-                loading: true,
-                pageNumber: action.page
-            });
+        case 'INVALIDATE_FORUM_THREAD':
+            return processPosts({ state, action });
         case 'RECEIVED_FORUM_THREAD':
-        return processPosts({
-            state: state,
-            threadId: action.id,
-            loading: false,
-            pageNumber: action.page,
-            count: action.count,
-            posts: action.data.posts
-        });
+            return processPosts({ state, action, count: action.count });
         default:
             return state;
     }
@@ -58,24 +43,24 @@ function byThread(state: Items = {}, action: Action): Items {
 
 interface IPostProcessingParams {
     state: Items;
-    threadId: number;
-    loading: boolean;
-    pageNumber: number;
+    action: ForumThreadAction;
     count?: number;
-    posts?: IForumPost[];
 }
 
+const pageReducer = getPageReducer('FORUM_THREAD', (action: ForumThreadReceivedAction) => {
+    return action.data.posts || [];
+});
+
 function processPosts(params: IPostProcessingParams) {
+    const action = params.action;
     const count = params.count || 0;
-    const current = params.state[params.threadId] || { count, pages: {} };
+    const current = params.state[action.id] || { count, pages: {} };
+    const currentPage = current.pages[action.page];
     const itemSet = objectAssign({}, current.pages, {
-        [params.pageNumber]: {
-            loading: params.loading,
-            items: params.posts || []
-        }
+        [action.page]: pageReducer(currentPage, params.action)
     });
     return objectAssign({}, params.state, {
-        [params.threadId]: {
+        [action.id]: {
             count: count,
             pages: itemSet
         }

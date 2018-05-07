@@ -2,31 +2,31 @@ import { IForumPost } from './IForumPost';
 import { IForumGroup } from './IForumGroup';
 import { IForumTopic } from './IForumTopic';
 import { IForumThread } from './IForumThread';
-import ILoadingItem from '../base/ILoadingItem';
+import ILoadingStatus from '../base/ILoadingStatus';
 import { INestedPages } from '../base/IPagedItemSet';
 
-export type ForumGroupData = {
-    loading: boolean;
-    items: IForumGroup[];
+export interface IForumGroupData {
+    status: ILoadingStatus;
+    items: number[];
     byId: { [id: number]: IForumGroup };
-};
+}
 
 export type ForumTopicData = {
-    byId: { [id: number]: ILoadingItem | IForumTopic };
+    byId: { [id: number]: IForumTopic };
 };
 
 export type ForumThreadData = {
-    byId: { [id: number]: ILoadingItem | IForumThread };
-    byTopic: INestedPages<IForumThread>;
+    byId: { [id: number]: IForumThread };
+    byTopic: INestedPages;
 };
 
 export type ForumPostData = {
     byId: { [id: number]: IForumPost };
-    byThread: INestedPages<IForumPost>;
+    byThread: INestedPages;
 };
 
 interface IForumData {
-    groups: ForumGroupData;
+    groups: IForumGroupData;
     topics: ForumTopicData;
     threads: ForumThreadData;
     posts: ForumPostData;

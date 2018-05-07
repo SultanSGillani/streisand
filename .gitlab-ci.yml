@@ -3,18 +3,23 @@ image: python:3.6
 services:
  - postgres
  - docker:dind
- - redis:3.2
+ - redis:latest
 
 stages:
  - test
+ - mirror
  - release
-#  - deploy
 
+#  - deploy
 
 variables:
   PIP_CACHE_DIR: "$CI_PROJECT_DIR/.cache"
-  DATABASE_URL: "postgres://postgres:postgres@postgres:5432/ci"
-  STREISAND_DEBUG: "True"
+  DB_NAME: postgres
+  DB_USER: postgres
+  DB_HOST: postgres
+  DB_PASS: postgres
+  DB_PORT: 5432
+  DEBUG: "True"
   REDIS_URL: "redis://redis:6379"
 
 cache:
@@ -34,14 +39,36 @@ python_linter:
   stage: test
   script:
     - invoke run-python-linter
-  when: manual
+  allow_failure: true # for now
 
 python_tests:
   stage: test
   script:
-    - invoke clean-slate
-    - invoke run-python-tests --coverage
+    - invoke make-migrations
+    - invoke migrate
+    - invoke foundation
     - invoke fixtures
+    - invoke run-python-tests --coverage
+
+variables:
+  MIRROR_REPOSITORY: "git@github.com:TheSaltman/jumpcut.git"
+
+mirror-github:
+  stage: mirror
+  before_script:
+    - echo hey
+  tags:
+    - github
+  cache: {}
+  script:
+    # Do a mirror clone of the repository
+    - git clone --mirror $CI_REPOSITORY_URL
+    # Mirror push it to the destination
+    - cd $CI_PROJECT_NAME.git
+    - git push --mirror $MIRROR_REPOSITORY
+    # Cleanup
+    - cd ..; rm -rf $CI_PROJECT_NAME.git
+  allow_failure: true
 
 ## TODO frontend linter/tests?
 #
@@ -55,6 +82,7 @@ release_develop:
     - docker push $CI_REGISTRY_IMAGE:$CI_COMMIT_REF_NAME
   only:
     - master
+
  
 # deploy-develop:
 #   stage: deploy

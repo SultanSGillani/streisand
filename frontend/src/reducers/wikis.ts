@@ -4,10 +4,11 @@ import Store from '../store';
 import IWiki from '../models/IWiki';
 import Action from '../actions/wikis';
 import { combineReducers } from './helpers';
-import { IPage } from '../models/base/IPagedItemSet';
-import ILoadingItem from '../models/base/ILoadingItem';
+import { getPageReducer } from './utilities/page';
+import { IPage, INodeMap } from '../models/base/IPagedItemSet';
+import { addLoadedNode, addLoadedNodes } from './utilities/mutations';
 
-type ItemMap = { [id: number]: IWiki | ILoadingItem };
+type ItemMap = INodeMap<IWiki>;
 function byId(state: ItemMap = {}, action: Action): ItemMap {
     switch (action.type) {
         case 'REMOVED_WIKI':
@@ -15,30 +16,22 @@ function byId(state: ItemMap = {}, action: Action): ItemMap {
             delete copy[action.id];
             return copy;
         case 'RECEIVED_WIKI':
-            return objectAssign({}, state, { [action.wiki.id]: action.wiki });
+            return addLoadedNode(state, action.wiki);
         case 'RECEIVED_WIKIS':
-            let map: ItemMap = {};
-            for (const item of action.wikis) {
-                map[item.id] = item;
-            }
-            return objectAssign({}, state, map);
+            return addLoadedNodes(state, action.items);
         default:
             return state;
     }
 }
 
-type Pages = { [page: number]: IPage<IWiki> };
+const pageReducer = getPageReducer('WIKIS');
+type Pages = { [page: number]: IPage };
 function pages(state: Pages = {}, action: Action): Pages {
-    let page: IPage<IWiki>;
     switch (action.type) {
         case 'FETCHING_WIKIS':
-            page = objectAssign({ items: [] }, state[action.page], { loading: true });
-            return objectAssign({}, state, { [action.page]: page });
         case 'RECEIVED_WIKIS':
-            page = { loading: false, items: action.wikis };
-            return objectAssign({}, state, { [action.page]: page });
-        case 'WIKIS_FAILURE':
-            page = objectAssign({ items: [] }, state[action.page], { loading: false });
+        case 'FAILED_WIKIS':
+            const page: IPage = pageReducer(state[action.page], action);
             return objectAssign({}, state, { [action.page]: page });
         default:
             return state;
@@ -59,11 +52,11 @@ function creating(state: boolean = false, action: Action): boolean {
         case 'CREATING_WIKI':
             return true;
         case 'CREATED_WIKI':
-        case 'WIKI_CREATION_FAILURE':
+        case 'FAILED_CREATING_WIKI':
             return false;
         default:
             return state;
     }
 }
 
-export default combineReducers<Store.Wikis>({ byId, count, pages, creating });
+export default combineReducers<Store.Wikis>({ byId, pages, count, creating });

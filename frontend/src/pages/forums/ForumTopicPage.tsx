@@ -6,9 +6,9 @@ import Store from '../../store';
 import Empty from '../../components/Empty';
 import { numericIdentifier } from '../../utilities/shim';
 import IForumTopic from '../../models/forums/IForumTopic';
-import { isLoadingItem } from '../../models/base/ILoadingItem';
-import { getThreads } from '../../actions/forums/ForumTopicAction';
 import ForumTopicView from '../../components/forums/ForumTopicView';
+import { getThreads } from '../../actions/forums/topics/ForumTopicAction';
+import ILoadingStatus, { defaultStatus } from '../../models/base/ILoadingStatus';
 
 export type Props = {
     params: {
@@ -20,8 +20,7 @@ export type Props = {
 type ConnectedState = {
     page: number;
     topicId: number;
-    loading: boolean;
-    loaded: boolean;
+    status: ILoadingStatus;
     topic?: IForumTopic;
 };
 
@@ -32,21 +31,24 @@ type ConnectedDispatch = {
 type CombinedProps = ConnectedState & ConnectedDispatch & Props;
 class ForumTopicPageComponent extends React.Component<CombinedProps, void> {
     public componentWillMount() {
-        if (!this.props.loading) {
+        if (!this.props.status.loading) {
             this.props.getThreads(this.props.topicId, this.props.page);
         }
     }
 
     public componentWillReceiveProps(props: CombinedProps) {
-        if (!props.loading && !props.loaded) {
+        const status = props.status;
+        const needPage = !status.failed && (!status.loaded || status.outdated);
+        const pageChanged = props.page !== this.props.page || props.topicId !== this.props.topicId;
+        if (!status.loading && (pageChanged || needPage)) {
             this.props.getThreads(props.topicId, props.page);
         }
     }
 
     public render() {
         const topic = this.props.topic;
-        if (!topic) {
-            return <Empty loading={this.props.loading} />;
+        if (!topic || !this.props.status.loaded) {
+            return <Empty loading={this.props.status.loading} />;
         }
 
         return (
@@ -61,15 +63,13 @@ const mapStateToProps = (state: Store.All, ownProps: Props): ConnectedState => {
     const topicPages = state.sealed.forums.threads.byTopic[topicId];
     const page = topicPages && topicPages.pages[pageNumber];
     const item = state.sealed.forums.topics.byId[topicId];
-    const topic = !isLoadingItem(item) && item || undefined;
-    const loading = page ? page.loading : false;
+    const topic = item || undefined;
 
     return {
         topic: topic,
         page: pageNumber,
         topicId: topicId,
-        loading: loading,
-        loaded: !!(!loading && page && page.items)
+        status: page ? page.status : defaultStatus
     };
 };
 

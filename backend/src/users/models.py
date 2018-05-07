@@ -22,7 +22,7 @@ class User(AbstractUser):
         ('enabled', 'Enabled'),
         ('disabled', 'Disabled'),
     )
-
+    is_banned = models.BooleanField(default=False)
     old_id = models.PositiveIntegerField(null=True, db_index=True)
 
     user_class = models.ForeignKey(

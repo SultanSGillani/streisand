@@ -3,8 +3,10 @@ import * as redux from 'redux';
 import { connect } from 'react-redux';
 
 import Store from '../../store';
+import Empty from '../../components/Empty';
 import FilmsView from '../../components/films/FilmsView';
 import { getFilms } from '../../actions/films/FilmsAction';
+import ILoadingStatus, { defaultStatus } from '../../models/base/ILoadingStatus';
 
 export type Props = {
     params: {
@@ -14,7 +16,7 @@ export type Props = {
 
 type ConnectedState = {
     page: number;
-    loading: boolean;
+    status: ILoadingStatus;
 };
 
 type ConnectedDispatch = {
@@ -24,18 +26,25 @@ type ConnectedDispatch = {
 type CombinedProps = ConnectedState & ConnectedDispatch & Props;
 class FilmsPage extends React.Component<CombinedProps> {
     public componentWillMount() {
-        if (!this.props.loading) {
+        if (!this.props.status.loading) {
             this.props.getFilms(this.props.page);
         }
     }
 
     public componentWillReceiveProps(props: CombinedProps) {
-        if (!props.loading && props.page !== this.props.page) {
+        const status = props.status;
+        const needPage = !status.failed && (!status.loaded || status.outdated);
+        const pageChanged = props.page !== this.props.page;
+        if (!status.loading && (pageChanged || needPage)) {
             this.props.getFilms(props.page);
         }
     }
 
     public render() {
+        if (!this.props.status.loaded) {
+            return <Empty loading={this.props.status.loading} />;
+        }
+
         return (
             <FilmsView page={this.props.page} />
         );
@@ -47,7 +56,7 @@ const mapStateToProps = (state: Store.All, ownProps: Props): ConnectedState => {
     const page = state.sealed.films.pages[pageNumber];
     return {
         page: pageNumber,
-        loading: page ? page.loading : false
+        status: page ? page.status : defaultStatus
     };
 };
 

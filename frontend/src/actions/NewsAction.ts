@@ -11,7 +11,7 @@ import { IForumPostResponse } from '../models/forums/IForumPost';
 type NewsAction =
     { type: 'FETCHING_NEWS_POST' } |
     { type: 'RECEIVED_NEWS_POST', data: IForumGroupData } |
-    { type: 'NEWS_POST_FAILURE' };
+    { type: 'FAILED_NEWS_POST' };
 export default NewsAction;
 type Action = NewsAction | ErrorAction;
 
@@ -24,7 +24,7 @@ function received(post: IForumPostResponse): Action {
 }
 
 function failure(): Action {
-    return { type: 'NEWS_POST_FAILURE' };
+    return { type: 'FAILED_NEWS_POST' };
 }
 
 export function getLatestNews(): ThunkAction<Action> {

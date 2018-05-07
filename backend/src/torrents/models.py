@@ -21,7 +21,7 @@ class Torrent(models.Model):
         null=False,
         db_index=True,
         related_name='torrents',
-        on_delete=models.PROTECT,
+        on_delete=models.CASCADE,
     )
     cut = models.CharField(max_length=128, default='Theatrical')
 
@@ -201,6 +201,7 @@ class ReseedRequest(models.Model):
         to='torrents.Torrent',
         related_name='reseed_requests',
         on_delete=models.CASCADE,
+        null=True,
     )
     created_by = models.ForeignKey(
         to='users.User',

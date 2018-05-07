@@ -4,8 +4,9 @@ import { connect } from 'react-redux';
 import Store from '../../store';
 import IFilm from '../../models/IFilm';
 import ITorrent from '../../models/ITorrent';
-import TorrentSection from '../torrents/TorrentSection';
+import { getItems } from '../../utilities/mapping';
 import TorrentModal from '../torrents/TorrentModal';
+import TorrentSection from '../torrents/TorrentSection';
 
 export type Props = {
     film: IFilm;
@@ -14,9 +15,19 @@ export type Props = {
 
 type ConnectedState = {
     torrents: ITorrent[];
-    loadingTorrents: boolean;
 };
 type ConnectedDispatch = {};
+
+const styles: { [key: string]: any } = {
+    videoContainer: { height: '350px', position: 'relative' },
+    video: {
+        position: 'absolute',
+        top: 0,
+        left: 0,
+        width: '100%',
+        height: '100%'
+    }
+};
 
 type CombinedProps = Props & ConnectedDispatch & ConnectedState;
 class FilmViewComponent extends React.Component<CombinedProps> {
@@ -29,10 +40,10 @@ class FilmViewComponent extends React.Component<CombinedProps> {
         });
         return (
             <div>
-                <h1>{film.title}  [{film.year}]</h1>
+                <h1>{film.title} [{film.year}]</h1>
                 <div className="col-lg-8">
-                    <div className="row">
-                        <iframe width="620" height="350" src={youtubeUrl} frameBorder="0"></iframe>
+                    <div className="row" style={styles.videoContainer}>
+                        <iframe style={styles.video} src={youtubeUrl} frameBorder="0"></iframe>
                     </div>
                     <div className="row">
                         <h2>Description</h2>
@@ -68,11 +79,13 @@ class FilmViewComponent extends React.Component<CombinedProps> {
 }
 
 const mapStateToProps = (state: Store.All, ownProps: Props): ConnectedState => {
-    const page = state.sealed.torrents.byFilmId[ownProps.film.id];
     return {
-        torrents: page ? page.items || [] : [],
-        loadingTorrents: page ? page.loading : false
-    };
+        torrents: getItems({
+            page: ownProps.film.id,
+            byId: state.sealed.torrents.byId,
+            pages: state.sealed.torrents.byFilmId
+        })
+     };
 };
 
 const FilmView: React.ComponentClass<Props> =

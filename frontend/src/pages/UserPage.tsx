@@ -5,10 +5,10 @@ import { connect } from 'react-redux';
 import Store from '../store';
 import IUser from '../models/IUser';
 import Empty from '../components/Empty';
+import { getNode } from '../utilities/mapping';
 import UserView from '../components/users/UserView';
 import { numericIdentifier } from '../utilities/shim';
 import { getUser } from '../actions/users/UserAction';
-import { isLoadingItem } from '../models/base/ILoadingItem';
 
 export type Props = {
     params: {
@@ -56,20 +56,11 @@ class UserPageComponent extends React.Component<CombinedProps, void> {
 
 const mapStateToProps = (state: Store.All, ownProps: Props): ConnectedState => {
     const userId = numericIdentifier(ownProps.params.userId);
-    const item = state.sealed.users.byId[userId];
-
-    let user: IUser | undefined;
-    let loading = false;
-    if (isLoadingItem(item)) {
-        loading = item.loading;
-    } else if (item) {
-        user = item;
-    }
-
+    const node = getNode({ id: userId, byId: state.sealed.users.byId });
     return {
-        loading: loading,
-        user: user,
-        userId: userId
+        userId: userId,
+        user: node.item,
+        loading: node.status.loading
     };
 };
 

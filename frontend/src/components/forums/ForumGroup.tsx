@@ -42,6 +42,7 @@ class ForumGroupComponent extends React.Component<CombinedProps> {
                             <th>Latest Post</th>
                             <th>Threads</th>
                             <th>Posts</th>
+                            <th></th>
                         </tr>
                     </thead>
                     <tbody>
