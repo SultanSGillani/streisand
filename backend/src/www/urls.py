@@ -8,6 +8,8 @@ from django.contrib.admin.views.decorators import staff_member_required
 from django.urls import re_path
 from django.views.generic import TemplateView
 from rest_framework.documentation import include_docs_urls
+import torrents.urls
+import tracker.urls
 
 urlpatterns = [
     # API
@@ -18,10 +20,14 @@ urlpatterns = [
 
     # Docs that need updating. Made with Sphinx
     url(r'^model-docs/', include('docs.urls')),
+    url(r'^torrents/', include('torrents.urls')),
+    url(r'^announce/', include('tracker.urls')),
+
 
     # Admin
     url(r'^admin/', admin.site.urls),
     url(r'^admin/docs/', include('django.contrib.admindocs.urls')),
+
 
     # Authentication
     url(r'^su/', include('django_su.urls')),
@@ -35,4 +41,4 @@ if settings.DEBUG:
             ))
 
 # Anything else gets passed to the frontend
-urlpatterns.append(re_path('.*', TemplateView.as_view(template_name='index.html')))
+# urlpatterns.append(re_path('.*', TemplateView.as_view(template_name='index.html')))
