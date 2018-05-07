@@ -1,13 +1,14 @@
 # -*- coding: utf-8 -*-
 
-from django.contrib.auth.password_validation import validate_password
 from django.contrib.auth import authenticate, user_logged_in
-from rest_framework import serializers
 from django.contrib.auth.models import Group
+from django.contrib.auth.password_validation import validate_password
+from rest_framework import serializers
 from rest_framework_jwt.serializers import JSONWebTokenSerializer, jwt_payload_handler, jwt_encode_handler
 from rest_framework_jwt.settings import api_settings
-from users.models import User
+
 from forums.models import ForumPost
+from users.models import User
 
 
 class JWTSerializer(JSONWebTokenSerializer):
@@ -101,7 +102,6 @@ class AdminUserProfileSerializer(serializers.ModelSerializer):
 
 
 class OwnedUserProfileSerializer(AdminUserProfileSerializer):
-
     class Meta:
         model = User(AdminUserProfileSerializer.Meta)
         fields = (
@@ -161,14 +161,17 @@ class DisplayUserProfileSerializer(PublicUserProfileSerializer):
             'avatar_url',
         )
 
+
 class UserForForumSerializer(PublicUserProfileSerializer, serializers.PrimaryKeyRelatedField):
     forum_posts = serializers.PrimaryKeyRelatedField(queryset=ForumPost.objects.all())
+
     class Meta(PublicUserProfileSerializer.Meta):
         fields = (
             'id',
             'username',
             'forum_posts',
         )
+
 
 class NewUserSerializer(serializers.ModelSerializer):
     # TODO: add invite key

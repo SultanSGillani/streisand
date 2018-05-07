@@ -104,6 +104,10 @@ class AdminFilmSerializer(serializers.ModelSerializer):
         if film.imdb:
             return film.imdb.tt_id
 
+    extra_kwargs = {
+        'tags': {'required': False},
+    }
+
 
 class PublicFilmSerializer(AdminFilmSerializer):
     """
@@ -146,7 +150,7 @@ class CollectionSerializer(serializers.ModelSerializer):
         queryset=Film.objects.all(),
         help_text="Since we are not making this read_only, "
                   "we have to give a queryset for the primary key related field"
-                  "We don't want this to be read only, since users need to add or remove a film from a coollection."
+                  "We don't want this to be read only, since users need to add or remove a film from a collection."
     )
     film_title = serializers.StringRelatedField(many=True, read_only=True, source='film')
     film_link = serializers.HyperlinkedRelatedField(

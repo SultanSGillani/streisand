@@ -1,17 +1,13 @@
 # -*- coding: utf-8 -*-
 
 import debug_toolbar
-
 from django.conf import settings
 from django.conf.urls import include, url
-from django.urls import re_path
 from django.contrib import admin
+from django.contrib.admin.views.decorators import staff_member_required
+from django.urls import re_path
 from django.views.generic import TemplateView
 from rest_framework.documentation import include_docs_urls
-from django.contrib.admin.views.decorators import staff_member_required
-from django.contrib.auth.decorators import login_required
-
-
 
 urlpatterns = [
     # API
