@@ -41,4 +41,4 @@ if settings.DEBUG:
             ))
 
 # Anything else gets passed to the frontend
-# urlpatterns.append(re_path('.*', TemplateView.as_view(template_name='index.html')))
+urlpatterns.append(re_path('.*', TemplateView.as_view(template_name='index.html')))
