@@ -184,7 +184,7 @@ class TorrentMetaInfo(models.Model):
     def for_user_download(self, user):
 
         # Make sure the private flag is set
-        self.dictionary['info']['private'] = 1
+        self.dictionary['metainfo']['private'] = 1
 
         # Set the announce url
         self.dictionary['announce'] = user.announce_url
