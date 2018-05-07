@@ -20,7 +20,7 @@ urlpatterns = [
 
     # Docs that need updating. Made with Sphinx
     url(r'^model-docs/', include('docs.urls')),
-    url(r'^torrents/', include('torrents.urls')),
+    url(r'^torrent-actions/', include('torrents.urls')),
     url(r'^announce/', include('tracker.urls')),
 
 
