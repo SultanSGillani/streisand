@@ -49,9 +49,25 @@ class IsSameUserAllowEditionOrReadOnly(permissions.BasePermission):
         return request.user.is_staff or (request.method == 'PUT' and
                                          obj.id == request.user.id)
 
-
 class IsAccountOwner(permissions.BasePermission):
-    def has_object_permission(self, request, view, platformuser):
-        if request.user:
-            return platformuser == request.user
-        return False
+    """
+    Custom permission to only allow owners of an object to create it.
+    """
+    def has_permission(self, request, view):
+        # Read permissions are allowed to any request,
+        # so we'll always allow GET, HEAD, POST, or OPTIONS requests.
+        if request.method in permissions.SAFE_METHODS:
+            return True
+
+        # grant permission only if the method is the PUT method
+        return request.user.is_staff or request.method == 'POST'
+
+    def has_object_permission(self, request, view, obj):
+        # Read permissions are allowed to any request,
+        # so we'll always allow GET, HEAD, POST, or OPTIONS requests.
+        if request.method in permissions.SAFE_METHODS:
+            return True
+
+        return request.user.is_staff or (request.method == 'POST' and
+                                         obj.id == request.user.id)
+        

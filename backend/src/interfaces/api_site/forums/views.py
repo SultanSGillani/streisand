@@ -281,8 +281,21 @@ class ForumPostCreateViewSet(mixins.RetrieveModelMixin, mixins.CreateModelMixin,
         'author__user_class',
     ).order_by('created_at').distinct('created_at')
 
-    def get_queryset(self):
-        return super().get_queryset().accessible_to_user(self.request.user)
+      def get_queryset(self):
+        queryset = super().get_queryset().accessible_to_user(self.request.user)
+
+        thread_id = self.request.query_params.get('thread_id', None)
+        if thread_id is not None:
+            queryset = queryset.filter(thread_id=thread_id)
+
+        return queryset
+
+    def perform_create(self, serializer):
+        serializer.save(author=self.request.user
+                        )
+
+    def perform_update(self, serializer):
+        serializer.save(modified_by=self.request.user)
 
 
 class ForumPostViewSet(ModelViewSet):
