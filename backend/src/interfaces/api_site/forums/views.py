@@ -339,7 +339,7 @@ class ForumPostCreateViewSet(mixins.RetrieveModelMixin, mixins.CreateModelMixin,
         'author__user_class',
     ).order_by('created_at').distinct('created_at')
 
-      def get_queryset(self):
+    def get_queryset(self):
         queryset = super().get_queryset().accessible_to_user(self.request.user)
 
         thread_id = self.request.query_params.get('thread_id', None)
