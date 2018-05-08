@@ -148,7 +148,7 @@ class ForumThread(models.Model):
     objects = ForumThreadQuerySet.as_manager()
 
     class Meta:
-        ordering = '-created_at'
+        ordering = ['-created_at']
 
     def __str__(self):
         return '{title}'.format(title=self.title)
@@ -214,7 +214,7 @@ class ForumPost(models.Model):
     objects = ForumPostQuerySet.as_manager()
 
     class Meta:
-        ordering = 'created_at'
+        ordering = ['created_at']
 
     @property
     def post_number(self):
