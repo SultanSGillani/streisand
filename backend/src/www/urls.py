@@ -8,8 +8,6 @@ from django.contrib.admin.views.decorators import staff_member_required
 from django.urls import re_path
 from django.views.generic import TemplateView
 from rest_framework.documentation import include_docs_urls
-import torrents.urls
-import tracker.urls
 
 urlpatterns = [
     # API
@@ -20,14 +18,15 @@ urlpatterns = [
 
     # Docs that need updating. Made with Sphinx
     url(r'^model-docs/', include('docs.urls')),
-    url(r'^torrent-actions/', include('torrents.urls')),
-    url(r'^announce/', include('tracker.urls')),
 
+    # torrent urls
+    url(r'^torrent-actions/', include('torrents.urls')),
+    url(r'^film-stuff/', include('films.urls')),
+    url(r'^announce/', include('tracker.urls')),
 
     # Admin
     url(r'^admin/', admin.site.urls),
     url(r'^admin/docs/', include('django.contrib.admindocs.urls')),
-
 
     # Authentication
     url(r'^su/', include('django_su.urls')),
