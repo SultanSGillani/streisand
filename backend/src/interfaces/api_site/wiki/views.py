@@ -10,7 +10,7 @@ from rest_framework import mixins
 from wiki.models import WikiArticle
 from www.pagination import WikiPageNumberPagination
 
-from rest_framework.permissions import IsAdminUser
+from rest_framework.permissions import IsAuthenticated
 from rest_framework.viewsets import GenericViewSet
 from .serializers import WikiCreateUpdateDestroySerializer, WikiBodySerializer, WikiViewListOnlySerializer
 
@@ -24,7 +24,7 @@ class WikiArticleCreateUpdateDestroyViewSet(mixins.CreateModelMixin,
     """
     serializer_class = WikiCreateUpdateDestroySerializer
     filter_backends = [SearchFilter, OrderingFilter]
-    permission_classes = [IsAdminUser]
+    permission_classes = [IsAuthenticated]
     search_fields = ['title', 'created_by__username', 'read_access_minimum_user_class__username__userclass']
     pagination_class = WikiPageNumberPagination  # PageNumberPagination
 
@@ -50,7 +50,7 @@ class WikiArticleBodyViewSet(mixins.RetrieveModelMixin, mixins.UpdateModelMixin,
     """
     API endpoint that allows Wiki Body and body ID to be viewed, or Patched only.
     """
-    permission_classes = [IsAdminUser]
+    permission_classes = [IsAuthenticated]
     serializer_class = WikiBodySerializer
     search_fields = ['body', 'id']
     pagination_class = WikiPageNumberPagination  # PageNumberPagination
@@ -77,7 +77,7 @@ class WikiArticleViewListOnlyViewSet(mixins.ListModelMixin, GenericViewSet):
     """
     serializer_class = WikiViewListOnlySerializer
     filter_backends = [SearchFilter, OrderingFilter]
-    permission_classes = [IsAdminUser]
+    permission_classes = [IsAuthenticated]
     search_fields = ['title', 'created_by__username']
     pagination_class = WikiPageNumberPagination
 

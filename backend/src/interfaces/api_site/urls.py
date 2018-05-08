@@ -1,19 +1,19 @@
 # -*- coding: utf-8 -*-
 
 from django.conf.urls import url, include
+from drf_yasg import openapi
+from drf_yasg.views import get_schema_view
+from graphene_django.views import GraphQLView
 from rest_framework import routers, permissions
+from rest_framework_jwt.views import refresh_jwt_token, verify_jwt_token
 
-from .invites import views as invites_views
 from .films import views as films_views
+from .forums import views as forums_views
+from .invites import views as invites_views
 from .torrents import views as torrents_views
 from .tracker import views as tracker_views
 from .users import views as users_views
-from .forums import views as forums_views
 from .wiki import views as wiki_views
-from rest_framework_jwt.views import refresh_jwt_token, verify_jwt_token
-from drf_yasg.views import get_schema_view
-from drf_yasg import openapi
-from graphene_django.views import GraphQLView
 
 schema_view = get_schema_view(
 
@@ -63,7 +63,9 @@ router.register(r'new-forum-index', viewset=forums_views.ForumIndexViewSet, base
 router.register(r'new-topic-index', viewset=forums_views.ForumTopicListViewSet, base_name='new-topic-index')
 router.register(r'new-topic-items', viewset=forums_views.ForumTopicCreateViewSet, base_name='new-topic-item')
 router.register(r'new-thread-index', viewset=forums_views.ForumThreadListViewSet, base_name='new-thread-index')
-router.register(r'new-post-items', viewset=forums_views.ForumPostCreateViewSet, base_name='new-post-items')
+router.register(r'new-thread-items', viewset=forums_views.ForumThreadCreateUpdateDestroyViewSet,
+                base_name='new-thread-items')
+router.register(r'new-post-items', viewset=forums_views.ForumPostCreateUpdateDestroyViewSet, base_name='new-post-items')
 
 router.register(r'forum-thread-index', viewset=forums_views.ForumThreadIndexViewSet, base_name='forum-thread-index')
 router.register(r'forum-threads', viewset=forums_views.ForumThreadViewSet, base_name='forum-thread')

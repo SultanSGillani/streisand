@@ -1,11 +1,10 @@
 # -*- coding: utf-8 -*-
 
-from .common_settings import *
 import datetime
 
-INTERNAL_IPS = [
-    '10.0.2.2',
-]
+from .common_settings import *
+
+INTERNAL_IPS = config('INTERNAL_IPS', cast=lambda v: [s.strip() for s in v.split(',')])
 
 GRAPHENE_DJANGO_EXTRAS = {
     'DEFAULT_PAGINATION_CLASS': 'graphene_django_extras.paginations.PageGraphqlPagination',
@@ -24,13 +23,17 @@ GRAPHENE = {
     'SCHEMA': 'interfaces.api_site.schema.schema',
 }
 
+DEBUG_TOOLBAR_CONFIG = {
+    "SHOW_TOOLBAR_CALLBACK": lambda request: True,
+}
+
 MIDDLEWARE = [
     'corsheaders.middleware.CorsMiddleware',
     'django.middleware.gzip.GZipMiddleware',
+    'debug_toolbar.middleware.DebugToolbarMiddleware',
     'django.middleware.security.SecurityMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
     'django.middleware.common.CommonMiddleware',
-    'debug_toolbar.middleware.DebugToolbarMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
     'corsheaders.middleware.CorsPostCsrfMiddleware',

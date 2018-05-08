@@ -36,6 +36,7 @@ DJANGO_APPS = (
 )
 
 THIRD_PARTY_APPS = (
+    'debug_toolbar',
     'decouple',
     'django_extensions',
     'django_su',
@@ -46,7 +47,7 @@ THIRD_PARTY_APPS = (
     'rest_framework_filters',
     'docs',
     'drf_yasg',
-    'debug_toolbar',
+
 )
 
 LOCAL_APPS = (

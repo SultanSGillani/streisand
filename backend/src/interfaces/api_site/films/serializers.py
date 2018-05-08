@@ -105,7 +105,7 @@ class AdminFilmSerializer(serializers.ModelSerializer):
             return film.imdb.tt_id
 
     extra_kwargs = {
-        'tags': {'required': False},
+        'tags': {'required': False}
     }
 
 

@@ -32,7 +32,7 @@ class Film(models.Model):
     duration_in_minutes = models.IntegerField(null=True)
     description = models.TextField()
     moderation_notes = models.TextField()
-    tags = models.ManyToManyField('films.Tag', related_name='films')
+    tags = models.ManyToManyField('films.Tag', related_name='films', blank=True)
 
     def __str__(self):
         return '{title} ({year})'.format(title=self.title, year=self.year)

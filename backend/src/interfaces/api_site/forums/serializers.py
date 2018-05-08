@@ -426,6 +426,20 @@ class ForumPostCreateSerializer(ModelSerializer):
         }
 
 
+class ForumThreadCreateSerializer(ModelSerializer):
+    created_by = serializers.PrimaryKeyRelatedField(default=serializers.CurrentUserDefault(), read_only=True,
+                                                    )
+
+    class Meta:
+        model = ForumThread
+        fields = (
+            'id',
+            'created_by',
+            'title',
+            'topic',
+        )
+
+
 class ForumThreadListSerializer(ModelSerializer):
     topics = ForumTopicThreadSerializer(read_only=True, source='topic')
     groups = ForumGroupTopicSerializer(read_only=True, source='topic.group')

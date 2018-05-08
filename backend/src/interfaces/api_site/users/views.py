@@ -1,19 +1,20 @@
 # -*- coding: utf-8 -*-
 from django.contrib.auth.models import Group
-from rest_framework.permissions import IsAdminUser, IsAuthenticatedOrReadOnly, AllowAny
 from django.http import Http404, request
-from www.permissions import IsOwnerOrReadOnly
-from rest_framework.response import Response
-from rest_framework.viewsets import ModelViewSet
 from django_filters import rest_framework as filters
 from rest_framework import status
 from rest_framework.generics import UpdateAPIView, RetrieveAPIView, CreateAPIView
-from .filters import UserFilter, PublicUserFilter
-from www.pagination import UserPageNumberPagination
+from rest_framework.permissions import IsAdminUser, IsAuthenticatedOrReadOnly, AllowAny
+from rest_framework.response import Response
+from rest_framework.viewsets import ModelViewSet
+from rest_framework_jwt.views import ObtainJSONWebToken
 from users.models import User
+from www.pagination import UserPageNumberPagination
+from www.permissions import IsOwnerOrReadOnly
+
+from .filters import UserFilter, PublicUserFilter
 from .serializers import GroupSerializer, AdminUserProfileSerializer, \
     OwnedUserProfileSerializer, PublicUserProfileSerializer, ChangePasswordSerializer, NewUserSerializer
-from rest_framework_jwt.views import ObtainJSONWebToken
 from .serializers import JWTSerializer
 
 

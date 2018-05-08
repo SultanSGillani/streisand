@@ -1,7 +1,6 @@
 # -*- coding: utf-8 -*-
-
 import debug_toolbar
-from django.conf import settings
+from decouple import config
 from django.conf.urls import include, url
 from django.contrib import admin
 from django.contrib.admin.views.decorators import staff_member_required
@@ -32,12 +31,14 @@ urlpatterns = [
     url(r'^su/', include('django_su.urls')),
 ]
 
-if settings.DEBUG:
-    urlpatterns += (
-        url(r'^__debug__/', include(debug_toolbar.urls)),
-        url(r'^dev/', staff_member_required(TemplateView.as_view(template_name='dev.html')),
+DEBUG = config('DEBUG', cast=bool)
 
-            ))
+if DEBUG:
+    urlpatterns = [
+
+        url(r'^__debug__/', include(debug_toolbar.urls)),
+        url(r'^dev/', staff_member_required(TemplateView.as_view(template_name='dev.html')))
+    ] + urlpatterns
 
 # Anything else gets passed to the frontend
 urlpatterns.append(re_path('.*', TemplateView.as_view(template_name='index.html')))
