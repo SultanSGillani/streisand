@@ -318,8 +318,8 @@ class ForumThreadItemViewSet(mixins.UpdateModelMixin, mixins.CreateModelMixin, m
 
     def partial_update(self, request, pk=None):
         serializer = ForumThreadSerializer(request.user, data=request.data, partial=True)
-        serializer.save(modified_by=self.request.user)
         serializer.is_valid(raise_exception=True)
+        serializer.save(modified_by=self.request.user)
         return Response(serializer.data)
 
     serializer_class = ForumThreadSerializer
@@ -361,16 +361,9 @@ class ForumThreadCreateUpdateDestroyViewSet(mixins.UpdateModelMixin, mixins.Crea
     API endpoint for Forum Topics. This should be mainly used for POST, PATCH, and DELETE requests only.
     """
     permission_classes = [IsOwnerOrReadOnly]
-
-    def partial_update(self, request, pk=None):
-        serializer = ForumThreadSerializer(request.user, data=request.data, partial=True)
-        serializer.save(modified_by=self.request.user)
-        serializer.is_valid(raise_exception=True)
-        return Response(serializer.data)
-
     serializer_class = ForumThreadCreateSerializer
     pagination_class = ForumsPageNumberPagination
-    queryset = ForumPost.objects.all().prefetch_related(
+    queryset = ForumThread.objects.all().prefetch_related(
         'topic',
         'topic__latest_post',
         'created_by',
@@ -393,19 +386,12 @@ class ForumThreadCreateUpdateDestroyViewSet(mixins.UpdateModelMixin, mixins.Crea
         serializer.save(modified_by=self.request.user)
 
 
-class ForumPostCreateUpdateDestroyViewSet(mixins.RetrieveModelMixin, mixins.CreateModelMixin, mixins.DestroyModelMixin,
+class ForumPostCreateUpdateDestroyViewSet(mixins.UpdateModelMixin, mixins.RetrieveModelMixin, mixins.CreateModelMixin, mixins.DestroyModelMixin,
                                           GenericViewSet):
     """
     API endpoint for Forum Topics. This should be mainly used for POST, PATCH, and DELETE requests only.
     """
     permission_classes = [IsOwnerOrReadOnly]
-
-    def partial_update(self, request, pk=None):
-        serializer = ForumThreadSerializer(request.user, data=request.data, partial=True)
-        serializer.save(modified_by=self.request.user)
-        serializer.is_valid(raise_exception=True)
-        return Response(serializer.data)
-
     serializer_class = ForumPostCreateSerializer
     pagination_class = ForumsPageNumberPagination
     queryset = ForumPost.objects.all().prefetch_related(
