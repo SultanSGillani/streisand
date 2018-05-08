@@ -1,8 +1,9 @@
 # -*- coding: utf-8 -*-
 
+from django.core.paginator import Paginator
 from rest_framework import serializers
 from rest_framework.serializers import ModelSerializer
-from django.core.paginator import Paginator
+
 from forums.models import ForumGroup, ForumPost, ForumThread, ForumTopic, ForumThreadSubscription
 from interfaces.api_site.users.serializers import DisplayUserProfileSerializer, UserForForumSerializer
 
@@ -210,33 +211,35 @@ class ForumPostForIndexSerializer(ModelSerializer):
 
     class Meta:
         model = ForumPost
-        fields = ('id',
-                  'thread',
-                  'topic',
-                  'author',
-                  'created_at',
-                  'page_number',
-                  'post_number'
-                  )
+        fields = (
+            'id',
+            'thread',
+            'topic',
+            'author',
+            'created_at',
+            'page_number',
+            'post_number'
+        )
 
 
 class ForumTopicIndexSerializer(ModelSerializer):
     class Meta:
         model = ForumTopic
-        fields = ('id',
-                  'group',
-                  'sort_order',
-                  'name',
-                  'description',
-                  'minimum_user_class',
-                  'number_of_threads',
-                  'number_of_posts'
-                  )
+        fields = (
+            'id',
+            'group',
+            'sort_order',
+            'name',
+            'description',
+            'minimum_user_class',
+            'number_of_threads',
+            'number_of_posts'
+        )
 
 
 class ForumIndexSerializer(ModelSerializer):
     topics = ForumTopicIndexSerializer(read_only=True, many=True)
-    # topic_count = serializers.IntegerField(source='topic.count', read_only=True)
+    topic_count = serializers.SerializerMethodField()
     threads = ForumThreadForIndexSerializer(read_only=True, many=True)
     posts = ForumPostForIndexSerializer(read_only=True, many=True)
 
@@ -247,9 +250,13 @@ class ForumIndexSerializer(ModelSerializer):
             'name',
             'sort_order',
             'topics',
+            'topic_count',
             'threads',
             'posts',
         )
+
+    def get_topic_count(self, obj):
+        return obj.topics.count()
 
 
 class ForumThreadTopicSerializer(ModelSerializer):
@@ -292,9 +299,10 @@ class ForumPostTopicSerializer(ModelSerializer):
 
 class ForumTopicListSerializer(ModelSerializer):
     groups = ForumGroupTopicSerializer(read_only=True, source='group')
-    threads = ForumThreadTopicSerializer(read_only=True, many=True)
+    threads = serializers.SerializerMethodField('paginated_threads')
     posts = ForumPostTopicSerializer(read_only=True, many=True)
-    users = UserForForumSerializer(source='threads.created_by', read_only=True)
+    thread_users = UserForForumSerializer(source='threads.created_by', read_only=True)
+    latest_post_user = UserForForumSerializer(source='latest_post.author', read_only=True)
 
     class Meta:
         model = ForumTopic
@@ -307,8 +315,22 @@ class ForumTopicListSerializer(ModelSerializer):
             'minimum_user_class',
             'threads',
             'posts',
-            'users',
+            'number_of_threads',
+            'number_of_posts',
+            'latest_post_user',
+            'thread_users',
         )
+
+    # This will allow for the front end to request a page size, or it will default to max 15 threads per page.
+
+    def paginated_threads(self, obj):
+        page_size = self.context['request'].query_params.get('size') or 15
+        paginator = Paginator(obj.threads.all(), page_size)
+        page_number = self.context['request'].query_params.get('page') or 1
+        threads = paginator.page(page_number)
+        serializer = ForumThreadTopicSerializer(threads, many=True)
+
+        return serializer.data
 
 
 class ForumTopicCreateSerializer(ModelSerializer):
@@ -348,6 +370,7 @@ class ForumTopicThreadSerializer(ModelSerializer):
 
 class ForumPostThreadSerializer(ModelSerializer):
     topic = serializers.PrimaryKeyRelatedField(read_only=True, source='thread.topic')
+    post_users = DisplayUserProfileSerializer(source='author')
 
     class Meta:
         model = ForumPost
@@ -360,6 +383,7 @@ class ForumPostThreadSerializer(ModelSerializer):
             'body',
             'modified_at',
             'modified_by',
+            'post_users',
             'page_number',
             'post_number',
         )
@@ -390,7 +414,7 @@ class ForumThreadListSerializer(ModelSerializer):
     topics = ForumTopicThreadSerializer(read_only=True, source='topic')
     groups = ForumGroupTopicSerializer(read_only=True, source='topic.group')
     posts = serializers.SerializerMethodField('paginated_posts')
-    users = DisplayUserProfileSerializer(read_only=True, source='created_by')
+    thread_users = DisplayUserProfileSerializer(read_only=True, source='created_by')
 
     class Meta:
         model = ForumThread
@@ -404,9 +428,12 @@ class ForumThreadListSerializer(ModelSerializer):
             'is_sticky',
             'created_at',
             'created_by',
+            'posts_count',
             'posts',
-            'users',
+            'thread_users',
         )
+
+    # This will allow for the front end to request a page size, or it will default to max 15 posts per page.
 
     def paginated_posts(self, obj):
         page_size = self.context['request'].query_params.get('size') or 15

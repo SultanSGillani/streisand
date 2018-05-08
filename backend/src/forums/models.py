@@ -34,6 +34,10 @@ class ForumGroup(models.Model):
         return self.threads.count()
 
     @property
+    def topics_count(self):
+        return self.topics.count
+
+    @property
     def is_group(self):
         if self.parent_id:
             return True
@@ -92,24 +96,12 @@ class ForumTopic(models.Model):
         )
 
     @property
-    def threads(self):
-        return ForumThread.objects.filter(group__id=self.id)
-
-    @property
-    def thread_count(self):
-        return self.threads.count()
-
-    @property
     def posts(self):
         return ForumPost.objects.filter(thread__id=self.id)
 
     @property
     def post_count(self):
-        return self.threads.posts.count()
-
-    @property
-    def last_thread(self):
-        return self.threads.order_by("-created_at").first()
+        return self.posts.count()
 
 
 class ForumThread(models.Model):
