@@ -1,11 +1,11 @@
 # -*- coding: utf-8 -*-
 
 from django.core.paginator import Paginator
-from rest_framework import serializers
-from rest_framework.serializers import ModelSerializer
-
 from forums.models import ForumGroup, ForumPost, ForumThread, ForumTopic, ForumThreadSubscription
 from interfaces.api_site.users.serializers import DisplayUserProfileSerializer, UserForForumSerializer
+from rest_framework import serializers
+from rest_framework.serializers import ModelSerializer
+from users.models import User
 
 
 class ForumPostSerializer(ModelSerializer):
@@ -62,6 +62,7 @@ class ForumThreadSerializer(ModelSerializer):
     topic_title = serializers.StringRelatedField(read_only=True, source='topic')
     latest_post_author_username = serializers.StringRelatedField(source='latest_post.author', read_only=True)
     latest_post_author_id = serializers.PrimaryKeyRelatedField(source='latest_post.author', read_only=True)
+    latest_post_created_at = serializers.PrimaryKeyRelatedField(source='latest_post.created_at', read_only=True)
     posts = ForumPostForThreadSerializer(many=True, read_only=True)
 
     class Meta(ForumPostForThreadSerializer.Meta):
@@ -78,6 +79,7 @@ class ForumThreadSerializer(ModelSerializer):
             'is_sticky',
             'number_of_posts',
             'latest_post',
+            'latest_post_created_at',
             'latest_post_author_id',
             'latest_post_author_username',
             'posts',
@@ -368,9 +370,23 @@ class ForumTopicThreadSerializer(ModelSerializer):
         )
 
 
+class UserForumSerializer(ModelSerializer):
+    class Meta:
+        model = User
+        fields = (
+            'id',
+            'username',
+            'user_class',
+            'account_status',
+            'is_donor',
+            'custom_title',
+            'avatar_url',
+        )
+
+
 class ForumPostThreadSerializer(ModelSerializer):
     topic = serializers.PrimaryKeyRelatedField(read_only=True, source='thread.topic')
-    post_users = DisplayUserProfileSerializer(source='author')
+    users = UserForumSerializer(source='author')
 
     class Meta:
         model = ForumPost
@@ -383,9 +399,9 @@ class ForumPostThreadSerializer(ModelSerializer):
             'body',
             'modified_at',
             'modified_by',
-            'post_users',
             'page_number',
             'post_number',
+            'users',
         )
 
 
@@ -414,7 +430,7 @@ class ForumThreadListSerializer(ModelSerializer):
     topics = ForumTopicThreadSerializer(read_only=True, source='topic')
     groups = ForumGroupTopicSerializer(read_only=True, source='topic.group')
     posts = serializers.SerializerMethodField('paginated_posts')
-    thread_users = DisplayUserProfileSerializer(read_only=True, source='created_by')
+    thread_users = UserForumSerializer(source='created_by')
 
     class Meta:
         model = ForumThread
@@ -429,7 +445,7 @@ class ForumThreadListSerializer(ModelSerializer):
             'created_at',
             'created_by',
             'modified_by',
-            'posts_count',
+            'number_of_posts',
             'posts',
             'thread_users',
         )

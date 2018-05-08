@@ -1,13 +1,19 @@
 from django.db.models import OuterRef, Subquery
+from django.db.models import Q
 from django_filters import rest_framework as filters
+from forums.managers import ForumThreadQuerySet
+from forums.models import ForumGroup, ForumTopic, ForumThread, ForumPost, ForumThreadSubscription
 from rest_framework import mixins
+from rest_framework.filters import (
+    SearchFilter,
+    OrderingFilter,
+)
 from rest_framework.mixins import Response
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.viewsets import ModelViewSet, GenericViewSet
-
-from forums.models import ForumGroup, ForumTopic, ForumThread, ForumPost, ForumThreadSubscription
 from www.pagination import ForumsPageNumberPagination
 from www.permissions import IsAccountOwner
+
 from .filters import ForumTopicFilter, ForumThreadFilter, ForumPostFilter
 from .serializers import (
     ForumGroupSerializer,
@@ -35,10 +41,20 @@ class ForumGroupViewSet(ModelViewSet):
         'topics__latest_post__author__user_class',
         'topics__latest_post__thread',
     ).order_by('sort_order').distinct('sort_order')
+    filter_backends = [SearchFilter, OrderingFilter]
+    search_fields = ['name', 'topics__latest_post__author__username', 'topics__latest_post__thread__title', ]
     pagination_class = ForumsPageNumberPagination
 
-    def get_queryset(self):
-        return super().get_queryset().accessible_to_user(self.request.user)
+    def get_queryset(self, *args, **kwargs):
+        queryset_list = ForumGroup.objects.all()  # filter(user=self.request.user)
+        query = self.request.GET.get("q")
+        if query:
+            queryset_list = queryset_list.filter(
+                Q(name__icontains=query) |
+                Q(topics__latest_post__author__username__icontains=query) |
+                Q(topics__latest_post__thread__titleicontains=query)
+            ).distinct()
+        return queryset_list
 
 
 class ForumIndexViewSet(ModelViewSet):
@@ -47,15 +63,25 @@ class ForumIndexViewSet(ModelViewSet):
     """
     permission_classes = [IsAuthenticated]
     serializer_class = ForumIndexSerializer
-    pagination_class = ForumsPageNumberPagination
     queryset = ForumGroup.objects.all().prefetch_related(
         'topics__latest_post__author',
         'topics__latest_post__author__user_class',
         'topics__latest_post__thread',
     ).order_by('sort_order').distinct('sort_order')
+    filter_backends = [SearchFilter, OrderingFilter]
+    search_fields = ['name', 'topics__latest_post__author__username', 'topics__latest_post__thread__title', ]
+    pagination_class = ForumsPageNumberPagination
 
-    def get_queryset(self):
-        return super().get_queryset().accessible_to_user(self.request.user)
+    def get_queryset(self, *args, **kwargs):
+        queryset_list = ForumGroup.objects.all()  # filter(user=self.request.user)
+        query = self.request.GET.get("q")
+        if query:
+            queryset_list = queryset_list.filter(
+                Q(name__icontains=query) |
+                Q(topics__latest_post__author__username__icontains=query) |
+                Q(topics__latest_post__thread__titleicontains=query)
+            ).distinct()
+        return queryset_list
 
 
 class ForumTopicListViewSet(ModelViewSet):
@@ -64,7 +90,6 @@ class ForumTopicListViewSet(ModelViewSet):
     """
     permission_classes = [IsAuthenticated]
     serializer_class = ForumTopicListSerializer
-    pagination_class = ForumsPageNumberPagination
     queryset = ForumTopic.objects.all().select_related(
         'group', 'minimum_user_class', 'latest_post'
     ).prefetch_related(
@@ -73,17 +98,21 @@ class ForumTopicListViewSet(ModelViewSet):
         'latest_post__author__user_class',
         'latest_post__thread__topic'
     ).order_by('sort_order').distinct('sort_order')
-    filter_backends = (filters.DjangoFilterBackend,)
-    filter_class = ForumTopicFilter
+    filter_backends = [SearchFilter, OrderingFilter]
+    search_fields = ['name', 'threads__created_by__username', 'latest_post__body', 'latest_post__author__username', ]
+    pagination_class = ForumsPageNumberPagination
 
-    def get_queryset(self):
-        queryset = super().get_queryset().accessible_to_user(self.request.user)
-
-        group_id = self.request.query_params.get('group_id', None)
-        if group_id is not None:
-            queryset = queryset.filter(group_id=group_id)
-
-        return queryset
+    def get_queryset(self, *args, **kwargs):
+        queryset_list = ForumTopic.objects.all()  # filter(user=self.request.user)
+        query = self.request.GET.get("q")
+        if query:
+            queryset_list = queryset_list.filter(
+                Q(name__icontains=query) |
+                Q(threads__created_by__username__icontains=query) |
+                Q(latest_post__body__icontains=query) |
+                Q(latest_post__author__username__icontains=query)
+            ).distinct()
+        return queryset_list
 
 
 class ForumTopicCreateViewSet(mixins.UpdateModelMixin, mixins.CreateModelMixin, mixins.DestroyModelMixin,
@@ -112,18 +141,21 @@ class ForumTopicViewSet(ModelViewSet):
         'latest_post__author__user_class',
         'latest_post__thread__topic'
     ).order_by('sort_order').distinct('sort_order')
-    filter_backends = (filters.DjangoFilterBackend,)
-    filter_class = ForumTopicFilter
+    filter_backends = [SearchFilter, OrderingFilter]
+    search_fields = ['name', 'threads__created_by__username', 'latest_post__body', 'latest_post__author__username', ]
     pagination_class = ForumsPageNumberPagination
 
-    def get_queryset(self):
-        queryset = super().get_queryset().accessible_to_user(self.request.user)
-
-        group_id = self.request.query_params.get('group_id', None)
-        if group_id is not None:
-            queryset = queryset.filter(group_id=group_id)
-
-        return queryset
+    def get_queryset(self, *args, **kwargs):
+        queryset_list = ForumTopic.objects.all()  # filter(user=self.request.user)
+        query = self.request.GET.get("q")
+        if query:
+            queryset_list = queryset_list.filter(
+                Q(name__icontains=query) |
+                Q(threads__created_by__username__icontains=query) |
+                Q(latest_post__body__icontains=query) |
+                Q(latest_post__author__username__icontains=query)
+            ).distinct()
+        return queryset_list
 
 
 class ForumThreadListViewSet(ModelViewSet):
@@ -132,7 +164,6 @@ class ForumThreadListViewSet(ModelViewSet):
     """
     permission_classes = [IsAuthenticated]
     serializer_class = ForumThreadListSerializer
-    pagination_class = ForumsPageNumberPagination
     queryset = ForumThread.objects.all().prefetch_related(
         'topic__group',
         'created_by',
@@ -144,12 +175,22 @@ class ForumThreadListViewSet(ModelViewSet):
         'topic__latest_post__author',
         'topic__latest_post__author__user_class',
         'topic__latest_post__thread',
-    ).order_by('-is_sticky', '-latest_post__created_at').distinct('is_sticky', 'latest_post__created_at')
-    filter_backends = (filters.DjangoFilterBackend,)
-    filter_class = ForumThreadFilter
+    ).order_by('is_sticky', 'latest_post__created_at').distinct('is_sticky', 'latest_post__created_at')
+    filter_backends = [SearchFilter, OrderingFilter]
+    search_fields = ['title', 'created_by__username', 'posts__body', 'posts__author__username', ]
+    pagination_class = ForumsPageNumberPagination
 
-    def get_queryset(self):
-        return super().get_queryset().accessible_to_user(self.request.user)
+    def get_queryset(self, *args, **kwargs):
+        queryset_list = ForumThread.objects.all()  # filter(user=self.request.user)
+        query = self.request.GET.get("q")
+        if query:
+            queryset_list = queryset_list.filter(
+                Q(title__icontains=query) |
+                Q(created_by__username__icontains=query) |
+                Q(posts__body__icontains=query) |
+                Q(posts__author__username__icontains=query)
+            ).distinct()
+        return queryset_list
 
 
 class ForumThreadIndexViewSet(ModelViewSet):
@@ -170,18 +211,21 @@ class ForumThreadIndexViewSet(ModelViewSet):
         'topic__latest_post__author__user_class',
         'topic__latest_post__thread',
     ).order_by('-is_sticky', '-latest_post__created_at').distinct('is_sticky', 'latest_post__created_at')
-    filter_backends = (filters.DjangoFilterBackend,)
-    filter_class = ForumThreadFilter
+    filter_backends = [SearchFilter, OrderingFilter]
+    search_fields = ['title', 'created_by__username', 'posts__body', 'posts__author__username', ]
     pagination_class = ForumsPageNumberPagination
 
-    def get_queryset(self):
-        queryset = super().get_queryset().accessible_to_user(self.request.user)
-
-        topic_id = self.request.query_params.get('topic_id', None)
-        if topic_id is not None:
-            queryset = queryset.filter(topic_id=topic_id)
-
-        return queryset
+    def get_queryset(self, *args, **kwargs):
+        queryset_list = ForumThread.objects.all()  # filter(user=self.request.user)
+        query = self.request.GET.get("q")
+        if query:
+            queryset_list = queryset_list.filter(
+                Q(title__icontains=query) |
+                Q(created_by__username__icontains=query) |
+                Q(posts__body__icontains=query) |
+                Q(posts__author__username__icontains=query)
+            ).distinct()
+        return queryset_list
 
 
 class ForumThreadViewSet(ModelViewSet):
@@ -202,18 +246,21 @@ class ForumThreadViewSet(ModelViewSet):
         'topic__latest_post__author__user_class',
         'topic__latest_post__thread',
         'subscribed_users').order_by('-created_at').distinct('created_at')
-    filter_backends = (filters.DjangoFilterBackend,)
-    filter_class = ForumThreadFilter
+    filter_backends = [SearchFilter, OrderingFilter]
+    search_fields = ['title', 'created_by__username', 'posts__body', 'posts__author__username', ]
     pagination_class = ForumsPageNumberPagination
 
-    def get_queryset(self):
-        queryset = super().get_queryset().accessible_to_user(self.request.user)
-
-        topic_id = self.request.query_params.get('topic_id', None)
-        if topic_id is not None:
-            queryset = queryset.filter(topic_id=topic_id)
-
-        return queryset
+    def get_queryset(self, *args, **kwargs):
+        queryset_list = ForumThread.objects.all()  # filter(user=self.request.user)
+        query = self.request.GET.get("q")
+        if query:
+            queryset_list = queryset_list.filter(
+                Q(title__icontains=query) |
+                Q(created_by__username__icontains=query) |
+                Q(posts__body__icontains=query) |
+                Q(posts__author__username__icontains=query)
+            ).distinct()
+        return queryset_list
 
     def perform_create(self, serializer):
         serializer.save(created_by=self.request.user
@@ -247,16 +294,21 @@ class ForumThreadItemViewSet(mixins.UpdateModelMixin, mixins.CreateModelMixin, m
         'topic__latest_post__author__user_class',
         'topic__latest_post__thread',
     ).order_by('topic__latest_post__thread').distinct('topic__latest_post__thread')
+    filter_backends = [SearchFilter, OrderingFilter]
+    search_fields = ['title', 'created_by__username', 'posts__body', 'posts__author__username', ]
     pagination_class = ForumsPageNumberPagination
 
-    def get_queryset(self):
-        queryset = super().get_queryset().accessible_to_user(self.request.user)
-
-        topic_id = self.request.query_params.get('topic_id', None)
-        if topic_id is not None:
-            queryset = queryset.filter(topic_id=topic_id)
-
-        return queryset
+    def get_queryset(self, *args, **kwargs):
+        queryset_list = ForumThread.objects.all()  # filter(user=self.request.user)
+        query = self.request.GET.get("q")
+        if query:
+            queryset_list = queryset_list.filter(
+                Q(title__icontains=query) |
+                Q(created_by__username__icontains=query) |
+                Q(posts__body__icontains=query) |
+                Q(posts__author__username__icontains=query)
+            ).distinct()
+        return queryset_list
 
     def perform_create(self, serializer):
         serializer.save(created_by=self.request.user)
@@ -292,7 +344,6 @@ class ForumPostViewSet(ModelViewSet):
     """
     serializer_class = ForumPostSerializer
     permission_classes = [IsAuthenticated]
-    pagination_class = ForumsPageNumberPagination
     queryset = ForumPost.objects.all().prefetch_related(
         'thread',
         'thread__topic',
@@ -300,17 +351,21 @@ class ForumPostViewSet(ModelViewSet):
         'author',
         'author__user_class',
     ).order_by('created_at').distinct('created_at')
-    filter_backends = (filters.DjangoFilterBackend,)
-    filter_class = ForumPostFilter
+    filter_backends = [SearchFilter, OrderingFilter]
+    search_fields = ['thread__title', 'thread__created_by__username', 'body', 'author__username', ]
+    pagination_class = ForumsPageNumberPagination
 
-    def get_queryset(self):
-        queryset = super().get_queryset().accessible_to_user(self.request.user)
-
-        thread_id = self.request.query_params.get('thread_id', None)
-        if thread_id is not None:
-            queryset = queryset.filter(thread_id=thread_id)
-
-        return queryset
+    def get_queryset(self, *args, **kwargs):
+        queryset_list = ForumPost.objects.all()  # filter(user=self.request.user)
+        query = self.request.GET.get("q")
+        if query:
+            queryset_list = queryset_list.filter(
+                Q(thread__title__icontains=query) |
+                Q(thread__created_by__username__icontains=query) |
+                Q(body__icontains=query) |
+                Q(author__username__icontains=query)
+            ).distinct()
+        return queryset_list
 
     def perform_create(self, serializer):
         serializer.save(author=self.request.user
