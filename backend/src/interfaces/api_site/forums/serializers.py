@@ -2,7 +2,7 @@
 
 from django.core.paginator import Paginator
 from forums.models import ForumGroup, ForumPost, ForumThread, ForumTopic, ForumThreadSubscription
-from interfaces.api_site.users.serializers import DisplayUserProfileSerializer, UserForForumSerializer
+from interfaces.api_site.users.serializers import UserForForumSerializer
 from rest_framework import serializers
 from rest_framework.serializers import ModelSerializer
 from users.models import User

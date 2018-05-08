@@ -1,7 +1,5 @@
 from django.db.models import OuterRef, Subquery
 from django.db.models import Q
-from django_filters import rest_framework as filters
-from forums.managers import ForumThreadQuerySet
 from forums.models import ForumGroup, ForumTopic, ForumThread, ForumPost, ForumThreadSubscription
 from rest_framework import mixins
 from rest_framework.filters import (
@@ -14,7 +12,6 @@ from rest_framework.viewsets import ModelViewSet, GenericViewSet
 from www.pagination import ForumsPageNumberPagination
 from www.permissions import IsAccountOwner
 
-from .filters import ForumTopicFilter, ForumThreadFilter, ForumPostFilter
 from .serializers import (
     ForumGroupSerializer,
     ForumTopicSerializer,
