@@ -428,6 +428,7 @@ class ForumThreadListSerializer(ModelSerializer):
             'is_sticky',
             'created_at',
             'created_by',
+            'modified_by',
             'posts_count',
             'posts',
             'thread_users',
