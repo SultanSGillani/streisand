@@ -21,7 +21,7 @@ urlpatterns = [
 
     # torrent urls
     url(r'^torrent-actions/', include('torrents.urls')),
-    url(r'^film-stuff/', include('film.urls')),
+    url(r'^film-stuff/', include('films.urls')),
     url(r'^announce/', include('tracker.urls')),
 
     # Admin
