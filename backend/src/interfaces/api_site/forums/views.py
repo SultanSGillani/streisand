@@ -42,7 +42,8 @@ class ForumGroupViewSet(ModelViewSet):
         'topics__latest_post__thread',
     ).order_by('sort_order').distinct('sort_order')
     filter_backends = [SearchFilter, OrderingFilter]
-    search_fields = ['name', 'topics__latest_post__author__username', 'topics__latest_post__thread__title', ]
+    search_fields = ['name', 'topics__latest_post__author__username', 'topics__latest_post__thread__title',
+                     'topics__name']
     pagination_class = ForumsPageNumberPagination
 
     def get_queryset(self, *args, **kwargs):
@@ -51,8 +52,9 @@ class ForumGroupViewSet(ModelViewSet):
         if query:
             queryset_list = queryset_list.filter(
                 Q(name__icontains=query) |
+                Q(topics__name__icontains=query) |
                 Q(topics__latest_post__author__username__icontains=query) |
-                Q(topics__latest_post__thread__titleicontains=query)
+                Q(topics__latest_post__thread__title__icontains=query)
             ).distinct()
         return queryset_list
 
@@ -69,7 +71,8 @@ class ForumIndexViewSet(ModelViewSet):
         'topics__latest_post__thread',
     ).order_by('sort_order').distinct('sort_order')
     filter_backends = [SearchFilter, OrderingFilter]
-    search_fields = ['name', 'topics__latest_post__author__username', 'topics__latest_post__thread__title', ]
+    search_fields = ['name', 'topics__latest_post__author__username', 'topics__latest_post__thread__title',
+                     'topics__name']
     pagination_class = ForumsPageNumberPagination
 
     def get_queryset(self, *args, **kwargs):
@@ -78,8 +81,9 @@ class ForumIndexViewSet(ModelViewSet):
         if query:
             queryset_list = queryset_list.filter(
                 Q(name__icontains=query) |
+                Q(topics__name__icontains=query) |
                 Q(topics__latest_post__author__username__icontains=query) |
-                Q(topics__latest_post__thread__titleicontains=query)
+                Q(topics__latest_post__thread__title__icontains=query)
             ).distinct()
         return queryset_list
 
@@ -99,7 +103,8 @@ class ForumTopicListViewSet(ModelViewSet):
         'latest_post__thread__topic'
     ).order_by('sort_order').distinct('sort_order')
     filter_backends = [SearchFilter, OrderingFilter]
-    search_fields = ['name', 'threads__created_by__username', 'latest_post__body', 'latest_post__author__username', ]
+    search_fields = ['name', 'threads__created_by__username', 'latest_post__body', 'latest_post__author__username',
+                     'threads__title', 'group__name']
     pagination_class = ForumsPageNumberPagination
 
     def get_queryset(self, *args, **kwargs):
@@ -108,7 +113,9 @@ class ForumTopicListViewSet(ModelViewSet):
         if query:
             queryset_list = queryset_list.filter(
                 Q(name__icontains=query) |
+                Q(group__name__icontains=query) |
                 Q(threads__created_by__username__icontains=query) |
+                Q(threads__title__icontains=query) |
                 Q(latest_post__body__icontains=query) |
                 Q(latest_post__author__username__icontains=query)
             ).distinct()
@@ -142,7 +149,8 @@ class ForumTopicViewSet(ModelViewSet):
         'latest_post__thread__topic'
     ).order_by('sort_order').distinct('sort_order')
     filter_backends = [SearchFilter, OrderingFilter]
-    search_fields = ['name', 'threads__created_by__username', 'latest_post__body', 'latest_post__author__username', ]
+    search_fields = ['name', 'threads__created_by__username', 'latest_post__body', 'latest_post__author__username',
+                     'threads__title']
     pagination_class = ForumsPageNumberPagination
 
     def get_queryset(self, *args, **kwargs):
@@ -152,6 +160,7 @@ class ForumTopicViewSet(ModelViewSet):
             queryset_list = queryset_list.filter(
                 Q(name__icontains=query) |
                 Q(threads__created_by__username__icontains=query) |
+                Q(threads__title__icontains=query) |
                 Q(latest_post__body__icontains=query) |
                 Q(latest_post__author__username__icontains=query)
             ).distinct()
