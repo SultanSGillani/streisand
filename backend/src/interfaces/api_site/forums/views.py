@@ -132,6 +132,7 @@ class ForumThreadListViewSet(ModelViewSet):
     """
     permission_classes = [IsAuthenticated]
     serializer_class = ForumThreadListSerializer
+    pagination_class = ForumsPageNumberPagination
     queryset = ForumThread.objects.all().prefetch_related(
         'topic__group',
         'created_by',
@@ -146,7 +147,6 @@ class ForumThreadListViewSet(ModelViewSet):
     ).order_by('-is_sticky', '-latest_post__created_at').distinct('is_sticky', 'latest_post__created_at')
     filter_backends = (filters.DjangoFilterBackend,)
     filter_class = ForumThreadFilter
-    pagination_class = ForumsPageNumberPagination
 
     def get_queryset(self):
         return super().get_queryset().accessible_to_user(self.request.user)
@@ -292,6 +292,7 @@ class ForumPostViewSet(ModelViewSet):
     """
     serializer_class = ForumPostSerializer
     permission_classes = [IsAuthenticated]
+    pagination_class = ForumsPageNumberPagination
     queryset = ForumPost.objects.all().prefetch_related(
         'thread',
         'thread__topic',
@@ -301,7 +302,6 @@ class ForumPostViewSet(ModelViewSet):
     ).order_by('created_at').distinct('created_at')
     filter_backends = (filters.DjangoFilterBackend,)
     filter_class = ForumPostFilter
-    pagination_class = ForumsPageNumberPagination
 
     def get_queryset(self):
         queryset = super().get_queryset().accessible_to_user(self.request.user)

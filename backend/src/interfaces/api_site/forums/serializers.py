@@ -2,7 +2,7 @@
 
 from rest_framework import serializers
 from rest_framework.serializers import ModelSerializer
-
+from django.core.paginator import Paginator
 from forums.models import ForumGroup, ForumPost, ForumThread, ForumTopic, ForumThreadSubscription
 from interfaces.api_site.users.serializers import DisplayUserProfileSerializer, UserForForumSerializer
 
@@ -389,7 +389,7 @@ class ForumPostCreateSerializer(ModelSerializer):
 class ForumThreadListSerializer(ModelSerializer):
     topics = ForumTopicThreadSerializer(read_only=True, source='topic')
     groups = ForumGroupTopicSerializer(read_only=True, source='topic.group')
-    posts = ForumPostThreadSerializer(read_only=True, many=True)
+    posts = serializers.SerializerMethodField('paginated_posts')
     users = DisplayUserProfileSerializer(read_only=True, source='created_by')
 
     class Meta:
@@ -407,3 +407,12 @@ class ForumThreadListSerializer(ModelSerializer):
             'posts',
             'users',
         )
+
+    def paginated_posts(self, obj):
+        page_size = self.context['request'].query_params.get('size') or 15
+        paginator = Paginator(obj.posts.all(), page_size)
+        page_number = self.context['request'].query_params.get('page') or 1
+        posts = paginator.page(page_number)
+        serializer = ForumPostThreadSerializer(posts, many=True)
+
+        return serializer.data
