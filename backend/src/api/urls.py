@@ -35,6 +35,7 @@ router = routers.DefaultRouter()
 router.register(r'users', viewset=users_views.AdminUserViewSet, base_name='user')
 router.register(r'user-profiles', viewset=users_views.PublicUserProfileViewSet, base_name='user-profile')
 router.register(r'groups', viewset=users_views.GroupViewSet, base_name='group')
+router.register(r'bulk', viewset=forums_views.UserForumViewset, base_name='bulk')
 
 # Invites
 router.register(r'invites', viewset=invites_views.InviteViewSet, base_name='invite')

@@ -1,17 +1,19 @@
 from django.db.models import OuterRef, Subquery
 from django.db.models import Q
-from forums.models import ForumGroup, ForumTopic, ForumThread, ForumPost, ForumThreadSubscription
 from rest_framework import mixins
 from rest_framework.filters import (
     SearchFilter,
     OrderingFilter,
 )
+from rest_flex_fields import FlexFieldsModelViewSet
 from rest_framework.mixins import Response
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.viewsets import ModelViewSet, GenericViewSet
+from rest_framework_bulk import generics
+from forums.models import ForumGroup, ForumTopic, ForumThread, ForumPost, ForumThreadSubscription
+from users.models import User
 from www.pagination import ForumsPageNumberPagination
 from www.permissions import IsOwnerOrReadOnly
-
 from .serializers import (
     ForumGroupSerializer,
     ForumTopicSerializer,
@@ -26,6 +28,13 @@ from .serializers import (
     ForumPostCreateSerializer,
     ForumThreadCreateSerializer
 )
+from .serializers import UserForumSerializer
+
+
+class UserForumViewset(generics.BulkModelViewSet):
+    permission_classes = [IsAuthenticated]
+    queryset = User.objects.all()
+    serializer_class = UserForumSerializer
 
 
 class ForumGroupViewSet(ModelViewSet):
@@ -175,12 +184,13 @@ class ForumTopicViewSet(ModelViewSet):
         return queryset_list
 
 
-class ForumThreadListViewSet(ModelViewSet):
+class ForumThreadListViewSet(FlexFieldsModelViewSet):
     """
     API endpoint for Forum Threads. This should be mainly used for GET requests only.
     """
     permission_classes = [IsAuthenticated]
     serializer_class = ForumThreadListSerializer
+    permit_list_expands = ['created_by', 'modified_by', 'posts']
     queryset = ForumThread.objects.all().prefetch_related(
         'topic__group',
         'created_by',
@@ -386,7 +396,8 @@ class ForumThreadCreateUpdateDestroyViewSet(mixins.UpdateModelMixin, mixins.Crea
         serializer.save(modified_by=self.request.user)
 
 
-class ForumPostCreateUpdateDestroyViewSet(mixins.UpdateModelMixin, mixins.RetrieveModelMixin, mixins.CreateModelMixin, mixins.DestroyModelMixin,
+class ForumPostCreateUpdateDestroyViewSet(mixins.UpdateModelMixin, mixins.RetrieveModelMixin, mixins.CreateModelMixin,
+                                          mixins.DestroyModelMixin,
                                           GenericViewSet):
     """
     API endpoint for Forum Topics. This should be mainly used for POST, PATCH, and DELETE requests only.

@@ -20,7 +20,7 @@ GRAPHENE = {
         'graphene_django.debug.DjangoDebugMiddleware',
         'graphene_django_extras.ExtraGraphQLDirectiveMiddleware',
     ],
-    'SCHEMA': 'interfaces.api_site.schema.schema',
+    'SCHEMA': 'api.schema.schema',
 }
 
 DEBUG_TOOLBAR_CONFIG = {

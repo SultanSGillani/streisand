@@ -10,7 +10,7 @@ from rest_framework.documentation import include_docs_urls
 
 urlpatterns = [
     # API
-    url(r'^api/v1/', include('interfaces.api_site.urls')),
+    url(r'^api/v1/', include('api.urls')),
 
     # API Core-Schema Docs TODO: Update this when better Api Docs come out and work.
     url(r'^docs/', include_docs_urls(title='jumpcut API v1', public=False)),
