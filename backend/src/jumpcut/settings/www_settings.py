@@ -6,23 +6,6 @@ from .common_settings import *
 
 INTERNAL_IPS = config('INTERNAL_IPS', cast=lambda v: [s.strip() for s in v.split(',')])
 
-GRAPHENE_DJANGO_EXTRAS = {
-    'DEFAULT_PAGINATION_CLASS': 'graphene_django_extras.paginations.PageGraphqlPagination',
-    'DEFAULT_PAGE_SIZE': 25,
-    'MAX_PAGE_SIZE': 50,
-    'CACHE_ACTIVE': True,
-    'CACHE_TIMEOUT': 300  # seconds
-}
-
-GRAPHENE = {
-    'SCHEMA_INDENT': 4,
-    'MIDDLEWARE': [
-        'graphene_django.debug.DjangoDebugMiddleware',
-        'graphene_django_extras.ExtraGraphQLDirectiveMiddleware',
-    ],
-    'SCHEMA': 'api.schema.schema',
-}
-
 DEBUG_TOOLBAR_CONFIG = {
     "SHOW_TOOLBAR_CALLBACK": lambda request: True,
 }

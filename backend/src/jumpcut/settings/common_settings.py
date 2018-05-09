@@ -41,7 +41,6 @@ THIRD_PARTY_APPS = (
     'django_extensions',
     'django_su',
     'rest_framework',
-    'graphene_django',
     'corsheaders',
     'django_filters',
     'rest_framework_filters',

@@ -3,7 +3,6 @@
 from django.conf.urls import url, include
 from drf_yasg import openapi
 from drf_yasg.views import get_schema_view
-from graphene_django.views import GraphQLView
 from rest_framework import routers, permissions
 from rest_framework_jwt.views import refresh_jwt_token, verify_jwt_token
 
@@ -97,6 +96,5 @@ urlpatterns = [
     url(r'^register/$', users_views.UserRegisterView.as_view()),
     url(r'^current-user/', users_views.CurrentUserView.as_view()),
     url(r'^change-password/', users_views.ChangePasswordView.as_view()),
-    url(r'^graphql', GraphQLView.as_view(graphiql=True)),
 
 ]
