@@ -1,19 +1,20 @@
 from django.db.models import OuterRef, Subquery
 from django.db.models import Q
+from forums.models import ForumGroup, ForumTopic, ForumThread, ForumPost, ForumThreadSubscription
+from rest_flex_fields import FlexFieldsModelViewSet
 from rest_framework import mixins
 from rest_framework.filters import (
     SearchFilter,
     OrderingFilter,
 )
-from rest_flex_fields import FlexFieldsModelViewSet
 from rest_framework.mixins import Response
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.viewsets import ModelViewSet, GenericViewSet
 from rest_framework_bulk import generics
-from forums.models import ForumGroup, ForumTopic, ForumThread, ForumPost, ForumThreadSubscription
 from users.models import User
 from www.pagination import ForumsPageNumberPagination
 from www.permissions import IsOwnerOrReadOnly
+
 from .serializers import (
     ForumGroupSerializer,
     ForumTopicSerializer,
@@ -190,7 +191,7 @@ class ForumThreadListViewSet(FlexFieldsModelViewSet):
     """
     permission_classes = [IsAuthenticated]
     serializer_class = ForumThreadListSerializer
-    permit_list_expands = ['created_by', 'modified_by', 'posts']
+    permit_list_expands = ['created_by', 'modified_by', 'posts', 'posts.author', 'posts.modified_by']
     queryset = ForumThread.objects.all().prefetch_related(
         'topic__group',
         'created_by',
@@ -204,6 +205,7 @@ class ForumThreadListViewSet(FlexFieldsModelViewSet):
         'topic__latest_post__thread',
         'topic',
         'topic__group',
+        'posts__thread__created_at',
     ).order_by('is_sticky', 'latest_post__created_at').distinct('is_sticky', 'latest_post__created_at', )
     filter_backends = [SearchFilter, OrderingFilter]
     search_fields = ['title', 'created_by__username', 'posts__body', 'posts__author__username', ]

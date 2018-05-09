@@ -1,14 +1,14 @@
 # -*- coding: utf-8 -*-
+from api.users.serializers import UserForForumSerializer
+from django.core.paginator import Paginator
+from forums.models import ForumGroup, ForumPost, ForumThread, ForumTopic, ForumThreadSubscription
+from rest_flex_fields import FlexFieldsModelSerializer
+from rest_framework import serializers
+from rest_framework.serializers import ModelSerializer
 from rest_framework_bulk import (
     BulkListSerializer,
     BulkSerializerMixin,
 )
-from rest_flex_fields import FlexFieldsModelSerializer
-from django.core.paginator import Paginator
-from forums.models import ForumGroup, ForumPost, ForumThread, ForumTopic, ForumThreadSubscription
-from api.users.serializers import UserForForumSerializer
-from rest_framework import serializers
-from rest_framework.serializers import ModelSerializer
 from users.models import User
 
 
@@ -375,7 +375,6 @@ class ForumTopicThreadSerializer(ModelSerializer):
 
 
 class UserForumSerializer(BulkSerializerMixin, FlexFieldsModelSerializer):
-
     class Meta(object):
         model = User
         fields = (
@@ -397,10 +396,22 @@ class UserForumSerializer(BulkSerializerMixin, FlexFieldsModelSerializer):
     list_serializer_class = BulkListSerializer
 
 
+class UserExpandForumSerializer(FlexFieldsModelSerializer):
+    class Meta:
+        model = User
+        fields = (
+            'id',
+            'username',
+            'user_class',
+            'account_status',
+            'is_donor',
+            'custom_title',
+            'avatar_url',
+        )
+
+
 class ForumPostThreadSerializer(FlexFieldsModelSerializer):
     topic = serializers.PrimaryKeyRelatedField(read_only=True, source='thread.topic')
-    author = UserForumSerializer()
-    modified_by = UserForumSerializer()
 
     class Meta:
         model = ForumPost
@@ -416,6 +427,12 @@ class ForumPostThreadSerializer(FlexFieldsModelSerializer):
             'page_number',
             'post_number',
         )
+
+    expandable_fields = {
+        'author': (UserExpandForumSerializer, {'source': 'author'}),
+        'modified_by': (UserExpandForumSerializer, {'source': 'modified_by'}),
+
+    }
 
 
 class ForumPostCreateSerializer(ModelSerializer):
@@ -460,7 +477,7 @@ class ForumThreadListSerializer(FlexFieldsModelSerializer):
     created_by = serializers.PrimaryKeyRelatedField(read_only='True')
     modified_by = serializers.PrimaryKeyRelatedField(read_only='True')
 
-    class Meta(ForumPostThreadSerializer.Meta):
+    class Meta:
         model = ForumThread
         fields = (
             'groups',
@@ -475,22 +492,41 @@ class ForumThreadListSerializer(FlexFieldsModelSerializer):
             'modified_by',
             'number_of_posts',
             'posts',
+
         )
 
-    expandable_fields = {
-        'posts': (ForumPostThreadSerializer, {'source': 'posts', 'many': True, 'expand': ['author', 'modified_by']}),
-        'created_by': (UserForumSerializer, {'source': 'created_by', 'many': False, 'expand': ['created_by']}),
-        'modified_by': (UserForumSerializer, {'source': 'modified_by', 'many': False, 'expand': ['modified_by']})
-
-    }
-
     # This will allow for the front end to request a page size, or it will default to max 15 posts per page.
-
     def paginated_posts(self, obj):
         page_size = self.context['request'].query_params.get('size') or 15
         paginator = Paginator(obj.posts.all(), page_size)
-        page_number = self.context['request'].query_params.get('page') or 1
-        posts = paginator.page(page_number)
+        page = self.context['request'].query_params.get('page') or 1
+        posts = paginator.page(page)
         serializer = ForumPostThreadSerializer(posts, many=True)
 
         return serializer.data
+
+    expandable_fields = {
+        'created_by': (UserExpandForumSerializer, {'source': 'created_by', 'many': False, 'expand': ['created_by']}),
+        'modified_by': (UserExpandForumSerializer, {'source': 'modified_by', 'many': False, 'expand': ['modified_by']}),
+        'posts': (ForumPostThreadSerializer, {'source': 'posts', 'many': True, 'expand': ['modified_by', 'author']})
+
+    }
+
+    '''
+    Add a way to be able to query for specific resources. For Example: /api/v1/new-thread-index/?&tab=posts&tab=id
+    Will give only posts, and Id of the thread
+    '''
+
+    def __init__(self, *args, **kwargs):
+        super(ForumThreadListSerializer, self).__init__(*args, **kwargs)
+
+        if 'context' in kwargs:
+            if 'request' in kwargs['context']:
+                tabs = kwargs['context']['request'].query_params.getlist('tab', [])
+                if tabs:
+                    # tabs = tabs.split(',')
+                    included = set(tabs)
+                    existing = set(self.fields.keys())
+
+                    for other in existing - included:
+                        self.fields.pop(other)
