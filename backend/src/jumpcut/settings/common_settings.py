@@ -47,7 +47,6 @@ THIRD_PARTY_APPS = (
     'rest_framework_filters',
     'docs',
     'drf_yasg',
-
 )
 
 LOCAL_APPS = (
@@ -56,7 +55,7 @@ LOCAL_APPS = (
     'forums',
     'imdb',
     'import_scripts',
-    'interfaces.api_site',
+    'api',
     'invites',
     'media_formats',
     'mediainfo',

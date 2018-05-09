@@ -3,7 +3,7 @@ from graphene_django.types import DjangoObjectType
 from graphene_django.debug import DjangoDebug
 from forums.models import ForumGroup, ForumTopic, ForumThread, ForumPost
 from users.schema import UserType
-from interfaces.api_site.utils import get_paginator
+from api.utils import get_paginator
 
 
 class ForumGroupType(DjangoObjectType):

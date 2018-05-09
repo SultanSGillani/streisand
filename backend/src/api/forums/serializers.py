@@ -1,8 +1,12 @@
 # -*- coding: utf-8 -*-
-
+from rest_framework_bulk import (
+    BulkListSerializer,
+    BulkSerializerMixin,
+)
+from rest_flex_fields import FlexFieldsModelSerializer
 from django.core.paginator import Paginator
 from forums.models import ForumGroup, ForumPost, ForumThread, ForumTopic, ForumThreadSubscription
-from interfaces.api_site.users.serializers import UserForForumSerializer
+from api.users.serializers import UserForForumSerializer
 from rest_framework import serializers
 from rest_framework.serializers import ModelSerializer
 from users.models import User
@@ -370,8 +374,9 @@ class ForumTopicThreadSerializer(ModelSerializer):
         )
 
 
-class UserForumSerializer(ModelSerializer):
-    class Meta:
+class UserForumSerializer(BulkSerializerMixin, FlexFieldsModelSerializer):
+
+    class Meta(object):
         model = User
         fields = (
             'id',
@@ -383,10 +388,19 @@ class UserForumSerializer(ModelSerializer):
             'avatar_url',
         )
 
+    def __iter__(self):
+        return self
 
-class ForumPostThreadSerializer(ModelSerializer):
+    def next(self):
+        raise StopIteration
+
+    list_serializer_class = BulkListSerializer
+
+
+class ForumPostThreadSerializer(FlexFieldsModelSerializer):
     topic = serializers.PrimaryKeyRelatedField(read_only=True, source='thread.topic')
-    users = UserForumSerializer(source='author')
+    author = UserForumSerializer()
+    modified_by = UserForumSerializer()
 
     class Meta:
         model = ForumPost
@@ -401,7 +415,6 @@ class ForumPostThreadSerializer(ModelSerializer):
             'modified_by',
             'page_number',
             'post_number',
-            'users',
         )
 
 
@@ -440,13 +453,14 @@ class ForumThreadCreateSerializer(ModelSerializer):
         )
 
 
-class ForumThreadListSerializer(ModelSerializer):
+class ForumThreadListSerializer(FlexFieldsModelSerializer):
     topics = ForumTopicThreadSerializer(read_only=True, source='topic')
     groups = ForumGroupTopicSerializer(read_only=True, source='topic.group')
     posts = serializers.SerializerMethodField('paginated_posts')
-    thread_users = UserForumSerializer(source='created_by')
+    created_by = serializers.PrimaryKeyRelatedField(read_only='True')
+    modified_by = serializers.PrimaryKeyRelatedField(read_only='True')
 
-    class Meta:
+    class Meta(ForumPostThreadSerializer.Meta):
         model = ForumThread
         fields = (
             'groups',
@@ -456,13 +470,19 @@ class ForumThreadListSerializer(ModelSerializer):
             'topic',
             'is_locked',
             'is_sticky',
-            'created_at',
             'created_by',
+            'created_at',
             'modified_by',
             'number_of_posts',
             'posts',
-            'thread_users',
         )
+
+    expandable_fields = {
+        'posts': (ForumPostThreadSerializer, {'source': 'posts', 'many': True, 'expand': ['author', 'modified_by']}),
+        'created_by': (UserForumSerializer, {'source': 'created_by', 'many': False, 'expand': ['created_by']}),
+        'modified_by': (UserForumSerializer, {'source': 'modified_by', 'many': False, 'expand': ['modified_by']})
+
+    }
 
     # This will allow for the front end to request a page size, or it will default to max 15 posts per page.
 

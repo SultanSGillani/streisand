@@ -48,3 +48,5 @@ graphene-django>=2.0.dev
 graphene-django-extras==0.3.6
 python-decouple==3.1
 django-graphql-extensions==0.0.4
+djangorestframework-bulk==0.2.1
+drf-flex-fields==0.3.4
