@@ -15,9 +15,9 @@ class BaseAPITestCase(object):
 
     list_requires_login = False
     detail_requires_login = False
-    create_requires_login = True
-    update_requires_login = True
-    delete_requires_login = True
+    create_requires_login = False
+    update_requires_login = False
+    delete_requires_login = False
 
     to_update_fieds = {}
     extra_update_fields = {}

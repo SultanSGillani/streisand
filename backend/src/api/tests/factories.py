@@ -18,8 +18,8 @@ class UserFactory(DjangoModelFactory):
     last_name = fuzzy.FuzzyText()
     password = PostGenerationMethodCall('set_password', 'changeM3')
     is_active = True
-    is_staff = False
-    is_superuser = False
+    is_staff = True
+    is_superuser = True
     is_banned = False
     account_status = 'enabled'
 
