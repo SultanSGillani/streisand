@@ -65,7 +65,7 @@ mirror-github:
     - cd $CI_HOME
     - git clone --mirror $CI_REPOSITORY_URL
     - cd $CI_PROJECT_NAME
-    - ssh -i key "$SSH_DESTINATION"
+    - ssh -i key "github.com"
     - git push --mirror $MIRROR_REPOSITORY
     # Cleanup
     - cd ..; rm -rf $CI_PROJECT_NAME.git
