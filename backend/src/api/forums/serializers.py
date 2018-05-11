@@ -224,7 +224,7 @@ class ForumPostForIndexSerializer(ModelSerializer):
             'author',
             'created_at',
             'page_number',
-            'post_number'
+            'position'
         )
 
 
@@ -425,7 +425,7 @@ class ForumPostThreadSerializer(FlexFieldsModelSerializer):
             'modified_at',
             'modified_by',
             'page_number',
-            'post_number',
+            'position',
         )
 
     expandable_fields = {
@@ -447,12 +447,12 @@ class ForumPostCreateSerializer(ModelSerializer):
             'body',
             'thread',
             'page_number',
-            'post_number',
+            'position',
         )
 
         extra_kwargs = {
             'page_number': {'read_only': True},
-            'post_number': {'read_only': True},
+            'position': {'read_only': True},
         }
 
 

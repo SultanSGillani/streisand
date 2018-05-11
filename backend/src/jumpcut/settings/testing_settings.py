@@ -26,6 +26,7 @@ CACHES = {
     }
 }
 
+ROOT_URLCONF = 'www.urls'
 # PASSWORDS
 # ------------------------------------------------------------------------------
 # https://docs.djangoproject.com/en/dev/ref/settings/#password-hashers

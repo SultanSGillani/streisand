@@ -1,7 +1,6 @@
-from six import iteritems
-
 from django.urls import reverse
 from rest_framework import status
+from six import iteritems
 
 from .factories import get_admin
 
@@ -12,7 +11,7 @@ class BaseAPITestCase(object):
     factory_default_kwargs = {}
     factory_delete_kwargs = {}
     api_base_name = None
-    api_base_url = ''
+    api_base_url = 'api.urls'
 
     list_requires_login = False
     detail_requires_login = False

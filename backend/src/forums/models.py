@@ -6,6 +6,7 @@ from django.db.models import F
 from django.urls import reverse
 
 from .managers import ForumGroupQuerySet, ForumTopicQuerySet, ForumThreadQuerySet, ForumPostQuerySet
+from api.utils.positions import PositionField
 
 
 class ForumGroup(models.Model):
@@ -169,10 +170,6 @@ class ForumThread(models.Model):
     def posts_count(self):
         return self.posts.count()
 
-    @property
-    def last_post(self):
-        return self.posts.order_by("created_at").first()
-
     def save(self, *args, **kwargs):
         if self.pk:
             self.modified = True
@@ -210,21 +207,11 @@ class ForumPost(models.Model):
         related_name='posts',
         on_delete=models.CASCADE,
     )
-
+    position = PositionField(collection='thread')
     objects = ForumPostQuerySet.as_manager()
 
     class Meta:
         ordering = ['created_at']
-
-    @property
-    def post_number(self):
-        qs = self.thread.posts.order_by("created_at")
-        post_index = list(qs.values_list("id", flat=True)).index(self.id)
-        return post_index + 1
-
-    @property
-    def page_number(self, page_size=25):
-        return math.ceil(self.post_number / page_size)
 
     def __str__(self):
         return 'Forum post by {author} in thread {thread}'.format(
@@ -237,6 +224,10 @@ class ForumPost(models.Model):
             thread_url=self.thread.get_absolute_url(),
             post_id=self.id,
         )
+
+    @property
+    def page_number(self, page_size=25):
+        return math.ceil(self.position / page_size)
 
     def save(self, *args, **kwargs):
         if self.pk:
