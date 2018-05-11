@@ -18,7 +18,7 @@ services:
         image: redis:latest
         restart: always
     www:
-        image: registry.ronzertnert.me/jumpcut/jumpcut:master
+        image: registry.pinigseu.xyz/jumpcut/jumpcut:master
         depends_on:
             - postgres
             - redis
@@ -28,7 +28,7 @@ services:
             - "7070:7070"
         restart: always
     celery:
-        image: registry.ronzertnert.me/jumpcut/jumpcut:master
+        image: registry.pinigseu.xyz/jumpcut/jumpcut:master
         command: celery worker --workdir /code/src -A jumpcut -l info
         depends_on:
             - postgres
