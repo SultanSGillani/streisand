@@ -7,12 +7,9 @@ from rest_framework.filters import (
     SearchFilter,
     OrderingFilter,
 )
-from rest_framework.mixins import Response
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.viewsets import ModelViewSet, GenericViewSet
-from rest_framework_bulk import generics
-from users.models import User
-from www.pagination import ForumsPageNumberPagination
+from www.pagination import ForumsPageNumberPagination, DetailPagination
 from www.permissions import IsOwnerOrReadOnly
 
 from .serializers import (
@@ -29,13 +26,6 @@ from .serializers import (
     ForumPostCreateSerializer,
     ForumThreadCreateSerializer
 )
-from .serializers import UserForumSerializer
-
-
-class UserForumViewset(generics.BulkModelViewSet):
-    permission_classes = [IsAuthenticated]
-    queryset = User.objects.all()
-    serializer_class = UserForumSerializer
 
 
 class ForumGroupViewSet(ModelViewSet):
@@ -82,7 +72,7 @@ class ForumIndexViewSet(ModelViewSet):
     filter_backends = [SearchFilter, OrderingFilter]
     search_fields = ['name', 'topics__latest_post__author__username', 'topics__latest_post__thread__title',
                      'topics__name']
-    pagination_class = ForumsPageNumberPagination
+    pagination_class = DetailPagination
 
     def get_queryset(self, *args, **kwargs):
         queryset_list = ForumGroup.objects.all().prefetch_related(
@@ -116,7 +106,7 @@ class ForumTopicListViewSet(ModelViewSet):
     filter_backends = [SearchFilter, OrderingFilter]
     search_fields = ['name', 'threads__created_by__username', 'latest_post__body', 'latest_post__author__username',
                      'threads__title', 'group__name']
-    pagination_class = ForumsPageNumberPagination
+    pagination_class = DetailPagination
 
     def get_queryset(self, *args, **kwargs):
         queryset_list = ForumTopic.objects.all().prefetch_related(
@@ -144,7 +134,7 @@ class ForumTopicCreateViewSet(mixins.UpdateModelMixin, mixins.CreateModelMixin, 
     permission_classes = [IsAuthenticated]
     serializer_class = ForumTopicCreateSerializer
     queryset = ForumTopic.objects.all()
-    pagination_class = ForumsPageNumberPagination
+    pagination_class = DetailPagination
 
 
 class ForumTopicViewSet(ModelViewSet):
@@ -191,7 +181,7 @@ class ForumThreadListViewSet(FlexFieldsModelViewSet):
     """
     permission_classes = [IsAuthenticated]
     serializer_class = ForumThreadListSerializer
-    permit_list_expands = ['created_by', 'modified_by', 'posts', 'posts.author', 'posts.modified_by']
+    permit_list_expands = ['created_by', 'modified_by', 'posts', 'posts.author', 'posts.modified_by', 'posts.thread', ]
     queryset = ForumThread.objects.all().prefetch_related(
         'topic__group',
         'created_by',
@@ -209,7 +199,7 @@ class ForumThreadListViewSet(FlexFieldsModelViewSet):
     ).order_by('is_sticky', 'latest_post__created_at').distinct('is_sticky', 'latest_post__created_at', )
     filter_backends = [SearchFilter, OrderingFilter]
     search_fields = ['title', 'created_by__username', 'posts__body', 'posts__author__username', ]
-    pagination_class = ForumsPageNumberPagination
+    pagination_class = DetailPagination
 
     def get_queryset(self, *args, **kwargs):
         queryset_list = ForumThread.objects.all().prefetch_related(
@@ -327,13 +317,6 @@ class ForumThreadItemViewSet(mixins.UpdateModelMixin, mixins.CreateModelMixin, m
     Please Note: Pagination is set to Page Number Pagination.
     """
     permission_classes = [IsAuthenticated]
-
-    def partial_update(self, request, pk=None):
-        serializer = ForumThreadSerializer(request.user, data=request.data, partial=True)
-        serializer.is_valid(raise_exception=True)
-        serializer.save(modified_by=self.request.user)
-        return Response(serializer.data)
-
     serializer_class = ForumThreadSerializer
     queryset = ForumThread.objects.all().prefetch_related(
         'created_by',
@@ -346,7 +329,7 @@ class ForumThreadItemViewSet(mixins.UpdateModelMixin, mixins.CreateModelMixin, m
     ).order_by('topic__latest_post__thread').distinct('topic__latest_post__thread')
     filter_backends = [SearchFilter, OrderingFilter]
     search_fields = ['title', 'created_by__username', 'posts__body', 'posts__author__username', ]
-    pagination_class = ForumsPageNumberPagination
+    pagination_class = DetailPagination
 
     def get_queryset(self, *args, **kwargs):
         queryset_list = ForumThread.objects.all()  # filter(user=self.request.user)
@@ -363,6 +346,10 @@ class ForumThreadItemViewSet(mixins.UpdateModelMixin, mixins.CreateModelMixin, m
     def perform_create(self, serializer):
         serializer.save(created_by=self.request.user)
 
+    def perform_partial_update(self, serializer, **kwargs):
+        kwargs['partial'] = True
+        serializer.save(modified_by=self.request.user)
+
     def perform_update(self, serializer):
         serializer.save(modified_by=self.request.user)
 
@@ -374,7 +361,7 @@ class ForumThreadCreateUpdateDestroyViewSet(mixins.UpdateModelMixin, mixins.Crea
     """
     permission_classes = [IsOwnerOrReadOnly]
     serializer_class = ForumThreadCreateSerializer
-    pagination_class = ForumsPageNumberPagination
+    pagination_class = DetailPagination
     queryset = ForumThread.objects.all().prefetch_related(
         'topic',
         'topic__latest_post',
@@ -394,6 +381,10 @@ class ForumThreadCreateUpdateDestroyViewSet(mixins.UpdateModelMixin, mixins.Crea
         serializer.save(created_by=self.request.user
                         )
 
+    def perform_partial_update(self, serializer, **kwargs):
+        kwargs['partial'] = True
+        serializer.save(modified_by=self.request.user)
+
     def perform_update(self, serializer):
         serializer.save(modified_by=self.request.user)
 
@@ -406,7 +397,7 @@ class ForumPostCreateUpdateDestroyViewSet(mixins.UpdateModelMixin, mixins.Retrie
     """
     permission_classes = [IsOwnerOrReadOnly]
     serializer_class = ForumPostCreateSerializer
-    pagination_class = ForumsPageNumberPagination
+    pagination_class = DetailPagination
     queryset = ForumPost.objects.all().prefetch_related(
         'thread',
         'thread__topic',
@@ -427,6 +418,10 @@ class ForumPostCreateUpdateDestroyViewSet(mixins.UpdateModelMixin, mixins.Retrie
     def perform_create(self, serializer):
         serializer.save(author=self.request.user
                         )
+
+    def perform_partial_update(self, serializer, **kwargs):
+        kwargs['partial'] = True
+        serializer.save(modified_by=self.request.user)
 
     def perform_update(self, serializer):
         serializer.save(modified_by=self.request.user)

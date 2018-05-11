@@ -9,33 +9,11 @@ try:
 except ImportError:
     now = datetime.datetime.now
 
-    # define basestring for python 3
-
-basestring = (str, bytes)
-
-# Source: https://djangosnippets.org/snippets/884/
-
-"""A model field to manage the position of an item within a collection.
-
-    By default all instances of a model are treated as one collection; if the
-    ``unique_for_field`` argument is used, each value of the specified field is
-    treated as a distinct collection.
-
-    ``PositionField`` values work like list indices, including the handling of
-    negative values.  A value of ``-2`` will be cause the position to be set to
-    the second to last position in the collection.  The implementation differs
-    from standard list indices in that values that are too large or too small
-    are converted to the maximum or minimum allowed value respectively.
-
-    When the value of a ``PositionField`` in a model instance is modified, the
-    positions of other instances in the same collection are automatically
-    updated to reflect the change.
-
-    Assigning a value of ``None`` to a ``PositionField`` will cause the instance
-    to be moved to the end of the collection (or appended to the collection, in
-    the case of a new instance).
-
-    """
+# define basestring for python 3
+try:
+    basestring
+except NameError:
+    basestring = (str, bytes)
 
 
 class PositionField(models.IntegerField):
@@ -211,7 +189,7 @@ class PositionField(models.IntegerField):
                 self.get_collection(instance).filter(
                     **{'%s__gt' % self.name: getattr(instance, self.get_cache_name())[0]})[
                     0]
-        except AttributeError:
+        except:
             return None
 
     def remove_from_collection(self, instance):
@@ -240,7 +218,7 @@ class PositionField(models.IntegerField):
         if next_sibling_pk:
             try:
                 next_sibling = type(instance)._default_manager.get(pk=next_sibling_pk)
-            except AttributeError:
+            except:
                 next_sibling = None
             if next_sibling:
                 queryset = self.get_collection(next_sibling)
@@ -288,6 +266,12 @@ class PositionField(models.IntegerField):
 
         queryset.update(**updates)
         setattr(instance, self.get_cache_name(), (updated, None))
+
+    def south_field_triple(self):
+        from south.modelsinspector import introspector
+        field_class = "django.db.models.fields.IntegerField"
+        args, kwargs = introspector(self)
+        return (field_class, args, kwargs)
 
     def get_cache_name(self):
         try:

@@ -6,7 +6,7 @@ from django.db.models import F
 from django.urls import reverse
 
 from .managers import ForumGroupQuerySet, ForumTopicQuerySet, ForumThreadQuerySet, ForumPostQuerySet
-from api.utils.positions import PositionField
+from api.positions import PositionField
 
 
 class ForumGroup(models.Model):
@@ -194,24 +194,26 @@ class ForumPost(models.Model):
     body = models.TextField()
     created_at = models.DateTimeField(auto_now_add=True)
     modified = models.BooleanField(default=False)
-    modified_at = models.DateTimeField(auto_now=True, null=True)
+    modified_at = models.DateTimeField(auto_now=True, null=True, editable=False)
     modified_count = models.PositiveIntegerField(default=0, editable=False)
     modified_by = models.ForeignKey(
         to='users.User',
         related_name='modified_posts',
         null=True,
         on_delete=models.SET_NULL,
+        editable=False,
     )
     thread = models.ForeignKey(
         to='forums.ForumThread',
         related_name='posts',
         on_delete=models.CASCADE,
     )
-    position = PositionField(collection='thread')
+    position = PositionField(unique_for_field='thread', editable=False)
     objects = ForumPostQuerySet.as_manager()
 
     class Meta:
         ordering = ['created_at']
+        get_latest_by = ['created_at']
 
     def __str__(self):
         return 'Forum post by {author} in thread {thread}'.format(
@@ -224,10 +226,6 @@ class ForumPost(models.Model):
             thread_url=self.thread.get_absolute_url(),
             post_id=self.id,
         )
-
-    @property
-    def page_number(self, page_size=25):
-        return math.ceil(self.position / page_size)
 
     def save(self, *args, **kwargs):
         if self.pk:
