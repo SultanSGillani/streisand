@@ -9,8 +9,7 @@ stages:
  - test
  - mirror
  - release
-
-#  - deploy
+ - deploy
 
 variables:
   PIP_CACHE_DIR: "$CI_PROJECT_DIR/.cache"
@@ -71,10 +70,11 @@ mirror-github:
   allow_failure: true
 
 ## TODO frontend linter/tests?
-#
+
 release_develop:
   image: docker:stable
   stage: release
+  cache: {}
   before_script:
     - docker login -u gitlab-ci-token -p $CI_PASS $CI_REGISTRY
   script:
@@ -83,12 +83,18 @@ release_develop:
   only:
     - master
 
- 
-# deploy-develop:
-#   stage: deploy
-#   before_script:
-#     - docker login -u gitlab-ci-token -p $CI_PASS $CI_REGISTRY
-#   script:
-#     - echo hi # will be the deploy script
-#   only:
-#     - develop
+deploy-develop:
+  stage: deploy
+  cache: {}
+  before_script:
+    # https://docs.gitlab.com/ee/ci/ssh_keys/
+    - echo "$SSH_PRIVATE_KEY" | tr -d '\r' > key
+    - chmod 700 key
+    - mkdir -p ~/.ssh
+    - chmod 700 ~/.ssh
+    - echo "$SSH_KNOWN_HOSTS" > ~/.ssh/known_hosts
+    - chmod 644 ~/.ssh/known_hosts
+  script:
+    - ssh -i key "$SSH_DESTINATION"
+  only:
+    - master
