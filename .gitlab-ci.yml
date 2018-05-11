@@ -55,7 +55,12 @@ variables:
 mirror-github:
   stage: mirror
   before_script:
-    - echo hey
+    - echo "$SSH_PRIVATE_KEY" | tr -d '\r' > key
+    - chmod 700 key
+    - mkdir -p ~/.ssh
+    - chmod 700 ~/.ssh
+    - echo "$SSH_KNOWN_HOSTS" > ~/.ssh/known_hosts
+    - chmod 644 ~/.ssh/known_hosts
   tags:
     - github
   cache: {}
@@ -63,7 +68,8 @@ mirror-github:
     # Do a mirror clone of the repository
     - git clone --mirror $CI_REPOSITORY_URL
     # Mirror push it to the destination
-    - cd $CI_PROJECT_NAME.git
+    - cd $CI_HOME/$CI_PROJECT_NAME
+    - ssh -i key "$SSH_DESTINATION"
     - git push --mirror $MIRROR_REPOSITORY
     # Cleanup
     - cd ..; rm -rf $CI_PROJECT_NAME.git
