@@ -55,12 +55,7 @@ variables:
 mirror-github:
   stage: mirror
   before_script:
-    - echo "$SSH_PRIVATE_KEY" | tr -d '\r' > key
-    - chmod 700 key
-    - mkdir -p ~/.ssh
-    - chmod 700 ~/.ssh
-    - echo "$SSH_KNOWN_HOSTS" > ~/.ssh/known_hosts
-    - chmod 644 ~/.ssh/known_hosts
+    - echo hi
   tags:
     - github
   cache: {}
