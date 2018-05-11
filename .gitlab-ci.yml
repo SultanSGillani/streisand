@@ -66,9 +66,10 @@ mirror-github:
   cache: {}
   script:
     # Do a mirror clone of the repository
-    - git clone --mirror $CI_REPOSITORY_URL
     # Mirror push it to the destination
-    - cd $CI_HOME/$CI_PROJECT_NAME
+    - cd $CI_HOME
+    - git clone --mirror $CI_REPOSITORY_URL
+    - cd $CI_PROJECT_NAME
     - ssh -i key "$SSH_DESTINATION"
     - git push --mirror $MIRROR_REPOSITORY
     # Cleanup
