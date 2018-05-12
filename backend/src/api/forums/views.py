@@ -1,6 +1,5 @@
 from django.db.models import OuterRef, Subquery
 from django.db.models import Q
-from forums.models import ForumGroup, ForumTopic, ForumThread, ForumPost, ForumThreadSubscription
 from rest_flex_fields import FlexFieldsModelViewSet
 from rest_framework import mixins
 from rest_framework.filters import (
@@ -9,9 +8,10 @@ from rest_framework.filters import (
 )
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.viewsets import ModelViewSet, GenericViewSet
+
+from forums.models import ForumGroup, ForumTopic, ForumThread, ForumPost, ForumThreadSubscription, ForumReport
 from www.pagination import ForumsPageNumberPagination, DetailPagination
 from www.permissions import IsOwnerOrReadOnly
-
 from .serializers import (
     ForumGroupSerializer,
     ForumTopicSerializer,
@@ -24,8 +24,15 @@ from .serializers import (
     ForumTopicCreateSerializer,
     ForumThreadListSerializer,
     ForumPostCreateSerializer,
-    ForumThreadCreateSerializer
+    ForumThreadCreateSerializer,
+    ForumReportSerializer
 )
+
+
+class ForumReportViewSet(ModelViewSet):
+    queryset = ForumReport.objects.all()
+    serializer_class = ForumReportSerializer
+    pagination_class = ForumsPageNumberPagination
 
 
 class ForumGroupViewSet(ModelViewSet):

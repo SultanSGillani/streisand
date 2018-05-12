@@ -73,6 +73,7 @@ router.register(r'new-thread-index', viewset=forums_views.ForumThreadListViewSet
 router.register(r'new-thread-items', viewset=forums_views.ForumThreadCreateUpdateDestroyViewSet,
                 base_name='new-thread-items')
 router.register(r'new-post-items', viewset=forums_views.ForumPostCreateUpdateDestroyViewSet, base_name='new-post-items')
+router.register(r'forum-reports', viewset=forums_views.ForumReportViewSet, base_name='forum-report')
 
 # Wiki
 router.register(r'wikis', viewset=wiki_views.WikiArticleCreateUpdateDestroyViewSet, base_name='wiki')
