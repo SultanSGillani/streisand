@@ -1,10 +1,12 @@
-from rest_framework.pagination import PageNumberPagination, LimitOffsetPagination, CursorPagination
+from rest_framework.pagination import PageNumberPagination, LimitOffsetPagination, CursorPagination, _positive_int
 from rest_framework.response import Response
 
 
 # source https://gist.github.com/marctc/9fa2a08d4fc51df6d9dc
 class DetailPagination(PageNumberPagination):
-    page_size_query_param = 'page_size'
+    page_size_query_param = 'size'
+
+    page_query_param = 'page'
 
     def get_paginated_response(self, data):
         return Response({
@@ -15,6 +17,18 @@ class DetailPagination(PageNumberPagination):
             'num_pages': self.page.paginator.num_pages,
             'results': data
         })
+    def get_page_size(self, request):
+        if self.page_size_query_param in request.query_params:
+            try:
+                return _positive_int(
+                    request.query_params[self.page_size_query_param],
+                    strict=True,
+                    cutoff=self.max_page_size
+                )
+            except (KeyError, ValueError):
+                pass
+
+        return self.page_size
 
 
 class WikiPageNumberPagination(PageNumberPagination):
