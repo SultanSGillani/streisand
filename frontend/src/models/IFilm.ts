@@ -9,7 +9,24 @@ interface IFilm {
     posterUrl: string;
     tags: string[];
     title: string;
-    tmdbId: string;
+    tmdbId: number;
+    lists: number[];
+    trailerType: string;
+    trailerUrl: string;
+    year: number;
+}
+
+export interface IFilmUpdate {
+    description: string;
+    durationInMinutes: number;
+    fanartUrl: string;
+    imdbId: string;
+    moderationNotes: string;
+    posterUrl: string;
+    tags?: string[];
+    title: string;
+    tmdbId: number;
+    lists: number[];
     trailerType: string;
     trailerUrl: string;
     year: number;

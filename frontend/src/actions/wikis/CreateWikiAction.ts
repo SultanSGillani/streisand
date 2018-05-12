@@ -24,7 +24,7 @@ function received(id: number, response: IWiki): Action {
     };
 }
 
-function creating(wiki: IWikiUpdate) {
+function creating(wiki: IWikiUpdate): Action {
     return { type: 'CREATING_WIKI', wiki };
 }
 

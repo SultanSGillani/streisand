@@ -10,7 +10,8 @@ import IPagedResponse from '../../models/base/IPagedResponse';
 type FilmsAction =
     { type: 'FETCHING_FILMS', page: number } |
     { type: 'RECEIVED_FILMS', page: number, count: number, items: IFilm[] } |
-    { type: 'FAILED_FILMS', page: number };
+    { type: 'FAILED_FILMS', page: number } |
+    { type: 'INVALIDATE_FILMS', page: number };
 export default FilmsAction;
 type Action = FilmsAction | ErrorAction;
 
@@ -29,6 +30,10 @@ function received(page: number, response: IPagedResponse<IFilm>): Action {
 
 function failure(page: number): Action {
     return { type: 'FAILED_FILMS', page };
+}
+
+export function invalidate(page: number): Action {
+    return { type: 'INVALIDATE_FILMS', page };
 }
 
 export function getFilms(page: number = 1): ThunkAction<Action> {

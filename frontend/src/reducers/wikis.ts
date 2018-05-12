@@ -11,7 +11,7 @@ import { addLoadedNode, addLoadedNodes } from './utilities/mutations';
 type ItemMap = INodeMap<IWiki>;
 function byId(state: ItemMap = {}, action: Action): ItemMap {
     switch (action.type) {
-        case 'REMOVED_WIKI':
+        case 'DELETED_WIKI':
             const copy = objectAssign({}, state);
             delete copy[action.id];
             return copy;
@@ -31,6 +31,7 @@ function pages(state: Pages = {}, action: Action): Pages {
         case 'FETCHING_WIKIS':
         case 'RECEIVED_WIKIS':
         case 'FAILED_WIKIS':
+        case 'INVALIDATE_WIKIS':
             const page: IPage = pageReducer(state[action.page], action);
             return objectAssign({}, state, { [action.page]: page });
         default:
