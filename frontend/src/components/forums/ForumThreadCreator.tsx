@@ -38,7 +38,7 @@ class ForumThreadCreatorComponent extends React.Component<CombinedProps, State> 
                     Create new forum thread
                 </div>
                 <div className="panel-body">
-                    <form className="form-horizontal" onKeyPress={createThread}>
+                    <form className="form-horizontal" onKeyPress={createThread} autoComplete="off">
                         <fieldset>
                             <div className="form-group">
                                 <label htmlFor="inputTitle" className="col-lg-2 control-label">Title</label>

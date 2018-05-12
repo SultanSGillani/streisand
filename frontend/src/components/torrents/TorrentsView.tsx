@@ -5,7 +5,7 @@ import Pager from '../Pager';
 import Store from '../../store';
 import TorrentList from './TorrentList';
 import ITorrent from '../../models/ITorrent';
-import { getItems } from '../../utilities/mapping';
+import { getNodeItems } from '../../utilities/mapping';
 
 export type Props = {
     page: number;
@@ -35,7 +35,7 @@ class TorrentsViewComponent extends React.Component<CombinedProps> {
 const mapStateToProps = (state: Store.All, ownProps: Props): ConnectedState => {
     return {
         total: state.sealed.torrents.count,
-        torrents: getItems({
+        torrents: getNodeItems({
             page: ownProps.page,
             byId: state.sealed.torrents.byId,
             pages: state.sealed.torrents.pages

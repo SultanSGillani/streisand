@@ -3,8 +3,8 @@ import { connect } from 'react-redux';
 
 import Pager from '../Pager';
 import Store from '../../store';
-import WikiRow from './WikiRow';
-import IWiki from '../../models/IWiki';
+import FilmRow from './FilmRow';
+import IFilm from '../../models/IFilm';
 import { getNodeItems } from '../../utilities/mapping';
 
 export type Props = {
@@ -13,24 +13,26 @@ export type Props = {
 
 type ConnectedState = {
     total: number;
-    wikis: IWiki[];
+    films: IFilm[];
 };
 type ConnectedDispatch = {};
 
 type CombinedProps = Props & ConnectedDispatch & ConnectedState;
-class WikiListComponent extends React.Component<CombinedProps> {
+class FilmListComponent extends React.Component<CombinedProps> {
     public render() {
-        const { wikis, page, total } = this.props;
-        const rows = wikis.map((wiki: IWiki) => {
-            return (<WikiRow wiki={wiki} key={wiki.id} page={page} />);
+        const { films, page, total } = this.props;
+        const rows = films.map((film: IFilm) => {
+            return (<FilmRow film={film} key={film.id} page={page} />);
         });
         return (
             <div>
-                <Pager uri="/wikis" total={total} page={page} />
+                <Pager uri="/films" total={total} page={page} />
                 <table className="table table-striped table-hover">
                     <thead>
                         <tr>
-                            <th>Title</th>
+                            <th></th>
+                            <th>Name</th>
+                            <th>Year</th>
                             <th></th>
                         </tr>
                     </thead>
@@ -38,7 +40,7 @@ class WikiListComponent extends React.Component<CombinedProps> {
                         {rows}
                     </tbody>
                 </table>
-                <Pager uri="/wikis" total={total} page={page} />
+                <Pager uri="/films" total={total} page={page} />
             </div>
         );
     }
@@ -46,15 +48,15 @@ class WikiListComponent extends React.Component<CombinedProps> {
 
 const mapStateToProps = (state: Store.All, ownProps: Props): ConnectedState => {
     return {
-        total: state.sealed.wikis.count,
-        wikis: getNodeItems({
+        total: state.sealed.films.count,
+        films: getNodeItems({
             page: ownProps.page,
-            byId: state.sealed.wikis.byId,
-            pages: state.sealed.wikis.pages
+            byId: state.sealed.films.byId,
+            pages: state.sealed.films.pages
         })
     };
 };
 
-const WikiList: React.ComponentClass<Props> =
-    connect(mapStateToProps)(WikiListComponent);
-export default WikiList;
+const FilmList: React.ComponentClass<Props> =
+    connect(mapStateToProps)(FilmListComponent);
+export default FilmList;

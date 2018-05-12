@@ -4,7 +4,7 @@ import { connect } from 'react-redux';
 import Store from '../../store';
 import IFilm from '../../models/IFilm';
 import ITorrent from '../../models/ITorrent';
-import { getItems } from '../../utilities/mapping';
+import { getNodeItems } from '../../utilities/mapping';
 import TorrentModal from '../torrents/TorrentModal';
 import TorrentSection from '../torrents/TorrentSection';
 
@@ -80,7 +80,7 @@ class FilmViewComponent extends React.Component<CombinedProps> {
 
 const mapStateToProps = (state: Store.All, ownProps: Props): ConnectedState => {
     return {
-        torrents: getItems({
+        torrents: getNodeItems({
             page: ownProps.film.id,
             byId: state.sealed.torrents.byId,
             pages: state.sealed.torrents.byFilmId
