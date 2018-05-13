@@ -1,5 +1,4 @@
 # -*- coding: utf-8 -*-
-import math
 
 from django.db import models
 from django.db.models import F
