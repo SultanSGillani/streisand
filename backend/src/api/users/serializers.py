@@ -126,7 +126,8 @@ class OwnedUserProfileSerializer(AdminUserProfileSerializer):
 
 
 class PublicUserProfileSerializer(OwnedUserProfileSerializer):
-    username = serializers.StringRelatedField()
+
+    username = serializers.StringRelatedField(read_only=True)
 
     class Meta(OwnedUserProfileSerializer.Meta):
         fields = (
@@ -144,8 +145,6 @@ class PublicUserProfileSerializer(OwnedUserProfileSerializer):
             'bytes_downloaded',
             'last_seeded',
         )
-
-    extra_kwargs = {'username': {'read_only': True, }}
 
 
 class DisplayUserProfileSerializer(PublicUserProfileSerializer):

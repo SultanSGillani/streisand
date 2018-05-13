@@ -7,7 +7,8 @@ class PublicUserFilter(filters.FilterSet):
     class Meta:
         model = User
         fields = {
-            'username': ['exact', 'in', 'startswith']
+            'id': ['in'],
+            'username': ['exact', 'in', 'startswith'],
         }
 
 
