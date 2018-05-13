@@ -316,7 +316,7 @@ class ForumPostTopicSerializer(FlexFieldsModelSerializer):
 class ForumTopicListSerializer(FlexFieldsModelSerializer):
     groups = ForumGroupTopicSerializer(read_only=True, source='group')
     threads = PaginatedRelationField(ForumThreadTopicSerializer, paginator=RelationPaginator)
-    latest_post = ForumPostTopicSerializer(source='threads.latest_post', read_only=True)
+    latest_post = ForumPostTopicSerializer()
 
     class Meta:
         model = ForumTopic
