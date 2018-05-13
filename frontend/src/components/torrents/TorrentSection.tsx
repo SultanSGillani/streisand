@@ -40,11 +40,11 @@ function TorrentRow(props: { torrent: ITorrent }) {
 
     return (
         <tr>
-            <td>
+            <td className="align-middle">
                 <Link to={url} title={name}>{name}</Link>
             </td>
-            <td>{torrent.size}</td>
-            <td>{torrent.snatchCount}</td>
+            <td className="align-middle">{torrent.size}</td>
+            <td className="align-middle">{torrent.snatchCount}</td>
         </tr>
     );
 }

@@ -9,7 +9,7 @@ export interface IEditorHandle {
 }
 
 export type Props = {
-    content: string;
+    content?: string;
     size: 'small' | 'large';
     receiveHandle?: (handle: IEditorHandle) => void;
 };
@@ -32,7 +32,7 @@ export default class Editor extends React.Component<Props, State> {
     }
 
     public componentWillMount() {
-        this.setState({ content: this.props.content });
+        this.setState({ content: this.props.content || '' });
     }
 
     public componentDidMount() {
@@ -49,9 +49,10 @@ export default class Editor extends React.Component<Props, State> {
     }
 
     public componentWillReceiveProps(props: Props) {
-        if (props.content !== this.props.content) {
+        const newContent = props.content || '';
+        if (newContent !== this.props.content) {
             this.setState({
-                content: props.content,
+                content: newContent,
                 preview: false
             });
         }

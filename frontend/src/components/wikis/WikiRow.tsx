@@ -30,7 +30,7 @@ class WikiRowComponent extends React.Component<CombinedProps> {
         };
         return (
             <tr>
-                <td>
+                <td className="align-middle">
                     <Link to={'/wiki/' + wiki.id} title={wiki.title}>{wiki.title}</Link>
                 </td>
                 <td style={{ display: 'flex', flexFlow: 'row-reverse' }}>
