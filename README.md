@@ -51,7 +51,7 @@ You can find the api/django-admin server on <localhost:8000>, the frontend serve
 <localhost:8001> and the tracker server on <localhost:7070>.
 
 For example, here is an announce request that will work with the fixture data that was loaded in
-by the `setup-db` command: <http://localhost:7070/16fd2706-8baf-433b-82eb-8c7fada847da/announce?info_hash=%89I%85%F9%7C%C2%5C%24n7%A0%7C%D7%C7%85%999%82%A7%CB&peer_id=-UT3400-111122221111&uploaded=721&downloaded=982&left=0&port=1337&ip=192.168.1.4>
+by the `setup-db` command: <http://localhost:7070/16fd2706-8baf-433b-82eb-8c7fada847da/announce/?info_hash=%89I%85%F9%7C%C2%5C%24n7%A0%7C%D7%C7%85%999%82%A7%CB&peer_id=-UT3400-111122221111&uploaded=721&downloaded=982&left=0&port=1337&ip=192.168.1.4>
 
 ### Rebuilding containers
 

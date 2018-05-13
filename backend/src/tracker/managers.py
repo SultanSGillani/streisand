@@ -64,6 +64,7 @@ class TorrentClientManager(models.Manager):
                     in self.filter(is_whitelisted=True)
                 ]
             )
-            cache.set(self.WHITELIST_CACHE_KEY, client_whitelist)
+            # Cache the whitelist for one hour
+            cache.set(self.WHITELIST_CACHE_KEY, client_whitelist, 3600)
 
         return client_whitelist

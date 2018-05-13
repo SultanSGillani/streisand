@@ -1,5 +1,896 @@
 [
     {
+        "model": "tracker.torrentclient",
+        "pk": "-AZ25",
+        "fields": {
+            "name": "Azureus 2.5.*",
+            "is_whitelisted": true,
+            "notes": null
+        }
+    },
+    {
+        "model": "tracker.torrentclient",
+        "pk": "-AZ31",
+        "fields": {
+            "name": "Azureus 3.1",
+            "is_whitelisted": true,
+            "notes": null
+        }
+    },
+    {
+        "model": "tracker.torrentclient",
+        "pk": "-AZ41",
+        "fields": {
+            "name": "Azureus/Vuze 4.1",
+            "is_whitelisted": true,
+            "notes": null
+        }
+    },
+    {
+        "model": "tracker.torrentclient",
+        "pk": "-AZ42",
+        "fields": {
+            "name": "Azurues/Vuze 4.2",
+            "is_whitelisted": true,
+            "notes": null
+        }
+    },
+    {
+        "model": "tracker.torrentclient",
+        "pk": "-AZ43",
+        "fields": {
+            "name": "Azureus/Vuze 4.3",
+            "is_whitelisted": true,
+            "notes": null
+        }
+    },
+    {
+        "model": "tracker.torrentclient",
+        "pk": "-AZ44",
+        "fields": {
+            "name": "Azureus/Vuze 4.4",
+            "is_whitelisted": true,
+            "notes": null
+        }
+    },
+    {
+        "model": "tracker.torrentclient",
+        "pk": "-AZ45",
+        "fields": {
+            "name": "Azureus/Vuze 4.5",
+            "is_whitelisted": true,
+            "notes": null
+        }
+    },
+    {
+        "model": "tracker.torrentclient",
+        "pk": "-AZ46",
+        "fields": {
+            "name": "Azureus/Vuze 4.6",
+            "is_whitelisted": true,
+            "notes": null
+        }
+    },
+    {
+        "model": "tracker.torrentclient",
+        "pk": "-AZ47",
+        "fields": {
+            "name": "Azureus/Vuze 4.7",
+            "is_whitelisted": true,
+            "notes": null
+        }
+    },
+    {
+        "model": "tracker.torrentclient",
+        "pk": "-AZ48",
+        "fields": {
+            "name": "Azureus/Vuze 4.8",
+            "is_whitelisted": true,
+            "notes": null
+        }
+    },
+    {
+        "model": "tracker.torrentclient",
+        "pk": "-AZ49",
+        "fields": {
+            "name": "Azureus/Vuze 4.9",
+            "is_whitelisted": true,
+            "notes": null
+        }
+    },
+    {
+        "model": "tracker.torrentclient",
+        "pk": "-AZ50",
+        "fields": {
+            "name": "Azureus/Vuze 5.0",
+            "is_whitelisted": true,
+            "notes": null
+        }
+    },
+    {
+        "model": "tracker.torrentclient",
+        "pk": "-AZ51",
+        "fields": {
+            "name": "Azureus/Vuze 5.1",
+            "is_whitelisted": true,
+            "notes": null
+        }
+    },
+    {
+        "model": "tracker.torrentclient",
+        "pk": "-AZ52",
+        "fields": {
+            "name": "Azureus/Vuze 5.2",
+            "is_whitelisted": true,
+            "notes": null
+        }
+    },
+    {
+        "model": "tracker.torrentclient",
+        "pk": "-AZ53",
+        "fields": {
+            "name": "Azureus/Vuze 5.3",
+            "is_whitelisted": true,
+            "notes": null
+        }
+    },
+    {
+        "model": "tracker.torrentclient",
+        "pk": "-AZ54",
+        "fields": {
+            "name": "Azureus/Vuze 5.4",
+            "is_whitelisted": true,
+            "notes": null
+        }
+    },
+    {
+        "model": "tracker.torrentclient",
+        "pk": "-AZ55",
+        "fields": {
+            "name": "Azureus/Vuze 5.5",
+            "is_whitelisted": true,
+            "notes": null
+        }
+    },
+    {
+        "model": "tracker.torrentclient",
+        "pk": "-AZ56",
+        "fields": {
+            "name": "Azureus/Vuze 5.6",
+            "is_whitelisted": true,
+            "notes": null
+        }
+    },
+    {
+        "model": "tracker.torrentclient",
+        "pk": "-AZ57",
+        "fields": {
+            "name": "Azureus/Vuze 5.7",
+            "is_whitelisted": true,
+            "notes": null
+        }
+    },
+    {
+        "model": "tracker.torrentclient",
+        "pk": "-BG10",
+        "fields": {
+            "name": "btgdaemon 1.*",
+            "is_whitelisted": true,
+            "notes": null
+        }
+    },
+    {
+        "model": "tracker.torrentclient",
+        "pk": "btpd/0.15",
+        "fields": {
+            "name": "BTPD 0.15",
+            "is_whitelisted": true,
+            "notes": null
+        }
+    },
+    {
+        "model": "tracker.torrentclient",
+        "pk": "btpd/0.16",
+        "fields": {
+            "name": "BTPD 0.16",
+            "is_whitelisted": true,
+            "notes": null
+        }
+    },
+    {
+        "model": "tracker.torrentclient",
+        "pk": "-CD0302-",
+        "fields": {
+            "name": "Enhanced CTorrent (dnh3.2)",
+            "is_whitelisted": true,
+            "notes": null
+        }
+    },
+    {
+        "model": "tracker.torrentclient",
+        "pk": "-DE12",
+        "fields": {
+            "name": "Deluge 1.2.*",
+            "is_whitelisted": true,
+            "notes": null
+        }
+    },
+    {
+        "model": "tracker.torrentclient",
+        "pk": "-DE13",
+        "fields": {
+            "name": "Deluge 1.3.*",
+            "is_whitelisted": true,
+            "notes": null
+        }
+    },
+    {
+        "model": "tracker.torrentclient",
+        "pk": "-HL031",
+        "fields": {
+            "name": "Halite 3.1",
+            "is_whitelisted": true,
+            "notes": null
+        }
+    },
+    {
+        "model": "tracker.torrentclient",
+        "pk": "-KT22",
+        "fields": {
+            "name": "KTorrent 2.2.*",
+            "is_whitelisted": true,
+            "notes": null
+        }
+    },
+    {
+        "model": "tracker.torrentclient",
+        "pk": "-KT32",
+        "fields": {
+            "name": "KTorrent 3.2",
+            "is_whitelisted": true,
+            "notes": null
+        }
+    },
+    {
+        "model": "tracker.torrentclient",
+        "pk": "-KT33",
+        "fields": {
+            "name": "KTorrent 3.3",
+            "is_whitelisted": true,
+            "notes": null
+        }
+    },
+    {
+        "model": "tracker.torrentclient",
+        "pk": "-KT40",
+        "fields": {
+            "name": "KTorrent 4.0",
+            "is_whitelisted": true,
+            "notes": null
+        }
+    },
+    {
+        "model": "tracker.torrentclient",
+        "pk": "-KT41",
+        "fields": {
+            "name": "KTorrent 4.1.*",
+            "is_whitelisted": true,
+            "notes": null
+        }
+    },
+    {
+        "model": "tracker.torrentclient",
+        "pk": "-KT42",
+        "fields": {
+            "name": "KTorrent 4.2.*",
+            "is_whitelisted": true,
+            "notes": null
+        }
+    },
+    {
+        "model": "tracker.torrentclient",
+        "pk": "-KT43",
+        "fields": {
+            "name": "KTorrent 4.3.*",
+            "is_whitelisted": true,
+            "notes": null
+        }
+    },
+    {
+        "model": "tracker.torrentclient",
+        "pk": "-lt0A4",
+        "fields": {
+            "name": "libtorrent 0.10.4 (rTorrent)",
+            "is_whitelisted": true,
+            "notes": null
+        }
+    },
+    {
+        "model": "tracker.torrentclient",
+        "pk": "-lt0B",
+        "fields": {
+            "name": "libtorrent 0.11.* (rTorrent)",
+            "is_whitelisted": true,
+            "notes": null
+        }
+    },
+    {
+        "model": "tracker.torrentclient",
+        "pk": "-lt0C",
+        "fields": {
+            "name": "libtorrent 0.12.* (rTorrent)",
+            "is_whitelisted": true,
+            "notes": null
+        }
+    },
+    {
+        "model": "tracker.torrentclient",
+        "pk": "-lt0D",
+        "fields": {
+            "name": "libtorrent 0.13.* (rTorrent)",
+            "is_whitelisted": true,
+            "notes": null
+        }
+    },
+    {
+        "model": "tracker.torrentclient",
+        "pk": "-qB26",
+        "fields": {
+            "name": "qBittorrent 2.6.*",
+            "is_whitelisted": true,
+            "notes": null
+        }
+    },
+    {
+        "model": "tracker.torrentclient",
+        "pk": "-qB27",
+        "fields": {
+            "name": "qBittorrent 2.7.*",
+            "is_whitelisted": true,
+            "notes": null
+        }
+    },
+    {
+        "model": "tracker.torrentclient",
+        "pk": "-qB28",
+        "fields": {
+            "name": "qBittorrent 2.8.*",
+            "is_whitelisted": true,
+            "notes": null
+        }
+    },
+    {
+        "model": "tracker.torrentclient",
+        "pk": "-qB29",
+        "fields": {
+            "name": "qBittorrent 2.9.*",
+            "is_whitelisted": true,
+            "notes": null
+        }
+    },
+    {
+        "model": "tracker.torrentclient",
+        "pk": "-qB30",
+        "fields": {
+            "name": "qBittorrent 3.0.*",
+            "is_whitelisted": true,
+            "notes": null
+        }
+    },
+    {
+        "model": "tracker.torrentclient",
+        "pk": "-qB31",
+        "fields": {
+            "name": "qBittorrent 3.1.*",
+            "is_whitelisted": true,
+            "notes": null
+        }
+    },
+    {
+        "model": "tracker.torrentclient",
+        "pk": "-qB32",
+        "fields": {
+            "name": "qBittorrent 3.2.*",
+            "is_whitelisted": true,
+            "notes": null
+        }
+    },
+    {
+        "model": "tracker.torrentclient",
+        "pk": "-qB33",
+        "fields": {
+            "name": "qBittorrent 3.3.*",
+            "is_whitelisted": true,
+            "notes": null
+        }
+    },
+    {
+        "model": "tracker.torrentclient",
+        "pk": "-TR1540-",
+        "fields": {
+            "name": "Transmission  1.5.4",
+            "is_whitelisted": true,
+            "notes": null
+        }
+    },
+    {
+        "model": "tracker.torrentclient",
+        "pk": "-TR16",
+        "fields": {
+            "name": "Transmission 1.6.*",
+            "is_whitelisted": true,
+            "notes": null
+        }
+    },
+    {
+        "model": "tracker.torrentclient",
+        "pk": "-TR17",
+        "fields": {
+            "name": "Transmission 1.7.*",
+            "is_whitelisted": true,
+            "notes": null
+        }
+    },
+    {
+        "model": "tracker.torrentclient",
+        "pk": "-TR18",
+        "fields": {
+            "name": "Transmission 1.8.*",
+            "is_whitelisted": true,
+            "notes": null
+        }
+    },
+    {
+        "model": "tracker.torrentclient",
+        "pk": "-TR1920-",
+        "fields": {
+            "name": "Transmission 1.92",
+            "is_whitelisted": true,
+            "notes": null
+        }
+    },
+    {
+        "model": "tracker.torrentclient",
+        "pk": "-TR1930-",
+        "fields": {
+            "name": "Transmission 1.93",
+            "is_whitelisted": true,
+            "notes": null
+        }
+    },
+    {
+        "model": "tracker.torrentclient",
+        "pk": "-TR20",
+        "fields": {
+            "name": "Transmission 2.0.*",
+            "is_whitelisted": true,
+            "notes": null
+        }
+    },
+    {
+        "model": "tracker.torrentclient",
+        "pk": "-TR210",
+        "fields": {
+            "name": "Transmission 2.1",
+            "is_whitelisted": true,
+            "notes": null
+        }
+    },
+    {
+        "model": "tracker.torrentclient",
+        "pk": "-TR2110-",
+        "fields": {
+            "name": "Transmission 2.11",
+            "is_whitelisted": true,
+            "notes": null
+        }
+    },
+    {
+        "model": "tracker.torrentclient",
+        "pk": "-TR212",
+        "fields": {
+            "name": "Transmission 2.12",
+            "is_whitelisted": true,
+            "notes": null
+        }
+    },
+    {
+        "model": "tracker.torrentclient",
+        "pk": "-TR213",
+        "fields": {
+            "name": "Transmission 2.13",
+            "is_whitelisted": true,
+            "notes": null
+        }
+    },
+    {
+        "model": "tracker.torrentclient",
+        "pk": "-TR220",
+        "fields": {
+            "name": "Transmission 2.20",
+            "is_whitelisted": true,
+            "notes": null
+        }
+    },
+    {
+        "model": "tracker.torrentclient",
+        "pk": "-TR221",
+        "fields": {
+            "name": "Transmission 2.21",
+            "is_whitelisted": true,
+            "notes": null
+        }
+    },
+    {
+        "model": "tracker.torrentclient",
+        "pk": "-TR222",
+        "fields": {
+            "name": "Transmission 2.22",
+            "is_whitelisted": true,
+            "notes": null
+        }
+    },
+    {
+        "model": "tracker.torrentclient",
+        "pk": "-TR23",
+        "fields": {
+            "name": "Transmission 2.3*",
+            "is_whitelisted": true,
+            "notes": null
+        }
+    },
+    {
+        "model": "tracker.torrentclient",
+        "pk": "-TR24",
+        "fields": {
+            "name": "Transmission 2.4*",
+            "is_whitelisted": true,
+            "notes": null
+        }
+    },
+    {
+        "model": "tracker.torrentclient",
+        "pk": "-TR25",
+        "fields": {
+            "name": "Transmission 2.5*",
+            "is_whitelisted": true,
+            "notes": null
+        }
+    },
+    {
+        "model": "tracker.torrentclient",
+        "pk": "-TR26",
+        "fields": {
+            "name": "Transmission 2.6*",
+            "is_whitelisted": true,
+            "notes": null
+        }
+    },
+    {
+        "model": "tracker.torrentclient",
+        "pk": "-TR27",
+        "fields": {
+            "name": "Transmission 2.7*",
+            "is_whitelisted": true,
+            "notes": null
+        }
+    },
+    {
+        "model": "tracker.torrentclient",
+        "pk": "-TR28",
+        "fields": {
+            "name": "Transmission 2.8*",
+            "is_whitelisted": true,
+            "notes": null
+        }
+    },
+    {
+        "model": "tracker.torrentclient",
+        "pk": "-TR292",
+        "fields": {
+            "name": "Transmission 2.92+",
+            "is_whitelisted": true,
+            "notes": null
+        }
+    },
+    {
+        "model": "tracker.torrentclient",
+        "pk": "-UM15",
+        "fields": {
+            "name": "\u00b5Torrent Mac 1.5.*",
+            "is_whitelisted": true,
+            "notes": null
+        }
+    },
+    {
+        "model": "tracker.torrentclient",
+        "pk": "-UM165",
+        "fields": {
+            "name": "\u00b5Torrent Mac 1.6.5",
+            "is_whitelisted": true,
+            "notes": null
+        }
+    },
+    {
+        "model": "tracker.torrentclient",
+        "pk": "-UM180",
+        "fields": {
+            "name": "\u00b5Torrent Mac 1.8.0",
+            "is_whitelisted": true,
+            "notes": null
+        }
+    },
+    {
+        "model": "tracker.torrentclient",
+        "pk": "-UM181",
+        "fields": {
+            "name": "\u00b5Torrent Mac 1.8.1",
+            "is_whitelisted": true,
+            "notes": null
+        }
+    },
+    {
+        "model": "tracker.torrentclient",
+        "pk": "-UM182",
+        "fields": {
+            "name": "\u00b5Torrent Mac 1.8.2",
+            "is_whitelisted": true,
+            "notes": null
+        }
+    },
+    {
+        "model": "tracker.torrentclient",
+        "pk": "-UM183",
+        "fields": {
+            "name": "\u00b5Torrent Mac 1.8.3",
+            "is_whitelisted": true,
+            "notes": null
+        }
+    },
+    {
+        "model": "tracker.torrentclient",
+        "pk": "-UM184",
+        "fields": {
+            "name": "\u00b5Torrent Mac 1.8.4",
+            "is_whitelisted": true,
+            "notes": null
+        }
+    },
+    {
+        "model": "tracker.torrentclient",
+        "pk": "-UM186",
+        "fields": {
+            "name": "\u00b5Torrent Mac 1.8.6",
+            "is_whitelisted": true,
+            "notes": null
+        }
+    },
+    {
+        "model": "tracker.torrentclient",
+        "pk": "-UM187",
+        "fields": {
+            "name": "\u00b5Torrent Mac 1.8.7",
+            "is_whitelisted": true,
+            "notes": null
+        }
+    },
+    {
+        "model": "tracker.torrentclient",
+        "pk": "-UT161",
+        "fields": {
+            "name": "\u00b5Torrent 1.6.1",
+            "is_whitelisted": true,
+            "notes": null
+        }
+    },
+    {
+        "model": "tracker.torrentclient",
+        "pk": "-UT177",
+        "fields": {
+            "name": "\u00b5Torrent 1.7.7",
+            "is_whitelisted": true,
+            "notes": null
+        }
+    },
+    {
+        "model": "tracker.torrentclient",
+        "pk": "-UT182",
+        "fields": {
+            "name": "\u00b5Torrent 1.8.2",
+            "is_whitelisted": true,
+            "notes": null
+        }
+    },
+    {
+        "model": "tracker.torrentclient",
+        "pk": "-UT185",
+        "fields": {
+            "name": "\u00b5Torrent 1.8.5",
+            "is_whitelisted": true,
+            "notes": null
+        }
+    },
+    {
+        "model": "tracker.torrentclient",
+        "pk": "-UT201",
+        "fields": {
+            "name": "\u00b5Torrent 2.0.1",
+            "is_whitelisted": true,
+            "notes": null
+        }
+    },
+    {
+        "model": "tracker.torrentclient",
+        "pk": "-UT202",
+        "fields": {
+            "name": "\u00b5Torrent 2.0.2",
+            "is_whitelisted": true,
+            "notes": null
+        }
+    },
+    {
+        "model": "tracker.torrentclient",
+        "pk": "-UT203",
+        "fields": {
+            "name": "\u00b5Torrent 2.0.3",
+            "is_whitelisted": true,
+            "notes": null
+        }
+    },
+    {
+        "model": "tracker.torrentclient",
+        "pk": "-UT204",
+        "fields": {
+            "name": "\u00b5Torrent 2.0.4",
+            "is_whitelisted": true,
+            "notes": null
+        }
+    },
+    {
+        "model": "tracker.torrentclient",
+        "pk": "-UT220",
+        "fields": {
+            "name": "\u00b5Torrent 2.2.0",
+            "is_whitelisted": true,
+            "notes": null
+        }
+    },
+    {
+        "model": "tracker.torrentclient",
+        "pk": "-UT221",
+        "fields": {
+            "name": "\u00b5Torrent 2.2.1",
+            "is_whitelisted": true,
+            "notes": null
+        }
+    },
+    {
+        "model": "tracker.torrentclient",
+        "pk": "-UT30",
+        "fields": {
+            "name": "\u00b5Torrent 3.0.*",
+            "is_whitelisted": true,
+            "notes": null
+        }
+    },
+    {
+        "model": "tracker.torrentclient",
+        "pk": "-UT31",
+        "fields": {
+            "name": "\u00b5Torrent 3.1.*",
+            "is_whitelisted": true,
+            "notes": null
+        }
+    },
+    {
+        "model": "tracker.torrentclient",
+        "pk": "-UT32",
+        "fields": {
+            "name": "\u00b5Torrent 3.2.*",
+            "is_whitelisted": true,
+            "notes": null
+        }
+    },
+    {
+        "model": "tracker.torrentclient",
+        "pk": "-UT33",
+        "fields": {
+            "name": "\u00b5Torrent 3.3.*",
+            "is_whitelisted": true,
+            "notes": null
+        }
+    },
+    {
+        "model": "tracker.torrentclient",
+        "pk": "-UT331",
+        "fields": {
+            "name": "\u00b5Torrent 3.3.1",
+            "is_whitelisted": true,
+            "notes": null
+        }
+    },
+    {
+        "model": "tracker.torrentclient",
+        "pk": "-UT340",
+        "fields": {
+            "name": "\u00b5Torrent 3.4.0",
+            "is_whitelisted": true,
+            "notes": null
+        }
+    },
+    {
+        "model": "tracker.torrentclient",
+        "pk": "-UT341",
+        "fields": {
+            "name": "\u00b5Torrent 3.4.1",
+            "is_whitelisted": true,
+            "notes": null
+        }
+    },
+    {
+        "model": "tracker.torrentclient",
+        "pk": "-UT343",
+        "fields": {
+            "name": "\u00b5Torrent 3.4.3",
+            "is_whitelisted": true,
+            "notes": null
+        }
+    },
+    {
+        "model": "tracker.torrentclient",
+        "pk": "-UT344",
+        "fields": {
+            "name": "\u00b5Torrent 3.4.4",
+            "is_whitelisted": true,
+            "notes": null
+        }
+    },
+    {
+        "model": "tracker.torrentclient",
+        "pk": "-UT345",
+        "fields": {
+            "name": "\u00b5Torrent 3.4.5",
+            "is_whitelisted": true,
+            "notes": null
+        }
+    },
+    {
+        "model": "tracker.torrentclient",
+        "pk": "-UT346",
+        "fields": {
+            "name": "\u00b5Torrent 3.4.6",
+            "is_whitelisted": true,
+            "notes": null
+        }
+    },
+    {
+        "model": "tracker.torrentclient",
+        "pk": "-UT347",
+        "fields": {
+            "name": "\u00b5Torrent 3.4.7",
+            "is_whitelisted": true,
+            "notes": null
+        }
+    },
+    {
+        "model": "tracker.torrentclient",
+        "pk": "-UT348",
+        "fields": {
+            "name": "\u00b5Torrent 3.4.8",
+            "is_whitelisted": true,
+            "notes": null
+        }
+    },
+    {
+        "model": "tracker.torrentclient",
+        "pk": "-UT349",
+        "fields": {
+            "name": "\u00b5Torrent 3.4.9",
+            "is_whitelisted": true,
+            "notes": null
+        }
+    },
+    {
         "pk": "TS",
         "model": "media_formats.container",
         "fields": {}
@@ -347,42 +1238,42 @@
             "issued_at": "2014-09-18T14:52:58.484Z"
         }
     },
-{    "model": "users.user",
-    "pk": 1,
-    "fields": {
-        "password": "argon2$argon2i$v=19$m=512,t=2,p=2$R0VhZlE2ekdocUtq$gPpl0+Nk5+NRq6ni+YnXaw",
-        "last_login": "2018-04-15T12:58:23.736Z",
-        "is_superuser": true,
-        "username": "admin",
-        "first_name": "",
-        "last_name": "",
-        "email": "dolan@gooby.pls",
-        "is_staff": true,
-        "is_active": true,
-        "date_joined": "2014-09-18T14:52:58.484Z",
-        "old_id": null,
-        "user_class": 18,
-        "is_donor": false,
-        "account_status": "enabled",
-        "failed_login_attempts": 0,
-        "announce_key": "16fd2706-8baf-433b-82eb-8c7fada847da",
-        "torrent_download_key": null,
-        "avatar_url": null,
-        "custom_title": null,
-        "profile_description": "Admin User",
-        "staff_notes": null,
-        "irc_key": null,
-        "invited_by": null,
-        "invite_count": 0,
-        "bytes_uploaded": 0,
-        "bytes_downloaded": 0,
-        "log_successful_announces": false,
-        "last_seeded": null,
-        "average_seeding_size": 0,
-        "watch_queue": null,
-        "groups": [],
-        "user_permissions": []
+    {
+        "model": "users.user",
+        "pk": 1,
+        "fields": {
+            "password": "argon2$argon2i$v=19$m=512,t=2,p=2$R0VhZlE2ekdocUtq$gPpl0+Nk5+NRq6ni+YnXaw",
+            "last_login": "2018-04-15T12:58:23.736Z",
+            "is_superuser": true,
+            "username": "admin",
+            "first_name": "",
+            "last_name": "",
+            "email": "dolan@gooby.pls",
+            "is_staff": true,
+            "is_active": true,
+            "date_joined": "2014-09-18T14:52:58.484Z",
+            "old_id": null,
+            "user_class": 18,
+            "is_donor": false,
+            "account_status": "enabled",
+            "failed_login_attempts": 0,
+            "announce_key": "16fd2706-8baf-433b-82eb-8c7fada847da",
+            "torrent_download_key": null,
+            "avatar_url": null,
+            "custom_title": null,
+            "profile_description": "Admin User",
+            "staff_notes": null,
+            "irc_key": null,
+            "invited_by": null,
+            "invite_count": 0,
+            "bytes_uploaded": 0,
+            "bytes_downloaded": 0,
+            "log_successful_announces": false,
+            "last_seeded": null,
+            "average_seeding_size": 0,
+            "watch_queue": null,
+            "groups": [],
+            "user_permissions": []
+        }
     }
-
-}
 ]
