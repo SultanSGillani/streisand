@@ -5,13 +5,35 @@ import { IPage, INodeMap } from '../models/base/IPagedItemSet';
 export interface IGetItemsProps<T> {
     page: number;
     pages: { [page: number]: IPage };
+    byId: { [id: number]: T};
+}
+
+/**
+ * Returns the list of items for the given page filtering out undefined items.
+ */
+export function getItems<T>(props: IGetItemsProps<T>): T[] {
+    const page = props.pages[props.page];
+    const identifiers = (page ? page.items : []);
+    const items: T[] = [];
+    for (const id of identifiers) {
+        const item = props.byId[id];
+        if (item) {
+            items.push(item);
+        }
+    }
+    return items;
+}
+
+export interface IGetNodeItemsProps<T> {
+    page: number;
+    pages: { [page: number]: IPage };
     byId: INodeMap<T>;
 }
 
 /**
  * Returns the list of items for the given page filtering out empty nodes.
  */
-export function getItems<T>(props: IGetItemsProps<T>): T[] {
+export function getNodeItems<T>(props: IGetNodeItemsProps<T>): T[] {
     const page = props.pages[props.page];
     const identifiers = (page ? page.items : []);
     const items: T[] = [];

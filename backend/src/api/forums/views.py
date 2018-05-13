@@ -1,6 +1,9 @@
+from api import mixins as api_mixins
+from api.pagination import ForumsPageNumberPagination, DetailPagination
+from api.permissions import IsOwnerOrReadOnly
 from django.db.models import OuterRef, Subquery
 from django.db.models import Q
-from forums.models import ForumGroup, ForumTopic, ForumThread, ForumPost, ForumThreadSubscription
+from forums.models import ForumGroup, ForumTopic, ForumThread, ForumPost, ForumThreadSubscription, ForumReport
 from rest_flex_fields import FlexFieldsModelViewSet
 from rest_framework import mixins
 from rest_framework.filters import (
@@ -9,8 +12,6 @@ from rest_framework.filters import (
 )
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.viewsets import ModelViewSet, GenericViewSet
-from www.pagination import ForumsPageNumberPagination, DetailPagination
-from www.permissions import IsOwnerOrReadOnly
 
 from .serializers import (
     ForumGroupSerializer,
@@ -24,8 +25,15 @@ from .serializers import (
     ForumTopicCreateSerializer,
     ForumThreadListSerializer,
     ForumPostCreateSerializer,
-    ForumThreadCreateSerializer
+    ForumThreadCreateSerializer,
+    ForumReportSerializer
 )
+
+
+class ForumReportViewSet(ModelViewSet):
+    queryset = ForumReport.objects.all()
+    serializer_class = ForumReportSerializer
+    pagination_class = ForumsPageNumberPagination
 
 
 class ForumGroupViewSet(ModelViewSet):
@@ -57,7 +65,7 @@ class ForumGroupViewSet(ModelViewSet):
         return queryset_list
 
 
-class ForumIndexViewSet(ModelViewSet):
+class ForumIndexViewSet(api_mixins.AllowFieldLimitingMixin, FlexFieldsModelViewSet):
     """
     API endpoint for an overall Forum Index GET request.
     """
@@ -89,7 +97,7 @@ class ForumIndexViewSet(ModelViewSet):
         return queryset_list
 
 
-class ForumTopicListViewSet(ModelViewSet):
+class ForumTopicListViewSet(api_mixins.AllowFieldLimitingMixin, FlexFieldsModelViewSet):
     """
     API endpoint for Forum Topics. This should be mainly used for GET requests only.
     """
@@ -175,7 +183,7 @@ class ForumTopicViewSet(ModelViewSet):
         return queryset_list
 
 
-class ForumThreadListViewSet(FlexFieldsModelViewSet):
+class ForumThreadListViewSet(api_mixins.AllowFieldLimitingMixin, FlexFieldsModelViewSet):
     """
     API endpoint for Forum Threads. This should be mainly used for GET requests only.
     """
@@ -310,7 +318,8 @@ class ForumThreadViewSet(ModelViewSet):
         serializer.save(modified_by=self.request.user)
 
 
-class ForumThreadItemViewSet(mixins.UpdateModelMixin, mixins.CreateModelMixin, mixins.DestroyModelMixin,
+class ForumThreadItemViewSet(api_mixins.AllowFieldLimitingMixin, mixins.UpdateModelMixin, mixins.CreateModelMixin,
+                             mixins.DestroyModelMixin,
                              mixins.RetrieveModelMixin, GenericViewSet):
     """
     API endpoint that allows ForumThreads to be created, updated, edited or deleted only.

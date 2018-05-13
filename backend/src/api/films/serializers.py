@@ -105,7 +105,9 @@ class AdminFilmSerializer(serializers.ModelSerializer):
             return film.imdb.tt_id
 
     extra_kwargs = {
-        'tags': {'required': False}
+        'tags': {'required': False},
+        'fanart_url': {'required': False},
+        'moderation_notes': {'required': False},
     }
 
 

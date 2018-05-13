@@ -4,6 +4,7 @@ import { connect } from 'react-redux';
 import Pager from '../Pager';
 import Store from '../../store';
 import ForumThreadRow from './ForumThreadRow';
+import { getItems } from '../../utilities/mapping';
 import IForumTopic from '../../models/forums/IForumTopic';
 import IForumThread from '../../models/forums/IForumThread';
 import ForumThreadCreator from './ForumThreadCreator';
@@ -56,13 +57,13 @@ class ForumTopicViewComponent extends React.Component<CombinedProps> {
 
 const mapStateToProps = (state: Store.All, ownProps: Props): ConnectedState => {
     const topicPages = state.sealed.forums.threads.byTopic[ownProps.topic.id];
-    const page = topicPages && topicPages.pages[ownProps.page];
-    const threads = (page ? page.items : []).map((id: number) => {
-        return state.sealed.forums.threads.byId[id];
-    });
     return {
         total: topicPages ? topicPages.count : 0,
-        threads: threads
+        threads: getItems({
+            page: ownProps.page,
+            byId: state.sealed.forums.threads.byId,
+            pages: topicPages ? topicPages.pages : {}
+        })
     };
 };
 

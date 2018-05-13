@@ -11,6 +11,6 @@ export default function EmptyThreadCell(props: Props) {
     const thread = props.thread;
     const threadLink = <Link to={'/forum/thread/' + thread.id} title={thread.title}>{thread.title}</Link>;
     return (
-        <td>No posts in {threadLink}</td>
+        <td className="align-middle">No posts in {threadLink}</td>
     );
 }

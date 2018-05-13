@@ -11,6 +11,10 @@ import { addLoadedNode, addLoadedNodes, markLoading, markFailed } from './utilit
 type ItemMap = INodeMap<IFilm>;
 function byId(state: ItemMap = {}, action: Action): ItemMap {
     switch (action.type) {
+        case 'DELETED_FILM':
+            const copy = objectAssign({}, state);
+            delete copy[action.id];
+            return copy;
         case 'FETCHING_FILM':
             return markLoading(state, action.id);
         case 'RECEIVED_FILM':
@@ -31,6 +35,7 @@ function pages(state: Pages = {}, action: Action): Pages {
         case 'FETCHING_FILMS':
         case 'RECEIVED_FILMS':
         case 'FAILED_FILMS':
+        case 'INVALIDATE_FILMS':
             const page: IPage = pageReducer(state[action.page], action);
             return objectAssign({}, state, { [action.page]: page });
         default:

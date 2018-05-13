@@ -10,7 +10,8 @@ import IPagedResponse from '../../models/base/IPagedResponse';
 type WikisAction =
     { type: 'FETCHING_WIKIS', page: number } |
     { type: 'RECEIVED_WIKIS', page: number, count: number, items: IWiki[] } |
-    { type: 'FAILED_WIKIS', page: number };
+    { type: 'FAILED_WIKIS', page: number } |
+    { type: 'INVALIDATE_WIKIS', page: number };
 export default WikisAction;
 type Action = WikisAction | ErrorAction;
 
@@ -29,6 +30,10 @@ function received(page: number, response: IPagedResponse<IWiki>): Action {
 
 function failure(page: number): Action {
     return { type: 'FAILED_WIKIS', page };
+}
+
+export function invalidate(page: number): Action {
+    return { type: 'INVALIDATE_WIKIS', page };
 }
 
 export function getWikis(page: number = 1): ThunkAction<Action> {

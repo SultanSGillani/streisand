@@ -4,7 +4,7 @@ from rest_framework.viewsets import ModelViewSet
 from .filters import TorrentFilter
 from django_filters import rest_framework as filters
 
-from www.pagination import TorrentPageNumberPagination
+from api.pagination import TorrentPageNumberPagination
 
 from torrents.models import Torrent, TorrentComment
 from .serializers import AdminTorrentSerializer, TorrentCommentSerializer

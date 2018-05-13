@@ -26,12 +26,12 @@ class Film(models.Model):
     )
     tmdb_id = models.IntegerField(null=True, unique=True)
     poster_url = models.URLField()
-    fanart_url = models.URLField()
+    fanart_url = models.URLField(blank=True)
     trailer_url = models.URLField()
     trailer_type = models.CharField(max_length=64)
     duration_in_minutes = models.IntegerField(null=True)
     description = models.TextField()
-    moderation_notes = models.TextField()
+    moderation_notes = models.TextField(blank=True)
     tags = models.ManyToManyField('films.Tag', related_name='films', blank=True)
 
     def __str__(self):

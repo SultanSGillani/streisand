@@ -47,7 +47,7 @@ class ForumTopicCreatorComponent extends React.Component<CombinedProps, State> {
                     Create new forum topic
                 </div>
                 <div className="panel-body">
-                    <form className="form-horizontal" onKeyPress={createTopic}>
+                    <form className="form-horizontal" onKeyPress={createTopic} autoComplete="off">
                         <fieldset>
                             <div className="form-group">
                                 <label htmlFor="selectGroup" className="col-lg-2 control-label">Parent forum group</label>

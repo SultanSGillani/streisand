@@ -7,7 +7,6 @@ services:
 
 stages:
  - test
- - mirror
  - release
  - deploy
 
@@ -48,28 +47,6 @@ python_tests:
     - invoke foundation
     - invoke fixtures
     - invoke run-python-tests --coverage
-
-variables:
-  MIRROR_REPOSITORY: "git@github.com:TheSaltman/jumpcut.git"
-
-mirror-github:
-  stage: mirror
-  before_script:
-    - echo hi
-  tags:
-    - github
-  cache: {}
-  script:
-    # Do a mirror clone of the repository
-    # Mirror push it to the destination
-    - cd $CI_HOME
-    - git clone --mirror $CI_REPOSITORY_URL
-    - cd $CI_PROJECT_NAME.git
-    - ssh -i key "github.com"
-    - git push --mirror $MIRROR_REPOSITORY
-    # Cleanup
-    - cd ..; rm -rf $CI_PROJECT_NAME.git
-  allow_failure: true
 
 ## TODO frontend linter/tests?
 

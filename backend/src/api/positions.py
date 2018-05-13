@@ -189,7 +189,7 @@ class PositionField(models.IntegerField):
                 self.get_collection(instance).filter(
                     **{'%s__gt' % self.name: getattr(instance, self.get_cache_name())[0]})[
                     0]
-        except:
+        except Exception:
             return None
 
     def remove_from_collection(self, instance):
@@ -218,7 +218,7 @@ class PositionField(models.IntegerField):
         if next_sibling_pk:
             try:
                 next_sibling = type(instance)._default_manager.get(pk=next_sibling_pk)
-            except:
+            except Exception:
                 next_sibling = None
             if next_sibling:
                 queryset = self.get_collection(next_sibling)

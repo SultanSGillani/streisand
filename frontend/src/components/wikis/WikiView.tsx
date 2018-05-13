@@ -8,6 +8,7 @@ import WikiCommandBar from './WikiCommandBar';
 import IWiki, { IWikiUpdate } from '../../models/IWiki';
 import Editor, { IEditorHandle } from '../bbcode/Editor';
 import { updateWiki } from '../../actions/wikis/UpdateWikiAction';
+import { IDeleteProps, deleteWiki } from '../../actions/wikis/DeleteWikiAction';
 
 export type Props = {
     wiki: IWiki;
@@ -21,6 +22,7 @@ type State = {
 type ConnectedState = {};
 
 type ConnectedDispatch = {
+    deleteWiki: (props: IDeleteProps) => void;
     updateWiki: (id: number, wiki: IWikiUpdate) => void;
 };
 
@@ -49,6 +51,9 @@ class WikiViewComponent extends React.Component<CombinedProps, State> {
                     title: this.state.title,
                     body: content
                 });
+            },
+            onDelete: () => {
+                this.props.deleteWiki({ id: wiki.id });
             }
         };
 
@@ -77,7 +82,8 @@ class WikiViewComponent extends React.Component<CombinedProps, State> {
 }
 
 const mapDispatchToProps = (dispatch: redux.Dispatch<Store.All>): ConnectedDispatch => ({
-    updateWiki: (id: number, wiki: IWikiUpdate) => dispatch(updateWiki(id, wiki))
+    updateWiki: (id: number, wiki: IWikiUpdate) => dispatch(updateWiki(id, wiki)),
+    deleteWiki: (props: IDeleteProps) => dispatch(deleteWiki(props))
 });
 
 const WikiView: React.ComponentClass<Props> =

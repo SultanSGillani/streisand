@@ -49,7 +49,7 @@ function failure(props: Props): Action {
     return { type: 'FAILED_FORUM_TOPIC', id: props.id, page: props.page };
 }
 
-export function invalidate(props: Props) {
+export function invalidate(props: Props): Action {
     return { type: 'INVALIDATE_FORUM_TOPIC', id: props.id, page: props.page };
 }
 

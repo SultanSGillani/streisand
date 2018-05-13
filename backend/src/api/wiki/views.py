@@ -8,7 +8,7 @@ from rest_framework.response import Response
 
 from rest_framework import mixins
 from wiki.models import WikiArticle
-from www.pagination import WikiPageNumberPagination
+from api.pagination import WikiPageNumberPagination
 
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.viewsets import GenericViewSet
