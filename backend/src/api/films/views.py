@@ -2,7 +2,7 @@ from rest_framework.permissions import IsAdminUser, IsAuthenticated
 from rest_framework.viewsets import ModelViewSet
 from django_filters import rest_framework as filters
 
-from www.pagination import FilmPageNumberPagination
+from api.pagination import FilmPageNumberPagination
 from films.models import Film, Collection, CollectionComment, FilmComment
 from .serializers import AdminFilmSerializer, CollectionSerializer, FilmCommentSerializer, CollectionCommentSerializer
 from .filters import FilmFilter, CollectionFilter

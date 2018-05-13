@@ -73,7 +73,7 @@ REST_FRAMEWORK = {
         'django_filters.rest_framework.DjangoFilterBackend',
     ),
     'PAGE_SIZE': 50,
-    'DEFAULT_PAGINATION_CLASS': 'www.pagination.DetailPagination',
+    'DEFAULT_PAGINATION_CLASS': 'api.pagination.DetailPagination',
     'DEFAULT_AUTHENTICATION_CLASSES': (
         'rest_framework_jwt.authentication.JSONWebTokenAuthentication',
         'rest_framework.authentication.SessionAuthentication',

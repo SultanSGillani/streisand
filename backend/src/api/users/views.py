@@ -9,8 +9,8 @@ from rest_framework.response import Response
 from rest_framework.viewsets import ModelViewSet
 from rest_framework_jwt.views import ObtainJSONWebToken
 from users.models import User
-from www.pagination import UserPageNumberPagination
-from www.permissions import IsOwnerOrReadOnly
+from api.pagination import UserPageNumberPagination
+from api.permissions import IsOwnerOrReadOnly
 
 from .filters import UserFilter, PublicUserFilter
 from .serializers import GroupSerializer, AdminUserProfileSerializer, \
