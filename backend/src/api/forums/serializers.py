@@ -274,6 +274,7 @@ class ForumIndexSerializer(FlexFieldsModelSerializer):
 
 
 class ForumThreadTopicSerializer(ModelSerializer):
+    latest_post = ForumPostForIndexSerializer()
     class Meta:
         model = ForumThread
         fields = (
@@ -337,15 +338,6 @@ class ForumTopicListSerializer(FlexFieldsModelSerializer):
         'number_of_posts': {'read_only': True},
         'number_of_threads': {'read_only': True},
     }
-
-    expandable_fields = {
-        'latest_post': (
-            ForumPostTopicSerializer, {'source': 'latest_post', 'many': False, 'expand': ['author', 'modified_by', ]}),
-        'threads': (
-            ForumPostTopicSerializer, {'source': 'threads', 'many': True, 'expand': ['created_by', 'modified_by']}),
-
-    }
-
 
 class ForumTopicCreateSerializer(ModelSerializer):
     class Meta:
