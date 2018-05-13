@@ -6,6 +6,7 @@ from django.conf import settings
 from django.http import HttpResponse
 from django.utils.timezone import now
 from django.views.generic import View
+
 from users.models import User
 from www.tasks import handle_announce
 from .bencoding import bencode
