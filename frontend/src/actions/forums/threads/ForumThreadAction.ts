@@ -41,7 +41,7 @@ function received(props: Props, response: Response): Action {
         id: props.id,
         page: props.page,
         count: response.count,
-        data: transformThread(response)
+        data: transformThread(props.id, response)
     };
 }
 
@@ -49,7 +49,7 @@ function failure(props: Props): Action {
     return { type: 'FAILED_FORUM_THREAD', id: props.id, page: props.page };
 }
 
-export function invalidate(props: Props) {
+export function invalidate(props: Props): Action {
     return { type: 'INVALIDATE_FORUM_THREAD', id: props.id, page: props.page };
 }
 

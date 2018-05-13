@@ -28,13 +28,13 @@ class ForumPostCellComponent extends React.Component<CombinedProps> {
         const thread = this.props.thread;
 
         if (!post) {
-            return <td>No posts...</td>;
+            return <td className="align-middle">No posts...</td>;
         }
 
         const posted = getDateDiff({ past: post.createdAt });
         const threadLink = <Link to={'/forum/thread/' + thread.id} title={thread.title}>{thread.title}</Link>;
         return (
-            <td>
+            <td className="align-middle">
                 <UserLink user={this.props.author} /> posted in {threadLink} {posted}
             </td>
         );

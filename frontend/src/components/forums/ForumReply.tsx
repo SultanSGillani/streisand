@@ -3,7 +3,6 @@ import * as redux from 'redux';
 import { connect } from 'react-redux';
 
 import Store from '../../store';
-import Avatar from '../users/Avatar';
 import IUser from '../../models/IUser';
 import { getItem } from '../../utilities/mapping';
 import Editor, { IEditorHandle } from '../bbcode/Editor';
@@ -41,16 +40,14 @@ class ForumReplyComponent extends React.Component<CombinedProps> {
                 <div className="panel-heading" >
                     Post your reply
                 </div>
-                <div className="panel-body" style={{ display: 'flex' }}>
-                    <Avatar />
-                    <div style={{ flex: 'auto', marginLeft: '8px' }}>
-                        <Editor content={''} size="small" receiveHandle={onHandle} />
-                        <div style={{ display: 'flex', flexFlow: 'row-reverse' }}>
-                            <button type="button" className="btn btn-sm btn-primary"
-                                style={{ marginTop: '4px' }} onClick={onSave}>
-                                Post reply
-                            </button>
-                        </div>
+                <div className="panel-body">
+                    <Editor content={''} size="small" receiveHandle={onHandle} />
+                </div>
+                <div className="panel-footer">
+                    <div className=" btn-toolbar" style={{ display: 'flex', flexFlow: 'row-reverse' }}>
+                        <button type="button" className="btn btn-sm btn-primary" onClick={onSave}>
+                            Post reply
+                        </button>
                     </div>
                 </div>
             </div>

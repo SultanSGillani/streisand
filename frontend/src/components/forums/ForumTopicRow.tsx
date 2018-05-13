@@ -30,10 +30,10 @@ class ForumTopicRowComponent extends React.Component<CombinedProps> {
         };
         return (
             <tr>
-                <td><Link to={'/forum/topic/' + topic.id} title={topic.title}>{topic.title}</Link></td>
+                <td className="align-middle"><Link to={'/forum/topic/' + topic.id} title={topic.title}>{topic.title}</Link></td>
                 <ForumPostCell id={topic.latestPost} />
-                <td>{topic.numberOfThreads}</td>
-                <td>{topic.numberOfPosts}</td>
+                <td className="align-middle">{topic.numberOfThreads}</td>
+                <td className="align-middle">{topic.numberOfPosts}</td>
                 <td style={{ display: 'flex', flexFlow: 'row-reverse' }}>
                     <button className="btn btn-sm btn-danger" onClick={onDelete}>
                         <i className="fa fa-trash" style={{ fontSize: '14px' }} />

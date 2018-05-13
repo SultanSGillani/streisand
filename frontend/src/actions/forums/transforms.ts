@@ -1,6 +1,6 @@
 import IPagedResponse from '../../models/base/IPagedResponse';
-import { IForumPostResponse } from '../../models/forums/IForumPost';
 import { IForumThreadResponse } from '../../models/forums/IForumThread';
+import { IForumPostResponse, IForumPost } from '../../models/forums/IForumPost';
 import { IForumGroupResponse, IForumGroupData } from '../../models/forums/IForumGroup';
 
 export function transformGroups(response: IPagedResponse<IForumGroupResponse>): IForumGroupData {
@@ -116,7 +116,7 @@ export function transformTopic(response: IPagedResponse<IForumThreadResponse>): 
     return result;
 }
 
-export function transformThread(response: IPagedResponse<IForumPostResponse>): IForumGroupData {
+export function transformThread(thread: number, response: IPagedResponse<IForumPostResponse>): IForumGroupData {
     const result: IForumGroupData = {
         groups: [],
         topics: [],
@@ -127,6 +127,9 @@ export function transformThread(response: IPagedResponse<IForumPostResponse>): I
 
     let addedCommon = false;
     for (const post of response.results) {
+        if (post.thread !== thread) {
+            continue;
+        }
         if (!addedCommon) {
             result.topics.push({
                 id: post.topicId,
@@ -207,4 +210,16 @@ export function transformPost(post: IForumPostResponse): IForumGroupData {
     }
 
     return result;
+}
+
+export function transformPostOnly(response: IForumPostResponse): IForumPost {
+    return {
+        id: response.id,
+        thread: response.thread,
+        author: response.authorId,
+        createdAt: response.createdAt,
+        modifiedAt: response.modifiedAt,
+        body: response.body,
+        modifiedBy: response.modifiedById
+    };
 }

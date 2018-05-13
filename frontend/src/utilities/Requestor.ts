@@ -78,6 +78,16 @@ export function put<T>(options: IPutRequestOptions): Promise<T> {
     return makeRequest<T>({ url: options.url, method: 'PUT', headers, data });
 }
 
+export function patch<T>(options: IPutRequestOptions): Promise<T> {
+    const headers = {
+        'Authorization': `jwt ${options.token}`,
+        'Accept': 'application/json',
+        'Content-Type': 'application/json'
+    };
+    const data = typeof options.data === 'string' ? options.data : JSON.stringify(options.data);
+    return makeRequest<T>({ url: options.url, method: 'PATCH', headers, data });
+}
+
 export interface IPostRequestOptions {
     data: any;
     url: string;

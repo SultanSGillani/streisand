@@ -40,8 +40,8 @@ class ForumThreadRowComponent extends React.Component<CombinedProps> {
         return (
             <tr>
                 {activity}
-                <td>{thread.numberOfPosts}</td>
-                <td><UserLink user={this.props.author} /></td>
+                <td className="align-middle">{thread.numberOfPosts}</td>
+                <td className="align-middle"><UserLink user={this.props.author} /></td>
                 <td style={{ display: 'flex', flexFlow: 'row-reverse' }}>
                     <button className="btn btn-sm btn-danger" onClick={onDelete}>
                         <i className="fa fa-trash" style={{ fontSize: '14px' }} />

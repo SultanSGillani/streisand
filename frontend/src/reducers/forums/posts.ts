@@ -14,6 +14,8 @@ type Action = ForumAction | NewsAction;
 type ItemMap = { [id: number]: IForumPost };
 function byId(state: ItemMap = {}, action: Action): ItemMap {
     switch (action.type) {
+        case 'UPDATED_FORUM_POST':
+            return objectAssign({}, state, {[action.post.id]: action.post});
         case 'RECEIVED_FORUM_GROUPS':
         case 'RECEIVED_FORUM_TOPIC':
         case 'RECEIVED_FORUM_THREAD':
