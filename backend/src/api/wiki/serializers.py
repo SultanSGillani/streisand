@@ -43,4 +43,3 @@ class WikiBodySerializer(ModelSerializer):
             'body',
             'url',
         )
-
