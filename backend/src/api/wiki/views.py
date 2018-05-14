@@ -4,14 +4,15 @@ from rest_framework.filters import (
     SearchFilter,
     OrderingFilter,
 )
-
-from wiki.models import WikiArticle
-from api.pagination import WikiPageNumberPagination
-
+from dry_rest_permissions.generics import DRYPermissions
 from rest_framework.permissions import IsAuthenticated
 from rest_framework import viewsets
-from . import serializers
+
+from api.pagination import WikiPageNumberPagination
 from api.mixins import MultiSerializerViewSetMixin
+
+from wiki.models import WikiArticle
+from . import serializers
 
 
 class WikiViewSet(MultiSerializerViewSetMixin, viewsets.ModelViewSet):
@@ -24,12 +25,12 @@ class WikiViewSet(MultiSerializerViewSetMixin, viewsets.ModelViewSet):
     }
 
     filter_backends = [SearchFilter, OrderingFilter]
-    permission_classes = [IsAuthenticated]
+    permission_classes = [IsAuthenticated, DRYPermissions]
     search_fields = ['title', 'created_by__username']
     pagination_class = WikiPageNumberPagination  # PageNumberPagination
 
     def get_queryset(self, *args, **kwargs):
-        queryset_list = WikiArticle.objects.all()  # filter(user=self.request.user)
+        queryset_list = WikiArticle.objects.accessible_to_user(self.request.user)
         query = self.request.GET.get("q")
         if query:
             queryset_list = queryset_list.filter(

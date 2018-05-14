@@ -57,3 +57,25 @@ class WikiArticle(models.Model):
                 'wiki_article_id': self.id,
             },
         )
+
+    # Permissions
+
+    @staticmethod
+    def has_read_permission(request):
+        return True
+
+    def has_object_read_permission(self, request):
+        if self.read_access_minimum_user_class is not None:
+            return request.user.user_class.rank >= self.read_access_minimum_user_class.rank
+        else:
+            return True
+
+    def has_object_write_permission(self, request):
+        if self.write_access_minimum_user_class is not None:
+            return request.user.user_class.rank >= self.write_access_minimum_user_class.rank
+        else:
+            return True
+
+    @staticmethod
+    def has_write_permission(request):
+        return request.user.is_superuser
