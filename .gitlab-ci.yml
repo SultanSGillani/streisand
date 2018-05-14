@@ -43,7 +43,7 @@ python_tests:
   stage: test
   script:
     # Test for missing migrations
-    - backend/src/manage.py makemigrations --check --dry-run --settings=conf.settings.test > /dev/null || echo "Missing migrations."; false
+    - src/manage.py makemigrations --check --dry-run || (echo "Missing migrations"; false)
     - invoke migrate
     - invoke foundation
     - invoke fixtures
