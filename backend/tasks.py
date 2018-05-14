@@ -76,7 +76,7 @@ def run_python_linter(ctx):
 def run_python_tests(ctx, coverage=False):
     if coverage:
         ctx.run(
-            'coverage run --source=''.'' {} test torrents tracker --settings=jumpcut.settings.testing_settings -v 3'.format(
+            'coverage run --source=''.'' {} test torrents tracker api --settings=jumpcut.settings.testing_settings -v 3'.format(
                 MANAGE_PATH))
         ctx.run('coverage report -m')
     else:

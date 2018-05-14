@@ -91,16 +91,16 @@ class Mediainfo(models.Model):
         self._set_subtitles(dictionary, subtitles_sections)
 
     def _set_file_path(self, dictionary):
-        self.file_path = dictionary.get("general")("complete name")
+        self.file_path = dictionary['general']['file path']
 
     def _set_file_size(self, dictionary):
-        self.file_size = dictionary.get("general")("file size")
+        self.file_size = dictionary['general']['file size']
 
     def _set_runtime(self, dictionary):
 
         duration = dict()
 
-        for time_component in dictionary.get("general")("duration").split():
+        for time_component in dictionary['general']['duration'].split():
 
             value = ''
             unit = ''
