@@ -42,7 +42,8 @@ python_linter:
 python_tests:
   stage: test
   script:
-    - invoke make-migrations
+    # Test for missing migrations
+    - src/manage.py makemigrations --check --dry-run || (echo "Missing migrations"; false)
     - invoke migrate
     - invoke foundation
     - invoke fixtures
