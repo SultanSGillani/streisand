@@ -42,5 +42,5 @@ export function getWikis(page: number = 1): ThunkAction<Action> {
 }
 
 function request(token: string, page: number): Promise<IPagedResponse<IWiki>> {
-    return get({ token, url: `${globals.apiUrl}/wiki-articles/?page=${page}` });
+    return get({ token, url: `${globals.apiUrl}/wikis/?page=${page}` });
 }

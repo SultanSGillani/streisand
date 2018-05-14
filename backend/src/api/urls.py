@@ -76,9 +76,7 @@ router.register(r'new-post-items', viewset=forums_views.ForumPostCreateUpdateDes
 router.register(r'forum-reports', viewset=forums_views.ForumReportViewSet, base_name='forum-report')
 
 # Wiki
-router.register(r'wikis', viewset=wiki_views.WikiArticleCreateUpdateDestroyViewSet, base_name='wiki')
-router.register(r'wiki-articles', viewset=wiki_views.WikiArticleViewListOnlyViewSet, base_name='wiki-article')
-router.register(r'wiki-bodies', viewset=wiki_views.WikiArticleBodyViewSet, base_name='wiki-body')
+router.register(r'wikis', viewset=wiki_views.WikiViewSet, base_name='wiki')
 
 urlpatterns = [
 
