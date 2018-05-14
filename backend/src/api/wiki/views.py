@@ -4,9 +4,7 @@ from rest_framework.filters import (
     SearchFilter,
     OrderingFilter,
 )
-from rest_framework.response import Response
 
-from rest_framework import mixins
 from wiki.models import WikiArticle
 from api.pagination import WikiPageNumberPagination
 

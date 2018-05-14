@@ -46,6 +46,7 @@ THIRD_PARTY_APPS = (
     'rest_framework_filters',
     'docs',
     'drf_yasg',
+    'dry_rest_permissions',
 )
 
 LOCAL_APPS = (
