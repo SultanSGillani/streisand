@@ -20,7 +20,7 @@ class WikiViewSet(MultiSerializerViewSetMixin, viewsets.ModelViewSet):
     """
     API endpoint for managing wiki articles
     """
-    serializer_class = serializers.WikiDetialSererializer
+    serializer_class = serializers.WikiDetailSererializer
     serializer_action_classes = {
         'list': serializers.WikiListSerializer
     }

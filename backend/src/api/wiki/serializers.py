@@ -6,7 +6,7 @@ from rest_framework.serializers import ModelSerializer
 from wiki.models import WikiArticle
 
 
-class WikiDetialSererializer(ModelSerializer):
+class WikiDetailSererializer(ModelSerializer):
     class Meta:
         model = WikiArticle
         fields = (
