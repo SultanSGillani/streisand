@@ -4,21 +4,22 @@
 
 ![JumpCut](https://i.imgur.com/8UqIWFI.png)
 
-A private BitTorrent tracker backend written in python, django, and redis
+A private BitTorrent tracker written with Python, Django, Redis, and React.
 
 ## To get started
 
 - Install docker and docker-compose
-  ([ubuntu](https://docs.docker.com/install/linux/docker-ce/ubuntu/),
-  [mac](https://docs.docker.com/docker-for-mac/install/),
+  ([Ubuntu](https://docs.docker.com/install/linux/docker-ce/ubuntu/),
+  [Mac](https://docs.docker.com/docker-for-mac/install/),
+  [Windows](https://store.docker.com/editions/community/docker-ce-desktop-windows),
   [compose](https://docs.docker.com/compose/install/))
-- Run `./jc.sh build` to build the images
-- Run `./jc.sh i setup-db` to create the db tables and load in some development data
-- Run `./jc.sh m passwd admin` to set yourself a password for the admin
-  user
+- Run `docker-compose build` to build the images
+- Run `docker-compose run --rm api invoke setup-db` to create the db tables and load in some development data
+- Run `docker-compose run --rm api python src/manage.py passwd admin` to set yourself a password for the admin user
+- Run `docker-compose up` to start everything, and visit <localhost:8001> to log in
 
-The `docker-compose` builds all the containers and sets up the database with our core fixtures.
-This may take a while, but afterwards subsequent commands will be much faster
+These commands will build all the containers and set up the database with our core fixtures.
+This may take a while, but afterwards subsequent commands will be much faster.
 
 ## Managing
 
