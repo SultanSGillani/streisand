@@ -256,8 +256,6 @@ class ForumTopicIndexSerializer(ModelSerializer):
 class ForumIndexSerializer(ModelSerializer):
     topics = ForumTopicIndexSerializer(read_only=True, many=True)
     topic_count = serializers.SerializerMethodField()
-    threads = ForumThreadForIndexSerializer(read_only=True, many=True)
-    posts = ForumPostForIndexSerializer(many=True, read_only=True)
 
     class Meta:
         model = ForumGroup
@@ -267,8 +265,6 @@ class ForumIndexSerializer(ModelSerializer):
             'sort_order',
             'topics',
             'topic_count',
-            'threads',
-            'posts',
         )
 
     def get_topic_count(self, obj):
