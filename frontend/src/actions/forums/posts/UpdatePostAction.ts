@@ -44,5 +44,5 @@ export function updatePost(id: number, content: string): ThunkAction<Action> {
 
 function update(token: string, id: number, content: string): Promise<IForumPostResponse2> {
     const data = { body: content };
-    return patch({ token, url: `${globals.apiUrl}/forums-post-items/${id}/`, data });
+    return patch({ token, url: `${globals.apiUrl}/forum-post-items/${id}/`, data });
 }
