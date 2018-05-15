@@ -33,7 +33,6 @@ class WikiViewListOnlySerializer(ModelSerializer):
 
 class WikiBodySerializer(ModelSerializer):
 
-    body_html = SerializerMethodField()
     url = HyperlinkedIdentityField(view_name="wiki-body-detail")
 
     class Meta:

@@ -1,39 +1,76 @@
+import warnings
+
+
 class AllowFieldLimitingMixin(object):
     """
-    A mixin for a generic APIView that will allow the serialized fields to be
-    limited to a set of comma-separated values, specified via the `fields`
-    query parameter.  This will only apply to GET requests.
+    A serializer mixin that takes an additional `fields` argument that controls
+    which fields should be displayed.
 
-    Source: https://gist.github.com/philipn/8659192
+    Source: https: // gist.github.com / philipn / 8659192
     """
-    _serializer_class_for_fields = {}
 
-    def get_serializer_class_for_fields(self, serializer_class, fields):
-        fields = sorted(fields.strip().split(','))
-        fields = tuple(fields)
-        if fields in self._serializer_class_for_fields:
-            return self._serializer_class_for_fields[fields]
-        # Doing this because a simple copy.copy() doesn't work here.
-        meta = type(
-            'Meta', (serializer_class.Meta, object), {
-                'fields': fields})
-        LimitedFieldsSerializer = type(
-            'LimitedFieldsSerializer', (serializer_class,), {
-                'Meta': meta})
-        self._serializer_class_for_fields[fields] = LimitedFieldsSerializer
-        return LimitedFieldsSerializer
+    @property
+    def fields(self):
+        """
+        Filters the fields according to the `fields` query parameter.
+        A blank `fields` parameter (?fields) will remove all fields. Not
+        passing `fields` will pass all fields individual fields are comma
+        separated (?fields=id,name,url,email).
+        """
+        fields = super(AllowFieldLimitingMixin, self).fields
 
-    def get_serializer_class(self):
-        """
-        Allow the `fields` query parameter to limit the returned fields
-        in list and detail views.  `fields` takes a comma-separated list of
-        fields.
-        """
-        serializer_class = super(
-            AllowFieldLimitingMixin,
-            self).get_serializer_class()
-        fields = self.request.query_params.get('tab')
-        if self.request.method == 'GET' and fields:
-            return self.get_serializer_class_for_fields(
-                serializer_class, fields)
-        return serializer_class
+        if not hasattr(self, '_context'):
+            # We are being called before a request cycle
+            return fields
+
+        # Only filter if this is the root serializer, or if the parent is the
+        # root serializer with many=True
+        is_root = self.root == self
+        parent_is_list_root = self.parent == self.root and getattr(self.parent, 'many', False)
+        if not (is_root or parent_is_list_root):
+            return fields
+
+        try:
+            request = self.context['request']
+        except KeyError:
+            warnings.warn('Context does not have access to request')
+            return fields
+
+        # NOTE: drf test framework builds a request object where the query
+        # parameters are found under the GET attribute.
+        params = getattr(
+            request, 'query_params', getattr(request, 'GET', None)
+        )
+        if params is None:
+            warnings.warn('Request object does not contain query paramters')
+
+        try:
+            filter_fields = params.get('tab', None).split(',')
+        except AttributeError:
+            filter_fields = None
+
+        try:
+            omit_fields = params.get('omit', None).split(',')
+        except AttributeError:
+            omit_fields = []
+
+        # Drop any fields that are not specified in the `fields` argument.
+        existing = set(fields.keys())
+        if filter_fields is None:
+            # no fields param given, don't filter.
+            allowed = existing
+        else:
+            allowed = set(filter(None, filter_fields))
+
+        # omit fields in the `omit` argument.
+        omitted = set(filter(None, omit_fields))
+
+        for field in existing:
+
+            if field not in allowed:
+                fields.pop(field, None)
+
+            if field in omitted:
+                fields.pop(field, None)
+
+        return fields

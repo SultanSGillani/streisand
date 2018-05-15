@@ -4,6 +4,7 @@ from forums.models import ForumGroup, ForumPost, ForumThread, ForumTopic, ForumT
 from rest_framework import serializers
 from rest_framework.serializers import ModelSerializer
 from users.models import User
+from api import mixins as api_mixins
 
 
 class UserForForumSerializer(ModelSerializer):
@@ -61,7 +62,7 @@ class ForumTopicForIndexSerializer(ModelSerializer):
         )
 
 
-class ForumIndexSerializer(ModelSerializer):
+class ForumIndexSerializer(api_mixins.AllowFieldLimitingMixin, ModelSerializer):
     topics = ForumTopicForIndexSerializer(read_only=True, many=True)
     topic_count = serializers.SerializerMethodField()
 
@@ -129,7 +130,7 @@ class ForumPostForTopicSerializer(ModelSerializer):
         )
 
 
-class ForumTopicIndexSerializer(ModelSerializer):
+class ForumTopicIndexSerializer(api_mixins.AllowFieldLimitingMixin, ModelSerializer):
     groups = ForumGroupForTopicSerializer(source='group', read_only=True)
     threads = PaginatedRelationField(ForumThreadForTopicSerializer, paginator=RelationPaginator)
     latest_post = ForumPostForTopicSerializer()
@@ -261,12 +262,12 @@ class ForumThreadItemSerializer(ModelSerializer):
     }
 
 
-class ForumThreadIndexSerializer(ModelSerializer):
+class ForumThreadIndexSerializer(api_mixins.AllowFieldLimitingMixin, ModelSerializer):
     topics = ForumTopicForThreadSerializer(read_only=True, source='topic')
     groups = ForumGroupForTopicSerializer(read_only=True, source='topic.group')
     posts = PaginatedRelationField(ForumPostForThreadSerializer, paginator=RelationPaginator)
-    created_by = serializers.PrimaryKeyRelatedField(read_only='True')
-    modified_by = serializers.PrimaryKeyRelatedField(read_only='True')
+    created_by = serializers.PrimaryKeyRelatedField(read_only=True)
+    modified_by = serializers.PrimaryKeyRelatedField(read_only=True)
 
     class Meta:
         model = ForumThread
@@ -287,7 +288,7 @@ class ForumThreadIndexSerializer(ModelSerializer):
         )
 
 
-class NewsSerializer(ModelSerializer):
+class NewsSerializer(api_mixins.AllowFieldLimitingMixin, ModelSerializer):
     class Meta:
         model = ForumPost
         fields = (
@@ -304,7 +305,7 @@ class NewsSerializer(ModelSerializer):
         )
 
 
-class ForumThreadSubscriptionSerializer(ModelSerializer):
+class ForumThreadSubscriptionSerializer(api_mixins.AllowFieldLimitingMixin, ModelSerializer):
     user = serializers.StringRelatedField(read_only=True)
 
     class Meta:
@@ -315,7 +316,7 @@ class ForumThreadSubscriptionSerializer(ModelSerializer):
         )
 
 
-class ForumReportSerializer(ModelSerializer):
+class ForumReportSerializer(api_mixins.AllowFieldLimitingMixin, ModelSerializer):
     class Meta:
         model = ForumReport
         fields = (

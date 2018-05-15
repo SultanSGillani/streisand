@@ -1,4 +1,3 @@
-from api import mixins as api_mixins
 from api.pagination import ForumsPageNumberPagination, DetailPagination
 from api.permissions import IsOwnerOrReadOnly
 from django.db.models import OuterRef, Subquery
@@ -26,7 +25,7 @@ from .serializers import (
 )
 
 
-class ForumIndexViewSet(api_mixins.AllowFieldLimitingMixin, ModelViewSet):
+class ForumIndexViewSet(ModelViewSet):
     """
     API endpoint for an overall Forum Index GET request.
     """
@@ -69,7 +68,7 @@ class ForumGroupItemViewSet(mixins.UpdateModelMixin, mixins.CreateModelMixin, mi
     pagination_class = DetailPagination
 
 
-class ForumTopicIndexViewSet(api_mixins.AllowFieldLimitingMixin, ModelViewSet):
+class ForumTopicIndexViewSet(ModelViewSet):
     """
     API endpoint for Forum Topics. This should be mainly used for GET requests only.
     """
@@ -117,7 +116,7 @@ class ForumTopicItemViewSet(mixins.UpdateModelMixin, mixins.CreateModelMixin, mi
     pagination_class = DetailPagination
 
 
-class ForumThreadIndexViewSet(api_mixins.AllowFieldLimitingMixin, ModelViewSet):
+class ForumThreadIndexViewSet(ModelViewSet):
     """
     API endpoint for Forum Threads. This should be mainly used for GET requests only.
     """

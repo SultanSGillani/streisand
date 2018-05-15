@@ -122,19 +122,20 @@ JWT_AUTH = {
 }
 
 SWAGGER_SETTINGS = {
-    'USE_SESSION_AUTH': True,
+    'LOGIN_URL': '/auth/login',
+    'LOGOUT_URL': '/auth/logout',
+    'DEFAULT_INFO': 'api.urls.swagger_info',
     'SECURITY_DEFINITIONS': {
-        'JWT': {
-            'type': 'Token',
-            'in': 'header',
-            'name': 'Authorization'
-        }
+        'Basic': {
+            'type': 'basic'
+        },
     },
+
     'APIS_SORTER': 'alpha',
     'SUPPORTED_SUBMIT_METHODS': ['get', 'post', 'put', 'delete', 'patch'],
     'OPERATIONS_SORTER': 'alpha'
 }
-
+SWAGGER_SETTINGS.update({'VALIDATOR_URL': 'http://localhost:8189'})
 REDOC_SETTINGS = {
     'LAZY_RENDERING': True,
 }

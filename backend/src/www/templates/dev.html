@@ -6,17 +6,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
     <title>Streisand dev</title>
 
-    <script type="text/javascript">
-        var defaultTheme = window['__defaultTheme'] = 'https://maxcdn.bootstrapcdn.com/bootswatch/3.3.7/darkly/bootstrap.min.css';
-        var url = (typeof localStorage !== 'undefined' && localStorage['app.theme.url']) || defaultTheme;
-        var link = document.createElement('link');
-        link.href = url;
-        link.type = 'text/css';
-        link.rel = 'stylesheet';
-        link.media = 'screen,print';
-        link.id = 'theme';
-        document.getElementsByTagName('head')[0].appendChild(link);
-    </script>
     <style>
         html, body {
             position: absolute;
@@ -85,10 +74,9 @@
         <ul>
             <li><a href="/home" target="if">Frontend</a></li>
             <li><a href="/api/v1/" target="if">DRF API</a></li>
-            <li><a href="/docs/" target="if">Core API Docs</li>
             <li><a href="/api/v1/swagger/" target="if">Swagger</a></li>
-            <li><a href="/api/v1/redoc/" target="if">Redoc</a></li>
-            <li><a href="/api/v1/graphql/" target="if">Graph<em>i</em>QL</a></li>
+            <li><a href="/api/v1/swagger.json" target="if">Swagger .json file</a></li>
+            <li><a href="/api/v1/schema/" target="if">Core API Docs</a></li>
             <li><a href="/admin/" target="if">Django Admin</a></li>
         </ul>
     </div>

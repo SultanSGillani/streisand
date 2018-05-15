@@ -5,6 +5,7 @@ from drf_yasg import openapi
 from drf_yasg.views import get_schema_view
 from rest_framework import routers, permissions
 from rest_framework_jwt.views import refresh_jwt_token, verify_jwt_token
+from rest_framework.documentation import include_docs_urls
 
 from .films import views as films_views
 from .forums import views as forums_views
@@ -14,18 +15,19 @@ from .tracker import views as tracker_views
 from .users import views as users_views
 from .wiki import views as wiki_views
 
-schema_view = get_schema_view(
+swagger_info = openapi.Info(
+    title="Streisand API",
+    default_version='v1',
+    description="""Streisand API Swagger Definition""",  # noqa
+    terms_of_service="https://www.something.com/policies/terms/",
+    contact=openapi.Contact(email="contact@something.xyz"),
+    license=openapi.License(name="MIT License"),
+)
 
-    openapi.Info(
-        title="Streisand API",
-        default_version='v1',
-        description="Open Api Schema",
-        terms_of_service="https://www.google.com/policies/terms/",
-        contact=openapi.Contact(email="contact@ronzertnert.me"),
-        license=openapi.License(name="BSD License"),
-    ),
+SchemaView = get_schema_view(
+    validators=['ssv', 'flex'],
     public=True,
-    permission_classes=(permissions.AllowAny,),
+    permission_classes=(permissions.IsAuthenticated,),
 )
 
 router = routers.DefaultRouter()
@@ -80,14 +82,20 @@ urlpatterns = [
 
     # DRF browsable API
     url(r'^auth/', include('rest_framework.urls', namespace='rest_framework')),
-    url(r'^swagger(?P<format>\.json|\.yaml)$', schema_view.without_ui(cache_timeout=None), name='schema-json'),
-    url(r'^swagger/$', schema_view.with_ui('swagger', cache_timeout=None), name='schema-swagger-ui'),
-    url(r'^redoc/$', schema_view.with_ui('redoc', cache_timeout=0), name='schema-redoc'),
+    url(r'^swagger(?P<format>\.json|\.yaml)$', SchemaView.without_ui(cache_timeout=None), name='schema-json'),
+    url(r'^swagger/$', SchemaView.with_ui('swagger', cache_timeout=None), name='schema-swagger-ui'),
+
+    # API Core-Schema Docs TODO: Update this when better Api Docs come out and work.
+    url(r'^schema/', include_docs_urls(title='streisand API v1', public=False)),
+
+    # Login and user items
     url(r'^login/', users_views.UserLoginView.as_view()),
-    url(r'^token-refresh/', refresh_jwt_token),
-    url(r'^token-verify/', verify_jwt_token),
-    url(r'^register/$', users_views.UserRegisterView.as_view()),
     url(r'^current-user/', users_views.CurrentUserView.as_view()),
     url(r'^change-password/', users_views.ChangePasswordView.as_view()),
+    url(r'^register/$', users_views.UserRegisterView.as_view()),
+
+    # JWT
+    url(r'^token-refresh/', refresh_jwt_token),
+    url(r'^token-verify/', verify_jwt_token),
 
 ]
