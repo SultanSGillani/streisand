@@ -13,7 +13,6 @@ from rest_framework.permissions import IsAuthenticated, IsAdminUser
 from rest_framework.viewsets import ModelViewSet, GenericViewSet
 
 from .serializers import (
-    UserForForumSerializer,
     ForumIndexSerializer,
     ForumGroupItemSerializer,
     ForumTopicIndexSerializer,
@@ -59,6 +58,16 @@ class ForumIndexViewSet(api_mixins.AllowFieldLimitingMixin, ModelViewSet):
         return queryset_list
 
 
+class ForumGroupItemViewSet(mixins.UpdateModelMixin, mixins.CreateModelMixin, mixins.DestroyModelMixin,
+                            mixins.RetrieveModelMixin, GenericViewSet):
+    """
+    API endpoint for Forum Groups. This should be mainly used for POST, PATCH, and DELETE requests only.
+    """
+    permission_classes = [IsAdminUser]
+    serializer_class = ForumGroupItemSerializer
+    queryset = ForumGroup.objects.all()
+    pagination_class = DetailPagination
+
 
 class ForumTopicIndexViewSet(api_mixins.AllowFieldLimitingMixin, ModelViewSet):
     """
@@ -95,6 +104,17 @@ class ForumTopicIndexViewSet(api_mixins.AllowFieldLimitingMixin, ModelViewSet):
                 Q(latest_post__author__username__icontains=query)
             ).distinct()
         return queryset_list
+
+
+class ForumTopicItemViewSet(mixins.UpdateModelMixin, mixins.CreateModelMixin, mixins.DestroyModelMixin,
+                            mixins.RetrieveModelMixin, GenericViewSet):
+    """
+    API endpoint for Forum Topics. This should be mainly used for POST, PATCH, and DELETE requests only.
+    """
+    permission_classes = [IsAuthenticated]
+    serializer_class = ForumTopicItemSerializer
+    queryset = ForumTopic.objects.all()
+    pagination_class = DetailPagination
 
 
 class ForumThreadIndexViewSet(api_mixins.AllowFieldLimitingMixin, ModelViewSet):
@@ -138,28 +158,6 @@ class ForumThreadIndexViewSet(api_mixins.AllowFieldLimitingMixin, ModelViewSet):
                 Q(posts__author__username__icontains=query)
             ).distinct()
         return queryset_list
-
-
-class ForumGroupItemViewSet(mixins.UpdateModelMixin, mixins.CreateModelMixin, mixins.DestroyModelMixin,
-                            mixins.RetrieveModelMixin, GenericViewSet):
-    """
-    API endpoint for Forum Topics. This should be mainly used for POST, PATCH, and DELETE requests only.
-    """
-    permission_classes = [IsAdminUser]
-    serializer_class = ForumGroupItemSerializer
-    queryset = ForumGroup.objects.all()
-    pagination_class = DetailPagination
-
-
-class ForumTopicItemViewSet(mixins.UpdateModelMixin, mixins.CreateModelMixin, mixins.DestroyModelMixin,
-                            mixins.RetrieveModelMixin, GenericViewSet):
-    """
-    API endpoint for Forum Topics. This should be mainly used for POST, PATCH, and DELETE requests only.
-    """
-    permission_classes = [IsAuthenticated]
-    serializer_class = ForumTopicItemSerializer
-    queryset = ForumTopic.objects.all()
-    pagination_class = DetailPagination
 
 
 class ForumThreadItemViewSet(mixins.UpdateModelMixin, mixins.CreateModelMixin, mixins.DestroyModelMixin,
@@ -238,7 +236,6 @@ class ForumPostItemViewSet(mixins.UpdateModelMixin, mixins.RetrieveModelMixin, m
 class NewsPostViewSet(ModelViewSet):
     """
     API endpoint that allows LatestForumPosts to be viewed, or edited.
-    Please Note: Pagination is set to Page Number Pagination.
     """
     permission_classes = [IsAuthenticated]
     serializer_class = NewsSerializer
@@ -282,25 +279,37 @@ class NewsPostViewSet(ModelViewSet):
 
 class ForumThreadSubscriptionViewSet(ModelViewSet):
     """
-    API endpoint that allows ThreadSubscriptions to be viewed, or edited.
-    Please Note: Pagination is set to Page Number Pagination.
+    API endpoint that allows thread subscriptions to be viewed, or edited.
     """
     permission_classes = [IsAuthenticated]
     serializer_class = ForumThreadSubscriptionSerializer
     queryset = ForumThreadSubscription.objects.all().prefetch_related(
         'thread',
-    ).order_by('-thread').distinct('thread')
+    ).order_by('thread')
     pagination_class = ForumsPageNumberPagination
 
     def perform_create(self, serializer):
-        serializer.save(created_by=self.request.user)
+        serializer.save(user=self.request.user)
 
     def perform_update(self, serializer):
-        serializer.save(modified_by=self.request.user)
+        serializer.save(user=self.request.user)
 
 
 class ForumReportViewSet(ModelViewSet):
+    """
+    API endpoint For Reporting Forum threads/posts.
+    """
     permission_classes = [IsAuthenticated]
-    queryset = ForumReport.objects.all()
+    queryset = ForumReport.objects.all().prefetch_related(
+        'post',
+        'reporting_user',
+        'thread',
+        'resolved_by',
+    ).order_by(
+        'thread',
+    )
     serializer_class = ForumReportSerializer
     pagination_class = ForumsPageNumberPagination
+
+    def perform_create(self, serializer):
+        serializer.save(reporting_user=self.request.user)

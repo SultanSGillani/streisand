@@ -61,8 +61,12 @@ router.register(r'forum-topic-items', viewset=forums_views.ForumTopicItemViewSet
 router.register(r'forum-thread-index', viewset=forums_views.ForumThreadIndexViewSet, base_name='forum-thread-index')
 router.register(r'forum-thread-items', viewset=forums_views.ForumThreadItemViewSet, base_name='forum-thread-items')
 router.register(r'forum-post-items', viewset=forums_views.ForumPostItemViewSet, base_name='forum-post-items')
-router.register(r'news-posts', viewset=forums_views.NewsPostViewSet, base_name='news-post')
+router.register(r'forum-thread-subscriptions', viewset=forums_views.ForumThreadSubscriptionViewSet,
+                base_name='forum-thread-subscription'
+                )
 router.register(r'forum-reports', viewset=forums_views.ForumReportViewSet, base_name='forum-report')
+# Forum News Post
+router.register(r'news-posts', viewset=forums_views.NewsPostViewSet, base_name='news-post')
 
 # Wiki
 router.register(r'wikis', viewset=wiki_views.WikiArticleCreateUpdateDestroyViewSet, base_name='wiki')

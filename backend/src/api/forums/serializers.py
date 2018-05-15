@@ -1,7 +1,6 @@
 # -*- coding: utf-8 -*-
 from api.utils import PaginatedRelationField, RelationPaginator
 from forums.models import ForumGroup, ForumPost, ForumThread, ForumTopic, ForumThreadSubscription, ForumReport
-from rest_flex_fields import FlexFieldsModelSerializer
 from rest_framework import serializers
 from rest_framework.serializers import ModelSerializer
 from users.models import User
@@ -219,6 +218,7 @@ class ForumPostItemSerializer(ModelSerializer):
         fields = (
             'id',
             'author',
+            'created_at',
             'modified_at',
             'modified_by',
             'body',
@@ -230,6 +230,7 @@ class ForumPostItemSerializer(ModelSerializer):
 
     extra_kwargs = {
         'position': {'read_only': True},
+        'created_at': {'read_only': True},
         'modified_at': {'read_only': True},
         'modified_by': {'read_only': True},
         'total': {'read_only': True}
@@ -289,7 +290,19 @@ class ForumThreadIndexSerializer(ModelSerializer):
 class NewsSerializer(ModelSerializer):
     class Meta:
         model = ForumPost
-        fields = '__all__'
+        fields = (
+            'id',
+            'author',
+            'body',
+            'created_at',
+            'modified',
+            'modified_by',
+            'modified_at',
+            'modified_count',
+            'thread'
+
+        )
+
 
 class ForumThreadSubscriptionSerializer(ModelSerializer):
     user = serializers.StringRelatedField(read_only=True)
