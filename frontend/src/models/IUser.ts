@@ -15,6 +15,7 @@ export interface IUserResponse {
     bytesUploaded: number;
     bytesDownloaded: number;
     lastSeeded: string; // Date
+    announceKey: number;
 }
 
 interface IUser {
@@ -35,6 +36,7 @@ interface IUser {
         bytesUploaded: number;
         bytesDownloaded: number;
         lastSeeded: string; // Date
+        announceKey: number;
     };
 }
 

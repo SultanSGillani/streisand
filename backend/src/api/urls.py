@@ -54,25 +54,14 @@ router.register(r'tracker-swarm', viewset=tracker_views.SwarmViewSet, base_name=
 router.register(r'tracker-peers', viewset=tracker_views.PeerViewSet, base_name='tracker-peer')
 
 # Forum
-router.register(r'forum-groups', viewset=forums_views.ForumGroupViewSet, base_name='forum-group')
-router.register(r'forum-topics', viewset=forums_views.ForumTopicViewSet, base_name='forum-topic')
-
+router.register(r'forum-index', viewset=forums_views.ForumIndexViewSet, base_name='forums')
+router.register(r'forum-group-items', viewset=forums_views.ForumGroupItemViewSet, base_name='forum-group-item')
+router.register(r'forum-topic-index', viewset=forums_views.ForumTopicIndexViewSet, base_name='forum-topic-index')
+router.register(r'forum-topic-items', viewset=forums_views.ForumTopicItemViewSet, base_name='forum-topic-item')
 router.register(r'forum-thread-index', viewset=forums_views.ForumThreadIndexViewSet, base_name='forum-thread-index')
-router.register(r'forum-threads', viewset=forums_views.ForumThreadViewSet, base_name='forum-thread')
-router.register(r'forum-thread-items', viewset=forums_views.ForumThreadItemViewSet, base_name='forum-thread-item')
-router.register(r'forum-thread-subscriptions', viewset=forums_views.ForumThreadSubscriptionViewSet,
-                base_name='forum-thread-subscription')
-router.register(r'forum-posts', viewset=forums_views.ForumPostViewSet, base_name='forum-post')
+router.register(r'forum-thread-items', viewset=forums_views.ForumThreadItemViewSet, base_name='forum-thread-items')
+router.register(r'forum-post-items', viewset=forums_views.ForumPostItemViewSet, base_name='forum-post-items')
 router.register(r'news-posts', viewset=forums_views.NewsPostViewSet, base_name='news-post')
-
-# New Forum endpoints
-router.register(r'new-forum-index', viewset=forums_views.ForumIndexViewSet, base_name='new-forum-index')
-router.register(r'new-topic-index', viewset=forums_views.ForumTopicListViewSet, base_name='new-topic-index')
-router.register(r'new-topic-items', viewset=forums_views.ForumTopicCreateViewSet, base_name='new-topic-item')
-router.register(r'new-thread-index', viewset=forums_views.ForumThreadListViewSet, base_name='new-thread-index')
-router.register(r'new-thread-items', viewset=forums_views.ForumThreadCreateUpdateDestroyViewSet,
-                base_name='new-thread-items')
-router.register(r'new-post-items', viewset=forums_views.ForumPostCreateUpdateDestroyViewSet, base_name='new-post-items')
 router.register(r'forum-reports', viewset=forums_views.ForumReportViewSet, base_name='forum-report')
 
 # Wiki
