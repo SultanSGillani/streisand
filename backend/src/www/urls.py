@@ -32,9 +32,9 @@ DEBUG = config('DEBUG', cast=bool)
 if DEBUG:
     urlpatterns = [
 
-                      url(r'^__debug__/', include(debug_toolbar.urls)),
-                      url(r'^dev/', staff_member_required(TemplateView.as_view(template_name='dev.html')))
-                  ] + urlpatterns
+        url(r'^__debug__/', include(debug_toolbar.urls)),
+        url(r'^dev/', staff_member_required(TemplateView.as_view(template_name='dev.html')))
+    ] + urlpatterns
 
 # Anything else gets passed to the frontend
 

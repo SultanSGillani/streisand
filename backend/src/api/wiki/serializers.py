@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 
-from rest_framework.serializers import ModelSerializer, SerializerMethodField, HyperlinkedIdentityField
+from rest_framework.serializers import ModelSerializer, HyperlinkedIdentityField
 
 
 from wiki.models import WikiArticle
