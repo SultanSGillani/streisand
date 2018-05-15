@@ -5,7 +5,7 @@ import { patch } from '../../../utilities/Requestor';
 import { IUnkownError } from '../../../models/base/IError';
 import { ThunkAction, IDispatch } from '../../ActionTypes';
 import ErrorAction, { handleError } from '../../ErrorAction';
-import { IForumPostResponse, IForumPost } from '../../../models/forums/IForumPost';
+import { IForumPost, IForumPostResponse2 } from '../../../models/forums/IForumPost';
 
 type UpdatePostAction =
     { type: 'UPDATING_FORUM_POST', id: number, content: string } |
@@ -18,7 +18,7 @@ function updating(id: number, content: string): Action {
     return { type: 'UPDATING_FORUM_POST', id, content };
 }
 
-function updated(response: IForumPostResponse): Action {
+function updated(response: IForumPostResponse2): Action {
     return {
         type: 'UPDATED_FORUM_POST',
         post: transformPostOnly(response)
@@ -33,7 +33,7 @@ export function updatePost(id: number, content: string): ThunkAction<Action> {
     return (dispatch: IDispatch<Action>, getState: () => Store.All) => {
         const state = getState();
         dispatch(updating(id, content));
-        return update(state.sealed.auth.token, id, content).then((response: IForumPostResponse) => {
+        return update(state.sealed.auth.token, id, content).then((response: IForumPostResponse2) => {
             return dispatch(updated(response));
         }, (error: IUnkownError) => {
             dispatch(failure(id));
@@ -42,7 +42,7 @@ export function updatePost(id: number, content: string): ThunkAction<Action> {
     };
 }
 
-function update(token: string, id: number, content: string): Promise<IForumPostResponse> {
+function update(token: string, id: number, content: string): Promise<IForumPostResponse2> {
     const data = { body: content };
-    return patch({ token, url: `${globals.apiUrl}/forum-posts/${id}/`, data });
+    return patch({ token, url: `${globals.apiUrl}/new-post-items/${id}/`, data });
 }

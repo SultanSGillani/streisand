@@ -51,6 +51,7 @@ export function getNodeItems<T>(props: IGetNodeItemsProps<T>): T[] {
  */
 export interface IGetItemProps<T> {
     id?: number | null;
+    fallback?: boolean;
     byId: INodeMap<T>;
 }
 
@@ -58,6 +59,8 @@ export function getItem<T>(props: IGetItemProps<T>): T | undefined {
     const node = props.byId[props.id as number];
     if (node && node.item) {
         return node.item;
+    } else if (props.id) {
+        return { id: props.id } as any as T;
     }
 }
 

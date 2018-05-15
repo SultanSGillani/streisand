@@ -63,7 +63,7 @@ class LatestNewsComponent extends React.Component<CombinedProps, void> {
 
         return (
             <div className="panel panel-default">
-                <div className="panel-heading">{thread.title} - posted by <UserLink user={this.props.author} /> { posted }</div>
+                <div className="panel-heading">{thread.title} - posted by <UserLink user={this.props.author} /> {posted}</div>
                 <div className="panel-body">
                     <TextView content={post.body || ''} />
                 </div>
@@ -76,7 +76,11 @@ const mapStateToProps = (state: Store.All, ownProps: Props): ConnectedState => {
     const loading = state.sealed.news.loading;
     const loaded = !loading && !!state.sealed.news.latest;
     const post = state.sealed.news.latest ? state.sealed.forums.posts.byId[state.sealed.news.latest] : undefined;
-    const author = getItem({ id: post && post.author, byId: state.sealed.users.byId });
+    const author = getItem({
+        fallback: true,
+        id: post && post.author,
+        byId: state.sealed.users.byId
+    });
     const thread = post && state.sealed.forums.threads.byId[post.thread] as IForumThread;
 
     return { post, author, thread, loading, loaded };

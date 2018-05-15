@@ -18,6 +18,39 @@ export interface IForumThreadResponse {
     latestPostAuthorUsername?: string;
 }
 
+export interface IForumThreadResponse2 {
+    groups: {
+        id: number;
+        name: string;
+    };
+    topics: {
+        id: number;
+        group: number;
+        name: string;
+    };
+    id: number;
+    title: string;
+    topic: number;
+    isLocked: boolean;
+    isSticky: boolean;
+    createdAt: string; // Date
+    createdBy: number;
+    numberOfPosts: number;
+    posts: {
+        count: number;
+        results: {
+            id: number;
+            thread: number;
+            topic: number;
+            author: number;
+            createdAt: string; // Date
+            body: string;
+            modifiedAt: string; // Date
+            modifiedBy: number;
+        }[];
+    };
+}
+
 export interface IForumThread {
     id: number;
     title: string;
@@ -28,7 +61,6 @@ export interface IForumThread {
     isSticky?: boolean;
     numberOfPosts?: number;
     latestPost?: number;
-    posts?: number[];
 }
 
 export default IForumThread;

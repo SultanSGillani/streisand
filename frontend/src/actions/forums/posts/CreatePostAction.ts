@@ -54,5 +54,5 @@ export function postReply(post: IForumPostUpdate): ThunkAction<Action> {
 }
 
 function create(token: string, data: IForumPostUpdate): Promise<any> {
-    return post({ token, data, url: `${globals.apiUrl}/forum-posts/` });
+    return post({ token, data, url: `${globals.apiUrl}/new-post-items/` });
 }

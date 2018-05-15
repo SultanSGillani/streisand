@@ -55,6 +55,7 @@ class ForumThreadRowComponent extends React.Component<CombinedProps> {
 const mapStateToProps = (state: Store.All, ownProps: Props): ConnectedState => {
     return {
         author: getItem({
+            fallback: true,
             id: ownProps.thread && ownProps.thread.createdBy,
             byId: state.sealed.users.byId
         })
