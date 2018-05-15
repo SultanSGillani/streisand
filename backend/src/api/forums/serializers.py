@@ -222,21 +222,22 @@ class ForumThreadForIndexSerializer(ModelSerializer, serializers.PrimaryKeyRelat
 
 
 class ForumPostForIndexSerializer(ModelSerializer):
-    topic = serializers.PrimaryKeyRelatedField(read_only=True, source='thread.topic')
+    thread_title = serializers.StringRelatedField(source='thread', read_only=True)
 
     class Meta:
         model = ForumPost
         fields = (
             'id',
-            'thread',
-            'topic',
             'author',
+            'thread',
+            'thread_title',
             'created_at',
-            'position'
         )
 
 
 class ForumTopicIndexSerializer(ModelSerializer):
+    latest_post = ForumPostForIndexSerializer()
+
     class Meta:
         model = ForumTopic
         fields = (
@@ -247,15 +248,16 @@ class ForumTopicIndexSerializer(ModelSerializer):
             'description',
             'minimum_user_class',
             'number_of_threads',
-            'number_of_posts'
+            'number_of_posts',
+            'latest_post',
         )
 
 
-class ForumIndexSerializer(FlexFieldsModelSerializer):
-    topics = PaginatedRelationField(ForumTopicIndexSerializer, paginator=RelationPaginator)
+class ForumIndexSerializer(ModelSerializer):
+    topics = ForumTopicIndexSerializer(read_only=True, many=True)
     topic_count = serializers.SerializerMethodField()
     threads = ForumThreadForIndexSerializer(read_only=True, many=True)
-    posts = ForumPostForIndexSerializer(source='topics.latest_post', read_only=True)
+    posts = ForumPostForIndexSerializer(many=True, read_only=True)
 
     class Meta:
         model = ForumGroup
