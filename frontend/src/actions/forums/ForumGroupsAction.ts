@@ -5,7 +5,6 @@ import { get } from '../../utilities/Requestor';
 import ErrorAction from '../ErrorAction';
 import { transformGroups } from './transforms';
 import { simplefetchData } from '../ActionHelper';
-import IPagedResponse from '../../models/base/IPagedResponse';
 import { IForumGroupResponse, IForumGroupData } from '../../models/forums/IForumGroup';
 
 type ForumGroupsction =
@@ -20,7 +19,7 @@ function fetching(): Action {
     return { type: 'FETCHING_FORUM_GROUPS' };
 }
 
-function received(response: IPagedResponse<IForumGroupResponse>): Action {
+function received(response: IForumGroupResponse): Action {
     return {
         type: 'RECEIVED_FORUM_GROUPS',
         data: transformGroups(response)
@@ -40,6 +39,6 @@ export function getForumGroups(): ThunkAction<Action> {
     return simplefetchData({ request, fetching, received, failure, errorPrefix });
 }
 
-function request(token: string): Promise<IPagedResponse<IForumGroupResponse>> {
-    return get({ token, url: `${globals.apiUrl}/forum-groups/` });
+function request(token: string): Promise<IForumGroupResponse> {
+    return get({ token, url: `${globals.apiUrl}/new-forum-index/` });
 }

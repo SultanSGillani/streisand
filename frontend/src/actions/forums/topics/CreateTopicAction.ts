@@ -57,8 +57,7 @@ function create(token: string, payload: INewForumTopicPayload): Promise<any> {
         sortOrder: payload.sortOrder,
         name: payload.title,
         description: payload.description,
-        threads: [],
         group: payload.group
     };
-    return post({ token, data, url: `${globals.apiUrl}/forum-topics/` });
+    return post({ token, data, url: `${globals.apiUrl}/new-topic-items/` });
 }

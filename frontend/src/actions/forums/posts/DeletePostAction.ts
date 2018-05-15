@@ -34,18 +34,18 @@ function failure(id: number): Action {
 export function deleteForumPost(props: IDeletePostProps): ThunkAction<Action> {
     return (dispatch: IDispatch<Action>, getState: () => Store.All) => {
         const state = getState();
-        dispatch(deleting(props.thread));
-        return request(state.sealed.auth.token, props.thread).then(() => {
+        dispatch(deleting(props.post));
+        return request(state.sealed.auth.token, props.post).then(() => {
             const action = dispatch(deleted(props.post));
             dispatch(invalidate({ id: props.thread, page: props.currentPage }));
             return action;
         }, (error: IUnkownError) => {
-            dispatch(failure(props.thread));
+            dispatch(failure(props.post));
             return dispatch(handleError(error));
         });
     };
 }
 
 function request(token: string, id: number): Promise<void> {
-    return remove({ token, url: `${globals.apiUrl}/forum-posts/${id}/` });
+    return remove({ token, url: `${globals.apiUrl}/new-post-items/${id}/` });
 }

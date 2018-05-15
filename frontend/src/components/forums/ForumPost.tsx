@@ -140,10 +140,12 @@ const mapStateToProps = (state: Store.All, ownProps: Props): ConnectedState => {
     return {
         screenSize: state.deviceInfo.screenSize,
         author: getItem({
+            fallback: true,
             id: ownProps.post.author,
             byId: state.sealed.users.byId
         }),
         modifiedBy: getItem({
+            fallback: true,
             id: ownProps.post.modifiedBy,
             byId: state.sealed.users.byId
         })

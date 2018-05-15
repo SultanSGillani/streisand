@@ -1,14 +1,31 @@
 import IUser from '../IUser';
 import IForumPost from './IForumPost';
 import IForumThread from './IForumThread';
-import { IForumTopicResponse, IForumTopic } from './IForumTopic';
+import { IForumTopic } from './IForumTopic';
 
 export interface IForumGroupResponse {
-    id: number;
-    name: string;
-    sortOrder: number;
-    topicCount: number;
-    topicsData: IForumTopicResponse[];
+    results: {
+        id: number;
+        name: string;
+        sortOrder: number;
+        topics: {
+            id: number;
+            group: number;
+            sortOrder: number;
+            name: string;
+            description: string;
+            minimumUserClass: number;
+            numberOfThreads: number;
+            numberOfPosts: number;
+            latestPost?: {
+                id: number;
+                author: number;
+                thread: number;
+                threadTitle: string;
+                createdAt: string; // Date
+            }
+        }[];
+    }[];
 }
 
 export interface IForumGroup {

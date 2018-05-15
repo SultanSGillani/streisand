@@ -15,6 +15,16 @@ export interface IForumPostResponse {
     modifiedByUsername: string;
 }
 
+export interface IForumPostResponse2 {
+    author: number;
+    id: number;
+    body: string;
+    createdAt: string; // Date
+    modifiedAt: string; // Date
+    modifiedBy: number;
+    thread: number;
+}
+
 export interface IForumPost {
     id: number;
     author: number;

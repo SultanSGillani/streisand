@@ -49,6 +49,7 @@ const mapStateToProps = (state: Store.All, ownProps: Props): ConnectedState => {
         post: post as IForumPost,
         thread: thread as IForumThread,
         author: getItem({
+            fallback: true,
             id: post && post.author,
             byId: state.sealed.users.byId
         })

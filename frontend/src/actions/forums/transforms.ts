@@ -1,9 +1,9 @@
-import IPagedResponse from '../../models/base/IPagedResponse';
-import { IForumThreadResponse } from '../../models/forums/IForumThread';
-import { IForumPostResponse, IForumPost } from '../../models/forums/IForumPost';
+import { IForumPostResponse, IForumPost, IForumPostResponse2 } from '../../models/forums/IForumPost';
 import { IForumGroupResponse, IForumGroupData } from '../../models/forums/IForumGroup';
+import { IForumTopicResponse2 } from '../../models/forums/IForumTopic';
+import { IForumThreadResponse2 } from '../../models/forums/IForumThread';
 
-export function transformGroups(response: IPagedResponse<IForumGroupResponse>): IForumGroupData {
+export function transformGroups(response: IForumGroupResponse): IForumGroupData {
     const result: IForumGroupData = {
         groups: [],
         topics: [],
@@ -19,7 +19,7 @@ export function transformGroups(response: IPagedResponse<IForumGroupResponse>): 
             topics: [] as number[]
         };
         result.groups.push(transformedGroup);
-        for (const topic of group.topicsData) {
+        for (const topic of group.topics) {
             transformedGroup.topics.push(topic.id);
             result.topics.push({
                 id: topic.id,
@@ -29,33 +29,30 @@ export function transformGroups(response: IPagedResponse<IForumGroupResponse>): 
                 description: topic.description,
                 numberOfThreads: topic.numberOfThreads,
                 numberOfPosts: topic.numberOfPosts,
-                latestPost: topic.latestPostId
+                latestPost: topic.latestPost && topic.latestPost.id
             });
 
-            result.threads.push({
-                id: topic.latestPostThreadId,
-                title: topic.latestPostThreadTitle,
-                topic: topic.id
-            });
+            if (topic.latestPost) {
+                result.threads.push({
+                    id: topic.latestPost.thread,
+                    title: topic.latestPost.threadTitle,
+                    topic: topic.id
+                });
 
-            result.posts.push({
-                id: topic.latestPostId,
-                thread: topic.latestPostThreadId,
-                author: topic.latestPostAuthorId,
-                createdAt: topic.latestPostCreatedAt
-            });
-
-            result.users.push({
-                id: topic.latestPostAuthorId,
-                username: topic.latestPostAuthorName
-            });
+                result.posts.push({
+                    id: topic.latestPost.id,
+                    thread: topic.latestPost.thread,
+                    author: topic.latestPost.author,
+                    createdAt: topic.latestPost.createdAt
+                });
+            }
         }
     }
 
     return result;
 }
 
-export function transformTopic(response: IPagedResponse<IForumThreadResponse>): IForumGroupData {
+export function transformTopic(response: IForumTopicResponse2): IForumGroupData {
     const result: IForumGroupData = {
         groups: [],
         topics: [],
@@ -64,59 +61,38 @@ export function transformTopic(response: IPagedResponse<IForumThreadResponse>): 
         users: []
     };
 
-    let addedCommon = false;
-    for (const thread of response.results) {
-        if (!addedCommon) {
-            result.groups.push({
-                id: thread.groupId,
-                title: thread.groupName || ''
-            });
-            result.topics.push({
-                id: thread.topic,
-                title: thread.topicTitle,
-                group: thread.groupId
-            });
-            addedCommon = true;
-        }
+    const { groups: group } = response;
+    result.groups.push({
+        id: group.id,
+        title: group.name
+    });
 
+    result.topics.push({
+        id: response.id,
+        title: response.name,
+        description: response.description,
+        group: response.group,
+        numberOfPosts: response.numberOfPosts
+    });
+
+    for (const thread of response.threads.results) {
         result.threads.push({
             id: thread.id,
             title: thread.title,
             topic: thread.topic,
             createdAt: thread.createdAt,
-            createdBy: thread.createdById,
+            createdBy: thread.createdBy,
             isLocked: thread.isLocked,
             isSticky: thread.isSticky,
             numberOfPosts: thread.numberOfPosts,
-            latestPost: thread.latestPost
+            latestPost: thread.latestPost && thread.latestPost.id
         });
-
-        if (thread.latestPost) {
-            result.posts.push({
-                id: thread.latestPost,
-                thread: thread.id,
-                author: thread.latestPostAuthorId || 0,
-                createdAt: thread.latestPostCreatedAt || ''
-            });
-        }
-
-        result.users.push({
-            id: thread.createdById,
-            username: thread.createdByUsername
-        });
-
-        if (thread.latestPostAuthorId) {
-            result.users.push({
-                id: thread.latestPostAuthorId,
-                username: thread.latestPostAuthorUsername || ''
-            });
-        }
     }
 
     return result;
 }
 
-export function transformThread(thread: number, response: IPagedResponse<IForumPostResponse>): IForumGroupData {
+export function transformThread(thread: number, response: IForumThreadResponse2): IForumGroupData {
     const result: IForumGroupData = {
         groups: [],
         topics: [],
@@ -125,47 +101,39 @@ export function transformThread(thread: number, response: IPagedResponse<IForumP
         users: []
     };
 
-    let addedCommon = false;
-    for (const post of response.results) {
-        if (post.thread !== thread) {
-            continue;
-        }
-        if (!addedCommon) {
-            result.topics.push({
-                id: post.topicId,
-                title: post.topicName
-            });
-            result.threads.push({
-                id: post.thread,
-                title: post.threadTitle,
-                topic: post.topicId
-            });
-            addedCommon = true;
-        }
+    const { groups: group, topics: topic } = response;
+    result.groups.push({
+        id: group.id,
+        title: group.name
+    });
 
+    result.topics.push({
+        id: topic.id,
+        group: topic.group,
+        title: topic.name
+    });
+
+    result.threads.push({
+        id: response.id,
+        title: response.title,
+        topic: response.topic,
+        numberOfPosts: response.numberOfPosts,
+        createdAt: response.createdAt,
+        createdBy: response.createdBy,
+        isLocked: response.isLocked,
+        isSticky: response.isSticky
+    });
+
+    for (const post of response.posts.results) {
         result.posts.push({
             id: post.id,
             thread: post.thread,
-            author: post.authorId,
+            author: post.author,
             createdAt: post.createdAt,
             modifiedAt: post.modifiedAt,
             body: post.body,
-            modifiedBy: post.modifiedById
+            modifiedBy: post.modifiedBy
         });
-
-        // post creater
-        result.users.push({
-            id: post.authorId,
-            username: post.authorUsername
-        });
-
-        // post modifier
-        if (post.modifiedById) {
-            result.users.push({
-                id: post.modifiedById,
-                username: post.modifiedByUsername
-            });
-        }
     }
 
     return result;
@@ -212,14 +180,14 @@ export function transformPost(post: IForumPostResponse): IForumGroupData {
     return result;
 }
 
-export function transformPostOnly(response: IForumPostResponse): IForumPost {
+export function transformPostOnly(response: IForumPostResponse2): IForumPost {
     return {
         id: response.id,
         thread: response.thread,
-        author: response.authorId,
+        author: response.author,
         createdAt: response.createdAt,
         modifiedAt: response.modifiedAt,
         body: response.body,
-        modifiedBy: response.modifiedById
+        modifiedBy: response.modifiedBy
     };
 }
