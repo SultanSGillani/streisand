@@ -43,6 +43,7 @@ export default function UserView(props: Props) {
                 <InfoRow label="Bytes uploaded" value={details.bytesUploaded} />
                 <InfoRow label="Bytes downloaded" value={details.bytesDownloaded} />
                 <InfoRow label="Last seeded" value={lastSeeded} />
+                <InfoRow label="Announce Key" value={details.announceKey} />
             </ul>
         </div>
     );

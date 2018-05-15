@@ -40,5 +40,5 @@ export function getForumGroups(): ThunkAction<Action> {
 }
 
 function request(token: string): Promise<IForumGroupResponse> {
-    return get({ token, url: `${globals.apiUrl}/new-forum-index/` });
+    return get({ token, url: `${globals.apiUrl}/forum-index/` });
 }

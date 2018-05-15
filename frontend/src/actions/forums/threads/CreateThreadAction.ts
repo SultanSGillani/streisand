@@ -60,5 +60,5 @@ export function createForumThread(payload: INewForumThreadPayload): ThunkAction<
 }
 
 function create(token: string, data: INewForumThreadPayload): Promise<IForumThreadResponse> {
-    return post({ token, data, url: `${globals.apiUrl}/new-thread-items/` });
+    return post({ token, data, url: `${globals.apiUrl}/forum-thread-items/` });
 }

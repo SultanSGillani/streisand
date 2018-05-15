@@ -57,5 +57,5 @@ export function getPosts(id: number, page: number = 1): ThunkAction<Action> {
 
 const PAGE_SIZE = 3;
 function request(token: string, props: Props): Promise<IForumThreadResponse2> {
-    return get({ token, url: `${globals.apiUrl}/new-thread-index/${props.id}/?page=${props.page}&size=${PAGE_SIZE}` });
+    return get({ token, url: `${globals.apiUrl}/forum-thread-index/${props.id}/?page=${props.page}&size=${PAGE_SIZE}` });
 }

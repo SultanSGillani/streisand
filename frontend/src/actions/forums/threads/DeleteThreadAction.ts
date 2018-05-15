@@ -47,5 +47,5 @@ export function deleteForumThread(props: IDeleteThreadProps): ThunkAction<Action
 }
 
 function request(token: string, id: number): Promise<void> {
-    return remove({ token, url: `${globals.apiUrl}/new-thread-items/${id}/` });
+    return remove({ token, url: `${globals.apiUrl}/forum-thread-items/${id}/` });
 }

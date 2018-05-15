@@ -59,5 +59,5 @@ function create(token: string, payload: INewForumTopicPayload): Promise<any> {
         description: payload.description,
         group: payload.group
     };
-    return post({ token, data, url: `${globals.apiUrl}/new-topic-items/` });
+    return post({ token, data, url: `${globals.apiUrl}/forum-topic-items/` });
 }
