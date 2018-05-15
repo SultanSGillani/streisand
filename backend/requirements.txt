@@ -5,7 +5,6 @@ Pygments==2.2.0
 Werkzeug==0.14.1
 anyjson==0.3.3
 amqp==2.2.2
-bbcode==1.0.31
 beautifulsoup4==4.6.0
 billiard==3.5.0.3
 celery==4.1.0
@@ -42,7 +41,5 @@ https://github.com/philipn/django-rest-framework-filters/archive/master.zip
 # djangorestframework-filters
 https://github.com/darklow/django-suit/tarball/v2
 djangorestframework-jwt>=1.11.0
-drf-yasg>=1.7.1
+drf-yasg[validation]==1.7.4
 python-decouple==3.1
-djangorestframework-bulk==0.2.1
-drf-flex-fields==0.3.4

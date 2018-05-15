@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 
-from rest_framework.serializers import ModelSerializer, SerializerMethodField, HyperlinkedIdentityField
+from rest_framework.serializers import ModelSerializer, HyperlinkedIdentityField
 
 
 from wiki.models import WikiArticle
@@ -33,7 +33,6 @@ class WikiViewListOnlySerializer(ModelSerializer):
 
 class WikiBodySerializer(ModelSerializer):
 
-    body_html = SerializerMethodField()
     url = HyperlinkedIdentityField(view_name="wiki-body-detail")
 
     class Meta:
