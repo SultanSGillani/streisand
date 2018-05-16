@@ -26,14 +26,19 @@ class WikiArticleCreateUpdateDestroyViewSet(mixins.CreateModelMixin,
     permission_classes = [IsAuthenticated]
     search_fields = ['title', 'created_by__username', 'read_access_minimum_user_class__username__userclass']
 
-    def partial_update(self, request, pk=None):
-        serializer = WikiCreateUpdateDestroySerializer(request.user, data=request.data, partial=True)
-        serializer.save()
-        serializer.is_valid(raise_exception=True)
-        return Response(serializer.data)
+    def perform_create(self, serializer):
+        serializer.save(created_by=self.request.user
+                        )
+
+    def perform_partial_update(self, serializer, **kwargs):
+        kwargs['partial'] = True
+        serializer.save(modified_by=self.request.user)
+
+    def perform_update(self, serializer):
+        serializer.save(modified_by=self.request.user)
 
     def get_queryset(self, *args, **kwargs):
-        queryset_list = WikiArticle.objects.all()  # filter(user=self.request.user)
+        queryset_list = WikiArticle.objects.all()
         query = self.request.GET.get("q")
         if query:
             queryset_list = queryset_list.filter(
@@ -52,14 +57,19 @@ class WikiArticleBodyViewSet(mixins.RetrieveModelMixin, mixins.UpdateModelMixin,
     serializer_class = WikiBodySerializer
     search_fields = ['body', 'id']
 
-    def partial_update(self, request, pk=None):
-        serializer = WikiBodySerializer(request.user, data=request.data, partial=True)
-        serializer.save()
-        serializer.is_valid(raise_exception=True)
-        return Response(serializer.data)
+    def perform_create(self, serializer):
+        serializer.save(created_by=self.request.user
+                        )
+
+    def perform_partial_update(self, serializer, **kwargs):
+        kwargs['partial'] = True
+        serializer.save(modified_by=self.request.user)
+
+    def perform_update(self, serializer):
+        serializer.save(modified_by=self.request.user)
 
     def get_queryset(self, *args, **kwargs):
-        queryset_list = WikiArticle.objects.all()  # filter(user=self.request.user)
+        queryset_list = WikiArticle.objects.all()
         query = self.request.GET.get("q")
         if query:
             queryset_list = queryset_list.filter(
