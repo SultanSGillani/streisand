@@ -45,7 +45,7 @@ class AllowFieldLimitingMixin(object):
             warnings.warn('Request object does not contain query paramters')
 
         try:
-            filter_fields = params.get('tab', None).split(',')
+            filter_fields = params.get('fields', None).split(',')
         except AttributeError:
             filter_fields = None
 
