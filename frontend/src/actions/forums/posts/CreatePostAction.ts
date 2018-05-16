@@ -39,7 +39,7 @@ export function postReply(post: IForumPostUpdate): ThunkAction<Action> {
             // we don't have to guess which page it is going to be on.
             const page = state.sealed.forums.posts.byThread[post.thread];
             const count = (page.count || 0) + 1;
-            const lastPage = Math.ceil(count / globals.pageSize) || 1;
+            const lastPage = Math.ceil(count / globals.pageSize.posts) || 1;
 
             // Invalidate last page of posts
             dispatch(invalidate({ id: post.thread, page: lastPage }));

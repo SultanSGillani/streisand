@@ -13,6 +13,7 @@ export type Props = {
 
 type ConnectedState = {
     total: number;
+    pageSize: number;
     wikis: IWiki[];
 };
 type ConnectedDispatch = {};
@@ -20,13 +21,14 @@ type ConnectedDispatch = {};
 type CombinedProps = Props & ConnectedDispatch & ConnectedState;
 class WikiListComponent extends React.Component<CombinedProps> {
     public render() {
-        const { wikis, page, total } = this.props;
+        const { wikis, page, total, pageSize } = this.props;
+        const pager = <Pager uri="/wikis" total={total} page={page} pageSize={pageSize} />;
         const rows = wikis.map((wiki: IWiki) => {
             return (<WikiRow wiki={wiki} key={wiki.id} page={page} />);
         });
         return (
             <div>
-                <Pager uri="/wikis" total={total} page={page} />
+                {pager}
                 <table className="table table-striped table-hover">
                     <thead>
                         <tr>
@@ -38,7 +40,7 @@ class WikiListComponent extends React.Component<CombinedProps> {
                         {rows}
                     </tbody>
                 </table>
-                <Pager uri="/wikis" total={total} page={page} />
+                {pager}
             </div>
         );
     }
@@ -47,6 +49,7 @@ class WikiListComponent extends React.Component<CombinedProps> {
 const mapStateToProps = (state: Store.All, ownProps: Props): ConnectedState => {
     return {
         total: state.sealed.wikis.count,
+        pageSize: state.sealed.wikis.pageSize,
         wikis: getNodeItems({
             page: ownProps.page,
             byId: state.sealed.wikis.byId,

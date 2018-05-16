@@ -16,6 +16,7 @@ export type Props = {
 
 type ConnectedState = {
     total: number;
+    pageSize: number;
     threads: IForumThread[];
 };
 type ConnectedDispatch = {};
@@ -23,10 +24,9 @@ type ConnectedDispatch = {};
 type CombinedProps = Props & ConnectedDispatch & ConnectedState;
 class ForumTopicViewComponent extends React.Component<CombinedProps> {
     public render() {
-        const page = this.props.page;
-        const topic = this.props.topic;
-        const threads = this.props.threads;
+        const { page, topic, total, pageSize, threads } = this.props;
         const uri = `/forum/topic/${topic.id}`;
+        const pager = <Pager uri={uri} total={total} page={page} pageSize={pageSize} />;
         const rows = threads.map((thread: IForumThread) => {
             return (<ForumThreadRow thread={thread} key={thread.id} page={page} />);
         });
@@ -34,7 +34,7 @@ class ForumTopicViewComponent extends React.Component<CombinedProps> {
             <div>
                 <h1>{topic.title}</h1>
                 <p>{topic.description}</p>
-                <Pager uri={uri} total={this.props.total} page={page} />
+                {pager}
                 <table className="table table-striped table-hover">
                     <thead>
                         <tr>
@@ -48,7 +48,7 @@ class ForumTopicViewComponent extends React.Component<CombinedProps> {
                         {rows}
                     </tbody>
                 </table>
-                <Pager uri={uri} total={this.props.total} page={page} />
+                {pager}
                 <ForumThreadCreator topic={topic} />
             </div>
         );
@@ -56,13 +56,14 @@ class ForumTopicViewComponent extends React.Component<CombinedProps> {
 }
 
 const mapStateToProps = (state: Store.All, ownProps: Props): ConnectedState => {
-    const topicPages = state.sealed.forums.threads.byTopic[ownProps.topic.id];
+    const pages = state.sealed.forums.threads.byTopic[ownProps.topic.id];
     return {
-        total: topicPages ? topicPages.count : 0,
+        total: pages ? pages.count : 0,
+        pageSize: pages ? pages.pageSize : 0,
         threads: getItems({
             page: ownProps.page,
             byId: state.sealed.forums.threads.byId,
-            pages: topicPages ? topicPages.pages : {}
+            pages: pages ? pages.pages : {}
         })
     };
 };

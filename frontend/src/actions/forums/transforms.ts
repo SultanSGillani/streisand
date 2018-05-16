@@ -1,7 +1,7 @@
 import { IForumPostResponse, IForumPost, IForumPostResponse2 } from '../../models/forums/IForumPost';
 import { IForumGroupResponse, IForumGroupData } from '../../models/forums/IForumGroup';
-import { IForumTopicResponse2 } from '../../models/forums/IForumTopic';
-import { IForumThreadResponse2 } from '../../models/forums/IForumThread';
+import { IForumTopicResponse } from '../../models/forums/IForumTopic';
+import { IForumThreadResponse } from '../../models/forums/IForumThread';
 
 export function transformGroups(response: IForumGroupResponse): IForumGroupData {
     const result: IForumGroupData = {
@@ -52,7 +52,7 @@ export function transformGroups(response: IForumGroupResponse): IForumGroupData 
     return result;
 }
 
-export function transformTopic(response: IForumTopicResponse2): IForumGroupData {
+export function transformTopic(response: IForumTopicResponse): IForumGroupData {
     const result: IForumGroupData = {
         groups: [],
         topics: [],
@@ -92,7 +92,7 @@ export function transformTopic(response: IForumTopicResponse2): IForumGroupData 
     return result;
 }
 
-export function transformThread(thread: number, response: IForumThreadResponse2): IForumGroupData {
+export function transformThread(thread: number, response: IForumThreadResponse): IForumGroupData {
     const result: IForumGroupData = {
         groups: [],
         topics: [],

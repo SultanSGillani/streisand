@@ -4,9 +4,9 @@ import { combineReducers } from '../helpers';
 import ForumAction from '../../actions/forums';
 import NewsAction from '../../actions/NewsAction';
 import { getPageReducer } from '../utilities/page';
-import { INestedPages } from '../../models/base/IPagedItemSet';
 import { IForumThread } from '../../models/forums/IForumThread';
 import { ForumThreadData } from '../../models/forums/IForumData';
+import { INestedPages, IPage, INestedPage } from '../../models/base/IPagedItemSet';
 import ForumTopicAction, { ForumTopicReceivedAction } from '../../actions/forums/topics/ForumTopicAction';
 
 type Action = ForumAction | NewsAction;
@@ -36,7 +36,7 @@ function byTopic(state: Items = {}, action: ForumTopicAction): Items {
         case 'INVALIDATE_FORUM_TOPIC':
             return processThreads({ state , action });
         case 'RECEIVED_FORUM_TOPIC':
-            return processThreads({ state, action, count: action.count });
+            return processThreads({ state, action, count: action.count, pageSize: action.pageSize });
         default:
             return state;
     }
@@ -46,25 +46,28 @@ interface IThreadProcessingParams {
     state: Items;
     action: ForumTopicAction;
     count?: number;
+    pageSize?: number;
 }
 
 const pageReducer = getPageReducer('FORUM_TOPIC', (action: ForumTopicReceivedAction) => {
     return action.data.threads || [];
 });
 
-function processThreads(params: IThreadProcessingParams) {
-    const action = params.action;
-    const count = params.count || 0;
-    const current = params.state[action.id] || { count, pages: {} };
+type Pages = { [page: number]: IPage };
+function processThreads(params: IThreadProcessingParams): INestedPages {
+    const { action, count, pageSize } = params;
+    const current = params.state[action.id] || { count, pageSize, pages: {} };
     const currentPage = current.pages[action.page];
-    const itemSet = objectAssign({}, current.pages, {
+    const itemSet: Pages = objectAssign({}, current.pages, {
         [action.page]: pageReducer(currentPage, params.action)
     });
+    const nestedPage: INestedPage = {
+        pages: itemSet,
+        count: count !== undefined ? count : current.count,
+        pageSize: pageSize !== undefined ? pageSize : current.pageSize
+    };
     return objectAssign({}, params.state, {
-        [action.id]: {
-            count: count,
-            pages: itemSet
-        }
+        [action.id]: nestedPage
     });
 }
 

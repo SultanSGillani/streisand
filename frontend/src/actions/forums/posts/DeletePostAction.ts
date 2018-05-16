@@ -1,3 +1,5 @@
+import { push } from 'react-router-redux';
+
 import Store from '../../../store';
 import globals from '../../../utilities/globals';
 import { remove } from '../../../utilities/Requestor';
@@ -37,6 +39,15 @@ export function deleteForumPost(props: IDeletePostProps): ThunkAction<Action> {
         dispatch(deleting(props.post));
         return request(state.sealed.auth.token, props.post).then(() => {
             const action = dispatch(deleted(props.post));
+
+            // Ideally this response would include an updated count of posts so
+            // we don't have to assume the count hasn't changed.
+            const page = state.sealed.forums.posts.byThread[props.thread];
+            const count = (page.count || 1) - 1;
+            const lastPage = Math.ceil(count / globals.pageSize.posts) || 1;
+            if (lastPage < props.currentPage) {
+                dispatch(push(`/forum/thread/${props.thread}/${lastPage}`));
+            }
             dispatch(invalidate({ id: props.thread, page: props.currentPage }));
             return action;
         }, (error: IUnkownError) => {

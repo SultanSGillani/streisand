@@ -5,8 +5,8 @@ import ForumAction from '../../actions/forums';
 import NewsAction from '../../actions/NewsAction';
 import { getPageReducer } from '../utilities/page';
 import { IForumPost } from '../../models/forums/IForumPost';
-import { INestedPages } from '../../models/base/IPagedItemSet';
 import { ForumPostData } from '../../models/forums/IForumData';
+import { INestedPages, INestedPage, IPage } from '../../models/base/IPagedItemSet';
 import ForumThreadAction, { ForumThreadReceivedAction } from '../../actions/forums/threads/ForumThreadAction';
 
 type Action = ForumAction | NewsAction;
@@ -38,7 +38,7 @@ function byThread(state: Items = {}, action: ForumThreadAction): Items {
         case 'INVALIDATE_FORUM_THREAD':
             return processPosts({ state, action });
         case 'RECEIVED_FORUM_THREAD':
-            return processPosts({ state, action, count: action.count });
+            return processPosts({ state, action, count: action.count, pageSize: action.pageSize });
         default:
             return state;
     }
@@ -48,25 +48,28 @@ interface IPostProcessingParams {
     state: Items;
     action: ForumThreadAction;
     count?: number;
+    pageSize?: number;
 }
 
 const pageReducer = getPageReducer('FORUM_THREAD', (action: ForumThreadReceivedAction) => {
     return action.data.posts || [];
 });
 
+type Pages = { [page: number]: IPage };
 function processPosts(params: IPostProcessingParams) {
-    const action = params.action;
-    const count = params.count || 0;
-    const current = params.state[action.id] || { count, pages: {} };
+    const { action, count, pageSize } = params;
+    const current = params.state[action.id] || { count, pageSize, pages: {} };
     const currentPage = current.pages[action.page];
-    const itemSet = objectAssign({}, current.pages, {
+    const itemSet: Pages = objectAssign({}, current.pages, {
         [action.page]: pageReducer(currentPage, params.action)
     });
+    const nestedPage: INestedPage = {
+        pages: itemSet,
+        count: count !== undefined ? count : current.count,
+        pageSize: pageSize !== undefined ? pageSize : current.pageSize
+    };
     return objectAssign({}, params.state, {
-        [action.id]: {
-            count: count,
-            pages: itemSet
-        }
+        [action.id]: nestedPage
     });
 }
 

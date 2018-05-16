@@ -39,6 +39,15 @@ function pages(state: Pages = {}, action: Action): Pages {
     }
 }
 
+function pageSize(state: number = 0, action: Action): number {
+    switch (action.type) {
+        case 'RECEIVED_WIKIS':
+            return action.pageSize;
+        default:
+            return state;
+    }
+}
+
 function count(state: number = 0, action: Action): number {
     switch (action.type) {
         case 'RECEIVED_WIKIS':
@@ -60,4 +69,4 @@ function creating(state: boolean = false, action: Action): boolean {
     }
 }
 
-export default combineReducers<Store.Wikis>({ byId, pages, count, creating });
+export default combineReducers<Store.Wikis>({ byId, pages, pageSize, count, creating });

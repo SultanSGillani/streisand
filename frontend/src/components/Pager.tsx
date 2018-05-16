@@ -3,10 +3,7 @@ import { Link } from 'react-router';
 import { connect } from 'react-redux';
 
 import Store from '../store';
-import globals from '../utilities/globals';
 import { ScreenSize } from '../models/IDeviceInfo';
-
-const PAGE_SIZE = globals.pageSize;
 
 const center = {
     'display': 'flex',
@@ -17,6 +14,7 @@ export type Props = {
     uri: string;
     page: number;
     total: number;
+    pageSize: number;
 };
 
 type ConnectedState = {
@@ -26,8 +24,8 @@ type ConnectedState = {
 type CombinedProps = Props & ConnectedState;
 class PagerComponent extends React.Component<CombinedProps> {
     public render() {
-        const { uri, page, total } = this.props;
-        const pageCount = Math.ceil(total / PAGE_SIZE);
+        const { uri, page, total, pageSize } = this.props;
+        const pageCount = Math.ceil(total / pageSize);
         if (pageCount <= 1) {
             // No need to render paging controls if there is only one page
             return null;
@@ -44,8 +42,8 @@ class PagerComponent extends React.Component<CombinedProps> {
 
         let pages: JSX.Element[] = [];
         for (let i = left; i <= right; i++) {
-            const start = PAGE_SIZE * (i - 1) + 1;
-            const end = Math.min(start + PAGE_SIZE - 1, total);
+            const start = pageSize * (i - 1) + 1;
+            const end = Math.min(start + pageSize - 1, total);
             const classes = i === page ? 'active' : '';
             pages.push(<li className={classes} key={i} title={`${start} - ${end}`}><Link to={`${uri}/${i}`}>{i}</Link></li>);
         }

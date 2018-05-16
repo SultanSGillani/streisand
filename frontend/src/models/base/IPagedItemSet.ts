@@ -12,12 +12,14 @@ export interface INodeMap<T> {
 
 export interface IPagedItemSet<T> {
     count: number;
+    pageSize: number;
     byId: INodeMap<T>;
     pages: { [page: number]: IPage };
 }
 
 export interface INestedPage {
     count: number;
+    pageSize: number;
     pages: { [page: number]: IPage };
 }
 

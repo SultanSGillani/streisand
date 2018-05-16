@@ -1,21 +1,13 @@
 
-export interface IForumTopicResponse {
-    id: number;
-    sortOrder: number;
-    name: string;
+export interface ISingleForumTopicResponse {
     description: string;
+    group: number;
+    id: number;
     minimumUserClass: number;
-    numberOfThreads: number;
-    numberOfPosts: number;
-    latestPostId: number;
-    latestPostCreatedAt: string; // Date
-    latestPostAuthorId: number;
-    latestPostAuthorName: string;
-    latestPostThreadId: number;
-    latestPostThreadTitle: string;
+    name: string;
 }
 
-export interface IForumTopicResponse2 {
+export interface IForumTopicResponse {
     groups: {
         id: number;
         name: string;

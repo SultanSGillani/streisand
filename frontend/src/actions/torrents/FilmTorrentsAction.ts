@@ -7,9 +7,10 @@ import { fetchData } from '../ActionHelper';
 import ITorrent from '../../models/ITorrent';
 import IPagedResponse from '../../models/base/IPagedResponse';
 
+const PAGE_SIZE = globals.pageSize.wikis;
 type FilmTorrentsAction =
     { type: 'FETCHING_FILM_TORRENTS', id: number, page: number } |
-    { type: 'RECEIVED_FILM_TORRENTS', id: number, page: number, count: number, items: ITorrent[] } |
+    { type: 'RECEIVED_FILM_TORRENTS', id: number, page: number, pageSize: number, count: number, items: ITorrent[] } |
     { type: 'FAILED_FILM_TORRENTS', id: number, page: number };
 export default FilmTorrentsAction;
 type Action = FilmTorrentsAction | ErrorAction;
@@ -25,8 +26,9 @@ function fetching(props: Props): Action {
 
 function received(props: Props, response: IPagedResponse<ITorrent>): Action {
     return {
-        page: props.page,
         id: props.id,
+        page: props.page,
+        pageSize: PAGE_SIZE,
         count: response.count,
         type: 'RECEIVED_FILM_TORRENTS',
         items: response.results
@@ -43,5 +45,5 @@ export function getTorrents(id: number, page: number = 1): ThunkAction<Action> {
 }
 
 function request(token: string, props: Props): Promise<IPagedResponse<ITorrent>> {
-    return get({ token, url: `${globals.apiUrl}/torrents/?film_id=${props.id}&page=${props.page}` });
+    return get({ token, url: `${globals.apiUrl}/torrents/?film_id=${props.id}&page=${props.page}&size=${PAGE_SIZE}` });
 }
