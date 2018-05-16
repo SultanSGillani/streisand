@@ -1,11 +1,10 @@
+from django_filters import rest_framework as filters
 from rest_framework.permissions import IsAdminUser, IsAuthenticated
 from rest_framework.viewsets import ModelViewSet
-from django_filters import rest_framework as filters
 
-from api.pagination import FilmPageNumberPagination
 from films.models import Film, Collection, CollectionComment, FilmComment
-from .serializers import AdminFilmSerializer, CollectionSerializer, FilmCommentSerializer, CollectionCommentSerializer
 from .filters import FilmFilter, CollectionFilter
+from .serializers import AdminFilmSerializer, CollectionSerializer, FilmCommentSerializer, CollectionCommentSerializer
 
 
 class CollectionCommentViewSet(ModelViewSet):
@@ -56,12 +55,10 @@ class CollectionViewSet(ModelViewSet):
     ).order_by(
         '-id',
     ).distinct('id')
-    pagination_class = FilmPageNumberPagination
     filter_backends = (filters.DjangoFilterBackend,)
     filter_class = CollectionFilter
 
     def get_queryset(self):
-
         queryset = super().get_queryset()
 
         # Tag filtering
@@ -87,12 +84,10 @@ class FilmViewSet(ModelViewSet):
     ).order_by(
         '-id',
     ).distinct('id')
-    pagination_class = FilmPageNumberPagination
     filter_backends = (filters.DjangoFilterBackend,)
     filter_class = FilmFilter
 
     def get_queryset(self):
-
         queryset = super().get_queryset()
 
         # Tag filtering

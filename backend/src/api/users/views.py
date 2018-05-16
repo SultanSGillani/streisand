@@ -2,7 +2,6 @@
 
 from django.contrib.auth.models import Group
 from django.http import Http404
-
 from django_filters import rest_framework as filters
 from rest_framework import status
 from rest_framework.generics import UpdateAPIView, RetrieveAPIView, CreateAPIView
@@ -11,10 +10,8 @@ from rest_framework.response import Response
 from rest_framework.viewsets import ModelViewSet
 from rest_framework_jwt.views import ObtainJSONWebToken
 
-from users.models import User
-from api.pagination import UserPageNumberPagination
 from api.permissions import IsOwnerOrReadOnly
-
+from users.models import User
 from .filters import UserFilter, PublicUserFilter
 from .serializers import GroupSerializer, AdminUserProfileSerializer, \
     OwnedUserProfileSerializer, PublicUserProfileSerializer, ChangePasswordSerializer, NewUserSerializer
@@ -118,7 +115,7 @@ class CurrentUserView(RetrieveAPIView):
 
         self.check_object_permissions(self.request, obj)
 
-        serializer = self.get_serialezer(self.request.user, obj)
+        serializer = self.get_serializer(self.request.user, obj)
         return Response(serializer.data)
 
 
@@ -131,7 +128,6 @@ class PublicUserProfileViewSet(ModelViewSet):
     http_method_names = ['get', 'head', 'options']
     filter_backends = (filters.DjangoFilterBackend,)
     filter_class = PublicUserFilter
-    pagination_class = UserPageNumberPagination
     queryset = User.objects.all().select_related(
         'user_class',
     ).prefetch_related(
@@ -149,7 +145,6 @@ class AdminUserViewSet(ModelViewSet):
     serializer_class = AdminUserProfileSerializer
     filter_backends = (filters.DjangoFilterBackend,)
     filter_class = UserFilter
-    pagination_class = UserPageNumberPagination
     queryset = User.objects.all().select_related(
         'user_class',
         'invited_by',

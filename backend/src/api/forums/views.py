@@ -1,8 +1,5 @@
-from api.pagination import ForumsPageNumberPagination, DetailPagination
-from api.permissions import IsOwnerOrReadOnly
 from django.db.models import OuterRef, Subquery
 from django.db.models import Q
-from forums.models import ForumGroup, ForumTopic, ForumThread, ForumPost, ForumThreadSubscription, ForumReport
 from rest_framework import mixins
 from rest_framework.filters import (
     SearchFilter,
@@ -11,6 +8,8 @@ from rest_framework.filters import (
 from rest_framework.permissions import IsAuthenticated, IsAdminUser
 from rest_framework.viewsets import ModelViewSet, GenericViewSet
 
+from api.permissions import IsOwnerOrReadOnly
+from forums.models import ForumGroup, ForumTopic, ForumThread, ForumPost, ForumThreadSubscription, ForumReport
 from .serializers import (
     ForumIndexSerializer,
     ForumGroupItemSerializer,
@@ -40,7 +39,6 @@ class ForumIndexViewSet(ModelViewSet):
     filter_backends = [SearchFilter, OrderingFilter]
     search_fields = ['name', 'topics__latest_post__author__username', 'topics__latest_post__thread__title',
                      'topics__name']
-    pagination_class = DetailPagination
 
     def get_queryset(self, *args, **kwargs):
         queryset_list = ForumGroup.objects.all().prefetch_related(
@@ -65,7 +63,6 @@ class ForumGroupItemViewSet(mixins.UpdateModelMixin, mixins.CreateModelMixin, mi
     permission_classes = [IsAdminUser]
     serializer_class = ForumGroupItemSerializer
     queryset = ForumGroup.objects.all()
-    pagination_class = DetailPagination
 
 
 class ForumTopicIndexViewSet(ModelViewSet):
@@ -85,7 +82,6 @@ class ForumTopicIndexViewSet(ModelViewSet):
     filter_backends = [SearchFilter, OrderingFilter]
     search_fields = ['name', 'threads__created_by__username', 'latest_post__body', 'latest_post__author__username',
                      'threads__title', 'group__name']
-    pagination_class = DetailPagination
 
     def get_queryset(self, *args, **kwargs):
         queryset_list = ForumTopic.objects.all().prefetch_related(
@@ -113,7 +109,6 @@ class ForumTopicItemViewSet(mixins.UpdateModelMixin, mixins.CreateModelMixin, mi
     permission_classes = [IsAuthenticated]
     serializer_class = ForumTopicItemSerializer
     queryset = ForumTopic.objects.all()
-    pagination_class = DetailPagination
 
 
 class ForumThreadIndexViewSet(ModelViewSet):
@@ -139,7 +134,6 @@ class ForumThreadIndexViewSet(ModelViewSet):
     ).order_by('is_sticky', 'latest_post__created_at').distinct('is_sticky', 'latest_post__created_at', )
     filter_backends = [SearchFilter, OrderingFilter]
     search_fields = ['title', 'created_by__username', 'posts__body', 'posts__author__username', ]
-    pagination_class = DetailPagination
 
     def get_queryset(self, *args, **kwargs):
         queryset_list = ForumThread.objects.all().prefetch_related(
@@ -166,7 +160,6 @@ class ForumThreadItemViewSet(mixins.UpdateModelMixin, mixins.CreateModelMixin, m
     """
     permission_classes = [IsOwnerOrReadOnly]
     serializer_class = ForumThreadItemSerializer
-    pagination_class = DetailPagination
     queryset = ForumThread.objects.all().prefetch_related(
         'topic',
         'topic__latest_post',
@@ -202,7 +195,6 @@ class ForumPostItemViewSet(mixins.UpdateModelMixin, mixins.RetrieveModelMixin, m
     """
     permission_classes = [IsOwnerOrReadOnly]
     serializer_class = ForumPostItemSerializer
-    pagination_class = DetailPagination
     queryset = ForumPost.objects.all().prefetch_related(
         'thread',
         'thread__topic',
@@ -265,8 +257,6 @@ class NewsPostViewSet(ModelViewSet):
             '-created_at',
         ).distinct()
 
-    pagination_class = ForumsPageNumberPagination
-
     def get_object(self):
         """
         If the 'latest' identifier is requested, fetch the most recent news post.
@@ -285,7 +275,6 @@ class ForumThreadSubscriptionViewSet(ModelViewSet):
     queryset = ForumThreadSubscription.objects.all().prefetch_related(
         'thread',
     ).order_by('thread')
-    pagination_class = ForumsPageNumberPagination
 
     def perform_create(self, serializer):
         serializer.save(user=self.request.user)
@@ -308,7 +297,6 @@ class ForumReportViewSet(ModelViewSet):
         'thread',
     )
     serializer_class = ForumReportSerializer
-    pagination_class = ForumsPageNumberPagination
 
     def perform_create(self, serializer):
         serializer.save(reporting_user=self.request.user)
