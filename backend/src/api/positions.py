@@ -267,12 +267,6 @@ class PositionField(models.IntegerField):
         queryset.update(**updates)
         setattr(instance, self.get_cache_name(), (updated, None))
 
-    def south_field_triple(self):
-        from south.modelsinspector import introspector
-        field_class = "django.db.models.fields.IntegerField"
-        args, kwargs = introspector(self)
-        return (field_class, args, kwargs)
-
     def get_cache_name(self):
         try:
             return super(PositionField, self).get_cache_name()
