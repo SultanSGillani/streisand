@@ -8,7 +8,6 @@ from rest_framework.response import Response
 
 from rest_framework import mixins
 from wiki.models import WikiArticle
-from api.pagination import WikiPageNumberPagination
 
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.viewsets import GenericViewSet
@@ -26,7 +25,6 @@ class WikiArticleCreateUpdateDestroyViewSet(mixins.CreateModelMixin,
     filter_backends = [SearchFilter, OrderingFilter]
     permission_classes = [IsAuthenticated]
     search_fields = ['title', 'created_by__username', 'read_access_minimum_user_class__username__userclass']
-    pagination_class = WikiPageNumberPagination  # PageNumberPagination
 
     def partial_update(self, request, pk=None):
         serializer = WikiCreateUpdateDestroySerializer(request.user, data=request.data, partial=True)
@@ -53,7 +51,6 @@ class WikiArticleBodyViewSet(mixins.RetrieveModelMixin, mixins.UpdateModelMixin,
     permission_classes = [IsAuthenticated]
     serializer_class = WikiBodySerializer
     search_fields = ['body', 'id']
-    pagination_class = WikiPageNumberPagination  # PageNumberPagination
 
     def partial_update(self, request, pk=None):
         serializer = WikiBodySerializer(request.user, data=request.data, partial=True)
@@ -79,7 +76,6 @@ class WikiArticleViewListOnlyViewSet(mixins.ListModelMixin, GenericViewSet):
     filter_backends = [SearchFilter, OrderingFilter]
     permission_classes = [IsAuthenticated]
     search_fields = ['title', 'created_by__username']
-    pagination_class = WikiPageNumberPagination
 
     def get_queryset(self, *args, **kwargs):
         queryset_list = WikiArticle.objects.all()

@@ -4,7 +4,6 @@ from rest_framework.viewsets import ModelViewSet
 from .filters import TorrentFilter
 from django_filters import rest_framework as filters
 
-from api.pagination import TorrentPageNumberPagination
 
 from torrents.models import Torrent, TorrentComment
 from .serializers import AdminTorrentSerializer, TorrentCommentSerializer
@@ -22,7 +21,6 @@ class TorrentCommentViewset(ModelViewSet):
         'torrent__film',
         'author',
     ).prefetch_related('torrent', 'author').order_by('id').distinct('id')
-    pagination_class = TorrentPageNumberPagination
 
     """
     This will automatically associate the comment author with the torrent comment on creation,
@@ -52,7 +50,6 @@ class TorrentViewSet(ModelViewSet):
     serializer_class = AdminTorrentSerializer
     filter_backends = (filters.DjangoFilterBackend,)
     filter_class = TorrentFilter
-    pagination_class = TorrentPageNumberPagination
     queryset = Torrent.objects.all().select_related(
         'film',
         'mediainfo',
