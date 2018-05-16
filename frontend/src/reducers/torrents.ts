@@ -53,6 +53,15 @@ function byFilmId(state: Torrents = {}, action: Action): Torrents {
     }
 }
 
+function pageSize(state: number = 0, action: Action): number {
+    switch (action.type) {
+        case 'RECEIVED_FILM_TORRENTS':
+            return action.pageSize;
+        default:
+            return state;
+    }
+}
+
 function count(state: number = 0, action: Action): number {
     switch (action.type) {
         case 'RECEIVED_TORRENTS':
@@ -62,4 +71,4 @@ function count(state: number = 0, action: Action): number {
     }
 }
 
-export default combineReducers<ITorrentItemSet>({ byId, byFilmId, count, pages });
+export default combineReducers<ITorrentItemSet>({ byId, byFilmId, pageSize, count, pages });

@@ -35,4 +35,8 @@ function count(state: number = 0, action: Action): number {
     return state;
 }
 
-export default combineReducers<Store.Users>({ byId, count, pages });
+function pageSize(state: number = 0, action: Action): number {
+    return state;
+}
+
+export default combineReducers<Store.Users>({ byId, count, pages, pageSize });

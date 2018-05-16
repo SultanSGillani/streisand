@@ -13,6 +13,7 @@ export type Props = {
 
 type ConnectedState = {
     total: number;
+    pageSize: number;
     torrents: ITorrent[];
 };
 type ConnectedDispatch = {};
@@ -20,8 +21,8 @@ type ConnectedDispatch = {};
 type CombinedProps = Props & ConnectedDispatch & ConnectedState;
 class TorrentsViewComponent extends React.Component<CombinedProps> {
     public render() {
-        const torrents = this.props.torrents;
-        const pager = <Pager uri="/torrents" total={this.props.total} page={this.props.page} />;
+        const { page, total, pageSize, torrents } = this.props;
+        const pager = <Pager uri="/torrents" total={total} page={page} pageSize={pageSize} />;
         return (
             <div>
                 {pager}
@@ -35,6 +36,7 @@ class TorrentsViewComponent extends React.Component<CombinedProps> {
 const mapStateToProps = (state: Store.All, ownProps: Props): ConnectedState => {
     return {
         total: state.sealed.torrents.count,
+        pageSize: state.sealed.torrents.pageSize,
         torrents: getNodeItems({
             page: ownProps.page,
             byId: state.sealed.torrents.byId,

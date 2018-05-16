@@ -7,9 +7,10 @@ import ErrorAction from '../ErrorAction';
 import { fetchData } from '../ActionHelper';
 import IPagedResponse from '../../models/base/IPagedResponse';
 
+const PAGE_SIZE = globals.pageSize.wikis;
 type WikisAction =
     { type: 'FETCHING_WIKIS', page: number } |
-    { type: 'RECEIVED_WIKIS', page: number, count: number, items: IWiki[] } |
+    { type: 'RECEIVED_WIKIS', page: number, pageSize: number, count: number, items: IWiki[] } |
     { type: 'FAILED_WIKIS', page: number } |
     { type: 'INVALIDATE_WIKIS', page: number };
 export default WikisAction;
@@ -22,6 +23,7 @@ function fetching(page: number): Action {
 function received(page: number, response: IPagedResponse<IWiki>): Action {
     return {
         page: page,
+        pageSize: PAGE_SIZE,
         count: response.count,
         type: 'RECEIVED_WIKIS',
         items: response.results
@@ -42,5 +44,5 @@ export function getWikis(page: number = 1): ThunkAction<Action> {
 }
 
 function request(token: string, page: number): Promise<IPagedResponse<IWiki>> {
-    return get({ token, url: `${globals.apiUrl}/wiki-articles/?page=${page}` });
+    return get({ token, url: `${globals.apiUrl}/wiki-articles/?page=${page}&size=${PAGE_SIZE}` });
 }

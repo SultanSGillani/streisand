@@ -1,3 +1,5 @@
+import { push } from 'react-router-redux';
+
 import Store from '../../../store';
 import globals from '../../../utilities/globals';
 import { invalidate } from '../ForumGroupsAction';
@@ -5,6 +7,7 @@ import { post } from '../../../utilities/Requestor';
 import { IUnkownError } from '../../../models/base/IError';
 import { ThunkAction, IDispatch } from '../../ActionTypes';
 import ErrorAction, { handleError } from '../../ErrorAction';
+import { ISingleForumTopicResponse } from '../../../models/forums/IForumTopic';
 
 export interface INewForumTopicPayload {
     group: number;
@@ -41,8 +44,9 @@ export function createForumTopic(payload: INewForumTopicPayload): ThunkAction<Ac
         const lastTopic = state.sealed.forums.topics.byId[lastTopicId || -1];
         const sortOrder = ((lastTopic && lastTopic.sortOrder) || 1) + 1;
         payload.sortOrder = payload.sortOrder || sortOrder;
-        return create(state.sealed.auth.token, payload).then((response: any) => {
+        return create(state.sealed.auth.token, payload).then((response: ISingleForumTopicResponse) => {
             const action = dispatch(created(response.id));
+            dispatch(push(`/forum/topic/${response.id}`));
             dispatch(invalidate());
             return action;
         }, (error: IUnkownError) => {
@@ -52,7 +56,7 @@ export function createForumTopic(payload: INewForumTopicPayload): ThunkAction<Ac
     };
 }
 
-function create(token: string, payload: INewForumTopicPayload): Promise<any> {
+function create(token: string, payload: INewForumTopicPayload): Promise<ISingleForumTopicResponse> {
     const data = {
         sortOrder: payload.sortOrder,
         name: payload.title,

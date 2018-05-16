@@ -6,15 +6,18 @@ import { ThunkAction } from '../../ActionTypes';
 import globals from '../../../utilities/globals';
 import { get } from '../../../utilities/Requestor';
 import { IForumGroupData } from '../../../models/forums/IForumGroup';
-import { IForumTopicResponse2 } from '../../../models/forums/IForumTopic';
+import { IForumTopicResponse } from '../../../models/forums/IForumTopic';
 
+const PAGE_SIZE = globals.pageSize.threads;
 export type ForumTopicReceivedAction = {
     type: 'RECEIVED_FORUM_TOPIC',
     id: number,
     page: number,
     count: number,
+    pageSize: number;
     data: IForumGroupData
 };
+
 type ForumTopicAction =
     { type: 'FETCHING_FORUM_TOPIC', id: number, page: number } |
     ForumTopicReceivedAction |
@@ -32,11 +35,12 @@ function fetching(props: Props): Action {
     return { type: 'FETCHING_FORUM_TOPIC', id: props.id, page: props.page };
 }
 
-function received(props: Props, response: IForumTopicResponse2): Action {
+function received(props: Props, response: IForumTopicResponse): Action {
     return {
         type: 'RECEIVED_FORUM_TOPIC',
         id: props.id,
         page: props.page,
+        pageSize: PAGE_SIZE,
         count: response.threads.count,
         data: transformTopic(response)
     };
@@ -55,7 +59,6 @@ export function getThreads(id: number, page: number = 1): ThunkAction<Action> {
     return fetchData({ request, fetching, received, failure, errorPrefix, props: { id, page } });
 }
 
-const PAGE_SIZE = 10;
-function request(token: string, props: Props): Promise<IForumTopicResponse2> {
+function request(token: string, props: Props): Promise<IForumTopicResponse> {
     return get({ token, url: `${globals.apiUrl}/forum-topic-index/${props.id}/?page=${props.page}&size=${PAGE_SIZE}` });
 }

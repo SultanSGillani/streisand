@@ -43,6 +43,15 @@ function pages(state: Pages = {}, action: Action): Pages {
     }
 }
 
+function pageSize(state: number = 0, action: Action): number {
+    switch (action.type) {
+        case 'RECEIVED_FILMS':
+            return action.pageSize;
+        default:
+            return state;
+    }
+}
+
 function count(state: number = 0, action: Action): number {
     switch (action.type) {
         case 'RECEIVED_FILMS':
@@ -52,4 +61,4 @@ function count(state: number = 0, action: Action): number {
     }
 }
 
-export default combineReducers<Store.Films>({ byId, pages, count });
+export default combineReducers<Store.Films>({ byId, pages, count, pageSize });

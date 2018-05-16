@@ -13,6 +13,7 @@ export type Props = {
 
 type ConnectedState = {
     total: number;
+    pageSize: number;
     films: IFilm[];
 };
 type ConnectedDispatch = {};
@@ -20,13 +21,14 @@ type ConnectedDispatch = {};
 type CombinedProps = Props & ConnectedDispatch & ConnectedState;
 class FilmListComponent extends React.Component<CombinedProps> {
     public render() {
-        const { films, page, total } = this.props;
+        const { films, page, total, pageSize } = this.props;
+        const pager = <Pager uri="/films" total={total} page={page} pageSize={pageSize} />;
         const rows = films.map((film: IFilm) => {
             return (<FilmRow film={film} key={film.id} page={page} />);
         });
         return (
             <div>
-                <Pager uri="/films" total={total} page={page} />
+                {pager}
                 <table className="table table-striped table-hover">
                     <thead>
                         <tr>
@@ -40,7 +42,7 @@ class FilmListComponent extends React.Component<CombinedProps> {
                         {rows}
                     </tbody>
                 </table>
-                <Pager uri="/films" total={total} page={page} />
+                {pager}
             </div>
         );
     }
@@ -49,6 +51,7 @@ class FilmListComponent extends React.Component<CombinedProps> {
 const mapStateToProps = (state: Store.All, ownProps: Props): ConnectedState => {
     return {
         total: state.sealed.films.count,
+        pageSize: state.sealed.films.pageSize,
         films: getNodeItems({
             page: ownProps.page,
             byId: state.sealed.films.byId,

@@ -1,3 +1,5 @@
+import { push } from 'react-router-redux';
+
 import Store from '../../../store';
 import globals from '../../../utilities/globals';
 import { remove } from '../../../utilities/Requestor';
@@ -37,6 +39,15 @@ export function deleteForumThread(props: IDeleteThreadProps): ThunkAction<Action
         dispatch(deleting(props.thread));
         return request(state.sealed.auth.token, props.thread).then(() => {
             const action = dispatch(deleted(props.thread));
+
+            // Ideally this response would include an updated count of threads so
+            // we don't have to assume the count hasn't changed.
+            const page = state.sealed.forums.threads.byTopic[props.topic];
+            const count = (page.count || 1) - 1;
+            const lastPage = Math.ceil(count / globals.pageSize.threads) || 1;
+            if (lastPage < props.currentPage) {
+                dispatch(push(`/forum/topic/${props.topic}/${lastPage}`));
+            }
             dispatch(invalidate({ id: props.topic, page: props.currentPage }));
             return action;
         }, (error: IUnkownError) => {

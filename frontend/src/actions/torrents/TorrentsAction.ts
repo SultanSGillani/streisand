@@ -7,9 +7,10 @@ import { fetchData } from '../ActionHelper';
 import ITorrent from '../../models/ITorrent';
 import IPagedResponse from '../../models/base/IPagedResponse';
 
+const PAGE_SIZE = globals.pageSize.torrents;
 type TorrentsAction =
     { type: 'FETCHING_TORRENTS', page: number } |
-    { type: 'RECEIVED_TORRENTS', page: number, count: number, items: ITorrent[] } |
+    { type: 'RECEIVED_TORRENTS', page: number, pageSize: number, count: number, items: ITorrent[] } |
     { type: 'FAILED_TORRENTS', page: number };
 export default TorrentsAction;
 type Action = TorrentsAction | ErrorAction;
@@ -21,6 +22,7 @@ function fetching(page: number): Action {
 function received(page: number, response: IPagedResponse<ITorrent>): Action {
     return {
         page: page,
+        pageSize: PAGE_SIZE,
         count: response.count,
         type: 'RECEIVED_TORRENTS',
         items: response.results
@@ -37,5 +39,5 @@ export function getTorrents(page: number = 1): ThunkAction<Action> {
 }
 
 function request(token: string, page: number): Promise<IPagedResponse<ITorrent>> {
-    return get({ token, url: `${globals.apiUrl}/torrents/?page=${page}` });
+    return get({ token, url: `${globals.apiUrl}/torrents/?page=${page}&size=${PAGE_SIZE}` });
 }

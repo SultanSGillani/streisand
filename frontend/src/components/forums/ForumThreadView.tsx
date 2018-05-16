@@ -16,6 +16,7 @@ export type Props = {
 
 type ConnectedState = {
     total: number;
+    pageSize: number;
     posts: IForumPost[];
 };
 type ConnectedDispatch = {};
@@ -23,30 +24,33 @@ type ConnectedDispatch = {};
 type CombinedProps = Props & ConnectedDispatch & ConnectedState;
 class ForumThreadViewComponent extends React.Component<CombinedProps> {
     public render() {
-        const { page, posts, total, thread } = this.props;
+        const { page, posts, total, pageSize, thread } = this.props;
         const uri = `/forum/thread/${thread.id}`;
+        const pager = <Pager uri={uri} total={total} page={page} pageSize={pageSize} />;
         const rows = posts.map((post: IForumPost) => {
             return (<ForumPost post={post} key={post.id} page={page} />);
         });
         return (
             <div>
-                <Pager uri={uri} total={total} page={page} />
+                <h1>{thread.title}</h1>
+                {pager}
                 <div>{rows}</div>
                 <ForumReply thread={thread} />
-                <Pager uri={uri} total={total} page={page} />
+                {pager}
             </div>
         );
     }
 }
 
 const mapStateToProps = (state: Store.All, ownProps: Props): ConnectedState => {
-    const threadPages = state.sealed.forums.posts.byThread[ownProps.thread.id];
+    const pages = state.sealed.forums.posts.byThread[ownProps.thread.id];
     return {
-        total: threadPages ? threadPages.count : 0,
+        total: pages ? pages.count : 0,
+        pageSize: pages ? pages.pageSize : 0,
         posts: getItems({
             page: ownProps.page,
             byId: state.sealed.forums.posts.byId,
-            pages: threadPages ? threadPages.pages : {}
+            pages: pages ? pages.pages : {}
         })
     };
 };
