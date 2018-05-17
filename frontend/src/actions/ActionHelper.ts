@@ -7,7 +7,7 @@ export interface ISimpleFetchDataProps<A extends ReduxAction, R> {
     errorPrefix: string;
     request: (token: string) => Promise<R>;
     fetching: () => A;
-    received: (response: R) => A;
+    received: (response: R) => A | ThunkAction<A>;
     failure: () => A;
 }
 
@@ -29,7 +29,7 @@ export interface IFetchDataProps<A extends ReduxAction, P, R> {
     errorPrefix: string;
     request: (token: string, params: P) => Promise<R>;
     fetching: (params: P) => A;
-    received: (params: P, response: R) => A;
+    received: (params: P, response: R) => A | ThunkAction<A>;
     failure: (params: P) => A;
 }
 

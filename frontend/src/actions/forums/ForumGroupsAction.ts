@@ -1,10 +1,11 @@
-import { ThunkAction } from '../ActionTypes';
-import globals from '../../utilities/globals';
-import { get } from '../../utilities/Requestor';
-
+import Store from '../../store';
 import ErrorAction from '../ErrorAction';
+import globals from '../../utilities/globals';
 import { transformGroups } from './transforms';
+import { get } from '../../utilities/Requestor';
 import { simplefetchData } from '../ActionHelper';
+import { ThunkAction, IDispatch } from '../ActionTypes';
+import BulkUserAction, { getUsers } from '../users/BulkUserAction';
 import { IForumGroupResponse, IForumGroupData } from '../../models/forums/IForumGroup';
 
 type ForumGroupsction =
@@ -13,16 +14,22 @@ type ForumGroupsction =
     { type: 'FAILED_FORUM_GROUPS' } |
     { type: 'INVALIDATE_FORUM_GROUPS' };
 export default ForumGroupsction;
-type Action = ForumGroupsction | ErrorAction;
+type Action = ForumGroupsction | BulkUserAction | ErrorAction;
 
 function fetching(): Action {
     return { type: 'FETCHING_FORUM_GROUPS' };
 }
 
-function received(response: IForumGroupResponse): Action {
-    return {
-        type: 'RECEIVED_FORUM_GROUPS',
-        data: transformGroups(response)
+function received(response: IForumGroupResponse): ThunkAction<Action> {
+    return (dispatch: IDispatch<Action>, getState: () => Store.All) => {
+        const data = transformGroups(response);
+        if (data.users.length) {
+            dispatch(getUsers(data.users));
+        }
+        return dispatch({
+            type: 'RECEIVED_FORUM_GROUPS',
+            data: data
+        });
     };
 }
 

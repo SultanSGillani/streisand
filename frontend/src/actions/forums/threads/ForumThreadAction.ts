@@ -1,10 +1,12 @@
+import Store from '../../../store';
 import ErrorAction from '../../ErrorAction';
 import { fetchData } from '../../ActionHelper';
 import { transformThread } from '../transforms';
-import { ThunkAction } from '../../ActionTypes';
 import globals from '../../../utilities/globals';
 import { get } from '../../../utilities/Requestor';
+import { ThunkAction, IDispatch } from '../../ActionTypes';
 import { IForumGroupData } from '../../../models/forums/IForumGroup';
+import BulkUserAction, { getUsers } from '../../users/BulkUserAction';
 import { IForumThreadResponse } from '../../../models/forums/IForumThread';
 
 const PAGE_SIZE = 3 || globals.pageSize.posts;
@@ -23,7 +25,7 @@ type ForumThreadAction =
     { type: 'FAILED_FORUM_THREAD', id: number, page: number } |
     { type: 'INVALIDATE_FORUM_THREAD', id: number, page: number };
 export default ForumThreadAction;
-type Action = ForumThreadAction | ErrorAction;
+type Action = ForumThreadAction | BulkUserAction | ErrorAction;
 
 type Props = {
     id: number;
@@ -34,14 +36,20 @@ function fetching(props: Props): Action {
     return { type: 'FETCHING_FORUM_THREAD', id: props.id, page: props.page };
 }
 
-function received(props: Props, response: IForumThreadResponse): Action {
-    return {
-        type: 'RECEIVED_FORUM_THREAD',
-        id: props.id,
-        page: props.page,
-        pageSize: PAGE_SIZE,
-        count: response.posts.count,
-        data: transformThread(props.id, response)
+function received(props: Props, response: IForumThreadResponse): ThunkAction<Action> {
+    return (dispatch: IDispatch<Action>, getState: () => Store.All) => {
+        const data = transformThread(response);
+        if (data.users.length) {
+            dispatch(getUsers(data.users));
+        }
+        return dispatch({
+            type: 'RECEIVED_FORUM_THREAD',
+            id: props.id,
+            page: props.page,
+            pageSize: PAGE_SIZE,
+            count: response.posts.count,
+            data: data
+        });
     };
 }
 

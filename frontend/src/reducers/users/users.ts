@@ -13,14 +13,11 @@ type Action = UserAction | ForumAction | NewsAction;
 type ItemMap = INodeMap<IUser>;
 function byId(state: ItemMap = {}, action: Action): ItemMap {
     switch (action.type) {
-        case 'RECEIVED_FORUM_GROUPS':
-        case 'RECEIVED_FORUM_TOPIC':
-        case 'RECEIVED_FORUM_THREAD':
-        case 'RECEIVED_NEWS_POST':
-            return addLoadedNodes(state, action.data.users);
         case 'RECEIVED_USER':
         case 'RECEIVED_CURRENT_USER':
             return addLoadedNode(state, action.user);
+        case 'RECEIVED_BULK_USERS':
+            return addLoadedNodes(state, action.users);
         default:
             return state;
     }

@@ -1,7 +1,8 @@
-import { IForumPostResponse, IForumPost, IForumPostResponse2 } from '../../models/forums/IForumPost';
-import { IForumGroupResponse, IForumGroupData } from '../../models/forums/IForumGroup';
 import { IForumTopicResponse } from '../../models/forums/IForumTopic';
 import { IForumThreadResponse } from '../../models/forums/IForumThread';
+import { IForumGroupResponse, IForumGroupData } from '../../models/forums/IForumGroup';
+import { IForumPost, IForumPostResponse } from '../../models/forums/IForumPost';
+import { INewsPostData, INewsPostResponse } from '../../models/forums/INewsPost';
 
 export function transformGroups(response: IForumGroupResponse): IForumGroupData {
     const result: IForumGroupData = {
@@ -45,6 +46,8 @@ export function transformGroups(response: IForumGroupResponse): IForumGroupData 
                     author: topic.latestPost.author,
                     createdAt: topic.latestPost.createdAt
                 });
+
+                result.users.push(topic.latestPost.author);
             }
         }
     }
@@ -87,12 +90,24 @@ export function transformTopic(response: IForumTopicResponse): IForumGroupData {
             numberOfPosts: thread.numberOfPosts,
             latestPost: thread.latestPost && thread.latestPost.id
         });
+        result.users.push(thread.createdBy);
+
+        if (thread.latestPost) {
+            const post = thread.latestPost;
+            result.posts.push({
+                id: post.id,
+                thread: post.thread,
+                author: post.author,
+                createdAt: post.createdAt
+            });
+            result.users.push(post.author);
+        }
     }
 
     return result;
 }
 
-export function transformThread(thread: number, response: IForumThreadResponse): IForumGroupData {
+export function transformThread(response: IForumThreadResponse): IForumGroupData {
     const result: IForumGroupData = {
         groups: [],
         topics: [],
@@ -123,6 +138,7 @@ export function transformThread(thread: number, response: IForumThreadResponse):
         isLocked: response.isLocked,
         isSticky: response.isSticky
     });
+    result.users.push(response.createdBy);
 
     for (const post of response.posts.results) {
         result.posts.push({
@@ -134,53 +150,39 @@ export function transformThread(thread: number, response: IForumThreadResponse):
             body: post.body,
             modifiedBy: post.modifiedBy
         });
+        result.users.push(post.author);
     }
 
     return result;
 }
 
-export function transformPost(post: IForumPostResponse): IForumGroupData {
+export function transformNewsPost(post: INewsPostResponse): INewsPostData {
     if (!post || !post.id) {
-        return { groups: [], topics: [], threads: [], posts: [], users: [] };
+        return { threads: [], posts: [], users: [] };
     }
-    const result: IForumGroupData = {
-        groups: [],
-        topics: [{
-            id: post.topicId,
-            title: post.topicName
-        }],
+    const result: INewsPostData = {
         threads: [{
-            id: post.thread,
             title: post.threadTitle,
-            topic: post.topicId
+            id: post.thread
         }],
         posts: [{
             id: post.id,
             thread: post.thread,
-            author: post.authorId,
+            author: post.author,
             createdAt: post.createdAt,
             modifiedAt: post.modifiedAt,
             body: post.body,
-            modifiedBy: post.modifiedById
+            modifiedBy: post.modifiedBy
         }],
-        users: [{
-            id: post.authorId,
-            username: post.authorUsername
-        }]
+        users: []
     };
 
-    // post modifier
-    if (post.modifiedById) {
-        result.users.push({
-            id: post.modifiedById,
-            username: post.modifiedByUsername
-        });
-    }
-
+    result.users.push(post.author);
+    result.users.push(post.modifiedBy);
     return result;
 }
 
-export function transformPostOnly(response: IForumPostResponse2): IForumPost {
+export function transformPostOnly(response: IForumPostResponse): IForumPost {
     return {
         id: response.id,
         thread: response.thread,

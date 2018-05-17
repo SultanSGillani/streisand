@@ -31,11 +31,13 @@ class ForumThreadRowComponent extends React.Component<CombinedProps> {
             ? <ForumPostCell id={thread.latestPost} />
             : <EmptyThreadCell thread={thread} />;
         const onDelete = () => {
-            this.props.deleteForumThread({
-                topic: thread.topic,
-                thread: thread.id,
-                currentPage: this.props.page
-            });
+            if (thread.topic) {
+                this.props.deleteForumThread({
+                    topic: thread.topic,
+                    thread: thread.id,
+                    currentPage: this.props.page
+                });
+            }
         };
         return (
             <tr>
@@ -59,7 +61,7 @@ const mapStateToProps = (state: Store.All, ownProps: Props): ConnectedState => {
             id: ownProps.thread && ownProps.thread.createdBy,
             byId: state.sealed.users.byId
         })
-     };
+    };
 };
 
 const mapDispatchToProps = (dispatch: redux.Dispatch<Store.All>): ConnectedDispatch => ({
