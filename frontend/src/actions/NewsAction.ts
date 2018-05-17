@@ -1,26 +1,32 @@
-import globals from '../utilities/globals';
-import { ThunkAction } from './ActionTypes';
-import { get } from '../utilities/Requestor';
-
+import Store from '../store';
 import ErrorAction from './ErrorAction';
+import globals from '../utilities/globals';
+import { get } from '../utilities/Requestor';
 import { simplefetchData } from './ActionHelper';
-import { transformPost } from './forums/transforms';
-import { IForumGroupData } from '../models/forums/IForumGroup';
-import { IForumPostResponse } from '../models/forums/IForumPost';
+import { ThunkAction, IDispatch } from './ActionTypes';
+import { transformNewsPost } from './forums/transforms';
+import BulkUserAction, { getUsers } from './users/BulkUserAction';
+import { INewsPostResponse, INewsPostData } from '../models/forums/INewsPost';
 
 type NewsAction =
     { type: 'FETCHING_NEWS_POST' } |
-    { type: 'RECEIVED_NEWS_POST', data: IForumGroupData } |
+    { type: 'RECEIVED_NEWS_POST', data: INewsPostData } |
     { type: 'FAILED_NEWS_POST' };
 export default NewsAction;
-type Action = NewsAction | ErrorAction;
+type Action = NewsAction | BulkUserAction | ErrorAction;
 
 function fetching(): Action {
     return { type: 'FETCHING_NEWS_POST' };
 }
 
-function received(post: IForumPostResponse): Action {
-    return { type: 'RECEIVED_NEWS_POST', data: transformPost(post) };
+function received(news: INewsPostResponse): ThunkAction<Action> {
+    return (dispatch: IDispatch<Action>, getState: () => Store.All) => {
+        const data = transformNewsPost(news);
+        if (data.users.length) {
+            dispatch(getUsers(data.users));
+        }
+        return dispatch({ type: 'RECEIVED_NEWS_POST', data });
+    };
 }
 
 function failure(): Action {
@@ -32,6 +38,6 @@ export function getLatestNews(): ThunkAction<Action> {
     return simplefetchData({ request, fetching, received, failure, errorPrefix });
 }
 
-function request(token: string): Promise<IForumPostResponse> {
+function request(token: string): Promise<INewsPostResponse> {
     return get({ token, url: `${globals.apiUrl}/news-posts/latest/` });
 }

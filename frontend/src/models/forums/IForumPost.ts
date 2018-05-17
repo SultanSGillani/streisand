@@ -1,21 +1,5 @@
 
 export interface IForumPostResponse {
-    id: number;
-    thread: number;
-    threadTitle: string;
-    topicId: number;
-    topicName: string;
-    authorId: number;
-    authorUsername: string;
-    body: string;
-    bodyHtml: string;
-    createdAt: string; // Date
-    modifiedAt: string; // Date
-    modifiedById: number;
-    modifiedByUsername: string;
-}
-
-export interface IForumPostResponse2 {
     author: number;
     id: number;
     body: string;

@@ -1,4 +1,3 @@
-import IUser from '../IUser';
 import IForumPost from './IForumPost';
 import IForumThread from './IForumThread';
 import { IForumTopic } from './IForumTopic';
@@ -39,7 +38,7 @@ export interface IForumGroupData {
     topics: IForumTopic[];
     threads: IForumThread[];
     posts: IForumPost[];
-    users: IUser[];
+    users: number[];
 }
 
 export default IForumGroup;

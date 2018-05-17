@@ -44,7 +44,7 @@ export interface IForumThreadResponse {
 export interface IForumThread {
     id: number;
     title: string;
-    topic: number;
+    topic?: number;
     createdAt?: string; // Date
     createdBy?: number;
     isLocked?: boolean;
