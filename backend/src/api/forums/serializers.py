@@ -289,6 +289,8 @@ class ForumThreadIndexSerializer(api_mixins.AllowFieldLimitingMixin, ModelSerial
 
 
 class NewsSerializer(api_mixins.AllowFieldLimitingMixin, ModelSerializer):
+    thread_title = serializers.PrimaryKeyRelatedField(source='thread.title', read_only=True)
+
     class Meta:
         model = ForumPost
         fields = (
@@ -300,7 +302,8 @@ class NewsSerializer(api_mixins.AllowFieldLimitingMixin, ModelSerializer):
             'modified_by',
             'modified_at',
             'modified_count',
-            'thread'
+            'thread',
+            'thread_title',
 
         )
 
