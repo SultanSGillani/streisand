@@ -39,3 +39,9 @@ class WikiViewSet(MultiSerializerViewSetMixin, viewsets.ModelViewSet):
                 Q(read_access_minimum_user_class__username__userclass__icontains=query)
             ).distinct()
         return queryset_list
+
+    def perform_create(self, serializer):
+        serializer.save(created_by=self.request.user)
+
+    def perform_update(self, serializer):
+        serializer.save(modified_by=self.request.user)

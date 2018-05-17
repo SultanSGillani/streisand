@@ -18,12 +18,22 @@ LIST_FIELDS = (
 )
 
 
+READ_ONLY_FIELDS = (
+    'id',
+    'created_at',
+    'created_by',
+    'modified_at',
+    'modified_by',
+)
+
+
 class WikiDetailSererializer(ModelSerializer):
     permissions = DRYPermissionsField()
 
     class Meta:
         model = WikiArticle
         fields = LIST_FIELDS + ('body', 'permissions')
+        read_only_fields = READ_ONLY_FIELDS
 
 
 class WikiListSerializer(ModelSerializer):
