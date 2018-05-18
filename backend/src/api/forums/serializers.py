@@ -135,7 +135,6 @@ class ForumGroupForTopicSerializer(ModelSerializer):
 class ForumTopicIndexSerializer(api_mixins.AllowFieldLimitingMixin, ModelSerializer):
     groups = ForumGroupForTopicSerializer(source='group', read_only=True)
     threads = PaginatedRelationField(ForumThreadForTopicSerializer, paginator=RelationPaginator)
-    latest_post = ForumPostForTopicSerializer()
 
     class Meta:
         model = ForumTopic
