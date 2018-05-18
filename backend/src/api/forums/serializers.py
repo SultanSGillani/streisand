@@ -1,10 +1,10 @@
 # -*- coding: utf-8 -*-
+from api import mixins as api_mixins
 from api.utils import PaginatedRelationField, RelationPaginator
 from forums.models import ForumGroup, ForumPost, ForumThread, ForumTopic, ForumThreadSubscription, ForumReport
 from rest_framework import serializers
 from rest_framework.serializers import ModelSerializer
 from users.models import User
-from api import mixins as api_mixins
 
 
 class UserForForumSerializer(ModelSerializer):
@@ -90,7 +90,24 @@ class ForumGroupItemSerializer(ModelSerializer):
         )
 
 
+class ForumPostForTopicSerializer(ModelSerializer):
+    author = UserForForumSerializer()
+    modified_by = UserForForumSerializer()
+
+    class Meta:
+        model = ForumPost
+        fields = (
+            'id',
+            'thread',
+            'author',
+            'created_at',
+            'modified_by',
+        )
+
+
 class ForumThreadForTopicSerializer(ModelSerializer):
+    latest_post = ForumPostForTopicSerializer()
+
     class Meta:
         model = ForumThread
         fields = (
@@ -115,25 +132,9 @@ class ForumGroupForTopicSerializer(ModelSerializer):
         )
 
 
-class ForumPostForTopicSerializer(ModelSerializer):
-    author = UserForForumSerializer()
-    modified_by = UserForForumSerializer()
-
-    class Meta:
-        model = ForumPost
-        fields = (
-            'id',
-            'thread',
-            'author',
-            'created_at',
-            'modified_by',
-        )
-
-
 class ForumTopicIndexSerializer(api_mixins.AllowFieldLimitingMixin, ModelSerializer):
     groups = ForumGroupForTopicSerializer(source='group', read_only=True)
     threads = PaginatedRelationField(ForumThreadForTopicSerializer, paginator=RelationPaginator)
-    latest_post = ForumPostForTopicSerializer()
 
     class Meta:
         model = ForumTopic

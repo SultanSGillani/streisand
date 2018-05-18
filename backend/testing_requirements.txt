@@ -13,3 +13,4 @@ pyflakes==1.6.0
 invoke==0.23.0
 coverage==4.5.1
 factory-boy
+model_mommy==1.5.1
