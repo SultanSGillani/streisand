@@ -27,7 +27,8 @@ class ForumThreadForIndexSerializer(ModelSerializer, serializers.PrimaryKeyRelat
         fields = (
             'id',
             'title',
-            'topic')
+            'topic'
+        )
 
 
 class ForumPostForIndexSerializer(ModelSerializer):
@@ -91,17 +92,17 @@ class ForumGroupItemSerializer(ModelSerializer):
 
 
 class ForumPostForTopicSerializer(ModelSerializer):
-    author = UserForForumSerializer()
-    modified_by = UserForForumSerializer()
+    topic = serializers.PrimaryKeyRelatedField(source='thread.topic', read_only=True)
 
     class Meta:
         model = ForumPost
         fields = (
             'id',
             'thread',
+            'topic',
             'author',
             'created_at',
-            'modified_by',
+            'position',
         )
 
 
@@ -118,8 +119,9 @@ class ForumThreadForTopicSerializer(ModelSerializer):
             'is_sticky',
             'created_at',
             'created_by',
-            'latest_post',
             'number_of_posts',
+            'latest_post',
+
         )
 
 
@@ -146,15 +148,15 @@ class ForumTopicIndexSerializer(api_mixins.AllowFieldLimitingMixin, ModelSeriali
             'description',
             'minimum_user_class',
             'threads',
+            'latest_post',
             'number_of_threads',
             'number_of_posts',
-            'latest_post',
         )
+
+        read_only_fields = ('number_of_posts', 'number_of_threads')
 
     extra_kwargs = {
         'sort_order': {'required': False},
-        'number_of_posts': {'read_only': True},
-        'number_of_threads': {'read_only': True},
     }
 
 
@@ -173,10 +175,10 @@ class ForumTopicItemSerializer(ModelSerializer):
             'latest_post',
         )
 
+        read_only_fields = ('number_of_posts', 'number_of_threads')
+
         extra_kwargs = {
             'sort_order': {'required': False},
-            'number_of_posts': {'read_only': True},
-            'number_of_threads': {'read_only': True},
         }
 
 
@@ -230,13 +232,7 @@ class ForumPostItemSerializer(ModelSerializer):
 
         )
 
-    extra_kwargs = {
-        'position': {'read_only': True},
-        'created_at': {'read_only': True},
-        'modified_at': {'read_only': True},
-        'modified_by': {'read_only': True},
-        'total': {'read_only': True}
-    }
+        read_only_fields = ('position', 'created_at', 'modified_at', 'modified_by', 'total')
 
     def get_total(self, obj):
         return obj.thread.number_of_posts
@@ -257,10 +253,7 @@ class ForumThreadItemSerializer(ModelSerializer):
             'topic',
         )
 
-    extra_kwargs = {
-        'modified_at': {'read_only': True},
-        'modified_by': {'read_only': True},
-    }
+        read_only_fields = ('modified_at', 'modified_by')
 
 
 class ForumThreadIndexSerializer(api_mixins.AllowFieldLimitingMixin, ModelSerializer):
