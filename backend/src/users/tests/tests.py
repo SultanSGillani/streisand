@@ -23,5 +23,6 @@ class UserTestMommy(TestCase):
         new_user_class = mommy.make('users.UserClass')
         self.assertTrue(isinstance(new_user, User))
         self.assertTrue(isinstance(new_user_class, UserClass))
+
         self.assertEqual(new_user.__str__(), new_user.username)
         self.assertEqual(new_user_class.__str__(), new_user_class.name)
