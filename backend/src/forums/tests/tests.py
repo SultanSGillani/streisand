@@ -7,7 +7,7 @@ from forums.models import ForumGroup, ForumTopic, ForumThread, ForumPost
 
 class ForumTestMommy(TestCase):
     """
-    Class to test the Forums
+    Class to test the Forums, needs way more tests.
     """
 
     def setUp(self):
@@ -19,7 +19,7 @@ class ForumTestMommy(TestCase):
         self.thread = mommy.make(ForumThread)
         self.post = mommy.make(ForumPost)
 
-    def test_film_creation_mommy(self):
+    def test_forum_creation_mommy(self):
         new_group = mommy.make('forums.ForumGroup')
         new_topic = mommy.make('forums.ForumTopic')
         new_thread = mommy.make('forums.ForumThread')
