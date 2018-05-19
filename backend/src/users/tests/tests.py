@@ -1,7 +1,7 @@
 # -*- coding:utf-8 -*-
 from django.test import TestCase
 from model_mommy import mommy
-import uuid
+
 from users.models import User, UserClass
 
 
@@ -18,7 +18,6 @@ class UserTestMommy(TestCase):
         self.user = mommy.make(User)
         self.user_class = mommy.make(UserClass)
 
-
     def test_user_creation_mommy(self):
         new_user = mommy.make('users.User')
         new_user_class = mommy.make('users.UserClass')
@@ -27,4 +26,3 @@ class UserTestMommy(TestCase):
 
         self.assertEqual(new_user.__str__(), new_user.username)
         self.assertEqual(new_user_class.__str__(), new_user_class.name)
-
