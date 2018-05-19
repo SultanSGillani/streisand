@@ -1,6 +1,7 @@
 import * as React from 'react';
 import * as redux from 'redux';
 import { connect } from 'react-redux';
+import { Card, CardBody, CardHeader, Button, ButtonGroup, CardFooter } from 'reactstrap';
 
 import Store from '../../store';
 import Avatar from '../users/Avatar';
@@ -67,53 +68,55 @@ class ForumPostComponent extends React.Component<CombinedProps, State> {
 
         if (this.state.editMode) {
             return (
-                <div className="panel panel-primary">
-                    <div className="panel-heading" style={{ display: 'flex', alignItems: 'center' }}>
-                        <span style={{ flex: 'auto' }}>
-                            <UserLink user={author} /> {posted}
-                        </span>
-                    </div>
-                    <div className="panel-body">
+                <Card color="primary" className="mb-2">
+                    <CardHeader>
+                        <UserLink user={author} /> {posted}
+                    </CardHeader>
+                    <CardBody>
                         <Editor content={post.body} size="small" receiveHandle={onHandle} />
-                    </div>
-                    <div className="panel-footer">
-                        <div className=" btn-toolbar" style={{ display: 'flex', flexFlow: 'row-reverse' }}>
-                            <button type="button" className="btn btn-sm btn-primary" onClick={onSave}>
-                                Update post
-                            </button>
-                            <button type="button" className="btn btn-sm btn-default" onClick={onCancel}>
-                                Cancel
-                            </button>
+                    </CardBody>
+                    <CardFooter>
+                        <div className="row m-0 justify-content-end">
+                            <ButtonGroup>
+                                <Button onClick={onCancel}>Cancel</Button>
+                                <Button color="primary" onClick={onSave}>Update post</Button>
+                            </ButtonGroup>
                         </div>
-                    </div>
-                </div>
+                    </CardFooter>
+                </Card >
             );
         }
 
         const avatar = this.props.screenSize >= ScreenSize.medium ? <Avatar /> : undefined;
         return (
-            <div className="panel panel-default">
-                <div className="panel-heading" style={{ display: 'flex', alignItems: 'center' }}>
-                    <span style={{ flex: 'auto' }}>
-                        <UserLink user={author} /> {posted}
-                    </span>
-                    <div className="btn-toolbar" style={{ flex: 'none' }}>
-                        <button className="btn btn-sm btn-default" onClick={onEdit}>
-                            <i className="fa fa-pencil" style={{ fontSize: '14px' }} />
-                        </button>
-                        <button className="btn btn-sm btn-danger" onClick={onDelete}>
-                            <i className="fa fa-trash" style={{ fontSize: '14px' }} />
-                        </button>
+            <Card className="mb-2">
+                <CardHeader>
+                    <div className="row">
+                        <div className="col-auto"><UserLink user={author} /> {posted}</div>
+                        <div className="col-auto ml-auto">
+                            <ButtonGroup size="sm">
+                                <Button onClick={onEdit}>
+                                    <i className="fas fa-inverse fa-pencil-alt fa-lg" />
+                                </Button>
+                                <Button color="danger" onClick={onDelete}>
+                                    <i className="fas fa-trash fa-lg" />
+                                </Button>
+                            </ButtonGroup>
+                        </div>
                     </div>
-                </div>
-                <div className="panel-body" style={{ display: 'flex' }}>
-                    {avatar}
-                    <div style={{ flex: 'auto', marginLeft: '8px' }}>
-                        <TextView content={post.body || ''} />
+                </CardHeader>
+                <CardBody>
+                    <div className="row">
+                        <div className="col-auto">
+                            {avatar}
+                        </div>
+                        <div className="col">
+                            <TextView content={post.body || ''} />
+                        </div>
                     </div>
-                </div>
+                </CardBody>
                 {this._getStandardFooter()}
-            </div>
+            </Card >
         );
     }
 
@@ -128,9 +131,11 @@ class ForumPostComponent extends React.Component<CombinedProps, State> {
         }
         if (content) {
             return (
-                <div className="panel-footer" style={{ display: 'flex', flexFlow: 'row-reverse' }}>
-                    {content}
-                </div>
+                <CardFooter>
+                    <div className="row m-0 justify-content-end">
+                        {content}
+                    </div>
+                </CardFooter>
             );
         }
     }

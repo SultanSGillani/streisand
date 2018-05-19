@@ -5,6 +5,7 @@ import { connect } from 'react-redux';
 
 import Store from '../../store';
 import ForumPostCell from './ForumPostCell';
+import DeleteCell from '../generic/DeleteCell';
 import IForumTopic from '../../models/forums/IForumTopic';
 import { deleteForumTopic, IDeleteTopicProps } from '../../actions/forums/topics/DeleteTopicAction';
 
@@ -34,11 +35,7 @@ class ForumTopicRowComponent extends React.Component<CombinedProps> {
                 <ForumPostCell id={topic.latestPost} />
                 <td className="align-middle">{topic.numberOfThreads}</td>
                 <td className="align-middle">{topic.numberOfPosts}</td>
-                <td style={{ display: 'flex', flexFlow: 'row-reverse' }}>
-                    <button className="btn btn-sm btn-danger" onClick={onDelete}>
-                        <i className="fa fa-trash" style={{ fontSize: '14px' }} />
-                    </button>
-                </td>
+                <DeleteCell onDelete={onDelete} />
             </tr>
         );
     }

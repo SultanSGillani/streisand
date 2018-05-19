@@ -1,4 +1,5 @@
 import * as React from 'react';
+import { Table } from 'reactstrap';
 import { connect } from 'react-redux';
 
 import Pager from '../Pager';
@@ -26,10 +27,11 @@ class WikiListComponent extends React.Component<CombinedProps> {
         const rows = wikis.map((wiki: IWiki) => {
             return (<WikiRow wiki={wiki} key={wiki.id} page={page} />);
         });
+        // TODO: Create issue on reactstrap to fix the typings for Table and include borderless as a prop
         return (
             <div>
                 {pager}
-                <table className="table table-striped table-hover">
+                <Table className="table-borderless" striped hover>
                     <thead>
                         <tr>
                             <th>Title</th>
@@ -39,7 +41,7 @@ class WikiListComponent extends React.Component<CombinedProps> {
                     <tbody>
                         {rows}
                     </tbody>
-                </table>
+                </Table>
                 {pager}
             </div>
         );

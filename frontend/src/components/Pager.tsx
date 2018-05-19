@@ -1,14 +1,10 @@
 import * as React from 'react';
-import { Link } from 'react-router';
 import { connect } from 'react-redux';
+import { LinkContainer } from 'react-router-bootstrap';
+import { Pagination, PaginationItem, PaginationLink } from 'reactstrap';
 
 import Store from '../store';
 import { ScreenSize } from '../models/IDeviceInfo';
-
-const center = {
-    'display': 'flex',
-    'justify-content': 'center'
-};
 
 export type Props = {
     uri: string;
@@ -44,21 +40,32 @@ class PagerComponent extends React.Component<CombinedProps> {
         for (let i = left; i <= right; i++) {
             const start = pageSize * (i - 1) + 1;
             const end = Math.min(start + pageSize - 1, total);
-            const classes = i === page ? 'active' : '';
-            pages.push(<li className={classes} key={i} title={`${start} - ${end}`}><Link to={`${uri}/${i}`}>{i}</Link></li>);
+            pages.push(<Page key={i} active={i === page} url={`${uri}/${i}`} title={`${start} - ${end}`} value={i} />);
         }
         return (
-            <ul style={center} className="pagination">
-                <li className={page === 1 ? 'disabled' : ''}>
-                    <Link to={`${uri}/1`}>«</Link>
-                </li>
+            <Pagination className="justify-content-center">
+                <Page disabled={page === 1} url={`${uri}/1`} value="«" title="first page" />
                 {pages}
-                <li className={page === pageCount ? 'disabled' : ''}>
-                    <Link to={`${uri}/${pageCount}`}>» </Link>
-                </li>
-            </ul>
+                <Page disabled={page === pageCount} url={`${uri}/${pageCount}`} value="»" title="last page" />
+            </Pagination>
         );
     }
+}
+
+type PageProps = {
+    url: string;
+    title: string;
+    value: string | number;
+    active?: boolean;
+    disabled?: boolean;
+};
+
+function Page(props: PageProps) {
+    return (
+        <PaginationItem title={props.title} disabled={props.disabled} active={props.active}>
+            <LinkContainer to={props.url}><PaginationLink>{props.value}</PaginationLink></LinkContainer>
+        </PaginationItem>
+    );
 }
 
 function getPagesToShow(screenSize: ScreenSize): number {

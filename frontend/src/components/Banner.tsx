@@ -1,37 +1,16 @@
 import * as React from 'react';
-
-export const enum BannerType {
-    warning,
-    error,
-    info,
-    success
-}
+import { Alert } from 'reactstrap';
 
 export interface IBannerProps {
-    type: BannerType;
+    type: 'primary' | 'secondary' | 'success' | 'danger' | 'warning' | 'info' | 'light' | 'dark';
+    children?: React.ReactNode;
     onClose?: () => void;
 }
 
-const TYPES = {
-    [BannerType.warning]: 'alert-warning',
-    [BannerType.error]: 'alert-danger',
-    [BannerType.info]: 'alert-info',
-    [BannerType.success]: 'alert-success'
-};
-
-export default class Banner extends React.Component<IBannerProps> {
-    public render() {
-        let classes = `alert ${TYPES[this.props.type]}`;
-        let button;
-        if (this.props.onClose) {
-            classes += ' alert-dismissible';
-            button = <button type="button" className="close" onClick={this.props.onClose}>×</button>;
-        }
-        return (
-            <div className={classes}>
-                {button}
-                {this.props.children}
-            </div>
-        );
-    }
+export default function Banner(props: IBannerProps) {
+    return (
+        <Alert color={props.type} toggle={props.onClose}>
+            {props.children}
+        </Alert>
+    );
 }

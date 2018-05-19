@@ -1,6 +1,7 @@
 import * as React from 'react';
 import * as redux from 'redux';
 import { connect } from 'react-redux';
+import { Card, Form, FormGroup, Input, Label, CardBody, CardFooter, Button, CardTitle } from 'reactstrap';
 
 import Store from '../store';
 import { showError } from '../actions/ErrorAction';
@@ -34,40 +35,33 @@ class ChangePasswordComponent extends React.Component<CombinedProps, State> {
     public render() {
         const changePassword = this._changePassword.bind(this);
         return (
-            <div className="well">
-                <form className="form-horizontal" onKeyPress={changePassword}>
-                    <fieldset>
-                        <legend>Change your password</legend>
-                        <div className="form-group">
-                            <label htmlFor="inputOldPassword1" className="col-lg-2 control-label">Current password</label>
-                            <div className="col-lg-10">
-                                <input type="password" className="form-control" id="inputOldPassword1" autoComplete="current-password"
-                                    placeholder="Current password" value={this.state.oldPassword}
-                                    onChange={(event) => this.setState({ oldPassword: event.target.value })} />
-                            </div>
-                        </div>
-                        <div className="form-group">
-                            <label htmlFor="inputNewPassword1" className="col-lg-2 control-label">New Password</label>
-                            <div className="col-lg-10">
-                                <input type="password" className="form-control" id="inputNewPassword1" autoComplete="new-password"
-                                    placeholder="New password" value={this.state.newPassword}
-                                    onChange={(event) => this.setState({ newPassword: event.target.value })} />
-                            </div>
-                        </div>
-                        <div className="form-group">
-                            <label htmlFor="inputConfirmation1" className="col-lg-2 control-label">New password confirmation</label>
-                            <div className="col-lg-10">
-                                <input type="password" className="form-control" id="inputConfirmation1" autoComplete="off"
-                                    placeholder="New password" value={this.state.confirmation}
-                                    onChange={(event) => this.setState({ confirmation: event.target.value })} />
-                            </div>
-                        </div>
-                    </fieldset>
-                </form>
-                <div>
-                    <button className="btn btn-primary" onClick={() => changePassword()}>Submit</button>
-                </div>
-            </div>
+            <Card>
+                <CardBody>
+                    <CardTitle>Change your password</CardTitle>
+                    <Form onKeyPress={changePassword}>
+                        <FormGroup>
+                            <Label for="inputOldPassword">Current password</Label>
+                            <Input type="password" id="inputOldPassword" placeholder="Current password" autoComplete="current-password"
+                                value={this.state.oldPassword} onChange={(event) => this.setState({ oldPassword: event.target.value })} />
+                        </FormGroup>
+                        <FormGroup>
+                            <Label for="inputNewPassword">New Password</Label>
+                            <Input type="password" name="newPassword" id="inputNewPassword" placeholder="New password" autoComplete="new-password"
+                                value={this.state.newPassword} onChange={(event) => this.setState({ newPassword: event.target.value })} />
+                        </FormGroup>
+                        <FormGroup>
+                            <Label for="inputConfirmation">New password confirmation</Label>
+                            <Input type="password" name="passwordConfirmation" id="inputConfirmation" placeholder="New password" autoComplete="off"
+                                value={this.state.confirmation} onChange={(event) => this.setState({ confirmation: event.target.value })} />
+                        </FormGroup>
+                    </Form>
+                </CardBody>
+                <CardFooter>
+                    <div className="row m-0 justify-content-end">
+                        <Button className="col-auto" color="primary" onClick={() => changePassword()}>Submit</Button>
+                    </div>
+                </CardFooter>
+            </Card>
         );
     }
 
@@ -81,6 +75,7 @@ class ChangePasswordComponent extends React.Component<CombinedProps, State> {
         } else if (this.state.oldPassword && this.state.newPassword) {
             this.props.changePassword(this.state.oldPassword, this.state.newPassword);
         }
+        return false;
     }
 }
 

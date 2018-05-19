@@ -1,6 +1,7 @@
 import * as React from 'react';
 import * as redux from 'redux';
 import { connect } from 'react-redux';
+import { Card, CardHeader, CardBody, CardTitle } from 'reactstrap';
 
 import Empty from './Empty';
 import Store from '../store';
@@ -49,25 +50,32 @@ class LatestNewsComponent extends React.Component<CombinedProps, void> {
 
         if (post.id === undefined) {
             return (
-                <div className="panel panel-default">
-                    <div className="panel-heading">Latest news</div>
-                    <div className="panel-body">
+                <Card>
+                    <CardHeader>Latest news</CardHeader>
+                    <CardBody>
                         <TextView content="Welcome! There are currently no news posts on the site yet." />
-                    </div>
-                </div>
+                    </CardBody>
+                </Card>
             );
         }
 
         const thread = this.props.thread || { title: '' };
         const posted = getDateDiff({ past: post.createdAt });
-
         return (
-            <div className="panel panel-default">
-                <div className="panel-heading">{thread.title} - posted by <UserLink user={this.props.author} /> {posted}</div>
-                <div className="panel-body">
+            <Card>
+                <CardHeader>
+                    <div className="row">
+                        <div className="col-auto">Latest news</div>
+                        <div className="col-auto ml-auto">
+                            <small>posted by <UserLink user={this.props.author} /> {posted}</small>
+                        </div>
+                    </div>
+                </CardHeader>
+                <CardBody>
+                    <CardTitle>{thread.title}</CardTitle>
                     <TextView content={post.body || ''} />
-                </div>
-            </div>
+                </CardBody>
+            </Card>
         );
     }
 }

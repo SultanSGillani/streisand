@@ -1,6 +1,7 @@
 import * as React from 'react';
 import * as redux from 'redux';
 import { connect } from 'react-redux';
+import { Card, Form, FormGroup, Input, Label, CardBody, CardFooter, Button, CardTitle } from 'reactstrap';
 
 import Store from '../store';
 import { login } from '../actions/auth/AuthAction';
@@ -30,30 +31,28 @@ class LoginComponent extends React.Component<CombinedProps, State> {
     public render() {
         const login = this._login.bind(this);
         return (
-            <div className="well">
-                <form className="form-horizontal" onKeyPress={login}>
-                    <fieldset>
-                        <legend>Sign in</legend>
-                        <div className="form-group">
-                            <label htmlFor="inputEmail" className="col-lg-2 control-label">Email</label>
-                            <div className="col-lg-10">
-                                <input type="text" className="form-control" id="inputEmail" placeholder="Email"
-                                    value={this.state.username} onChange={(event) => this.setState({ username: event.target.value })} />
-                            </div>
-                        </div>
-                        <div className="form-group">
-                            <label htmlFor="inputPassword" className="col-lg-2 control-label">Password</label>
-                            <div className="col-lg-10">
-                                <input type="password" className="form-control" id="inputPassword" autoComplete="current-password"
-                                    placeholder="Password" value={this.state.password} onChange={(event) => this.setState({ password: event.target.value })} />
-                            </div>
-                        </div>
-                    </fieldset>
-                </form>
-                <div style={{ display: 'flex', flexFlow: 'row-reverse' }}>
-                    <button className="btn btn-primary" onClick={() => login()}>Login</button>
-                </div>
-            </div>
+            <Card>
+                <CardBody>
+                    <CardTitle>Sign in</CardTitle>
+                    <Form onKeyPress={login}>
+                        <FormGroup>
+                            <Label for="inputEmail">Email</Label>
+                            <Input type="email" id="inputEmail" placeholder="Email"
+                                value={this.state.username} onChange={(event) => this.setState({ username: event.target.value })} />
+                        </FormGroup>
+                        <FormGroup>
+                            <Label for="inputPassword">Password</Label>
+                            <Input type="password" id="inputPassword" placeholder="Password" autoComplete="current-password"
+                                value={this.state.password} onChange={(event) => this.setState({ password: event.target.value })} />
+                        </FormGroup>
+                    </Form>
+                </CardBody>
+                <CardFooter>
+                    <div className="row m-0 justify-content-end">
+                        <Button className="col-auto" color="primary" onClick={() => login()}>Login</Button>
+                    </div>
+                </CardFooter>
+            </Card>
         );
     }
 
@@ -65,6 +64,7 @@ class LoginComponent extends React.Component<CombinedProps, State> {
         if (this.state.username && this.state.password) {
             this.props.login(this.state.username, this.state.password);
         }
+        return false;
     }
 }
 

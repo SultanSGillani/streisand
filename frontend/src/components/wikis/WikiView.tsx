@@ -1,6 +1,7 @@
 import * as React from 'react';
 import * as redux from 'redux';
 import { connect } from 'react-redux';
+import { FormGroup, Input } from 'reactstrap';
 
 import Store from '../../store';
 import TextView from '../bbcode/TextView';
@@ -62,10 +63,10 @@ class WikiViewComponent extends React.Component<CombinedProps, State> {
             return (
                 <div>
                     <WikiCommandBar wiki={wiki} editMode={editMode} operations={operations} />
-                    <div className="form-group">
-                        <input type="text" className="form-control" placeholder="Wiki title"
-                            value={this.state.title} onChange={(event) => this.setState({ title: event.target.value })} />
-                    </div>
+                    <FormGroup>
+                        <Input type="text" placeholder="Wiki title" value={this.state.title}
+                            onChange={(event) => this.setState({ title: event.target.value })} />
+                    </FormGroup>
                     <Editor content={wiki.body} receiveHandle={onHandle} size="large" />
                 </div>
             );

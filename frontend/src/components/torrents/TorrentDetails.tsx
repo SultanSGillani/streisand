@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { Tabs, Tab } from 'react-bootstrap';
+import { Nav, NavItem, NavLink, TabContent, TabPane, ListGroup, ListGroupItem } from 'reactstrap';
 
 import IFilm from '../../models/IFilm';
 import TextView from '../bbcode/TextView';
@@ -10,15 +10,54 @@ export type Props = {
     torrent: ITorrent;
 };
 
-export default function TorrentDetails(props: Props) {
-    const torrent = props.torrent;
-    return (
-        <Tabs defaultActiveKey={2}>
-            <Tab eventKey={1} title="General"><GeneralContent torrent={torrent} /></Tab>
-            <Tab eventKey={2} title="Video"><MediaContent torrent={torrent} /></Tab>
-            <Tab eventKey={3} title="Torrent"><TorrentContent torrent={torrent} /></Tab>
-        </Tabs>
-    );
+type State = {
+    activeTab: string;
+};
+
+export default class TorrentDetails extends React.Component<Props, State> {
+    constructor(props: Props) {
+        super(props);
+
+        this.state = {
+            activeTab: 'general'
+        };
+    }
+
+    public render() {
+        const torrent = this.props.torrent;
+        return (
+            <div>
+                <Nav tabs>
+                    {this._getTab({ id: 'general', title: 'General' })}
+                    {this._getTab({ id: 'video', title: 'Video' })}
+                    {this._getTab({ id: 'torrent', title: 'Torrent' })}
+                </Nav>
+                <TabContent activeTab={this.state.activeTab}>
+                    <TabPane tabId="general" id="general">
+                        <GeneralContent torrent={torrent} />
+                    </TabPane>
+                    <TabPane tabId="video" id="video">
+                        <MediaContent torrent={torrent} />
+                    </TabPane>
+                    <TabPane tabId="torrent" id="torrent">
+                        <TorrentContent torrent={torrent} />
+                    </TabPane>
+                </TabContent>
+            </div>
+        );
+    }
+
+    private _getTab(props: { id: string; title: string; }) {
+        const classes = this.state.activeTab === props.id ? 'active' : '';
+        const onClick = () => { this.setState({ activeTab: props.id }); };
+        return (
+            <NavItem key={props.id}>
+                <NavLink className={classes} onClick={onClick} href={`#${props.id}`}>
+                    {props.title}
+                </NavLink>
+            </NavItem>
+        );
+    }
 }
 
 interface IRowProps {
@@ -28,16 +67,17 @@ interface IRowProps {
 
 function InfoRow(props: IRowProps) {
     return (
-        <li className="list-group-item">
+        <ListGroupItem>
             <strong>{props.label}</strong>: <span className="text-muted">{props.value}</span>
-        </li>
+        </ListGroupItem>
     );
 }
 
 function GeneralContent(props: { torrent: ITorrent }) {
+    const description = props.torrent.description || 'There is no description for this torrent.';
     return (
         <div style={{ marginTop: '8px' }}>
-            <TextView content={props.torrent.description} />
+            <TextView content={description} />
         </div>
     );
 }
@@ -45,12 +85,12 @@ function GeneralContent(props: { torrent: ITorrent }) {
 function TorrentContent(props: { torrent: ITorrent }) {
     const torrent = props.torrent;
     return (
-        <ul className="list-group" style={{ marginTop: '8px' }}>
+        <ListGroup className="mt-2">
             <InfoRow label="Release name" value={torrent.releaseName} />
             <InfoRow label="Release group" value={torrent.releaseGroup} />
             <InfoRow label="Uploaded at" value={torrent.uploadedAt} />
             <InfoRow label="Uploaded by" value={torrent.uploadedBy} />
-        </ul>
+        </ListGroup>
     );
 }
 
@@ -62,7 +102,7 @@ function MediaContent(props: { torrent: ITorrent }) {
     }
 
     return (
-        <ul className="list-group" style={{ marginTop: '8px' }}>
+        <ListGroup className="mt-2">
             <InfoRow label="Runtime" value={info.runtime} />
             <InfoRow label="Codec" value={torrent.codec} />
             <InfoRow label="Container" value={torrent.container} />
@@ -74,6 +114,6 @@ function MediaContent(props: { torrent: ITorrent }) {
             <InfoRow label="Resolution" value={torrent.resolution} />
             <InfoRow label="Width" value={info.resolutionWidth} />
             <InfoRow label="Height" value={info.resolutionHeight} />
-        </ul>
+        </ListGroup>
     );
 }

@@ -1,4 +1,5 @@
 import * as React from 'react';
+import { Table } from 'reactstrap';
 import { connect } from 'react-redux';
 
 import Pager from '../Pager';
@@ -35,7 +36,7 @@ class ForumTopicViewComponent extends React.Component<CombinedProps> {
                 <h1>{topic.title}</h1>
                 <p>{topic.description}</p>
                 {pager}
-                <table className="table table-striped table-hover">
+                <Table className="table-borderless" striped hover>
                     <thead>
                         <tr>
                             <th>Thread Activity</th>
@@ -47,7 +48,7 @@ class ForumTopicViewComponent extends React.Component<CombinedProps> {
                     <tbody>
                         {rows}
                     </tbody>
-                </table>
+                </Table>
                 {pager}
                 <ForumThreadCreator topic={topic} />
             </div>

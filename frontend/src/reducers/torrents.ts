@@ -55,6 +55,8 @@ function byFilmId(state: Torrents = {}, action: Action): Torrents {
 
 function pageSize(state: number = 0, action: Action): number {
     switch (action.type) {
+        // TODO: Split this up
+        case 'RECEIVED_TORRENTS':
         case 'RECEIVED_FILM_TORRENTS':
             return action.pageSize;
         default:

@@ -6,7 +6,7 @@ export interface IEmptyProps {
 
 const center = {
     'display': 'flex',
-    'justify-content': 'center'
+    'justifyContent': 'center'
 };
 
 function Empty(props: IEmptyProps) {

@@ -6,6 +6,7 @@ import Store from '../../store';
 import IUser from '../../models/IUser';
 import UserLink from '../links/UserLink';
 import ForumPostCell from './ForumPostCell';
+import DeleteCell from '../generic/DeleteCell';
 import EmptyThreadCell from './EmptyThreadCell';
 import { getItem } from '../../utilities/mapping';
 import IForumThread from '../../models/forums/IForumThread';
@@ -44,11 +45,7 @@ class ForumThreadRowComponent extends React.Component<CombinedProps> {
                 {activity}
                 <td className="align-middle">{thread.numberOfPosts}</td>
                 <td className="align-middle"><UserLink user={this.props.author} /></td>
-                <td style={{ display: 'flex', flexFlow: 'row-reverse' }}>
-                    <button className="btn btn-sm btn-danger" onClick={onDelete}>
-                        <i className="fa fa-trash" style={{ fontSize: '14px' }} />
-                    </button>
-                </td>
+                <DeleteCell onDelete={onDelete} />
             </tr>
         );
     }

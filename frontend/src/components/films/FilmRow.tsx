@@ -5,6 +5,7 @@ import { connect } from 'react-redux';
 
 import Store from '../../store';
 import IFilm from '../../models/IFilm';
+import DeleteCell from '../generic/DeleteCell';
 import { deleteFilm, IDeleteProps } from '../../actions/films/DeleteFilmAction';
 
 export type Props = {
@@ -33,11 +34,7 @@ class FilmRowComponent extends React.Component<CombinedProps> {
                 <td className="align-middle"><img src={film.posterUrl} width="80px" /></td>
                 <td className="align-middle"><Link to={'/film/' + film.id} title={film.title}>{film.title}</Link></td>
                 <td className="align-middle">{film.year}</td>
-                <td style={{ display: 'flex', flexFlow: 'row-reverse' }}>
-                    <button className="btn btn-sm btn-danger" onClick={onDelete}>
-                        <i className="fa fa-trash" style={{ fontSize: '14px' }} />
-                    </button>
-                </td>
+                <DeleteCell onDelete={onDelete} />
             </tr>
         );
     }

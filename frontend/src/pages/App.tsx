@@ -3,11 +3,11 @@ import * as redux from 'redux';
 import { connect } from 'react-redux';
 
 import Store from '../store';
+import Banner from '../components/Banner';
 import SiteNav from '../components/SiteNav';
 import { ScreenSize } from '../models/IDeviceInfo';
 import { removeError } from '../actions/ErrorAction';
 import { watchScreenSize } from '../utilities/device';
-import Banner, { BannerType } from '../components/Banner';
 import { updateScreenSize } from '../actions/DeviceAction';
 
 export type Props = {};
@@ -27,9 +27,9 @@ class AppComponent extends React.Component<CombinedProps> {
 
     public render() {
         return (
-            <div style={{'paddingTop': '80px'}}>
+            <div>
                 <SiteNav />
-                <div className="container">
+                <div className="container mt-3">
                     {this._getErrorBanners()}
                     {this.props.children}
                 </div>
@@ -54,7 +54,7 @@ class AppComponent extends React.Component<CombinedProps> {
     private _getErrorBanners() {
         return this.props.errors.map((error: string, index: number) => {
             const onClose = () => { this.props.removeError(index); };
-            return <Banner key={index} type={BannerType.error} onClose={onClose}>{error}</Banner>;
+            return <Banner key={index} type="danger" onClose={onClose}>{error}</Banner>;
         });
     }
 }

@@ -5,6 +5,7 @@ import { connect } from 'react-redux';
 
 import Store from '../../store';
 import IWiki from '../../models/IWiki';
+import DeleteCell from '../generic/DeleteCell';
 import { IDeleteProps, deleteWiki } from '../../actions/wikis/DeleteWikiAction';
 
 export type Props = {
@@ -33,11 +34,7 @@ class WikiRowComponent extends React.Component<CombinedProps> {
                 <td className="align-middle">
                     <Link to={'/wiki/' + wiki.id} title={wiki.title}>{wiki.title}</Link>
                 </td>
-                <td style={{ display: 'flex', flexFlow: 'row-reverse' }}>
-                    <button className="btn btn-sm btn-danger" onClick={onDelete}>
-                        <i className="fa fa-trash" style={{ fontSize: '14px' }} />
-                    </button>
-                </td>
+                <DeleteCell onDelete={onDelete} />
             </tr>
         );
     }

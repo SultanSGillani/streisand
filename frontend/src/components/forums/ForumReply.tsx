@@ -1,6 +1,7 @@
 import * as React from 'react';
 import * as redux from 'redux';
 import { connect } from 'react-redux';
+import { Card, CardBody, CardTitle, Button, CardFooter } from 'reactstrap';
 
 import Store from '../../store';
 import IUser from '../../models/IUser';
@@ -36,21 +37,17 @@ class ForumReplyComponent extends React.Component<CombinedProps> {
             });
         };
         return (
-            <div className="panel panel-primary">
-                <div className="panel-heading" >
-                    Post your reply
-                </div>
-                <div className="panel-body">
+            <Card color="primary" className="mb-3">
+                <CardBody>
+                    <CardTitle>Post your reply</CardTitle>
                     <Editor content={''} size="small" receiveHandle={onHandle} />
-                </div>
-                <div className="panel-footer">
-                    <div className=" btn-toolbar" style={{ display: 'flex', flexFlow: 'row-reverse' }}>
-                        <button type="button" className="btn btn-sm btn-primary" onClick={onSave}>
-                            Post reply
-                        </button>
+                </CardBody>
+                <CardFooter>
+                    <div className="row m-0 justify-content-end">
+                        <Button className="col-auto" color="primary" onClick={onSave}>Post reply</Button>
                     </div>
-                </div>
-            </div>
+                </CardFooter>
+            </Card>
         );
     }
 }
