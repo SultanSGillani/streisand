@@ -1,11 +1,11 @@
 import * as React from 'react';
-import * as redux from 'redux';
 import { connect } from 'react-redux';
 
 import Store from '../../store';
 import IFilm from '../../models/IFilm';
 import Empty from '../../components/Empty';
 import { getNode } from '../../utilities/mapping';
+import { IDispatch } from '../../actions/ActionTypes';
 import FilmView from '../../components/films/FilmView';
 import { numericIdentifier } from '../../utilities/shim';
 import { getFilm } from '../../actions/films/FilmAction';
@@ -69,7 +69,7 @@ const mapStateToProps = (state: Store.All, ownProps: Props): ConnectedState => {
     };
 };
 
-const mapDispatchToProps = (dispatch: redux.Dispatch<Store.All>): ConnectedDispatch => ({
+const mapDispatchToProps = (dispatch: IDispatch): ConnectedDispatch => ({
     getFilm: (id: number) => dispatch(getFilm(id)),
     getTorrents: (filmId: number) => dispatch(getTorrents(filmId))
 });

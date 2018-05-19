@@ -9,7 +9,7 @@ import { IForumGroupData } from '../../../models/forums/IForumGroup';
 import BulkUserAction, { getUsers } from '../../users/BulkUserAction';
 import { IForumThreadResponse } from '../../../models/forums/IForumThread';
 
-const PAGE_SIZE = 3 || globals.pageSize.posts;
+const PAGE_SIZE = globals.pageSize.posts;
 export type ForumThreadReceivedAction = {
     type: 'RECEIVED_FORUM_THREAD',
     id: number,

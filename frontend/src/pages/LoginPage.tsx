@@ -1,10 +1,9 @@
 import * as React from 'react';
-import * as redux from 'redux';
 import { connect } from 'react-redux';
 import { Card, Form, FormGroup, Input, Label, CardBody, CardFooter, Button, CardTitle } from 'reactstrap';
 
-import Store from '../store';
 import { login } from '../actions/auth/AuthAction';
+import { IDispatch } from '../actions/ActionTypes';
 
 export type Props = {};
 
@@ -68,7 +67,7 @@ class LoginComponent extends React.Component<CombinedProps, State> {
     }
 }
 
-const mapDispatchToProps = (dispatch: redux.Dispatch<Store.All>): ConnectedDispatch => ({
+const mapDispatchToProps = (dispatch: IDispatch): ConnectedDispatch => ({
     login: (username: string, password: string) => dispatch(login(username, password))
 });
 

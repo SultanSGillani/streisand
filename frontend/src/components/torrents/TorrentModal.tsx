@@ -1,13 +1,12 @@
 import * as React from 'react';
-import * as redux from 'redux';
 import { connect } from 'react-redux';
 import { push } from 'react-router-redux';
 import { Modal, ModalHeader, ModalBody, ModalFooter, Button } from 'reactstrap';
 
-import Store from '../../store';
 import IFilm from '../../models/IFilm';
 import ITorrent from '../../models/ITorrent';
 import TorrentDetails from './TorrentDetails';
+import { IDispatch } from '../../actions/ActionTypes';
 
 export type Props = {
     film: IFilm;
@@ -42,7 +41,7 @@ class TorrentModalComponent extends React.Component<CombinedProps> {
     }
 }
 
-const mapDispatchToProps = (dispatch: redux.Dispatch<Store.All>): ConnectedDispatch => ({
+const mapDispatchToProps = (dispatch: IDispatch): ConnectedDispatch => ({
     goTo: (pathname: string) => dispatch(push({ pathname: pathname }))
 });
 

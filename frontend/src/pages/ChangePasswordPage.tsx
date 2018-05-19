@@ -1,10 +1,9 @@
 import * as React from 'react';
-import * as redux from 'redux';
 import { connect } from 'react-redux';
 import { Card, Form, FormGroup, Input, Label, CardBody, CardFooter, Button, CardTitle } from 'reactstrap';
 
-import Store from '../store';
 import { showError } from '../actions/ErrorAction';
+import { IDispatch } from '../actions/ActionTypes';
 import { changePassword } from '../actions/auth/ChangePasswordAction';
 
 export type Props = {};
@@ -79,7 +78,7 @@ class ChangePasswordComponent extends React.Component<CombinedProps, State> {
     }
 }
 
-const mapDispatchToProps = (dispatch: redux.Dispatch<Store.All>): ConnectedDispatch => ({
+const mapDispatchToProps = (dispatch: IDispatch): ConnectedDispatch => ({
     showError: (message) => dispatch(showError(message)),
     changePassword: (oldPassword: string, newPassword: string) => dispatch(changePassword(oldPassword, newPassword))
 });

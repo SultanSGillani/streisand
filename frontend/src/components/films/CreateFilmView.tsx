@@ -1,11 +1,11 @@
 import * as React from 'react';
-import * as redux from 'redux';
 import { Form } from 'reactstrap';
 import { connect } from 'react-redux';
 
 import Store from '../../store';
 import { IFilmUpdate } from '../../models/IFilm';
 import CommandBar, { ICommand } from '../CommandBar';
+import { IDispatch } from '../../actions/ActionTypes';
 import { TextInput, NumericInput } from '../generic/inputs';
 import { createFilm } from '../../actions/films/CreateFilmAction';
 
@@ -101,7 +101,7 @@ const mapStateToProps = (state: Store.All, ownProps: Props): ConnectedState => (
     creating: state.sealed.wikis.creating
 });
 
-const mapDispatchToProps = (dispatch: redux.Dispatch<Store.All>): ConnectedDispatch => ({
+const mapDispatchToProps = (dispatch: IDispatch): ConnectedDispatch => ({
     createFilm: (film: IFilmUpdate) => dispatch(createFilm(film))
 });
 

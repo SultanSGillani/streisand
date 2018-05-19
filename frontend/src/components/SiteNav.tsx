@@ -28,7 +28,6 @@ class SiteNavComponent extends React.Component<CombinedProps, State> {
     }
 
     public render() {
-        // .navbar-dark .navbar-nav .nav-link {
         const isAuthenticated = this.props.isAuthenticated;
         const toggle = () => { this.setState({ isOpen: !this.state.isOpen }); };
         return (

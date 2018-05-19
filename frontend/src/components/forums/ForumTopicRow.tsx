@@ -1,11 +1,10 @@
 import * as React from 'react';
-import * as redux from 'redux';
 import { Link } from 'react-router';
 import { connect } from 'react-redux';
 
-import Store from '../../store';
 import ForumPostCell from './ForumPostCell';
 import DeleteCell from '../generic/DeleteCell';
+import { IDispatch } from '../../actions/ActionTypes';
 import IForumTopic from '../../models/forums/IForumTopic';
 import { deleteForumTopic, IDeleteTopicProps } from '../../actions/forums/topics/DeleteTopicAction';
 
@@ -41,7 +40,7 @@ class ForumTopicRowComponent extends React.Component<CombinedProps> {
     }
 }
 
-const mapDispatchToProps = (dispatch: redux.Dispatch<Store.All>): ConnectedDispatch => ({
+const mapDispatchToProps = (dispatch: IDispatch): ConnectedDispatch => ({
     deleteForumTopic: (props: IDeleteTopicProps) => dispatch(deleteForumTopic(props))
 });
 

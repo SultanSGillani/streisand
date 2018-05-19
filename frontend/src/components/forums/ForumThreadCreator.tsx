@@ -1,9 +1,8 @@
 import * as React from 'react';
-import * as redux from 'redux';
 import { connect } from 'react-redux';
 import { Card, CardBody, CardTitle, Form, FormGroup, Label, Input, CardFooter, Button } from 'reactstrap';
 
-import Store from '../../store';
+import { IDispatch } from '../../actions/ActionTypes';
 import { IForumTopic } from '../../models/forums/IForumTopic';
 import { INewForumThreadPayload, createForumThread } from '../../actions/forums/threads/CreateThreadAction';
 
@@ -69,7 +68,7 @@ class ForumThreadCreatorComponent extends React.Component<CombinedProps, State> 
     }
 }
 
-const mapDispatchToProps = (dispatch: redux.Dispatch<Store.All>): ConnectedDispatch => ({
+const mapDispatchToProps = (dispatch: IDispatch): ConnectedDispatch => ({
     createForumThread: (payload: INewForumThreadPayload) => dispatch(createForumThread(payload))
 });
 

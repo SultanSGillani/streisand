@@ -1,11 +1,10 @@
 import * as React from 'react';
-import * as redux from 'redux';
 import { connect } from 'react-redux';
 import { FormGroup, Input } from 'reactstrap';
 
-import Store from '../../store';
 import TextView from '../bbcode/TextView';
 import WikiCommandBar from './WikiCommandBar';
+import { IDispatch } from '../../actions/ActionTypes';
 import IWiki, { IWikiUpdate } from '../../models/IWiki';
 import Editor, { IEditorHandle } from '../bbcode/Editor';
 import { updateWiki } from '../../actions/wikis/UpdateWikiAction';
@@ -82,7 +81,7 @@ class WikiViewComponent extends React.Component<CombinedProps, State> {
     }
 }
 
-const mapDispatchToProps = (dispatch: redux.Dispatch<Store.All>): ConnectedDispatch => ({
+const mapDispatchToProps = (dispatch: IDispatch): ConnectedDispatch => ({
     updateWiki: (id: number, wiki: IWikiUpdate) => dispatch(updateWiki(id, wiki)),
     deleteWiki: (props: IDeleteProps) => dispatch(deleteWiki(props))
 });

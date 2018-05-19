@@ -1,11 +1,10 @@
 import * as React from 'react';
-import * as redux from 'redux';
 import { connect } from 'react-redux';
 import { push } from 'react-router-redux';
 
-import Store from '../../store';
 import WikiList from './WikiList';
 import CommandBar, { ICommand } from '../CommandBar';
+import { IDispatch } from '../../actions/ActionTypes';
 
 export type Props = {
     page: number;
@@ -32,7 +31,7 @@ class WikisViewComponent extends React.Component<CombinedProps> {
     }
 }
 
-const mapDispatchToProps = (dispatch: redux.Dispatch<Store.All>): ConnectedDispatch => ({
+const mapDispatchToProps = (dispatch: IDispatch): ConnectedDispatch => ({
     createWiki: () => dispatch(push('/wiki/create'))
 });
 const WikisView: React.ComponentClass<Props> =

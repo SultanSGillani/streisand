@@ -1,11 +1,10 @@
 import * as React from 'react';
-import * as redux from 'redux';
 import { Link } from 'react-router';
 import { connect } from 'react-redux';
 
-import Store from '../../store';
 import IFilm from '../../models/IFilm';
 import DeleteCell from '../generic/DeleteCell';
+import { IDispatch } from '../../actions/ActionTypes';
 import { deleteFilm, IDeleteProps } from '../../actions/films/DeleteFilmAction';
 
 export type Props = {
@@ -40,7 +39,7 @@ class FilmRowComponent extends React.Component<CombinedProps> {
     }
 }
 
-const mapDispatchToProps = (dispatch: redux.Dispatch<Store.All>): ConnectedDispatch => ({
+const mapDispatchToProps = (dispatch: IDispatch): ConnectedDispatch => ({
     deleteFilm: (props: IDeleteProps) => dispatch(deleteFilm(props))
 });
 

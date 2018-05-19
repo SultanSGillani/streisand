@@ -1,9 +1,9 @@
 import * as React from 'react';
-import * as redux from 'redux';
 import { connect } from 'react-redux';
 
 import Store from '../../store';
 import Empty from '../../components/Empty';
+import { IDispatch } from '../../actions/ActionTypes';
 import ForumView from '../../components/forums/ForumView';
 import ILoadingStatus from '../../models/base/ILoadingStatus';
 import { getForumGroups } from '../../actions/forums/ForumGroupsAction';
@@ -49,7 +49,7 @@ const mapStateToProps = (state: Store.All): ConnectedState => ({
     status: state.sealed.forums.groups.status
 });
 
-const mapDispatchToProps = (dispatch: redux.Dispatch<Store.All>): ConnectedDispatch => ({
+const mapDispatchToProps = (dispatch: IDispatch): ConnectedDispatch => ({
     getForumGroups: () => dispatch(getForumGroups())
 });
 

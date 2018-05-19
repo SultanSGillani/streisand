@@ -1,9 +1,9 @@
 import * as React from 'react';
-import * as redux from 'redux';
 import { connect } from 'react-redux';
 
 import Store from '../store';
 import Empty from '../components/Empty';
+import { IDispatch } from '../actions/ActionTypes';
 import TorrentsView from '../components/torrents/TorrentsView';
 import { getTorrents } from '../actions/torrents/TorrentsAction';
 import ILoadingStatus, { defaultStatus } from '../models/base/ILoadingStatus';
@@ -60,7 +60,7 @@ const mapStateToProps = (state: Store.All, ownProps: Props): ConnectedState => {
     };
 };
 
-const mapDispatchToProps = (dispatch: redux.Dispatch<Store.All>): ConnectedDispatch => ({
+const mapDispatchToProps = (dispatch: IDispatch): ConnectedDispatch => ({
     getTorrents: (page: number) => dispatch(getTorrents(page))
 });
 
