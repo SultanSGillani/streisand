@@ -1,4 +1,5 @@
 import * as React from 'react';
+import { Card, CardBody, ButtonToolbar, Button } from 'reactstrap';
 
 export interface ICommand {
     label: string;
@@ -13,16 +14,21 @@ export type Props = {
 
 function CommandBar(props: Props) {
     const commands = props.commands.map((command: ICommand) => {
-        const status = command.disabled ? 'disabled' : command.status ? `btn-${command.status}` : 'btn-default';
-        const classes = `btn btn-sm ${status}`;
-        return <button type="button" className={classes} onClick={command.onExecute}>{command.label}</button>;
+        const status = command.status ? command.status : 'secondary';
+        return (
+            <Button className="mx-1" size="md" key={command.label} color={status} disabled={command.disabled} onClick={command.onExecute}>
+                {command.label}
+            </Button>
+        );
     });
     return (
-        <div className="well well-sm text-center">
-            <div className="btn-toolbar" style={{ justifyContent: 'center', display: 'flex'}}>
-                {commands}
-            </div>
-        </div>
+        <Card className="my-2">
+            <CardBody className="p-1">
+                <ButtonToolbar className="justify-content-center">
+                    {commands}
+                </ButtonToolbar>
+            </CardBody>
+        </Card>
     );
 }
 

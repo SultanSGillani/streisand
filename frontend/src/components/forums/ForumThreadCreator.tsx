@@ -1,6 +1,7 @@
 import * as React from 'react';
 import * as redux from 'redux';
 import { connect } from 'react-redux';
+import { Card, CardBody, CardTitle, Form, FormGroup, Label, Input, CardFooter, Button } from 'reactstrap';
 
 import Store from '../../store';
 import { IForumTopic } from '../../models/forums/IForumTopic';
@@ -33,27 +34,23 @@ class ForumThreadCreatorComponent extends React.Component<CombinedProps, State> 
     public render() {
         const createThread = this._createThread.bind(this);
         return (
-            <div className="panel panel-primary">
-                <div className="panel-heading">
-                    Create new forum thread
-                </div>
-                <div className="panel-body">
-                    <form className="form-horizontal" onKeyPress={createThread} autoComplete="off">
-                        <fieldset>
-                            <div className="form-group">
-                                <label htmlFor="inputTitle" className="col-lg-2 control-label">Title</label>
-                                <div className="col-lg-10">
-                                    <input type="text" className="form-control" id="inputTitle" placeholder="Forum thread title"
-                                        value={this.state.title} onChange={(event) => this.setState({ title: event.target.value })} />
-                                </div>
-                            </div>
-                        </fieldset>
-                    </form>
-                    <div style={{ display: 'flex', flexFlow: 'row-reverse' }}>
-                        <button className="btn btn-primary" onClick={() => createThread()}>Create thread</button>
+            <Card color="primary" className="mb-3">
+                <CardBody>
+                    <CardTitle>Create new forum thread</CardTitle>
+                    <Form onKeyPress={createThread} autoComplete="off">
+                        <FormGroup>
+                            <Label for="inputTitle">Title</Label>
+                            <Input type="text" id="inputTitle" placeholder="Forum thread title"
+                                value={this.state.title} onChange={(event) => this.setState({ title: event.target.value })} />
+                        </FormGroup>
+                    </Form>
+                </CardBody>
+                <CardFooter>
+                    <div className="row m-0 justify-content-end">
+                        <Button className="col-auto" color="primary" onClick={() => createThread()}>Create thread</Button>
                     </div>
-                </div>
-            </div>
+                </CardFooter>
+            </Card >
         );
     }
 
@@ -68,6 +65,7 @@ class ForumThreadCreatorComponent extends React.Component<CombinedProps, State> 
                 title: this.state.title
             });
         }
+        return false;
     }
 }
 

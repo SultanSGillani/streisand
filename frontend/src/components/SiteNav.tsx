@@ -1,12 +1,15 @@
 import * as React from 'react';
-import { Link } from 'react-router';
 import { connect } from 'react-redux';
-import { Navbar, Nav } from 'react-bootstrap';
+import { LinkContainer } from 'react-router-bootstrap';
+import { Collapse, Navbar, NavbarToggler, Nav, NavItem, NavbarBrand, NavLink } from 'reactstrap';
 
 import Store from '../store';
 import CurrentUserLink from './users/CurrentUserLink';
 
 export type Props = {};
+type State = {
+    isOpen: boolean;
+};
 
 type ConnectedState = {
     isAuthenticated: boolean;
@@ -15,35 +18,42 @@ type ConnectedState = {
 type ConnectedDispatch = {};
 
 type CombinedProps = Props & ConnectedState & ConnectedDispatch;
-class SiteNavComponent extends React.Component<CombinedProps> {
-    public render() {
-        const isAuthenticated = this.props.isAuthenticated;
+class SiteNavComponent extends React.Component<CombinedProps, State> {
+    constructor(props: CombinedProps) {
+        super(props);
 
+        this.state = {
+            isOpen: false
+        };
+    }
+
+    public render() {
+        // .navbar-dark .navbar-nav .nav-link {
+        const isAuthenticated = this.props.isAuthenticated;
+        const toggle = () => { this.setState({ isOpen: !this.state.isOpen }); };
         return (
-            <Navbar fixedTop={true}>
-                <Navbar.Header>
-                    <Navbar.Brand>
-                        <Link to="/">Phoenix</Link>
-                    </Navbar.Brand>
-                    <Navbar.Toggle />
-                </Navbar.Header>
-                <Navbar.Collapse>
-                    { isAuthenticated && this._getLinks() }
-                    <Nav pullRight>
-                        <CurrentUserLink />
-                    </Nav>
-                </Navbar.Collapse>
+            <Navbar color="primary" dark expand="lg">
+                <div className="container">
+                    <LinkContainer to="/"><NavbarBrand>Phoenix</NavbarBrand></LinkContainer>
+                    <NavbarToggler onClick={toggle} />
+                    <Collapse isOpen={this.state.isOpen} navbar>
+                        {isAuthenticated && this._getLinks()}
+                        <Nav className="ml-auto" navbar>
+                            <CurrentUserLink />
+                        </Nav>
+                    </Collapse>
+                </div>
             </Navbar>
         );
     }
 
     private _getLinks() {
         return (
-            <Nav>
-                <li role="presentation"><Link role="button" to="/films">Films</Link></li>
-                <li role="presentation"><Link role="button" to="/torrents">Torrents</Link></li>
-                <li role="presentation"><Link role="button" to="/wikis">Wikis</Link></li>
-                <li role="presentation"><Link role="button" to="/forum">Forum</Link></li>
+            <Nav className="mr-auto" navbar>
+                <NavItem><LinkContainer to="/films"><NavLink>Films</NavLink></LinkContainer></NavItem>
+                <NavItem><LinkContainer to="/torrents"><NavLink>Torrents</NavLink></LinkContainer></NavItem>
+                <NavItem><LinkContainer to="/wikis"><NavLink>Wikis</NavLink></LinkContainer></NavItem>
+                <NavItem><LinkContainer to="/forum"><NavLink>Forum</NavLink></LinkContainer></NavItem>
             </Nav>
         );
     }

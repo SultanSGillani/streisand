@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { connect } from 'react-redux';
-import { DropdownButton } from 'react-bootstrap';
+import { ButtonToolbar, ButtonGroup, ButtonDropdown, DropdownToggle, DropdownMenu } from 'reactstrap';
 
 import Store from '../../../store';
 import { ITextEditorHandle } from '../TextEditor';
@@ -15,12 +15,24 @@ type Props = {
     commitContent: (content: string) => void;
 };
 
+type State = {
+    dropdownOpen: boolean;
+};
+
 type ConnectedState = {
     screenSize: ScreenSize;
 };
 
 type CombinedProps = Props & ConnectedState;
-class EditorCommandBarComponent extends React.Component<CombinedProps> {
+class EditorCommandBarComponent extends React.Component<CombinedProps, State> {
+    constructor(props: CombinedProps) {
+        super(props);
+
+        this.state = {
+            dropdownOpen: false
+        };
+    }
+
     public render() {
         const primary = buildCommands([
             getModeCommand(this.props)
@@ -28,20 +40,24 @@ class EditorCommandBarComponent extends React.Component<CombinedProps> {
 
         const collapse = this.props.screenSize <= ScreenSize.medium;
         const secondaryCommands = buildCommands(getCommandSet(this.props), collapse);
+        const toggle = () => { this.setState({ dropdownOpen: !this.state.dropdownOpen }); };
         const secondary = !collapse ? secondaryCommands : (
-            <DropdownButton title="BBCode Tools" bsSize="small" id="editor-tools-dropdown">
-                {secondaryCommands}
-            </DropdownButton>
+            <ButtonDropdown color="secondary" size="md" isOpen={this.state.dropdownOpen} toggle={toggle}>
+                <DropdownToggle caret>BBCode Tools</DropdownToggle>
+                <DropdownMenu>
+                    {secondaryCommands}
+                </DropdownMenu>
+            </ButtonDropdown>
         );
         return (
-            <div style={{ display: 'flex', marginBottom: '4px' }}>
-                <div className="btn-toolbar" style={{ marginRight: '20px' }}>
+            <ButtonToolbar className="mb-2">
+                <ButtonGroup className="mr-2">
                     {primary}
-                </div>
-                <div className="btn-toolbar">
+                </ButtonGroup>
+                <ButtonGroup>
                     {secondary}
-                </div>
-            </div >
+                </ButtonGroup>
+            </ButtonToolbar>
         );
     }
 }

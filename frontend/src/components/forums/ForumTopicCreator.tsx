@@ -1,6 +1,7 @@
 import * as React from 'react';
 import * as redux from 'redux';
 import { connect } from 'react-redux';
+import { Card, CardBody, CardTitle, Form, FormGroup, Label, Input, CardFooter, Button } from 'reactstrap';
 
 import Store from '../../store';
 import { IForumGroup } from '../../models/forums/IForumGroup';
@@ -16,7 +17,7 @@ type State = {
     group: number;
 };
 
-type ConnectedState = { };
+type ConnectedState = {};
 
 type ConnectedDispatch = {
     createForumTopic: (payload: INewForumTopicPayload) => void;
@@ -42,43 +43,35 @@ class ForumTopicCreatorComponent extends React.Component<CombinedProps, State> {
             return <option value={group.id} key={group.id}>{group.title}</option>;
         });
         return (
-            <div className="panel panel-primary">
-                <div className="panel-heading">
-                    Create new forum topic
-                </div>
-                <div className="panel-body">
-                    <form className="form-horizontal" onKeyPress={createTopic} autoComplete="off">
-                        <fieldset>
-                            <div className="form-group">
-                                <label htmlFor="selectGroup" className="col-lg-2 control-label">Parent forum group</label>
-                                <div className="col-lg-10">
-                                    <select className="form-control" id="selectGroup" value={this.state.group}
-                                        onChange={(event) => this.setState({ group: Number(event.target.value) || 0 })}>
-                                        {groupOptions}
-                                    </select>
-                                </div>
-                            </div>
-                            <div className="form-group">
-                                <label htmlFor="inputTitle" className="col-lg-2 control-label">Title</label>
-                                <div className="col-lg-10">
-                                    <input type="text" className="form-control" id="inputTitle" placeholder="Forum topic title"
-                                        value={this.state.title} onChange={(event) => this.setState({ title: event.target.value })} />
-                                </div>
-                            </div>
-                            <div className="form-group">
-                                <label htmlFor="inputDescription" className="col-lg-2 control-label">Description</label>
-                                <div className="col-lg-10">
-                                    <input type="text" className="form-control" id="inputDescription" placeholder="Forum topic description"
-                                        value={this.state.description} onChange={(event) => this.setState({ description: event.target.value })} />
-                                </div>
-                            </div>
-                        </fieldset>
-                    </form>
-                    <div style={{ display: 'flex', flexFlow: 'row-reverse' }}>
-                        <button className="btn btn-primary" onClick={() => createTopic()}>Create topic</button>
+            <Card color="primary" className="mb-3">
+                <CardBody>
+                    <CardTitle>Create new forum topic</CardTitle>
+                    <Form onKeyPress={createTopic} autoComplete="off">
+                        <FormGroup>
+                            <Label for="selectGroup">Parent forum group</Label>
+                            <Input type="select" id="selectGroup" value={this.state.group}
+                                onChange={(event) => this.setState({ group: Number(event.target.value) || 0 })}>
+                                {groupOptions}
+                            </Input>
+                        </FormGroup>
+                        <FormGroup>
+                            <Label for="inputTitle">Title</Label>
+                            <Input type="text" id="inputTitle" placeholder="Forum topic title"
+                                value={this.state.title} onChange={(event) => this.setState({ title: event.target.value })} />
+                        </FormGroup>
+                        <FormGroup>
+                            <Label for="inputDescription">Description</Label>
+                            <Input type="text" id="inputDescription" placeholder="Forum topic description"
+                                value={this.state.description} onChange={(event) => this.setState({ description: event.target.value })} />
+                        </FormGroup>
+                    </Form>
+                </CardBody>
+                <CardFooter>
+                    <div className="row m-0 justify-content-end">
+                        <Button className="col-auto" color="primary" onClick={() => createTopic()}>Create topic</Button>
                     </div>
-                </div>
-            </div>
+                </CardFooter>
+            </Card >
         );
     }
 
@@ -94,6 +87,7 @@ class ForumTopicCreatorComponent extends React.Component<CombinedProps, State> {
                 description: this.state.description
             });
         }
+        return false;
     }
 }
 

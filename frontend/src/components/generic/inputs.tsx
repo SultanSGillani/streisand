@@ -1,4 +1,5 @@
 import * as React from 'react';
+import { FormGroup, Label, Input } from 'reactstrap';
 
 export interface ITextInputProps {
     id: string;
@@ -11,13 +12,11 @@ export interface ITextInputProps {
 export function TextInput(props: ITextInputProps) {
     const id = `${props.id}Input`;
     return (
-        <div className="form-group">
-            <label htmlFor={id} className="col-lg-2 control-label">{props.label}</label>
-            <div className="col-lg-10">
-                <input type="text" className="form-control" id={id} placeholder={props.placeholder}
-                    value={props.value} onChange={(event) => props.setValue(event.target.value)} />
-            </div>
-        </div>
+        <FormGroup>
+            <Label for={id}>{props.label}</Label>
+            <Input type="text" id={id} value={props.value} placeholder={props.placeholder}
+                onChange={(event) => props.setValue(event.target.value)} />
+        </FormGroup>
     );
 }
 
@@ -31,12 +30,10 @@ export interface INumericInputProps {
 export function NumericInput(props: INumericInputProps) {
     const id = `${props.id}Input`;
     return (
-        <div className="form-group">
-            <label htmlFor={id} className="col-lg-2 control-label">{props.label}</label>
-            <div className="col-lg-10">
-                <input type="number" className="form-control" id={id}
-                    value={props.value} onChange={(event) => props.setValue(Number(event.target.value))} />
-            </div>
-        </div>
+        <FormGroup>
+            <Label for={id}>{props.label}</Label>
+            <Input type="number" id={id} value={props.value}
+                onChange={(event) => props.setValue(Number(event.target.value))} />
+        </FormGroup>
     );
 }

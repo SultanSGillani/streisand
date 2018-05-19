@@ -1,4 +1,5 @@
 import * as React from 'react';
+import { Card, CardBody } from 'reactstrap';
 
 import TextView from './TextView';
 import EditorCommandBar from './commands/EditorCommandBar';
@@ -72,9 +73,11 @@ export default class Editor extends React.Component<Props, State> {
             return (
                 <div>
                     {commandbar}
-                    <div className="well well-sm">
+                    <Card className="my-2">
+                        <CardBody className="p-2">
                         <TextView content={state.content} />
-                    </div>
+                        </CardBody>
+                    </Card>
                 </div>
             );
         }

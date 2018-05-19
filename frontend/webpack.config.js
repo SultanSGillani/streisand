@@ -72,6 +72,6 @@ module.exports = {
         'react': 'React',
         'react-dom': 'ReactDOM',
         'redux': 'Redux',
-        'react-bootstrap': 'ReactBootstrap'
+        'reactstrap': 'Reactstrap'
     }
 };

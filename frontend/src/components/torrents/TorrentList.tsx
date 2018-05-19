@@ -1,4 +1,5 @@
 import * as React from 'react';
+import { Table } from 'reactstrap';
 import { Link } from 'react-router';
 
 import ITorrent from '../../models/ITorrent';
@@ -14,7 +15,7 @@ export default function TorrentList(props: Props) {
     });
 
     return (
-        <table className="table table-striped table-hover">
+        <Table className="table-borderless" striped hover>
             <thead>
                 <tr>
                     <th>Release Name</th>
@@ -26,7 +27,7 @@ export default function TorrentList(props: Props) {
             <tbody>
                 {rows}
             </tbody>
-        </table>
+        </Table>
     );
 }
 

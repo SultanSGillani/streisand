@@ -35,8 +35,8 @@ class ForumThreadViewComponent extends React.Component<CombinedProps> {
                 <h1>{thread.title}</h1>
                 {pager}
                 <div>{rows}</div>
-                <ForumReply thread={thread} />
                 {pager}
+                <ForumReply thread={thread} />
             </div>
         );
     }

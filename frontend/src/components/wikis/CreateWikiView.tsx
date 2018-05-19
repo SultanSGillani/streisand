@@ -1,6 +1,7 @@
 import * as React from 'react';
 import * as redux from 'redux';
 import { connect } from 'react-redux';
+import { Input, FormGroup } from 'reactstrap';
 
 import Store from '../../store';
 import CommandBar, { ICommand } from '../CommandBar';
@@ -47,10 +48,10 @@ class CreateWikiViewComponent extends React.Component<CombinedProps, State> {
         return (
             <div>
                 <CommandBar commands={[create]} />
-                <div className="form-group">
-                    <input type="text" className="form-control" placeholder="Wiki title"
-                        value={this.state.title} onChange={(event) => this.setState({ title: event.target.value })} />
-                </div>
+                <FormGroup>
+                    <Input type="text" placeholder="Wiki title" value={this.state.title}
+                        onChange={(event) => this.setState({ title: event.target.value })} />
+                </FormGroup>
                 <Editor content="" receiveHandle={onHandle} size="large" />
             </div>
         );

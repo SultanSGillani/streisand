@@ -1,4 +1,5 @@
 import * as React from 'react';
+import { Table } from 'reactstrap';
 import { connect } from 'react-redux';
 
 import Pager from '../Pager';
@@ -29,7 +30,7 @@ class FilmListComponent extends React.Component<CombinedProps> {
         return (
             <div>
                 {pager}
-                <table className="table table-striped table-hover">
+                <Table className="table-borderless" striped hover>
                     <thead>
                         <tr>
                             <th></th>
@@ -41,7 +42,7 @@ class FilmListComponent extends React.Component<CombinedProps> {
                     <tbody>
                         {rows}
                     </tbody>
-                </table>
+                </Table>
                 {pager}
             </div>
         );

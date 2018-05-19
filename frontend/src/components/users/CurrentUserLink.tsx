@@ -1,9 +1,9 @@
 import * as React from 'react';
 import * as redux from 'redux';
-import { Link } from 'react-router';
 import { connect } from 'react-redux';
 import { replace } from 'react-router-redux';
-import { NavDropdown, MenuItem } from 'react-bootstrap';
+import { LinkContainer } from 'react-router-bootstrap';
+import { UncontrolledDropdown, DropdownToggle, DropdownMenu, DropdownItem } from 'reactstrap';
 
 import Store from '../../store';
 import IUser from '../../models/IUser';
@@ -41,18 +41,17 @@ class CurrentUserLinkComponent extends React.Component<CombinedProps> {
     public render() {
         const user = this.props.currentUser;
         const isAuthenticated = this.props.isAuthenticated;
-
-        const title = user ? user.username : 'Settings';
-        const profile = user && <li role="presentation"><Link role="button" to={`/user/${user.id}`}>Profile</Link></li>;
-        const logout = isAuthenticated && <MenuItem onClick={() => { this.props.logout(); }}>Logout</MenuItem>;
         return (
-            <NavDropdown title={title} id="basic-nav-dropdown">
-                {profile}
-                <li role="presentation"><Link role="menuitem" to="/themes">Themes</Link></li>
-                {user && <MenuItem divider />}
-                {isAuthenticated && <li role="presentation"><Link role="menuitem" to="/changepassword">Change password</Link></li>}
-                {logout}
-            </NavDropdown>
+            <UncontrolledDropdown nav inNavbar>
+                <DropdownToggle nav caret>{user ? user.username : 'Settings'}</DropdownToggle>
+                <DropdownMenu right>
+                    {user && <LinkContainer to={`/user/${user.id}`}><DropdownItem>Profile</DropdownItem></LinkContainer>}
+                    <LinkContainer to={`/themes`}><DropdownItem>Themes</DropdownItem></LinkContainer>
+                    {user && <DropdownItem divider />}
+                    {isAuthenticated && <LinkContainer to={`/changepassword`}><DropdownItem>Change password</DropdownItem></LinkContainer>}
+                    {isAuthenticated && <DropdownItem onClick={() => { this.props.logout(); }}>Logout</DropdownItem>}
+                </DropdownMenu>
+            </UncontrolledDropdown>
         );
     }
 }

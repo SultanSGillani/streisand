@@ -5,6 +5,7 @@ import Store from '../../store';
 import ForumTopicRow from './ForumTopicRow';
 import IForumGroup from '../../models/forums/IForumGroup';
 import IForumTopic from '../../models/forums/IForumTopic';
+import { Table } from 'reactstrap';
 
 export type Props = {
     group: IForumGroup;
@@ -35,7 +36,7 @@ class ForumGroupComponent extends React.Component<CombinedProps> {
         return (
             <div>
                 <h2>{group.title}</h2>
-                <table className="table table-striped table-hover">
+                <Table className="table-borderless" striped hover>
                     <thead>
                         <tr>
                             <th>Topic</th>
@@ -48,7 +49,7 @@ class ForumGroupComponent extends React.Component<CombinedProps> {
                     <tbody>
                         {rows}
                     </tbody>
-                </table>
+                </Table>
             </div>
         );
     }

@@ -2,7 +2,7 @@ import * as React from 'react';
 import * as redux from 'redux';
 import { connect } from 'react-redux';
 import { push } from 'react-router-redux';
-import { Modal, Button } from 'react-bootstrap';
+import { Modal, ModalHeader, ModalBody, ModalFooter, Button } from 'reactstrap';
 
 import Store from '../../store';
 import IFilm from '../../models/IFilm';
@@ -29,16 +29,14 @@ class TorrentModalComponent extends React.Component<CombinedProps> {
         };
 
         return (
-            <Modal show={true} onHide={onClose}>
-                <Modal.Header closeButton>
-                    <Modal.Title>{film.title}</Modal.Title>
-                </Modal.Header>
-                <Modal.Body>
+            <Modal isOpen={true} toggle={onClose}>
+                <ModalHeader toggle={onClose}>{film.title}</ModalHeader>
+                <ModalBody>
                     <TorrentDetails film={film} torrent={torrent} />
-                </Modal.Body>
-                <Modal.Footer>
-                    <Button bsStyle="primary" onClick={onClose}>Close</Button>
-                </Modal.Footer>
+                </ModalBody>
+                <ModalFooter>
+                    <Button color="primary" onClick={onClose}>Close</Button>
+                </ModalFooter>
             </Modal>
         );
     }

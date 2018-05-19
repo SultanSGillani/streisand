@@ -1,4 +1,5 @@
 import * as React from 'react';
+import { ListGroup, ListGroupItem } from 'reactstrap';
 
 import IUser from '../../models/IUser';
 import { getDateDiff } from '../../utilities/dates';
@@ -14,9 +15,9 @@ interface IRowProps {
 
 function InfoRow(props: IRowProps) {
     return (
-        <li className="list-group-item">
+        <ListGroupItem>
             <strong>{props.label}</strong>: <span className="text-muted">{`${props.value}`}</span>
-        </li>
+        </ListGroupItem>
     );
 }
 
@@ -31,7 +32,7 @@ export default function UserView(props: Props) {
     return (
         <div>
             <h1>{user.username}</h1>
-            <ul className="list-group" style={{ marginTop: '8px' }}>
+            <ListGroup>
                 <InfoRow label="Acount status" value={details.accountStatus} />
                 <InfoRow label="Class" value={details.userClass} />
                 <InfoRow label="Email" value={details.email} />
@@ -44,7 +45,7 @@ export default function UserView(props: Props) {
                 <InfoRow label="Bytes downloaded" value={details.bytesDownloaded} />
                 <InfoRow label="Last seeded" value={lastSeeded} />
                 <InfoRow label="Announce Key" value={details.announceKey} />
-            </ul>
+            </ListGroup>
         </div>
     );
 }
