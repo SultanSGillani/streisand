@@ -150,8 +150,7 @@
       "sort_order": 1,
       "name": "Staff Announcements",
       "description": "jumpcut Announcements for Staff",
-      "group": 1,
-      "number_of_threads": 1
+      "group": 1
     }
   },
   {
@@ -173,7 +172,7 @@
       "sort_order": 1,
       "name": "Announcements",
       "description": "jumpcut Announcements",
-      "group": 2,
+      "group": 2
     }
   },
   {
