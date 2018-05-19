@@ -169,9 +169,9 @@ class ForumThreadItemViewSet(mixins.UpdateModelMixin, mixins.CreateModelMixin, m
     def get_queryset(self):
         queryset = super().get_queryset().accessible_to_user(self.request.user)
 
-        thread_id = self.request.query_params.get('thread_id', None)
-        if thread_id is not None:
-            queryset = queryset.filter(thread_id=thread_id)
+        topic_id = self.request.query_params.get('topic_id', None)
+        if topic_id is not None:
+            queryset = queryset.filter(topic_id=topic_id)
 
         return queryset
 
@@ -206,9 +206,9 @@ class ForumPostItemViewSet(mixins.UpdateModelMixin, mixins.RetrieveModelMixin, m
     def get_queryset(self):
         queryset = super().get_queryset().accessible_to_user(self.request.user)
 
-        post_id = self.request.query_params.get('post_id', None)
-        if post_id is not None:
-            queryset = queryset.filter(post_id=post_id)
+        thread_id = self.request.query_params.get('thread_id', None)
+        if thread_id is not None:
+            queryset = queryset.filter(thread_id=thread_id)
 
         return queryset
 

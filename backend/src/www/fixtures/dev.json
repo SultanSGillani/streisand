@@ -162,8 +162,7 @@
       "sort_order": 2,
       "name": "Staff Discussions",
       "description": "jumpcut Discussions for Staff",
-      "group": 1,
-      "number_of_threads": 1
+      "group": 1
     }
   },
   {
@@ -175,7 +174,6 @@
       "name": "Announcements",
       "description": "jumpcut Announcements",
       "group": 2,
-      "number_of_threads": 1
     }
   },
   {
