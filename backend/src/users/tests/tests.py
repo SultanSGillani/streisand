@@ -1,7 +1,6 @@
 # -*- coding:utf-8 -*-
 from django.test import TestCase
 from model_mommy import mommy
-import uuid
 from users.models import User, UserClass
 
 
