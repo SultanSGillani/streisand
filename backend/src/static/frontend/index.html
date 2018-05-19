@@ -1,5 +1,4 @@
-{% load static %}
-<!DOCTYPE html>
+<!DOCTYPE html>{% load static %}
 <html>
 
 <head>
@@ -9,14 +8,10 @@
 
     <!-- https://www.bootstrapcdn.com/bootswatch/ -->
     <script type="text/javascript">
-        var defaultTheme = window['__defaultTheme'] = 'https://maxcdn.bootstrapcdn.com/bootswatch/3.3.7/darkly/bootstrap.min.css';
-        var url = (typeof localStorage !== 'undefined' && localStorage['app.theme.url']) || defaultTheme;
+        var key = (typeof localStorage !== 'undefined' && localStorage['app.theme.key']) || 'darkly'
         var link = document.createElement('link');
-        link.href = url;
-        link.type = 'text/css';
-        link.rel = 'stylesheet';
-        link.media = 'screen,print';
-        link.id = 'theme';
+        link.href = `https://stackpath.bootstrapcdn.com/bootswatch/4.1.1/${key}/bootstrap.min.css`;
+        link.type = 'text/css';link.rel = 'stylesheet';link.media = 'screen,print';link.id = 'theme';
         document.getElementsByTagName('head')[0].appendChild(link);
     </script>
 
@@ -24,8 +19,11 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/react/16.3.2/umd/react.production.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/react-dom/16.3.2/umd/react-dom.production.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/redux/3.7.2/redux.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/react-bootstrap/0.32.1/react-bootstrap.min.js"></script>
-    <link rel="stylesheet" href="https://use.fontawesome.com/f6e7af6507.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/reactstrap/6.0.1/reactstrap.full.min.js"></script>
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.0.13/css/solid.css" integrity="sha384-Rw5qeepMFvJVEZdSo1nDQD5B6wX0m7c5Z/pLNvjkB14W6Yki1hKbSEQaX9ffUbWe"
+        crossorigin="anonymous">
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.0.13/css/fontawesome.css" integrity="sha384-GVa9GOgVQgOk+TNYXu7S/InPTfSDTtBalSgkgqQ7sCik56N9ztlkoTr2f/T44oKV"
+        crossorigin="anonymous">
 </head>
 
 <body>
