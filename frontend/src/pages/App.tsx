@@ -1,10 +1,10 @@
 import * as React from 'react';
-import * as redux from 'redux';
 import { connect } from 'react-redux';
 
 import Store from '../store';
 import Banner from '../components/Banner';
 import SiteNav from '../components/SiteNav';
+import { IDispatch } from '../actions/ActionTypes';
 import { ScreenSize } from '../models/IDeviceInfo';
 import { removeError } from '../actions/ErrorAction';
 import { watchScreenSize } from '../utilities/device';
@@ -63,7 +63,7 @@ const mapStateToProps = (state: Store.All): ConnectedState => ({
     errors: state.errors
 });
 
-const mapDispatchToProps = (dispatch: redux.Dispatch<Store.All>): ConnectedDispatch => ({
+const mapDispatchToProps = (dispatch: IDispatch): ConnectedDispatch => ({
     removeError: (index: number) => dispatch(removeError(index)),
     updateScreenSize: (screenSize: ScreenSize) => dispatch(updateScreenSize(screenSize))
 });

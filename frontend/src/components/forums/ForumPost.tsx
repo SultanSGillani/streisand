@@ -1,5 +1,4 @@
 import * as React from 'react';
-import * as redux from 'redux';
 import { connect } from 'react-redux';
 import { Card, CardBody, CardHeader, Button, ButtonGroup, CardFooter } from 'reactstrap';
 
@@ -11,6 +10,7 @@ import TextView from '../bbcode/TextView';
 import { getItem } from '../../utilities/mapping';
 import { getDateDiff } from '../../utilities/dates';
 import { ScreenSize } from '../../models/IDeviceInfo';
+import { IDispatch } from '../../actions/ActionTypes';
 import IForumPost from '../../models/forums/IForumPost';
 import Editor, { IEditorHandle } from '../bbcode/Editor';
 import { updatePost } from '../../actions/forums/posts/UpdatePostAction';
@@ -157,7 +157,7 @@ const mapStateToProps = (state: Store.All, ownProps: Props): ConnectedState => {
     };
 };
 
-const mapDispatchToProps = (dispatch: redux.Dispatch<Store.All>): ConnectedDispatch => ({
+const mapDispatchToProps = (dispatch: IDispatch): ConnectedDispatch => ({
     deleteForumPost: (props: IDeletePostProps) => dispatch(deleteForumPost(props)),
     updatePost: (id: number, content: string) => dispatch(updatePost(id, content))
 });

@@ -1,11 +1,10 @@
 import * as React from 'react';
-import * as redux from 'redux';
 import { connect } from 'react-redux';
 import { push } from 'react-router-redux';
 
-import Store from '../../store';
 import FilmList from './FilmList';
 import CommandBar, { ICommand } from '../CommandBar';
+import { IDispatch } from '../../actions/ActionTypes';
 
 export type Props = {
     page: number;
@@ -32,7 +31,7 @@ class FilmsViewComponent extends React.Component<CombinedProps> {
     }
 }
 
-const mapDispatchToProps = (dispatch: redux.Dispatch<Store.All>): ConnectedDispatch => ({
+const mapDispatchToProps = (dispatch: IDispatch): ConnectedDispatch => ({
     createFilm: () => dispatch(push('/film/create'))
 });
 

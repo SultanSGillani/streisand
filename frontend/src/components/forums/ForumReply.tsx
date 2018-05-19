@@ -1,11 +1,11 @@
 import * as React from 'react';
-import * as redux from 'redux';
 import { connect } from 'react-redux';
 import { Card, CardBody, CardTitle, Button, CardFooter } from 'reactstrap';
 
 import Store from '../../store';
 import IUser from '../../models/IUser';
 import { getItem } from '../../utilities/mapping';
+import { IDispatch } from '../../actions/ActionTypes';
 import Editor, { IEditorHandle } from '../bbcode/Editor';
 import { IForumThread } from '../../models/forums/IForumThread';
 import { IForumPostUpdate } from '../../models/forums/IForumPost';
@@ -61,7 +61,7 @@ const mapStateToProps = (state: Store.All, ownProps: Props): ConnectedState => {
     };
 };
 
-const mapDispatchToProps = (dispatch: redux.Dispatch<Store.All>): ConnectedDispatch => ({
+const mapDispatchToProps = (dispatch: IDispatch): ConnectedDispatch => ({
     postReply: (post: IForumPostUpdate) => dispatch(postReply(post))
 });
 

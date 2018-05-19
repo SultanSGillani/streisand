@@ -1,5 +1,4 @@
 import * as React from 'react';
-import * as redux from 'redux';
 import { connect } from 'react-redux';
 import { replace } from 'react-router-redux';
 import { LinkContainer } from 'react-router-bootstrap';
@@ -8,6 +7,7 @@ import { UncontrolledDropdown, DropdownToggle, DropdownMenu, DropdownItem } from
 import Store from '../../store';
 import IUser from '../../models/IUser';
 import { getItem } from '../../utilities/mapping';
+import { IDispatch } from '../../actions/ActionTypes';
 import { logout } from '../../actions/auth/LogoutAction';
 import { getCurrentUser } from '../../actions/users/CurrentUserAction';
 
@@ -65,7 +65,7 @@ const mapStateToProps = (state: Store.All): ConnectedState => ({
     })
 });
 
-const mapDispatchToProps = (dispatch: redux.Dispatch<Store.All>): ConnectedDispatch => ({
+const mapDispatchToProps = (dispatch: IDispatch): ConnectedDispatch => ({
     getCurrentUser: () => dispatch(getCurrentUser()),
     logout: () => {
         dispatch(logout());

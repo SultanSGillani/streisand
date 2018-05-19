@@ -1,12 +1,12 @@
 import * as React from 'react';
-import * as redux from 'redux';
 import { connect } from 'react-redux';
 import { Input, FormGroup } from 'reactstrap';
 
 import Store from '../../store';
-import CommandBar, { ICommand } from '../CommandBar';
-import Editor, { IEditorHandle } from '../bbcode/Editor';
 import { IWikiUpdate } from '../../models/IWiki';
+import CommandBar, { ICommand } from '../CommandBar';
+import { IDispatch } from '../../actions/ActionTypes';
+import Editor, { IEditorHandle } from '../bbcode/Editor';
 import { createWiki } from '../../actions/wikis/CreateWikiAction';
 
 export type Props = {};
@@ -62,7 +62,7 @@ const mapStateToProps = (state: Store.All, ownProps: Props): ConnectedState => (
     creating: state.sealed.wikis.creating
 });
 
-const mapDispatchToProps = (dispatch: redux.Dispatch<Store.All>): ConnectedDispatch => ({
+const mapDispatchToProps = (dispatch: IDispatch): ConnectedDispatch => ({
     createWiki: (wiki: IWikiUpdate) => dispatch(createWiki(wiki))
 });
 

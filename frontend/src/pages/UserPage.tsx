@@ -1,11 +1,11 @@
 import * as React from 'react';
-import * as redux from 'redux';
 import { connect } from 'react-redux';
 
 import Store from '../store';
 import IUser from '../models/IUser';
 import Empty from '../components/Empty';
 import { getNode } from '../utilities/mapping';
+import { IDispatch } from '../actions/ActionTypes';
 import UserView from '../components/users/UserView';
 import { numericIdentifier } from '../utilities/shim';
 import { getUser } from '../actions/users/UserAction';
@@ -64,7 +64,7 @@ const mapStateToProps = (state: Store.All, ownProps: Props): ConnectedState => {
     };
 };
 
-const mapDispatchToProps = (dispatch: redux.Dispatch<Store.All>): ConnectedDispatch => ({
+const mapDispatchToProps = (dispatch: IDispatch): ConnectedDispatch => ({
     getUser: (id: number) => dispatch(getUser(id))
 });
 

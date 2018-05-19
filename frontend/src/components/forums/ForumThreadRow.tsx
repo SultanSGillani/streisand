@@ -1,5 +1,4 @@
 import * as React from 'react';
-import * as redux from 'redux';
 import { connect } from 'react-redux';
 
 import Store from '../../store';
@@ -9,6 +8,7 @@ import ForumPostCell from './ForumPostCell';
 import DeleteCell from '../generic/DeleteCell';
 import EmptyThreadCell from './EmptyThreadCell';
 import { getItem } from '../../utilities/mapping';
+import { IDispatch } from '../../actions/ActionTypes';
 import IForumThread from '../../models/forums/IForumThread';
 import { IDeleteThreadProps, deleteForumThread } from '../../actions/forums/threads/DeleteThreadAction';
 
@@ -61,7 +61,7 @@ const mapStateToProps = (state: Store.All, ownProps: Props): ConnectedState => {
     };
 };
 
-const mapDispatchToProps = (dispatch: redux.Dispatch<Store.All>): ConnectedDispatch => ({
+const mapDispatchToProps = (dispatch: IDispatch): ConnectedDispatch => ({
     deleteForumThread: (props: IDeleteThreadProps) => dispatch(deleteForumThread(props))
 });
 

@@ -1,9 +1,9 @@
 import * as React from 'react';
-import * as redux from 'redux';
 import { connect } from 'react-redux';
 
 import Store from '../../store';
 import Empty from '../../components/Empty';
+import { IDispatch } from '../../actions/ActionTypes';
 import WikisView from '../../components/wikis/WikisView';
 import { getWikis } from '../../actions/wikis/WikisAction';
 import ILoadingStatus, { defaultStatus } from '../../models/base/ILoadingStatus';
@@ -60,7 +60,7 @@ const mapStateToProps = (state: Store.All, ownProps: Props): ConnectedState => {
     };
 };
 
-const mapDispatchToProps = (dispatch: redux.Dispatch<Store.All>): ConnectedDispatch => ({
+const mapDispatchToProps = (dispatch: IDispatch): ConnectedDispatch => ({
     getWikis: (page: number) => dispatch(getWikis(page))
 });
 

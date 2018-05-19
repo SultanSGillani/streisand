@@ -1,5 +1,4 @@
 import * as React from 'react';
-import * as redux from 'redux';
 import { connect } from 'react-redux';
 import { Card, CardHeader, CardBody, CardTitle } from 'reactstrap';
 
@@ -10,6 +9,7 @@ import UserLink from './links/UserLink';
 import TextView from './bbcode/TextView';
 import { getItem } from '../utilities/mapping';
 import { getDateDiff } from '../utilities/dates';
+import { IDispatch } from '../actions/ActionTypes';
 import { getLatestNews } from '../actions/NewsAction';
 import { IForumPost } from '../models/forums/IForumPost';
 import { IForumThread } from '../models/forums/IForumThread';
@@ -94,7 +94,7 @@ const mapStateToProps = (state: Store.All, ownProps: Props): ConnectedState => {
     return { post, author, thread, loading, loaded };
 };
 
-const mapDispatchToProps = (dispatch: redux.Dispatch<Store.All>): ConnectedDispatch => ({
+const mapDispatchToProps = (dispatch: IDispatch): ConnectedDispatch => ({
     getLatestNews: () => dispatch(getLatestNews())
 });
 
