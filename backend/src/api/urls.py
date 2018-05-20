@@ -4,8 +4,8 @@ from django.conf.urls import url, include
 from drf_yasg import openapi
 from drf_yasg.views import get_schema_view
 from rest_framework import routers, permissions
-from rest_framework_jwt.views import refresh_jwt_token, verify_jwt_token
 from rest_framework.documentation import include_docs_urls
+from rest_framework_jwt.views import refresh_jwt_token, verify_jwt_token
 
 from .films import views as films_views
 from .forums import views as forums_views
@@ -46,9 +46,11 @@ router.register(r'film-comments', viewset=films_views.FilmCommentViewSet, base_n
 router.register(r'collections', viewset=films_views.CollectionViewSet, base_name='collection')
 router.register(r'collection-comments', viewset=films_views.CollectionCommentViewSet, base_name='collection-comment')
 
-# Torrents
+# Torrents 
 router.register(r'torrents', viewset=torrents_views.TorrentViewSet, base_name='torrent')
 router.register(r'torrent-comments', viewset=torrents_views.TorrentCommentViewset, base_name='torrent-comment')
+router.register(r'torrent-stats',
+                viewset=torrents_views.TorrentStatViewSet, base_name='torrent-stat')
 
 # Tracker
 router.register(r'torrent-clients', viewset=tracker_views.TorrentClientViewSet, base_name='torrent-client')
@@ -90,9 +92,9 @@ urlpatterns = [
 
     # Login and user items
     url(r'^login/', users_views.UserLoginView.as_view()),
-    url(r'^current-user/', users_views.CurrentUserView.as_view()),
+    url(r'^current-user/', users_views.CurrentUserView.as_view(), name='current-user'),
     url(r'^change-password/', users_views.ChangePasswordView.as_view()),
-    url(r'^register/$', users_views.UserRegisterView.as_view()),
+    url(r'^register/$', users_views.UserRegisterView.as_view(), name='user-registration'),
 
     # JWT
     url(r'^token-refresh/', refresh_jwt_token),

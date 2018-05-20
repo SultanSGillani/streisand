@@ -1,12 +1,13 @@
 # -*- coding: utf-8 -*-
 
+from django.template.defaultfilters import filesizeformat
 from rest_framework import serializers
 
-from django.template.defaultfilters import filesizeformat
-
 from mediainfo.serializers import AdminMediainfoSerializer
-
+from torrent_stats.models import TorrentStats
 from torrents.models import Torrent, TorrentComment
+
+
 # from mediainfo.models import Mediainfo
 
 
@@ -52,6 +53,13 @@ class AdminTorrentSerializer(serializers.ModelSerializer):
     @staticmethod
     def get_size(obj):
         return filesizeformat(obj.size_in_bytes)
+
+
+class TorrentStatSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = TorrentStats
+        fields = '__all__'
+
     # TODO: Getting key error for text. make this torrent serializer updatable. Currently cannot due to
     # Key error with Media Info Serializer as a nested unwritable serializer.
     """

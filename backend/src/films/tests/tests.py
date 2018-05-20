@@ -1,7 +1,8 @@
 # -*- coding:utf-8 -*-
 from django.test import TestCase
-from films.models import Film, Collection
 from model_mommy import mommy
+
+from films.models import Film, Collection
 
 
 class FilmTestMommy(TestCase):
