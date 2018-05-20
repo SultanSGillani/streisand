@@ -88,14 +88,15 @@ urlpatterns = [
     # API Core-Schema Docs TODO: Update this when better Api Docs come out and work.
     url(r'^schema/', include_docs_urls(title='streisand API v1', public=False)),
 
-    # Login and user items
-    url(r'^login/', users_views.UserLoginAPIView.as_view()),
-    url(r'logout/', knox_views.LogoutView.as_view(), name='knox_logout'),
-    url(r'logoutall/', knox_views.LogoutAllView.as_view(), name='knox_logoutall'),
-    url(r'^current-user/', users_views.CurrentUserView.as_view()),
-    url(r'^change-password/', users_views.ChangePasswordView.as_view()),
-    url(r'^auth/register/$', users_views.UserRegisterView.as_view()),
+    # User/password/registration
+    url(r'^current-user/', users_views.CurrentUserView.as_view(), name='current-user'),
+    url(r'^change-password/', users_views.ChangePasswordView.as_view(), name='user-password-change'),
+    url(r'^register/$', users_views.UserRegisterView.as_view(), name='user-registration'),
 
+    # DRF-Knox Authentication
     url(r'^auth/', include('knox.urls')),
+    url(r'^login/', users_views.UserLoginAPIView.as_view()),
+    url(r'^logout/', knox_views.LogoutView.as_view(), name='knox_logout'),
+    url(r'^logoutall/', knox_views.LogoutAllView.as_view(), name='knox_logoutall'),
 
 ]

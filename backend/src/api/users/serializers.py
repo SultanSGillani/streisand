@@ -1,9 +1,10 @@
 # -*- coding: utf-8 -*-
 
+from django.contrib.auth import authenticate
 from django.contrib.auth.models import Group
 from django.contrib.auth.password_validation import validate_password
-from rest_framework import serializers
-from django.contrib.auth import authenticate
+from rest_framework import serializers, validators
+
 from users.models import User
 
 
@@ -134,22 +135,30 @@ class UserForForumSerializer(PublicUserProfileSerializer):
 
 
 class NewUserSerializer(serializers.ModelSerializer):
-    password = serializers.CharField(write_only=True, required=True)
+    email = serializers.EmailField(
+        required=True,
+        validators=[validators.UniqueValidator(queryset=User.objects.all())]
+    )
+    username = serializers.CharField(
+        max_length=32,
+        validators=[validators.UniqueValidator(queryset=User.objects.all())]
+    )
+    password = serializers.CharField(min_length=8, write_only=True)
+
+    def create(self, validated_data):
+        user = User.objects.create_user(validated_data['username'], validated_data['email'],
+                                        validated_data['password'])
+        return user
 
     class Meta:
         model = User
         fields = (
             'id',
             'username',
-            'password',
-
+            'email',
+            'password'
         )
 
-    def create(self, validated_data):
-        user = User.objects.create_user(validated_data['username'],
-                                        None,
-                                        validated_data['password'])
-        return user
 
 class LoginUserSerializer(serializers.Serializer):
     username = serializers.CharField()
@@ -160,4 +169,3 @@ class LoginUserSerializer(serializers.Serializer):
         if user and user.is_active:
             return user
         raise serializers.ValidationError("Unable to log in with provided credentials.")
-
