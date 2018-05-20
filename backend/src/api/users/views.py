@@ -4,7 +4,7 @@ from django.contrib.auth.models import Group
 from django.http import Http404
 from django_filters import rest_framework as filters
 from rest_framework import status
-from rest_framework.generics import UpdateAPIView, RetrieveAPIView, CreateAPIView, GenericAPIView
+from rest_framework.generics import UpdateAPIView, RetrieveAPIView, CreateAPIView
 from knox.models import AuthToken
 from rest_framework.permissions import IsAdminUser, IsAuthenticated, AllowAny
 from rest_framework.response import Response
