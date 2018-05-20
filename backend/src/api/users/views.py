@@ -4,18 +4,17 @@ from django.contrib.auth.models import Group
 from django.http import Http404
 from django_filters import rest_framework as filters
 from rest_framework import status
-from rest_framework.generics import UpdateAPIView, RetrieveAPIView, CreateAPIView
+from rest_framework.generics import UpdateAPIView, RetrieveAPIView, CreateAPIView, GenericAPIView
+from knox.models import AuthToken
 from rest_framework.permissions import IsAdminUser, IsAuthenticated, AllowAny
 from rest_framework.response import Response
 from rest_framework.viewsets import ModelViewSet
-from rest_framework_jwt.views import ObtainJSONWebToken
-
 from api.permissions import IsOwnerOrReadOnly
 from users.models import User
 from .filters import UserFilter, PublicUserFilter
 from .serializers import GroupSerializer, AdminUserProfileSerializer, \
-    OwnedUserProfileSerializer, PublicUserProfileSerializer, ChangePasswordSerializer, NewUserSerializer
-from .serializers import JWTSerializer
+    OwnedUserProfileSerializer, PublicUserProfileSerializer, ChangePasswordSerializer, NewUserSerializer, LoginUserSerializer
+from knox.auth import TokenAuthentication
 
 
 class UserRegisterView(CreateAPIView):
@@ -24,45 +23,31 @@ class UserRegisterView(CreateAPIView):
     """
     serializer_class = NewUserSerializer
     permission_classes = (AllowAny,)
+    authentication_classes = (TokenAuthentication,)
 
     def post(self, request, *args, **kwargs):
-        serializer = self.serializer_class(data=request.data)
-        if serializer.is_valid():
-            serializer.save()
-            return Response(serializer.data, status=status.HTTP_201_CREATED)
-        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+        serializer = self.get_serializer(data=request.data)
+        serializer.is_valid(raise_exception=True)
+        user = serializer.save()
+        return Response({
+            "user": OwnedUserProfileSerializer(user, context=self.get_serializer_context()).data,
+            "token": AuthToken.objects.create(user)
+        })
 
 
-class UserLoginView(ObtainJSONWebToken):
-    """
-    User Login View
-    """
-    serializer_class = JWTSerializer
+class UserLoginAPIView(CreateAPIView):
+    serializer_class = LoginUserSerializer
+    permission_classes = (AllowAny,)
+    authentication_classes = (TokenAuthentication,)
 
-    # def post(self, request, format=None):
-    #     data = request.data
-    #     username = data.get('username', None)
-    #     password = data.get('password', None)
-    #
-    #     user = authenticate(username=username, password=password)
-    #     # Generate token and add it to the response object
-    #     if user is not None:
-    #         login(request, account)
-    #         return Response({
-    #             'status': 'Successful',
-    #             'message': 'You have successfully been logged into your account.'
-    #         }, status=status.HTTP_200_OK)
-    #
-    #     return Response({
-    #         'status': 'Unauthorized',
-    #         'message': 'Username/password combination invalid.'
-    #     }, status=status.HTTP_401_UNAUTHORIZED)
-
-
-# class UserRegisterView(CreateAPIView):
-#     serializer_class = UserRegistrationSerializer
-#     queryset = User.objects.all()
-#     permission_classes = [AllowAny]
+    def post(self, request, *args, **kwargs):
+        serializer = self.get_serializer(data=request.data)
+        serializer.is_valid(raise_exception=True)
+        user = serializer.validated_data
+        return Response({
+            "user": OwnedUserProfileSerializer(user, context=self.get_serializer_context()).data,
+            "token": AuthToken.objects.create(user)
+        })
 
 
 class ChangePasswordView(UpdateAPIView):
