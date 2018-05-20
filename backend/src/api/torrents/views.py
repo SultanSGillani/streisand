@@ -1,12 +1,19 @@
+from django_filters import rest_framework as filters
 from rest_framework.permissions import IsAdminUser, IsAuthenticated
 from rest_framework.viewsets import ModelViewSet
 
-from .filters import TorrentFilter
-from django_filters import rest_framework as filters
-
-
+from torrent_stats.models import TorrentStats
 from torrents.models import Torrent, TorrentComment
-from .serializers import AdminTorrentSerializer, TorrentCommentSerializer
+from .filters import TorrentFilter
+from .serializers import AdminTorrentSerializer, TorrentCommentSerializer, TorrentStatSerializer
+
+
+class TorrentStatViewSet(ModelViewSet):
+    permission_classes = [IsAuthenticated]
+    serializer_class = TorrentStatSerializer
+    queryset = TorrentStats.objects.all().select_related(
+        'torrent',
+        'torrent__film', )
 
 
 class TorrentCommentViewset(ModelViewSet):
@@ -26,12 +33,12 @@ class TorrentCommentViewset(ModelViewSet):
     This will automatically associate the comment author with the torrent comment on creation,
     since we already know that the comment author is the currently logged in user.
     """
+
     def perform_create(self, serializer):
         serializer.validated_data['author'] = self.request.user
         return super(TorrentCommentViewset, self).perform_create(serializer)
 
     def get_queryset(self):
-
         queryset = super().get_queryset()
 
         film_id = self.request.query_params.get('film_id', None)
@@ -64,10 +71,9 @@ class TorrentViewSet(ModelViewSet):
         'mediainfo',
         'comments',
         'comments__author',
-    ).order_by('id', 'source_media',).distinct('id', 'source_media',)
+    ).order_by('id', 'source_media', ).distinct('id', 'source_media', )
 
     def get_queryset(self):
-
         queryset = super().get_queryset()
 
         film_id = self.request.query_params.get('film_id', None)

@@ -3,7 +3,7 @@
 from django.contrib.auth import authenticate, user_logged_in
 from django.contrib.auth.models import Group
 from django.contrib.auth.password_validation import validate_password
-from rest_framework import serializers
+from rest_framework import serializers, validators
 from rest_framework_jwt.serializers import JSONWebTokenSerializer, jwt_payload_handler, jwt_encode_handler
 from rest_framework_jwt.settings import api_settings
 
@@ -126,7 +126,6 @@ class OwnedUserProfileSerializer(AdminUserProfileSerializer):
 
 
 class PublicUserProfileSerializer(OwnedUserProfileSerializer):
-
     username = serializers.StringRelatedField(read_only=True)
 
     class Meta(OwnedUserProfileSerializer.Meta):
@@ -170,20 +169,26 @@ class UserForForumSerializer(PublicUserProfileSerializer):
 
 class NewUserSerializer(serializers.ModelSerializer):
     # TODO: add invite key
-    password = serializers.CharField(write_only=True, required=True)
-    confirm_password = serializers.CharField(write_only=True, required=True)
+    email = serializers.EmailField(
+        required=True,
+        validators=[validators.UniqueValidator(queryset=User.objects.all())]
+    )
+    username = serializers.CharField(
+        max_length=32,
+        validators=[validators.UniqueValidator(queryset=User.objects.all())]
+    )
+    password = serializers.CharField(min_length=8, write_only=True)
     token = serializers.SerializerMethodField()
 
     class Meta:
         model = User
-        fields = [
+        fields = (
+            'id',
             'username',
             'email',
             'password',
-            'confirm_password',
             'token',
-
-        ]
+        )
 
     def get_token(self, obj):
         jwt_payload_handler = api_settings.JWT_PAYLOAD_HANDLER
@@ -194,29 +199,6 @@ class NewUserSerializer(serializers.ModelSerializer):
         return token
 
     def create(self, validated_data):
-        return User.objects.create_user(**validated_data)
-
-    def update(self, instance, validated_data):
-        instance.email = validated_data.get('email', instance.email)
-        instance.username = validated_data.get('username', instance.username)
-        password = validated_data.get('password', None)
-        confirm_password = validated_data.get('confirm_password', None)
-
-        if password and password == confirm_password:
-            instance.set_password(password)
-
-        instance.save()
-        return instance
-
-    def validate(self, data):
-        '''
-        Ensure the passwords are the same
-        '''
-
-        if data['password']:
-            print("Here")
-            if data['password'] != data['confirm_password']:
-                raise serializers.ValidationError(
-                    "The passwords have to be the same"
-                )
-        return data
+        user = User.objects.create_user(validated_data['username'], validated_data['email'],
+                                        validated_data['password'])
+        return user
