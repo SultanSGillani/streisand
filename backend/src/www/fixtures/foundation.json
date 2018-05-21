@@ -1292,6 +1292,16 @@
   },
   {
     "model": "users.userannouncekey",
+    "pk": "548860de-17b6-43cd-9b8a-9e6acf3f8a83",
+    "fields": {
+      "user": 8,
+      "issued_at": "2018-05-21T15:17:45.665Z",
+      "revoked_at": null,
+      "revocation_notes": ""
+    }
+  },
+  {
+    "model": "users.userannouncekey",
     "pk": "cb3d2bcf-2efe-427b-88c5-b2fee0ebd36e",
     "fields": {
       "user": 3,
@@ -1561,6 +1571,47 @@
       "account_status": "enabled",
       "failed_login_attempts": 0,
       "announce_key": "1ef0be11-cb9e-4138-a75f-ece3bd79c939",
+      "torrent_download_key": null,
+      "avatar_url": null,
+      "custom_title": null,
+      "profile_description": null,
+      "staff_notes": null,
+      "irc_key": null,
+      "invited_by": null,
+      "invite_count": 0,
+      "bytes_uploaded": 0,
+      "bytes_downloaded": 0,
+      "log_successful_announces": false,
+      "last_seeded": null,
+      "average_seeding_size": 0,
+      "watch_queue": null,
+      "groups": [],
+      "user_permissions": [
+        108
+      ]
+    }
+  },
+  {
+    "model": "users.user",
+    "pk": 8,
+    "fields": {
+      "password": "argon2$argon2i$v=19$m=512,t=2,p=2$Q2haUnVOaG9VcFU0$YTu+NmPnpVwboxJh6O/iNw",
+      "last_login": "2018-05-21T15:18:20.046Z",
+      "is_superuser": true,
+      "username": "dirty",
+      "first_name": "",
+      "last_name": "",
+      "email": "",
+      "is_staff": true,
+      "is_active": true,
+      "date_joined": "2018-05-21T15:17:45.587Z",
+      "is_banned": false,
+      "old_id": null,
+      "user_class": 18,
+      "is_donor": false,
+      "account_status": "enabled",
+      "failed_login_attempts": 0,
+      "announce_key": "548860de-17b6-43cd-9b8a-9e6acf3f8a83",
       "torrent_download_key": null,
       "avatar_url": null,
       "custom_title": null,

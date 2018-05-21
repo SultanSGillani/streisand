@@ -294,6 +294,13 @@
                         "description": "A page number within the paginated result set.",
                         "required": false,
                         "type": "integer"
+                    },
+                    {
+                        "name": "size",
+                        "in": "query",
+                        "description": "Number of results to return per page.",
+                        "required": false,
+                        "type": "integer"
                     }
                 ],
                 "responses": {
@@ -676,6 +683,13 @@
                         "name": "page",
                         "in": "query",
                         "description": "A page number within the paginated result set.",
+                        "required": false,
+                        "type": "integer"
+                    },
+                    {
+                        "name": "size",
+                        "in": "query",
+                        "description": "Number of results to return per page.",
                         "required": false,
                         "type": "integer"
                     }
@@ -3017,6 +3031,13 @@
                         "description": "A page number within the paginated result set.",
                         "required": false,
                         "type": "integer"
+                    },
+                    {
+                        "name": "size",
+                        "in": "query",
+                        "description": "Number of results to return per page.",
+                        "required": false,
+                        "type": "integer"
                     }
                 ],
                 "responses": {
@@ -3168,6 +3189,351 @@
                     "description": "A unique integer value identifying this torrent comment.",
                     "required": true,
                     "type": "integer"
+                }
+            ]
+        },
+        "/torrent-requests/": {
+            "get": {
+                "operationId": "torrent-requests_list",
+                "description": "",
+                "parameters": [
+                    {
+                        "name": "page",
+                        "in": "query",
+                        "description": "A page number within the paginated result set.",
+                        "required": false,
+                        "type": "integer"
+                    },
+                    {
+                        "name": "size",
+                        "in": "query",
+                        "description": "Number of results to return per page.",
+                        "required": false,
+                        "type": "integer"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "",
+                        "schema": {
+                            "required": [
+                                "count",
+                                "results"
+                            ],
+                            "type": "object",
+                            "properties": {
+                                "count": {
+                                    "type": "integer"
+                                },
+                                "next": {
+                                    "type": "string",
+                                    "format": "uri"
+                                },
+                                "previous": {
+                                    "type": "string",
+                                    "format": "uri"
+                                },
+                                "results": {
+                                    "type": "array",
+                                    "items": {
+                                        "$ref": "#/definitions/TorrentRequest"
+                                    }
+                                }
+                            }
+                        }
+                    }
+                },
+                "tags": [
+                    "torrent-requests"
+                ]
+            },
+            "post": {
+                "operationId": "torrent-requests_create",
+                "description": "",
+                "parameters": [
+                    {
+                        "name": "data",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/TorrentRequest"
+                        }
+                    }
+                ],
+                "responses": {
+                    "201": {
+                        "description": "",
+                        "schema": {
+                            "$ref": "#/definitions/TorrentRequest"
+                        }
+                    }
+                },
+                "tags": [
+                    "torrent-requests"
+                ]
+            },
+            "parameters": []
+        },
+        "/torrent-requests/{id}/": {
+            "get": {
+                "operationId": "torrent-requests_read",
+                "description": "",
+                "parameters": [],
+                "responses": {
+                    "200": {
+                        "description": "",
+                        "schema": {
+                            "$ref": "#/definitions/TorrentRequest"
+                        }
+                    }
+                },
+                "tags": [
+                    "torrent-requests"
+                ]
+            },
+            "put": {
+                "operationId": "torrent-requests_update",
+                "description": "",
+                "parameters": [
+                    {
+                        "name": "data",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/TorrentRequest"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "",
+                        "schema": {
+                            "$ref": "#/definitions/TorrentRequest"
+                        }
+                    }
+                },
+                "tags": [
+                    "torrent-requests"
+                ]
+            },
+            "patch": {
+                "operationId": "torrent-requests_partial_update",
+                "description": "",
+                "parameters": [
+                    {
+                        "name": "data",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/TorrentRequest"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "",
+                        "schema": {
+                            "$ref": "#/definitions/TorrentRequest"
+                        }
+                    }
+                },
+                "tags": [
+                    "torrent-requests"
+                ]
+            },
+            "delete": {
+                "operationId": "torrent-requests_delete",
+                "description": "",
+                "parameters": [],
+                "responses": {
+                    "204": {
+                        "description": ""
+                    }
+                },
+                "tags": [
+                    "torrent-requests"
+                ]
+            },
+            "parameters": [
+                {
+                    "name": "id",
+                    "in": "path",
+                    "description": "A unique integer value identifying this torrent request.",
+                    "required": true,
+                    "type": "integer"
+                }
+            ]
+        },
+        "/torrent-stats/": {
+            "get": {
+                "operationId": "torrent-stats_list",
+                "description": "",
+                "parameters": [
+                    {
+                        "name": "page",
+                        "in": "query",
+                        "description": "A page number within the paginated result set.",
+                        "required": false,
+                        "type": "integer"
+                    },
+                    {
+                        "name": "size",
+                        "in": "query",
+                        "description": "Number of results to return per page.",
+                        "required": false,
+                        "type": "integer"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "",
+                        "schema": {
+                            "required": [
+                                "count",
+                                "results"
+                            ],
+                            "type": "object",
+                            "properties": {
+                                "count": {
+                                    "type": "integer"
+                                },
+                                "next": {
+                                    "type": "string",
+                                    "format": "uri"
+                                },
+                                "previous": {
+                                    "type": "string",
+                                    "format": "uri"
+                                },
+                                "results": {
+                                    "type": "array",
+                                    "items": {
+                                        "$ref": "#/definitions/TorrentStat"
+                                    }
+                                }
+                            }
+                        }
+                    }
+                },
+                "tags": [
+                    "torrent-stats"
+                ]
+            },
+            "post": {
+                "operationId": "torrent-stats_create",
+                "description": "",
+                "parameters": [
+                    {
+                        "name": "data",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/TorrentStat"
+                        }
+                    }
+                ],
+                "responses": {
+                    "201": {
+                        "description": "",
+                        "schema": {
+                            "$ref": "#/definitions/TorrentStat"
+                        }
+                    }
+                },
+                "tags": [
+                    "torrent-stats"
+                ]
+            },
+            "parameters": []
+        },
+        "/torrent-stats/{id}/": {
+            "get": {
+                "operationId": "torrent-stats_read",
+                "description": "",
+                "parameters": [],
+                "responses": {
+                    "200": {
+                        "description": "",
+                        "schema": {
+                            "$ref": "#/definitions/TorrentStat"
+                        }
+                    }
+                },
+                "tags": [
+                    "torrent-stats"
+                ]
+            },
+            "put": {
+                "operationId": "torrent-stats_update",
+                "description": "",
+                "parameters": [
+                    {
+                        "name": "data",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/TorrentStat"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "",
+                        "schema": {
+                            "$ref": "#/definitions/TorrentStat"
+                        }
+                    }
+                },
+                "tags": [
+                    "torrent-stats"
+                ]
+            },
+            "patch": {
+                "operationId": "torrent-stats_partial_update",
+                "description": "",
+                "parameters": [
+                    {
+                        "name": "data",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/TorrentStat"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "",
+                        "schema": {
+                            "$ref": "#/definitions/TorrentStat"
+                        }
+                    }
+                },
+                "tags": [
+                    "torrent-stats"
+                ]
+            },
+            "delete": {
+                "operationId": "torrent-stats_delete",
+                "description": "",
+                "parameters": [],
+                "responses": {
+                    "204": {
+                        "description": ""
+                    }
+                },
+                "tags": [
+                    "torrent-stats"
+                ]
+            },
+            "parameters": [
+                {
+                    "name": "id",
+                    "in": "path",
+                    "description": "A UUID string identifying this torrent stats.",
+                    "required": true,
+                    "type": "string",
+                    "format": "uuid"
                 }
             ]
         },
@@ -3327,6 +3693,13 @@
                         "name": "page",
                         "in": "query",
                         "description": "A page number within the paginated result set.",
+                        "required": false,
+                        "type": "integer"
+                    },
+                    {
+                        "name": "size",
+                        "in": "query",
+                        "description": "Number of results to return per page.",
                         "required": false,
                         "type": "integer"
                     }
@@ -3867,6 +4240,13 @@
                         "description": "A page number within the paginated result set.",
                         "required": false,
                         "type": "integer"
+                    },
+                    {
+                        "name": "size",
+                        "in": "query",
+                        "description": "Number of results to return per page.",
+                        "required": false,
+                        "type": "integer"
                     }
                 ],
                 "responses": {
@@ -3991,6 +4371,13 @@
                         "name": "page",
                         "in": "query",
                         "description": "A page number within the paginated result set.",
+                        "required": false,
+                        "type": "integer"
+                    },
+                    {
+                        "name": "size",
+                        "in": "query",
+                        "description": "Number of results to return per page.",
                         "required": false,
                         "type": "integer"
                     }
@@ -4170,6 +4557,13 @@
                         "name": "page",
                         "in": "query",
                         "description": "A page number within the paginated result set.",
+                        "required": false,
+                        "type": "integer"
+                    },
+                    {
+                        "name": "size",
+                        "in": "query",
+                        "description": "Number of results to return per page.",
                         "required": false,
                         "type": "integer"
                     }
@@ -5178,7 +5572,8 @@
                 },
                 "modifiedBy": {
                     "title": "Modified by",
-                    "type": "integer"
+                    "type": "integer",
+                    "readOnly": true
                 },
                 "modifiedAt": {
                     "title": "Modified at",
@@ -5195,6 +5590,18 @@
                 "topic": {
                     "title": "Topic",
                     "type": "integer"
+                },
+                "isLocked": {
+                    "title": "Is locked",
+                    "type": "boolean"
+                },
+                "isSticky": {
+                    "title": "Is sticky",
+                    "type": "boolean"
+                },
+                "isArchived": {
+                    "title": "Is archived",
+                    "type": "boolean"
                 }
             }
         },
@@ -5215,95 +5622,12 @@
                 }
             }
         },
-        "UserForForum": {
-            "title": "Author",
-            "required": [
-                "username"
-            ],
-            "type": "object",
-            "properties": {
-                "id": {
-                    "title": "ID",
-                    "type": "integer",
-                    "readOnly": true
-                },
-                "username": {
-                    "title": "Username",
-                    "description": "Required. 150 characters or fewer. Letters, digits and @/./+/-/_ only.",
-                    "type": "string",
-                    "pattern": "^[\\w.@+-]+$",
-                    "maxLength": 150,
-                    "minLength": 1
-                },
-                "userClass": {
-                    "title": "User class",
-                    "type": "integer"
-                },
-                "accountStatus": {
-                    "title": "Account status",
-                    "type": "string",
-                    "enum": [
-                        "unconfirmed",
-                        "enabled",
-                        "disabled"
-                    ]
-                },
-                "isDonor": {
-                    "title": "Is donor",
-                    "type": "boolean"
-                },
-                "customTitle": {
-                    "title": "Custom title",
-                    "type": "string",
-                    "maxLength": 256
-                },
-                "avatarUrl": {
-                    "title": "Avatar url",
-                    "type": "string",
-                    "format": "uri",
-                    "maxLength": 512
-                }
-            }
-        },
-        "ForumPostForTopic": {
-            "title": "Latest post",
-            "required": [
-                "thread",
-                "author",
-                "modifiedBy"
-            ],
-            "type": "object",
-            "properties": {
-                "id": {
-                    "title": "ID",
-                    "type": "integer",
-                    "readOnly": true
-                },
-                "thread": {
-                    "title": "Thread",
-                    "type": "integer"
-                },
-                "author": {
-                    "$ref": "#/definitions/UserForForum"
-                },
-                "createdAt": {
-                    "title": "Created at",
-                    "type": "string",
-                    "format": "date-time",
-                    "readOnly": true
-                },
-                "modifiedBy": {
-                    "$ref": "#/definitions/UserForForum"
-                }
-            }
-        },
         "ForumTopicIndex": {
             "required": [
                 "group",
                 "name",
                 "description",
-                "threads",
-                "latestPost"
+                "threads"
             ],
             "type": "object",
             "properties": {
@@ -5339,20 +5663,19 @@
                     "title": "Threads",
                     "type": "string"
                 },
+                "latestPost": {
+                    "title": "Latest post",
+                    "type": "integer"
+                },
                 "numberOfThreads": {
                     "title": "Number of threads",
                     "type": "integer",
-                    "maximum": 2147483647,
-                    "minimum": 0
+                    "readOnly": true
                 },
                 "numberOfPosts": {
                     "title": "Number of posts",
                     "type": "integer",
-                    "maximum": 2147483647,
-                    "minimum": 0
-                },
-                "latestPost": {
-                    "$ref": "#/definitions/ForumPostForTopic"
+                    "readOnly": true
                 }
             }
         },
@@ -5537,40 +5860,43 @@
                 "thread": {
                     "title": "Thread",
                     "type": "integer"
+                },
+                "threadTitle": {
+                    "title": "Thread title",
+                    "type": "string",
+                    "readOnly": true
                 }
             }
         },
         "NewUser": {
             "required": [
                 "username",
-                "password",
-                "confirmPassword"
+                "email",
+                "password"
             ],
             "type": "object",
             "properties": {
+                "id": {
+                    "title": "ID",
+                    "type": "integer",
+                    "readOnly": true
+                },
                 "username": {
                     "title": "Username",
-                    "description": "Required. 150 characters or fewer. Letters, digits and @/./+/-/_ only.",
                     "type": "string",
-                    "pattern": "^[\\w.@+-]+$",
-                    "maxLength": 150,
+                    "maxLength": 32,
                     "minLength": 1
                 },
                 "email": {
-                    "title": "Email address",
+                    "title": "Email",
                     "type": "string",
                     "format": "email",
-                    "maxLength": 254
+                    "minLength": 1
                 },
                 "password": {
                     "title": "Password",
                     "type": "string",
-                    "minLength": 1
-                },
-                "confirmPassword": {
-                    "title": "Confirm password",
-                    "type": "string",
-                    "minLength": 1
+                    "minLength": 8
                 },
                 "token": {
                     "title": "Token",
@@ -5690,6 +6016,153 @@
                     "type": "string",
                     "format": "date-time",
                     "readOnly": true
+                }
+            }
+        },
+        "TorrentRequest": {
+            "required": [
+                "filmTitle",
+                "description",
+                "releaseName"
+            ],
+            "type": "object",
+            "properties": {
+                "id": {
+                    "title": "ID",
+                    "type": "integer",
+                    "readOnly": true
+                },
+                "filmTitle": {
+                    "title": "Film title",
+                    "type": "string",
+                    "maxLength": 1024,
+                    "minLength": 1
+                },
+                "filmYear": {
+                    "title": "Film year",
+                    "type": "integer",
+                    "maximum": 32767,
+                    "minimum": 0
+                },
+                "description": {
+                    "title": "Description",
+                    "type": "string",
+                    "minLength": 1
+                },
+                "releaseName": {
+                    "title": "Release name",
+                    "type": "string",
+                    "maxLength": 255,
+                    "minLength": 1
+                },
+                "requesterFollowedThrough": {
+                    "title": "Requester followed through",
+                    "type": "boolean"
+                },
+                "isSource": {
+                    "title": "Is source",
+                    "type": "boolean"
+                },
+                "createdBy": {
+                    "title": "Created by",
+                    "type": "integer"
+                },
+                "format": {
+                    "title": "Format",
+                    "type": "string",
+                    "readOnly": true
+                },
+                "imdb": {
+                    "title": "Imdb",
+                    "type": "integer"
+                },
+                "fillingTorrent": {
+                    "title": "Filling torrent",
+                    "type": "integer"
+                },
+                "sourceMedia": {
+                    "title": "Source media",
+                    "type": "string"
+                },
+                "resolution": {
+                    "title": "Resolution",
+                    "type": "string"
+                },
+                "codec": {
+                    "title": "Codec",
+                    "type": "string"
+                },
+                "container": {
+                    "title": "Container",
+                    "type": "string"
+                }
+            }
+        },
+        "TorrentStat": {
+            "required": [
+                "user",
+                "torrent"
+            ],
+            "type": "object",
+            "properties": {
+                "user": {
+                    "title": "User",
+                    "type": "integer"
+                },
+                "torrent": {
+                    "title": "Torrent",
+                    "type": "integer"
+                },
+                "bytesUploaded": {
+                    "title": "Bytes uploaded",
+                    "type": "integer",
+                    "maximum": 9223372036854775807,
+                    "minimum": -9223372036854775808
+                },
+                "bytesDownloaded": {
+                    "title": "Bytes downloaded",
+                    "type": "integer",
+                    "maximum": 9223372036854775807,
+                    "minimum": -9223372036854775808
+                },
+                "firstSnatched": {
+                    "title": "First snatched",
+                    "type": "string",
+                    "format": "date-time"
+                },
+                "lastSnatched": {
+                    "title": "Last snatched",
+                    "type": "string",
+                    "format": "date-time"
+                },
+                "snatchCount": {
+                    "title": "Snatch count",
+                    "type": "integer",
+                    "maximum": 2147483647,
+                    "minimum": -2147483648
+                },
+                "lastSeeded": {
+                    "title": "Last seeded",
+                    "type": "string",
+                    "format": "date-time"
+                },
+                "seedTime": {
+                    "title": "Seed time",
+                    "type": "number"
+                },
+                "ratio": {
+                    "title": "Ratio",
+                    "type": "string",
+                    "readOnly": true
+                },
+                "hnrCountdownStartedAt": {
+                    "title": "Hnr countdown started at",
+                    "type": "string",
+                    "format": "date-time"
+                },
+                "isHitAndRun": {
+                    "title": "Is hit and run",
+                    "type": "boolean"
                 }
             }
         },
