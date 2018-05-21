@@ -13,12 +13,12 @@ function byId(state: ItemMap = {}, action: Action): ItemMap {
     switch (action.type) {
         case 'RECEIVED_WIKI_DELETION':
             const copy = objectAssign({}, state);
-            delete copy[action.id];
+            delete copy[action.props.id];
             return copy;
         case 'RECEIVED_WIKI':
             return addLoadedNode(state, action.wiki);
         case 'RECEIVED_WIKIS':
-            return addLoadedNodes(state, action.items);
+            return addLoadedNodes(state, action.props.items);
         default:
             return state;
     }
@@ -32,8 +32,8 @@ function pages(state: Pages = {}, action: Action): Pages {
         case 'RECEIVED_WIKIS':
         case 'FAILED_WIKIS':
         case 'INVALIDATE_WIKIS':
-            const page: IPage = pageReducer(state[action.page], action);
-            return objectAssign({}, state, { [action.page]: page });
+            const page: IPage = pageReducer(state[action.props.page], action);
+            return objectAssign({}, state, { [action.props.page]: page });
         default:
             return state;
     }
@@ -42,7 +42,7 @@ function pages(state: Pages = {}, action: Action): Pages {
 function pageSize(state: number = 0, action: Action): number {
     switch (action.type) {
         case 'RECEIVED_WIKIS':
-            return action.pageSize;
+            return action.props.pageSize;
         default:
             return state;
     }
@@ -51,7 +51,7 @@ function pageSize(state: number = 0, action: Action): number {
 function count(state: number = 0, action: Action): number {
     switch (action.type) {
         case 'RECEIVED_WIKIS':
-            return action.count;
+            return action.props.count;
         default:
             return state;
     }

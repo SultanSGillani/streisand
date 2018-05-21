@@ -14,7 +14,7 @@ import { IDispatch } from '../../actions/ActionTypes';
 import IForumPost from '../../models/forums/IForumPost';
 import Editor, { IEditorHandle } from '../bbcode/Editor';
 import { updatePost } from '../../actions/forums/posts/UpdatePostAction';
-import { IDeletePostProps, deleteForumPost } from '../../actions/forums/posts/DeletePostAction';
+import { IActionProps, deleteForumPost } from '../../actions/forums/posts/DeletePostAction';
 
 export type Props = {
     page: number;
@@ -31,7 +31,7 @@ type ConnectedState = {
     screenSize: ScreenSize;
 };
 type ConnectedDispatch = {
-    deleteForumPost: (props: IDeletePostProps) => void;
+    deleteForumPost: (props: IActionProps) => void;
     updatePost: (id: number, content: string) => void;
 };
 
@@ -158,7 +158,7 @@ const mapStateToProps = (state: Store.All, ownProps: Props): ConnectedState => {
 };
 
 const mapDispatchToProps = (dispatch: IDispatch): ConnectedDispatch => ({
-    deleteForumPost: (props: IDeletePostProps) => dispatch(deleteForumPost(props)),
+    deleteForumPost: (props: IActionProps) => dispatch(deleteForumPost(props)),
     updatePost: (id: number, content: string) => dispatch(updatePost(id, content))
 });
 

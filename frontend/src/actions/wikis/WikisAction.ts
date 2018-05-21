@@ -9,7 +9,10 @@ interface IActionProps { page: number; }
 const PAGE_SIZE = globals.pageSize.wikis;
 
 export type RequestWikis = { type: 'REQUEST_WIKIS', props: IActionProps };
-export type ReceivedWikis = { type: 'RECEIVED_WIKIS', props: { page: number, pageSize: number, count: number, items: IWiki[] } };
+export type ReceivedWikis = {
+    type: 'RECEIVED_WIKIS',
+    props: { page: number, pageSize: number, count: number, items: IWiki[] }
+};
 export type FailedWikis = { type: 'FAILED_WIKIS', props: IActionProps };
 export type InvalidateWikis = { type: 'INVALIDATE_WIKIS', props: IActionProps };
 type WikisAction = RequestWikis | ReceivedWikis | FailedWikis | InvalidateWikis;
@@ -40,7 +43,7 @@ export function getWikis(page: number = 1): Action {
     return { type: 'REQUEST_WIKIS', props: { page } };
 }
 
-const errorPrefix = (props: IActionProps) => `Featching page ${props.page} of wikis failed`;
+const errorPrefix = (props: IActionProps) => `Fetching page ${props.page} of wikis failed`;
 const fetch = generateAuthFetch({ errorPrefix, request, received, failure });
 export const wikisSaga = generateSage<RequestWikis>('REQUEST_WIKIS', fetch);
 

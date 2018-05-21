@@ -8,7 +8,7 @@ import { generateAuthFetch, generateSage } from './sagas/generators';
 import { INewsPostResponse, INewsPostData } from '../models/forums/INewsPost';
 
 export type RequestNews = { type: 'REQUEST_NEWS_POST' };
-export type ReceivedNews = { type: 'RECEIVED_NEWS_POST', data: INewsPostData };
+export type ReceivedNews = { type: 'RECEIVED_NEWS_POST', props: { data: INewsPostData }};
 export type FailedNews = { type: 'FAILED_NEWS_POST' };
 
 type NewsAction = RequestNews | ReceivedNews | FailedNews;
@@ -17,7 +17,7 @@ type Action = NewsAction;
 
 function* received(news: INewsPostResponse) {
     const data = transformNewsPost(news);
-    yield put({ type: 'RECEIVED_NEWS_POST', data });
+    yield put({ type: 'RECEIVED_NEWS_POST', props: { data } });
     if (data.users.length) {
         yield put(getUsers(data.users));
     }

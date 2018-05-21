@@ -33,10 +33,10 @@ function byId(state: ItemMap = {}, action: Action): ItemMap {
     switch (action.type) {
         case 'RECEIVED_FORUM_GROUPS':
         case 'RECEIVED_FORUM_TOPIC':
-            return combineMap(state, addGroups(action.data.groups));
-        case 'DELETED_FORUM_TOPIC':
-            if (action.group) {
-                return combineMap(state, { [action.group]: removeTopic(state[action.group], action.topic) });
+            return combineMap(state, addGroups(action.props.data.groups));
+        case 'RECEIVED_FORUM_TOPIC_DELETION':
+            if (action.props.group) {
+                return combineMap(state, { [action.props.group]: removeTopic(state[action.props.group], action.props.topic) });
             }
             return state;
         default:
@@ -47,7 +47,7 @@ function byId(state: ItemMap = {}, action: Action): ItemMap {
 function items(state: number[] = [], action: Action): number[] {
     switch (action.type) {
         case 'RECEIVED_FORUM_GROUPS':
-            return action.data.groups.map((group: IForumGroup) => {
+            return action.props.data.groups.map((group: IForumGroup) => {
                 return group.id;
             });
         default:

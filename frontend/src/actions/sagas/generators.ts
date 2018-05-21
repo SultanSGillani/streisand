@@ -1,8 +1,8 @@
 import { takeEvery, ForkEffect, select, call, put } from 'redux-saga/effects';
 
-import { getAuthToken } from './selectors';
-import { handleError2 } from '../ErrorAction';
 import Store from '../../store';
+import { getAuthToken } from './selectors';
+import { handleError } from '../ErrorAction';
 
 interface IBasicAction { type: string; }
 export function generateSage<T extends IBasicAction>(type: T['type'], worker: (action: T) => IterableIterator<any>): () => IterableIterator<ForkEffect> {
@@ -40,9 +40,9 @@ export function generateAuthFetch<A extends IPropsAction<P>, P, R>(props: IGener
             yield isAction(result) ? put(result) : result;
         } catch (error) {
             if (typeof props.errorPrefix === 'function') {
-                yield handleError2(error, props.errorPrefix(actionProps));
+                yield handleError(error, props.errorPrefix(actionProps));
             } else {
-                yield handleError2(error, props.errorPrefix);
+                yield handleError(error, props.errorPrefix);
             }
             yield put(props.failure(actionProps));
         }
@@ -64,7 +64,7 @@ export function generateFetch<A extends IPropsAction<P>, P, R>(props: IGenerateF
             const result = props.received(data, actionProps);
             yield isAction(result) ? put(result) : result;
         } catch (error) {
-            yield handleError2(error, props.errorPrefix);
+            yield handleError(error, props.errorPrefix);
             yield put(props.failure(actionProps));
         }
     };

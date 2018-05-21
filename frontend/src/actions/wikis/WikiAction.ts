@@ -6,8 +6,8 @@ import { generateAuthFetch, generateSage } from '../sagas/generators';
 
 interface IActionProps { id: number; }
 
-export type RequestWiki = { type: 'REQUEST_WIKI', props: IActionProps } ;
-export type ReceivedtWiki = { type: 'RECEIVED_WIKI', wiki: IWiki } ;
+export type RequestWiki = { type: 'REQUEST_WIKI', props: IActionProps };
+export type ReceivedtWiki = { type: 'RECEIVED_WIKI', wiki: IWiki };
 export type FailedWiki = { type: 'FAILED_WIKI', props: IActionProps };
 
 type WikiAction = RequestWiki | ReceivedtWiki | FailedWiki;
@@ -20,6 +20,10 @@ export function received(wiki: IWiki): Action {
 
 function failure(props: IActionProps): Action {
     return { type: 'FAILED_WIKI', props };
+}
+
+export function getWiki(id: number): Action {
+    return { type: 'REQUEST_WIKI', props: { id } };
 }
 
 const errorPrefix = (props: IActionProps) => `Fetching wiki (${props.id}) failed`;

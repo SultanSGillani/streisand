@@ -1,71 +1,62 @@
-import Store from '../../../store';
-import ErrorAction from '../../ErrorAction';
+import { put } from 'redux-saga/effects';
+
 import { transformTopic } from '../transforms';
-import { fetchData } from '../../ActionHelper';
 import globals from '../../../utilities/globals';
 import { get } from '../../../utilities/Requestor';
-import { ThunkAction, IDispatch } from '../../ActionTypes';
+import { getUsers } from '../../users/BulkUserAction';
 import { IForumGroupData } from '../../../models/forums/IForumGroup';
-import BulkUserAction, { getUsers } from '../../users/BulkUserAction';
 import { IForumTopicResponse } from '../../../models/forums/IForumTopic';
+import { generateAuthFetch, generateSage } from '../../sagas/generators';
 
+interface IActionProps { id: number; page: number; }
 const PAGE_SIZE = globals.pageSize.threads;
-export type ForumTopicReceivedAction = {
+
+export type RequestForumTopic = { type: 'REQUEST_FORUM_TOPIC', props: IActionProps };
+export type ReceivedForumTopic = {
     type: 'RECEIVED_FORUM_TOPIC',
-    id: number,
-    page: number,
-    count: number,
-    pageSize: number;
-    data: IForumGroupData
+    props: { id: number, page: number, count: number, pageSize: number; data: IForumGroupData }
 };
+export type FailedForumTopic = { type: 'FAILED_FORUM_TOPIC', props: IActionProps };
+export type InvalidateForumTopic = { type: 'INVALIDATE_FORUM_TOPIC', props: IActionProps };
 
-type ForumTopicAction =
-    { type: 'FETCHING_FORUM_TOPIC', id: number, page: number } |
-    ForumTopicReceivedAction |
-    { type: 'FAILED_FORUM_TOPIC', id: number, page: number } |
-    { type: 'INVALIDATE_FORUM_TOPIC', id: number, page: number };
+type ForumTopicAction = RequestForumTopic | ReceivedForumTopic | FailedForumTopic | InvalidateForumTopic;
 export default ForumTopicAction;
-type Action = ForumTopicAction | BulkUserAction | ErrorAction;
+type Action = ForumTopicAction;
 
-type Props = {
-    id: number;
-    page: number;
-};
-
-function fetching(props: Props): Action {
-    return { type: 'FETCHING_FORUM_TOPIC', id: props.id, page: props.page };
-}
-
-function received(props: Props, response: IForumTopicResponse): ThunkAction<Action> {
-    return (dispatch: IDispatch<Action>, getState: () => Store.All) => {
-        const data = transformTopic(response);
-        if (data.users.length) {
-            dispatch(getUsers(data.users));
-        }
-        return dispatch({
-            type: 'RECEIVED_FORUM_TOPIC',
+function* received(response: IForumTopicResponse, props: IActionProps) {
+    const data = transformTopic(response);
+    yield put({
+        type: 'RECEIVED_FORUM_TOPIC',
+        props: {
             id: props.id,
             page: props.page,
             pageSize: PAGE_SIZE,
             count: response.threads.count,
             data: data
-        });
-    };
+        }
+    });
+
+    if (data.users.length) {
+        yield put(getUsers(data.users));
+    }
 }
 
-function failure(props: Props): Action {
-    return { type: 'FAILED_FORUM_TOPIC', id: props.id, page: props.page };
+function failure(props: IActionProps): Action {
+    return { type: 'FAILED_FORUM_TOPIC', props };
 }
 
-export function invalidate(props: Props): Action {
-    return { type: 'INVALIDATE_FORUM_TOPIC', id: props.id, page: props.page };
+export function invalidate(props: IActionProps): Action {
+    return { type: 'INVALIDATE_FORUM_TOPIC', props };
 }
 
-export function getThreads(id: number, page: number = 1): ThunkAction<Action> {
-    const errorPrefix = `Fetching page ${page} of the forum topic (${id}) failed`;
-    return fetchData({ request, fetching, received, failure, errorPrefix, props: { id, page } });
+export function getThreads(id: number, page: number = 1): Action {
+    return { type: 'REQUEST_FORUM_TOPIC', props: { id, page } };
 }
 
-function request(token: string, props: Props): Promise<IForumTopicResponse> {
+const errorPrefix = (props: IActionProps) => `Fetching page ${props.page} of the forum topic (${props.id}) failed`;
+const fetch = generateAuthFetch({ errorPrefix, request, received, failure });
+export const forumTopicSaga = generateSage<RequestForumTopic>('REQUEST_FORUM_TOPIC', fetch);
+
+function request(token: string, props: IActionProps): Promise<IForumTopicResponse> {
     return get({ token, url: `${globals.apiUrl}/forum-topic-index/${props.id}/?page=${props.page}&size=${PAGE_SIZE}` });
 }

@@ -40,7 +40,7 @@ export function getFilms(page: number = 1): Action {
     return { type: 'REQUEST_FILMS', props: { page } };
 }
 
-const errorPrefix = (props: IActionProps) => `Featching page ${props.page} of films failed`;
+const errorPrefix = (props: IActionProps) => `Fetching page ${props.page} of films failed`;
 const fetch = generateAuthFetch({ errorPrefix, request, received, failure });
 export const filmsSaga = generateSage<RequestFilms>('REQUEST_FILMS', fetch);
 

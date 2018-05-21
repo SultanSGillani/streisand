@@ -8,7 +8,7 @@ import { IDispatch } from '../../actions/ActionTypes';
 import IWiki, { IWikiUpdate } from '../../models/IWiki';
 import Editor, { IEditorHandle } from '../bbcode/Editor';
 import { updateWiki } from '../../actions/wikis/UpdateWikiAction';
-import { IDeleteProps, deleteWiki } from '../../actions/wikis/DeleteWikiAction';
+import { IActionProps, deleteWiki } from '../../actions/wikis/DeleteWikiAction';
 
 export type Props = {
     wiki: IWiki;
@@ -22,7 +22,7 @@ type State = {
 type ConnectedState = {};
 
 type ConnectedDispatch = {
-    deleteWiki: (props: IDeleteProps) => void;
+    deleteWiki: (props: IActionProps) => void;
     updateWiki: (id: number, wiki: IWikiUpdate) => void;
 };
 
@@ -83,7 +83,7 @@ class WikiViewComponent extends React.Component<CombinedProps, State> {
 
 const mapDispatchToProps = (dispatch: IDispatch): ConnectedDispatch => ({
     updateWiki: (id: number, wiki: IWikiUpdate) => dispatch(updateWiki(id, wiki)),
-    deleteWiki: (props: IDeleteProps) => dispatch(deleteWiki(props))
+    deleteWiki: (props: IActionProps) => dispatch(deleteWiki(props))
 });
 
 const WikiView: React.ComponentClass<Props> =

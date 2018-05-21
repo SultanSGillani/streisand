@@ -1,53 +1,41 @@
+import { put } from 'redux-saga/effects';
 import { push } from 'react-router-redux';
 
-import Store from '../../../store';
 import globals from '../../../utilities/globals';
 import { post } from '../../../utilities/Requestor';
-import { ThunkAction, IDispatch } from '../../ActionTypes';
-import { IUnkownError } from '../../../models/base/IError';
-import ErrorAction, { handleError } from '../../ErrorAction';
+import { generateAuthFetch, generateSage } from '../../sagas/generators';
 import { ISingleForumThreadResponse } from '../../../models/forums/IForumThread';
 
-type CreateThreadAction =
-    { type: 'CREATING_FORUM_THREAD', topic: number, title: string } |
-    { type: 'CREATED_FORUM_THREAD', id: number } |
-    { type: 'FAILED_CREATING_FORUM_THREAD' };
+export interface IActionProps extends INewForumThreadPayload {}
+export interface INewForumThreadPayload { topic: number; title: string; }
+
+export type RequestNewThread = { type: 'REQUEST_NEW_FORUM_THREAD',  props: IActionProps } ;
+export type ReceivedNewThread = { type: 'RECEIVED_NEW_FORUM_THREAD', id: number } ;
+export type FailedNewThread = { type: 'FAILED_NEW_FORUM_THREAD',  props: IActionProps };
+
+type CreateThreadAction = RequestNewThread | ReceivedNewThread |FailedNewThread;
 export default CreateThreadAction;
-type Action = CreateThreadAction | ErrorAction;
+type Action = CreateThreadAction;
 
-export interface INewForumThreadPayload {
-    topic: number;
-    title: string;
+function* received(response: ISingleForumThreadResponse, props: IActionProps) {
+    const id = response.id;
+    // We can't just use this response because it doesn't contain author information
+    yield put({ type: 'RECEIVED_NEW_FORUM_THREAD', id });
+    yield put(push(`/forum/thread/${id}`));
 }
 
-function creating(payload: INewForumThreadPayload): Action {
-    return { type: 'CREATING_FORUM_THREAD', topic: payload.topic, title: payload.title };
+function failure(props: IActionProps): Action {
+    return { type: 'FAILED_NEW_FORUM_THREAD', props };
 }
 
-function created(id: number): Action {
-    return { type: 'CREATED_FORUM_THREAD', id };
+export function createForumThread(props: INewForumThreadPayload): Action {
+    return { type: 'REQUEST_NEW_FORUM_THREAD', props };
 }
 
-function failure(): Action {
-    return { type: 'FAILED_CREATING_FORUM_THREAD' };
-}
+const errorPrefix = 'Creating a new forum thread failed';
+const fetch = generateAuthFetch({ errorPrefix, request, received, failure });
+export const creatForumThreadSaga = generateSage<RequestNewThread>('REQUEST_NEW_FORUM_THREAD', fetch);
 
-export function createForumThread(payload: INewForumThreadPayload): ThunkAction<Action> {
-    return (dispatch: IDispatch<Action>, getState: () => Store.All) => {
-        const state = getState();
-        dispatch(creating(payload));
-        return create(state.sealed.auth.token, payload).then((thread: ISingleForumThreadResponse) => {
-            // We can't just use this response because it doesn't contain author information
-            const action = dispatch(created(thread.id));
-            dispatch(push(`/forum/thread/${thread.id}`));
-             return action;
-        }, (error: IUnkownError) => {
-            dispatch(failure());
-            return dispatch(handleError(error));
-        });
-    };
-}
-
-function create(token: string, data: INewForumThreadPayload): Promise<ISingleForumThreadResponse> {
+function request(token: string, data: IActionProps): Promise<ISingleForumThreadResponse> {
     return post({ token, data, url: `${globals.apiUrl}/forum-thread-items/` });
 }

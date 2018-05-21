@@ -10,7 +10,7 @@ import EmptyThreadCell from './EmptyThreadCell';
 import { getItem } from '../../utilities/mapping';
 import { IDispatch } from '../../actions/ActionTypes';
 import IForumThread from '../../models/forums/IForumThread';
-import { IDeleteThreadProps, deleteForumThread } from '../../actions/forums/threads/DeleteThreadAction';
+import { IActionProps, deleteForumThread } from '../../actions/forums/threads/DeleteThreadAction';
 
 export type Props = {
     page: number;
@@ -21,7 +21,7 @@ type ConnectedState = {
     author?: IUser;
 };
 type ConnectedDispatch = {
-    deleteForumThread: (props: IDeleteThreadProps) => void;
+    deleteForumThread: (props: IActionProps) => void;
 };
 
 type CombinedProps = Props & ConnectedDispatch & ConnectedState;
@@ -62,7 +62,7 @@ const mapStateToProps = (state: Store.All, ownProps: Props): ConnectedState => {
 };
 
 const mapDispatchToProps = (dispatch: IDispatch): ConnectedDispatch => ({
-    deleteForumThread: (props: IDeleteThreadProps) => dispatch(deleteForumThread(props))
+    deleteForumThread: (props: IActionProps) => dispatch(deleteForumThread(props))
 });
 
 const ForumThreadRow: React.ComponentClass<Props> =

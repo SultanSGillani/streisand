@@ -5,8 +5,8 @@ import { combineReducers } from './helpers';
 function latest(state: number | null = null, action: Action): number | null {
     switch (action.type) {
         case 'RECEIVED_NEWS_POST':
-            if (action.data.posts.length) {
-                return action.data.posts[0].id;
+            if (action.props.data.posts.length) {
+                return action.props.data.posts[0].id;
             }
             return state;
         default:
