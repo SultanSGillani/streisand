@@ -2,13 +2,13 @@
 
 from django.contrib import admin
 from django.contrib.auth.admin import UserAdmin as DjangoUserAdmin
+from django.contrib.auth.models import AbstractUser
 
 from users.models import User, UserAnnounceKey, UserIPAddress, UserAnnounce, WatchedUser
 
 
-@admin.register(User)
-class UserAdmin(DjangoUserAdmin):
 
+class UserAdmin(DjangoUserAdmin):
     list_display = (
         'username',
         'user_class',
@@ -25,6 +25,7 @@ class UserAdmin(DjangoUserAdmin):
         'invited_by_link',
         'last_seeded',
         'seeding_size',
+
     )
 
     exclude = (
@@ -33,10 +34,6 @@ class UserAdmin(DjangoUserAdmin):
 
     search_fields = (
         'username',
-    )
-
-    actions = (
-        'reset_announce_key',
     )
 
     def get_queryset(self, request):
@@ -48,30 +45,15 @@ class UserAdmin(DjangoUserAdmin):
     def has_add_permission(self, request, obj=None):
         return False
 
-    def reset_announce_key(self, request, queryset):
-        count = 0
-        for user in queryset:
-            user.reset_announce_key()
-            count += 1
-        self.message_user(
-            request,
-            "{n} announce key{s} successfully reset.".format(
-                n=count,
-                s='' if count == 1 else 's',
-            )
-        )
-    reset_announce_key.short_description = "Reset announce key for selected user(s)"
-
     def invited_by_link(self, user):
         if user.invited_by is not None:
             return user.invited_by.admin_link
+
     invited_by_link.allow_tags = True
     invited_by_link.short_description = "Invited by"
 
 
-@admin.register(UserAnnounceKey)
 class UserAnnounceKeyAdmin(admin.ModelAdmin):
-
     list_display = (
         'id',
         'user_link',
@@ -98,12 +80,11 @@ class UserAnnounceKeyAdmin(admin.ModelAdmin):
 
     def user_link(self, announce_key):
         return announce_key.user.admin_link
+
     user_link.allow_tags = True
 
 
-@admin.register(UserIPAddress)
 class UserIPAddressAdmin(admin.ModelAdmin):
-
     list_display = (
         'ip_address',
         'user_link',
@@ -127,12 +108,11 @@ class UserIPAddressAdmin(admin.ModelAdmin):
 
     def user_link(self, user_ip_address):
         return user_ip_address.user.admin_link
+
     user_link.allow_tags = True
 
 
-@admin.register(UserAnnounce)
 class UserAnnounceAdmin(admin.ModelAdmin):
-
     list_display = (
         'time_stamp',
         'announce_key',
@@ -149,9 +129,7 @@ class UserAnnounceAdmin(admin.ModelAdmin):
     ordering = ['-time_stamp']
 
 
-@admin.register(WatchedUser)
 class WatchedUserAdmin(admin.ModelAdmin):
-
     fields = (
         'user',
         'last_checked',
@@ -170,3 +148,14 @@ class WatchedUserAdmin(admin.ModelAdmin):
             'user',
             'checked_by',
         )
+
+
+
+admin.site.register(User)
+admin.site.register(UserIPAddress, UserIPAddressAdmin)
+admin.site.register(WatchedUser, WatchedUserAdmin)
+admin.site.register(UserAnnounce, UserAnnounceAdmin)
+admin.site.register(UserAnnounceKey, UserAnnounceKeyAdmin)
+
+
+
