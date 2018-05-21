@@ -7,7 +7,7 @@ from rest_framework import serializers, validators
 from rest_framework_jwt.serializers import JSONWebTokenSerializer, jwt_payload_handler, jwt_encode_handler
 from rest_framework_jwt.settings import api_settings
 
-from users.models import User
+from users.models import User, UserIPAddress
 
 
 class JWTSerializer(JSONWebTokenSerializer):
@@ -26,12 +26,12 @@ class JWTSerializer(JSONWebTokenSerializer):
                     raise serializers.ValidationError(msg)
 
                 payload = jwt_payload_handler(user)
-                user_logged_in.send(sender=user.__class__, request=self.context['request'], user=user)
+                user_logged_in.send(
+                    sender=user.__class__,
+                    request=self.context['request'],
+                    user=user)
 
-                return {
-                    'token': jwt_encode_handler(payload),
-                    'user': user
-                }
+                return {'token': jwt_encode_handler(payload), 'user': user}
             else:
                 msg = 'Unable to log in with provided credentials.'
                 raise serializers.ValidationError(msg)
@@ -59,8 +59,16 @@ class GroupSerializer(serializers.ModelSerializer):
         fields = ('url', 'name')
 
 
+class UserIPSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = UserIPAddress
+        fields = '__all__'
+
+
 class AdminUserProfileSerializer(serializers.ModelSerializer):
-    user_class_rank = serializers.PrimaryKeyRelatedField(source='user_class', read_only=True)
+    user_class_rank = serializers.PrimaryKeyRelatedField(
+        source='user_class', read_only=True)
+    ip_addresses = UserIPSerializer(many=True, read_only=True)
     user_class = serializers.StringRelatedField()
 
     class Meta:
@@ -70,6 +78,7 @@ class AdminUserProfileSerializer(serializers.ModelSerializer):
             'user_class',
             'user_class_rank',
             'last_login',
+            'ip_addresses',
             'username',
             'email',
             'is_superuser',
@@ -85,19 +94,26 @@ class AdminUserProfileSerializer(serializers.ModelSerializer):
             'profile_description',
             'staff_notes',
             'irc_key',
+            'last_seen',
             'invite_count',
+            'invite_tree',
             'bytes_uploaded',
             'bytes_downloaded',
             'last_seeded',
             'average_seeding_size',
             'announce_key',
+            'announce_url',
             'invited_by',
             'watch_queue',
             'user_permissions',
             'torrents',
         )
 
-        extra_kwargs = {'password': {'write_only': True, }}
+        extra_kwargs = {
+            'password': {
+                'write_only': True,
+            }
+        }
 
 
 class OwnedUserProfileSerializer(AdminUserProfileSerializer):
@@ -171,12 +187,10 @@ class NewUserSerializer(serializers.ModelSerializer):
     # TODO: add invite key
     email = serializers.EmailField(
         required=True,
-        validators=[validators.UniqueValidator(queryset=User.objects.all())]
-    )
+        validators=[validators.UniqueValidator(queryset=User.objects.all())])
     username = serializers.CharField(
         max_length=32,
-        validators=[validators.UniqueValidator(queryset=User.objects.all())]
-    )
+        validators=[validators.UniqueValidator(queryset=User.objects.all())])
     password = serializers.CharField(min_length=8, write_only=True)
     token = serializers.SerializerMethodField()
 
@@ -199,6 +213,7 @@ class NewUserSerializer(serializers.ModelSerializer):
         return token
 
     def create(self, validated_data):
-        user = User.objects.create_user(validated_data['username'], validated_data['email'],
+        user = User.objects.create_user(validated_data['username'],
+                                        validated_data['email'],
                                         validated_data['password'])
         return user
