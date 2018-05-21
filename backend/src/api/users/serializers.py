@@ -26,12 +26,12 @@ class JWTSerializer(JSONWebTokenSerializer):
                     raise serializers.ValidationError(msg)
 
                 payload = jwt_payload_handler(user)
-                user_logged_in.send(sender=user.__class__, request=self.context['request'], user=user)
+                user_logged_in.send(
+                    sender=user.__class__,
+                    request=self.context['request'],
+                    user=user)
 
-                return {
-                    'token': jwt_encode_handler(payload),
-                    'user': user
-                }
+                return {'token': jwt_encode_handler(payload), 'user': user}
             else:
                 msg = 'Unable to log in with provided credentials.'
                 raise serializers.ValidationError(msg)
@@ -60,13 +60,14 @@ class GroupSerializer(serializers.ModelSerializer):
 
 
 class UserIPSerializer(serializers.ModelSerializer):
-	class Meta:
-		model = UserIPAddress
-		fields = '__all__'
+    class Meta:
+        model = UserIPAddress
+        fields = '__all__'
 
 
 class AdminUserProfileSerializer(serializers.ModelSerializer):
-    user_class_rank = serializers.PrimaryKeyRelatedField(source='user_class', read_only=True)
+    user_class_rank = serializers.PrimaryKeyRelatedField(
+        source='user_class', read_only=True)
     ip_addresses = UserIPSerializer(many=True, read_only=True)
     user_class = serializers.StringRelatedField()
 
@@ -108,7 +109,11 @@ class AdminUserProfileSerializer(serializers.ModelSerializer):
             'torrents',
         )
 
-        extra_kwargs = {'password': {'write_only': True, }}
+        extra_kwargs = {
+            'password': {
+                'write_only': True,
+            }
+        }
 
 
 class OwnedUserProfileSerializer(AdminUserProfileSerializer):
@@ -182,12 +187,10 @@ class NewUserSerializer(serializers.ModelSerializer):
     # TODO: add invite key
     email = serializers.EmailField(
         required=True,
-        validators=[validators.UniqueValidator(queryset=User.objects.all())]
-    )
+        validators=[validators.UniqueValidator(queryset=User.objects.all())])
     username = serializers.CharField(
         max_length=32,
-        validators=[validators.UniqueValidator(queryset=User.objects.all())]
-    )
+        validators=[validators.UniqueValidator(queryset=User.objects.all())])
     password = serializers.CharField(min_length=8, write_only=True)
     token = serializers.SerializerMethodField()
 
@@ -210,6 +213,7 @@ class NewUserSerializer(serializers.ModelSerializer):
         return token
 
     def create(self, validated_data):
-        user = User.objects.create_user(validated_data['username'], validated_data['email'],
+        user = User.objects.create_user(validated_data['username'],
+                                        validated_data['email'],
                                         validated_data['password'])
         return user
