@@ -6,8 +6,9 @@ from django.contrib.auth.password_validation import validate_password
 from rest_framework import serializers, validators
 from rest_framework_jwt.serializers import JSONWebTokenSerializer, jwt_payload_handler, jwt_encode_handler
 from rest_framework_jwt.settings import api_settings
-
+from api.mixins import AllowFieldLimitingMixin
 from users.models import User, UserIPAddress
+from rest_framework.validators import UniqueTogetherValidator
 
 
 class JWTSerializer(JSONWebTokenSerializer):
@@ -59,13 +60,20 @@ class GroupSerializer(serializers.ModelSerializer):
         fields = ('url', 'name')
 
 
-class UserIPSerializer(serializers.ModelSerializer):
+class UserIPSerializer(AllowFieldLimitingMixin, serializers.ModelSerializer):
+    ip_address = serializers.SerializerMethodField()
+
     class Meta:
         model = UserIPAddress
-        fields = '__all__'
+        fields = ('id', 'user', 'first_used', 'last_used', 'ip_address')
+
+    def get_ip_address(self, obj):
+        if obj.user.user_class.is_staff:
+            return '127.0.0.1'
+        return obj.ip_address
 
 
-class AdminUserProfileSerializer(serializers.ModelSerializer):
+class AdminUserProfileSerializer(AllowFieldLimitingMixin, serializers.ModelSerializer):
     user_class_rank = serializers.PrimaryKeyRelatedField(
         source='user_class', read_only=True)
     ip_addresses = UserIPSerializer(many=True, read_only=True)
@@ -114,6 +122,13 @@ class AdminUserProfileSerializer(serializers.ModelSerializer):
                 'write_only': True,
             }
         }
+
+        validators = [
+            UniqueTogetherValidator(
+                queryset=UserIPAddress.objects.all(),
+                fields=('user', 'ip_address')
+            )
+        ]
 
 
 class OwnedUserProfileSerializer(AdminUserProfileSerializer):
