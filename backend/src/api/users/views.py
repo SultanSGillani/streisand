@@ -35,7 +35,7 @@ class UserRegisterView(CreateAPIView):
         })
 
 
-class UserLoginAPIView(CreateAPIView):
+class UserLoginView(CreateAPIView):
     serializer_class = LoginUserSerializer
     permission_classes = (AllowAny,)
     authentication_classes = (TokenAuthentication,)

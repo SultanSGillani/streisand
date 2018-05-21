@@ -135,6 +135,7 @@ class UserForForumSerializer(PublicUserProfileSerializer):
 
 
 class NewUserSerializer(serializers.ModelSerializer):
+    # TODO: add invite key
     email = serializers.EmailField(
         required=True,
         validators=[validators.UniqueValidator(queryset=User.objects.all())]

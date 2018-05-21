@@ -6,7 +6,7 @@ from django.db.models.signals import post_save, post_delete
 from django.dispatch import receiver
 from users.models import User, WatchedUser, UserClass
 from www.models import Feature, LoginAttempt
-
+from knox.models import AuthToken
 from .signals import successful_login, failed_login
 
 
@@ -22,6 +22,7 @@ def invalidate_user_cache(**kwargs):
 def handle_new_user(**kwargs):
     if kwargs['created']:
         user = kwargs['instance']
+        AuthToken.objects.create(user=user)
 
         can_leech = Permission.objects.get(codename='can_leech')
         user.user_permissions.add(can_leech)

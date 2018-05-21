@@ -46,9 +46,11 @@ router.register(r'film-comments', viewset=films_views.FilmCommentViewSet, base_n
 router.register(r'collections', viewset=films_views.CollectionViewSet, base_name='collection')
 router.register(r'collection-comments', viewset=films_views.CollectionCommentViewSet, base_name='collection-comment')
 
-# Torrents
+# Torrents 
 router.register(r'torrents', viewset=torrents_views.TorrentViewSet, base_name='torrent')
 router.register(r'torrent-comments', viewset=torrents_views.TorrentCommentViewset, base_name='torrent-comment')
+router.register(r'torrent-stats',
+                viewset=torrents_views.TorrentStatViewSet, base_name='torrent-stat')
 
 # Tracker
 router.register(r'torrent-clients', viewset=tracker_views.TorrentClientViewSet, base_name='torrent-client')
@@ -88,14 +90,15 @@ urlpatterns = [
     # API Core-Schema Docs TODO: Update this when better Api Docs come out and work.
     url(r'^schema/', include_docs_urls(title='streisand API v1', public=False)),
 
-    # User/password/registration
+    # Login and user items
+    url(r'^login/', users_views.UserLoginView.as_view()),
     url(r'^current-user/', users_views.CurrentUserView.as_view(), name='current-user'),
-    url(r'^change-password/', users_views.ChangePasswordView.as_view(), name='user-password-change'),
+    url(r'^change-password/', users_views.ChangePasswordView.as_view()),
     url(r'^register/$', users_views.UserRegisterView.as_view(), name='user-registration'),
 
     # DRF-Knox Authentication
     url(r'^auth/', include('knox.urls')),
-    url(r'^login/', users_views.UserLoginAPIView.as_view()),
+    url(r'^login/', users_views.UserLoginView.as_view()),
     url(r'^logout/', knox_views.LogoutView.as_view(), name='knox_logout'),
     url(r'^logoutall/', knox_views.LogoutAllView.as_view(), name='knox_logoutall'),
 
