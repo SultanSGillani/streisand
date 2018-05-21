@@ -251,6 +251,9 @@ class ForumThreadItemSerializer(ModelSerializer):
             'modified_at',
             'title',
             'topic',
+            'is_locked',
+            'is_sticky',
+            'is_archived',
         )
 
         read_only_fields = ('modified_at', 'modified_by')

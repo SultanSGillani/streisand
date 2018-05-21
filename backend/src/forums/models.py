@@ -3,9 +3,9 @@
 from django.db import models
 from django.db.models import F
 from django.urls import reverse
+from positions import PositionField
 
 from .managers import ForumGroupQuerySet, ForumTopicQuerySet, ForumThreadQuerySet, ForumPostQuerySet
-from positions import PositionField
 
 
 class ForumGroup(models.Model):
@@ -35,7 +35,7 @@ class ForumGroup(models.Model):
 
     @property
     def topics_count(self):
-        return self.topics.count
+        return self.topics.count()
 
     @property
     def is_group(self):
@@ -68,7 +68,7 @@ class ForumTopic(models.Model):
         null=True,
         on_delete=models.SET_NULL,
     )
-    is_archived = models.NullBooleanField(default=False)
+
     staff_only_thread_creation = models.BooleanField(default=False)
     number_of_threads = models.PositiveIntegerField(default=0)
     number_of_posts = models.PositiveIntegerField(default=0)
@@ -118,6 +118,7 @@ class ForumThread(models.Model):
         on_delete=models.SET_NULL,
     )
     modified = models.BooleanField(default=False)
+    is_archived = models.BooleanField(default=False)
     modified_at = models.DateTimeField(auto_now=True, null=True)
     modified_count = models.PositiveIntegerField(default=0, editable=False)
     modified_by = models.ForeignKey(
@@ -165,14 +166,10 @@ class ForumThread(models.Model):
     def count(self):
         return self.count()
 
-    @property
-    def posts_count(self):
-        return self.posts.count()
-
     def save(self, *args, **kwargs):
         if self.pk:
-            self.modified = True
-            self.modified_count = F('modified_count') + 1
+            if self.modified:
+                self.modified_count = F('modified_count') + 1
 
         super(ForumThread, self).save(*args, **kwargs)
 
@@ -207,7 +204,7 @@ class ForumPost(models.Model):
         related_name='posts',
         on_delete=models.CASCADE,
     )
-    position = PositionField(unique_for_field='thread', editable=False)
+    position = PositionField(collection='thread', editable=False)
     objects = ForumPostQuerySet.as_manager()
 
     class Meta:
@@ -228,8 +225,8 @@ class ForumPost(models.Model):
 
     def save(self, *args, **kwargs):
         if self.pk:
-            self.modified = True
-            self.modified_count = F('modified_count') + 1
+            if self.modified:
+                self.modified_count = F('modified_count') + 1
 
         super(ForumPost, self).save(*args, **kwargs)
 

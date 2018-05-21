@@ -39,7 +39,7 @@ class Migration(migrations.Migration):
                 ('modified', models.BooleanField(default=False)),
                 ('modified_at', models.DateTimeField(auto_now=True, null=True)),
                 ('modified_count', models.PositiveIntegerField(default=0, editable=False)),
-                ('position', positions.PositionField(default=-1, editable=False)),
+                ('position', positions.fields.PositionField(default=-1, editable=False)),
                 ('author', models.ForeignKey(null=True, on_delete=django.db.models.deletion.PROTECT, related_name='forum_posts', to=settings.AUTH_USER_MODEL)),
                 ('modified_by', models.ForeignKey(editable=False, null=True, on_delete=django.db.models.deletion.SET_NULL, related_name='modified_posts', to=settings.AUTH_USER_MODEL)),
             ],
