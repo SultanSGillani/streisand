@@ -11,18 +11,18 @@ import { addLoadedNode, addLoadedNodes, markLoading, markFailed } from './utilit
 type ItemMap = INodeMap<IFilm>;
 function byId(state: ItemMap = {}, action: Action): ItemMap {
     switch (action.type) {
-        case 'DELETED_FILM':
+        case 'RECEIVED_FILM_DELETION':
             const copy = objectAssign({}, state);
-            delete copy[action.id];
+            delete copy[action.props.id];
             return copy;
-        case 'FETCHING_FILM':
-            return markLoading(state, action.id);
+        case 'REQUEST_FILM':
+            return markLoading(state, action.props.id);
         case 'RECEIVED_FILM':
             return addLoadedNode(state, action.film);
         case 'FAILED_FILM':
-            return markFailed(state, action.id);
+            return markFailed(state, action.props.id);
         case 'RECEIVED_FILMS':
-            return addLoadedNodes(state, action.items);
+            return addLoadedNodes(state, action.props.items);
         default:
             return state;
     }
@@ -32,12 +32,12 @@ const pageReducer = getPageReducer('FILMS');
 type Pages = { [page: number]: IPage };
 function pages(state: Pages = {}, action: Action): Pages {
     switch (action.type) {
-        case 'FETCHING_FILMS':
+        case 'REQUEST_FILMS':
         case 'RECEIVED_FILMS':
         case 'FAILED_FILMS':
         case 'INVALIDATE_FILMS':
-            const page: IPage = pageReducer(state[action.page], action);
-            return objectAssign({}, state, { [action.page]: page });
+            const page: IPage = pageReducer(state[action.props.page], action);
+            return objectAssign({}, state, { [action.props.page]: page });
         default:
             return state;
     }
@@ -46,7 +46,7 @@ function pages(state: Pages = {}, action: Action): Pages {
 function pageSize(state: number = 0, action: Action): number {
     switch (action.type) {
         case 'RECEIVED_FILMS':
-            return action.pageSize;
+            return action.props.pageSize;
         default:
             return state;
     }
@@ -55,7 +55,7 @@ function pageSize(state: number = 0, action: Action): number {
 function count(state: number = 0, action: Action): number {
     switch (action.type) {
         case 'RECEIVED_FILMS':
-            return action.count;
+            return action.props.count;
         default:
             return state;
     }

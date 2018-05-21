@@ -1,6 +1,6 @@
 import { RouterAction, LocationActionPayload, LOCATION_CHANGE } from 'react-router-redux';
 
-import AuthAction from '../actions/auth/AuthAction';
+import AuthAction from '../actions/auth/AuthenticateAction';
 import ILocationInfo, { ILocation } from '../models/ILocationInfo';
 
 interface IPayload extends LocationActionPayload, ILocation {
@@ -47,7 +47,7 @@ function location(state: ILocationInfo = defaultValue, action: Action): ILocatio
         return state;
     }
 
-    if (action.type === 'AUTHENTICATED') {
+    if (action.type === 'RECEIVED_AUTHENTICATION') {
         return { referred: true };
     }
 

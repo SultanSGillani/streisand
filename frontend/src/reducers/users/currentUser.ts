@@ -16,7 +16,7 @@ function loading(state: boolean = false, action: Action): boolean {
     switch (action.type) {
         case 'RECEIVED_CURRENT_USER':
             return false;
-        case 'FETCHING_CURRENT_USER':
+        case 'REQUEST_CURRENT_USER':
             return true;
         default:
             return state;

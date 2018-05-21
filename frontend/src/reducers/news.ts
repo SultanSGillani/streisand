@@ -16,7 +16,7 @@ function latest(state: number | null = null, action: Action): number | null {
 
 function loading(state: boolean = false, action: Action): boolean {
     switch (action.type) {
-        case 'FETCHING_NEWS_POST':
+        case 'REQUEST_NEWS_POST':
             return true;
         case 'FAILED_NEWS_POST':
         case 'RECEIVED_NEWS_POST':

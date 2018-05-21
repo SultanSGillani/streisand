@@ -1,39 +1,39 @@
-import { ThunkAction } from '../ActionTypes';
+
+import { transformUser } from './transforms';
 import globals from '../../utilities/globals';
 import { get } from '../../utilities/Requestor';
-
-import ErrorAction from '../ErrorAction';
-import { fetchData } from '../ActionHelper';
-import { transformUser } from './transforms';
 import IUser, { IUserResponse } from '../../models/IUser';
+import { generateSage, generateAuthFetch } from '../sagas/generators';
 
-type UserAction =
-    { type: 'FETCHING_USER', id: number } |
-    { type: 'RECEIVED_USER', user: IUser } |
-    { type: 'FAILED_USER', id: number };
+interface IActionProps { id: number; }
+
+export type RequestUser = { type: 'REQUEST_USER', props: IActionProps };
+export type ReceivedUser = { type: 'RECEIVED_USER', user: IUser };
+export type FailedUser = { type: 'FAILED_USER', props: IActionProps };
+
+type UserAction = RequestUser | ReceivedUser | FailedUser;
 export default UserAction;
-type Action = UserAction | ErrorAction;
+type Action = UserAction;
 
-function fetching(id: number): Action {
-    return { type: 'FETCHING_USER', id };
-}
-
-function received(id: number, response: IUserResponse): Action {
+function received(response: IUserResponse): Action {
     return {
         type: 'RECEIVED_USER',
         user: transformUser(response)
     };
 }
 
-function failure(id: number): Action {
-    return { type: 'FAILED_USER', id };
+function failure(props: IActionProps): Action {
+    return { type: 'FAILED_USER', props };
 }
 
-export function getUser(id: number): ThunkAction<Action> {
-    const errorPrefix = `Fetching user (${id}) failed`;
-    return fetchData({ request, fetching, received, failure, errorPrefix, props: id });
+export function getUser(id: number): Action {
+    return { type: 'REQUEST_USER', props: { id } };
 }
 
-function request(token: string, id: number): Promise<IUserResponse> {
-    return get({ token, url: `${globals.apiUrl}/users/${id}/` });
+const errorPrefix = (props: IActionProps) => `Fetching user (${props.id}) failed`;
+const fetch = generateAuthFetch({ errorPrefix, request, received, failure });
+export const userSaga = generateSage<RequestUser>('REQUEST_USER', fetch);
+
+function request(token: string, props: IActionProps): Promise<IUserResponse> {
+    return get({ token, url: `${globals.apiUrl}/users/${props.id}/` });
 }

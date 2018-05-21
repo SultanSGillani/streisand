@@ -1,4 +1,5 @@
 import { replace, RouterAction } from 'react-router-redux';
+import { put } from 'redux-saga/effects';
 
 import { logout } from './auth/LogoutAction';
 import { IUnkownError } from '../models/base/IError';
@@ -30,4 +31,16 @@ export function handleError(error: IUnkownError, prefix?: string): ThunkAction<A
         const message = `${label}${JSON.stringify(error.result)}`;
         return dispatch(showError(message));
     };
+}
+
+export function* handleError2(error: IUnkownError, prefix?: string) {
+    if (error.status === 401) {
+        yield put(logout());
+        yield put(showError('Authentication expired'));
+        yield put(replace('/login'));
+    } else {
+        const label = prefix ? `${prefix}: ` : '';
+        const message = `${label}${JSON.stringify(error.result)}`;
+        yield put(showError(message));
+    }
 }

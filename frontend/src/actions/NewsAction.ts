@@ -1,42 +1,39 @@
-import Store from '../store';
-import ErrorAction from './ErrorAction';
+import { put } from 'redux-saga/effects';
+
 import globals from '../utilities/globals';
 import { get } from '../utilities/Requestor';
-import { simplefetchData } from './ActionHelper';
-import { ThunkAction, IDispatch } from './ActionTypes';
+import { getUsers } from './users/BulkUserAction';
 import { transformNewsPost } from './forums/transforms';
-import BulkUserAction, { getUsers } from './users/BulkUserAction';
+import { generateAuthFetch, generateSage } from './sagas/generators';
 import { INewsPostResponse, INewsPostData } from '../models/forums/INewsPost';
 
-type NewsAction =
-    { type: 'FETCHING_NEWS_POST' } |
-    { type: 'RECEIVED_NEWS_POST', data: INewsPostData } |
-    { type: 'FAILED_NEWS_POST' };
+export type RequestNews = { type: 'REQUEST_NEWS_POST' };
+export type ReceivedNews = { type: 'RECEIVED_NEWS_POST', data: INewsPostData };
+export type FailedNews = { type: 'FAILED_NEWS_POST' };
+
+type NewsAction = RequestNews | ReceivedNews | FailedNews;
 export default NewsAction;
-type Action = NewsAction | BulkUserAction | ErrorAction;
+type Action = NewsAction;
 
-function fetching(): Action {
-    return { type: 'FETCHING_NEWS_POST' };
-}
-
-function received(news: INewsPostResponse): ThunkAction<Action> {
-    return (dispatch: IDispatch<Action>, getState: () => Store.All) => {
-        const data = transformNewsPost(news);
-        if (data.users.length) {
-            dispatch(getUsers(data.users));
-        }
-        return dispatch({ type: 'RECEIVED_NEWS_POST', data });
-    };
+function* received(news: INewsPostResponse) {
+    const data = transformNewsPost(news);
+    yield put({ type: 'RECEIVED_NEWS_POST', data });
+    if (data.users.length) {
+        yield put(getUsers(data.users));
+    }
 }
 
 function failure(): Action {
     return { type: 'FAILED_NEWS_POST' };
 }
 
-export function getLatestNews(): ThunkAction<Action> {
-    const errorPrefix = 'Fetching latest news failed';
-    return simplefetchData({ request, fetching, received, failure, errorPrefix });
+export function getLatestNews(): Action {
+    return { type: 'REQUEST_NEWS_POST' };
 }
+
+const errorPrefix = 'Fetching latest news failed';
+const fetch = generateAuthFetch({ errorPrefix, request, received, failure });
+export const newsSaga = generateSage<RequestNews>('REQUEST_NEWS_POST', fetch);
 
 function request(token: string): Promise<INewsPostResponse> {
     return get({ token, url: `${globals.apiUrl}/news-posts/latest/` });

@@ -1,57 +1,41 @@
+import { put } from 'redux-saga/effects';
 import { push } from 'react-router-redux';
 
-import Store from '../../store';
 import globals from '../../utilities/globals';
 import { post } from '../../utilities/Requestor';
-import { ThunkAction, IDispatch } from '../ActionTypes';
-
-import WikiAction from './WikiAction';
 import IWiki, { IWikiUpdate } from '../../models/IWiki';
-import { IUnkownError } from '../../models/base/IError';
-import ErrorAction, { handleError } from '../ErrorAction';
+import { received as receviedWiki } from './WikiAction';
+import { generateAuthFetch, generateSage } from '../sagas/generators';
 
-type CreateWikiAction =
-    { type: 'CREATING_WIKI', wiki: IWikiUpdate } |
-    { type: 'CREATED_WIKI', id: number } |
-    { type: 'FAILED_CREATING_WIKI' };
+interface IActionProps extends IWikiUpdate { }
+
+export type RequestNewWiki = { type: 'REQUEST_NEW_WIKI', props: IActionProps };
+export type ReceivedNewWiki = { type: 'RECEIVED_NEW_WIKI', id: number };
+export type FailedNewWiki = { type: 'FAILED_NEW_WIKI', props: IActionProps };
+
+type CreateWikiAction = RequestNewWiki | ReceivedNewWiki | FailedNewWiki;
 export default CreateWikiAction;
-type Action = CreateWikiAction | WikiAction | ErrorAction;
+type Action = CreateWikiAction;
 
-function received(id: number, response: IWiki): Action {
-    return {
-        type: 'RECEIVED_WIKI',
-        wiki: response
-    };
+function* received(response: IWiki) {
+    const id = response.id;
+    yield put(receviedWiki(response));
+    yield put({ type: 'RECEIVED_NEW_WIKI', id });
+    yield put(push(`/wiki/${id}`));
 }
 
-function creating(wiki: IWikiUpdate): Action {
-    return { type: 'CREATING_WIKI', wiki };
+function failure(props: IActionProps): Action {
+    return { type: 'FAILED_NEW_WIKI', props };
 }
 
-function created(id: number): Action {
-    return { type: 'CREATED_WIKI', id };
+export function createWiki(props: IWikiUpdate): Action {
+    return { type: 'REQUEST_NEW_WIKI', props };
 }
 
-function failure(): Action {
-    return { type: 'FAILED_CREATING_WIKI' };
-}
+const errorPrefix = 'Creating a new wiki failed';
+const fetch = generateAuthFetch({ errorPrefix, request, received, failure });
+export const creatWikiSaga = generateSage<RequestNewWiki>('REQUEST_NEW_WIKI', fetch);
 
-export function createWiki(wiki: IWikiUpdate): ThunkAction<Action> {
-    return (dispatch: IDispatch<Action>, getState: () => Store.All) => {
-        const state = getState();
-        dispatch(creating(wiki));
-        return request(state.sealed.auth.token, wiki).then((response: IWiki) => {
-            dispatch(received(response.id, response));
-            const action = dispatch(created(response.id));
-            dispatch(push(`/wiki/${response.id}`));
-            return action;
-        }, (error: IUnkownError) => {
-            dispatch(failure());
-            return dispatch(handleError(error));
-        });
-    };
-}
-
-function request(token: string, data: IWikiUpdate): Promise<IWiki> {
+function request(token: string, data: IActionProps): Promise<IWiki> {
     return post({ token, data, url: `${globals.apiUrl}/wikis/` });
 }
