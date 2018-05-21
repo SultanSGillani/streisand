@@ -7,7 +7,7 @@ import { fetchData } from '../ActionHelper';
 import ITorrent from '../../models/ITorrent';
 import IPagedResponse from '../../models/base/IPagedResponse';
 
-const PAGE_SIZE = globals.pageSize.wikis;
+const PAGE_SIZE = globals.pageSize.filmTorrents;
 type FilmTorrentsAction =
     { type: 'FETCHING_FILM_TORRENTS', id: number, page: number } |
     { type: 'RECEIVED_FILM_TORRENTS', id: number, page: number, pageSize: number, count: number, items: ITorrent[] } |
