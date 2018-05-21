@@ -2,10 +2,12 @@ from django_filters import rest_framework as filters
 from rest_framework.permissions import IsAdminUser, IsAuthenticated
 from rest_framework.viewsets import ModelViewSet
 
+from torrent_requests.models import TorrentRequest
 from torrent_stats.models import TorrentStats
 from torrents.models import Torrent, TorrentComment
 from .filters import TorrentFilter
-from .serializers import AdminTorrentSerializer, TorrentCommentSerializer, TorrentStatSerializer
+from .serializers import AdminTorrentSerializer, TorrentCommentSerializer, TorrentStatSerializer, \
+    TorrentRequestSerializer
 
 
 class TorrentStatViewSet(ModelViewSet):
@@ -13,7 +15,41 @@ class TorrentStatViewSet(ModelViewSet):
     serializer_class = TorrentStatSerializer
     queryset = TorrentStats.objects.all().select_related(
         'torrent',
-        'torrent__film', )
+        'torrent__film',
+        'user',
+    ).order_by(
+        'torrent'
+    )
+
+
+class TorrentRequestViewSet(ModelViewSet):
+    permission_classes = [IsAuthenticated]
+    serializer_class = TorrentRequestSerializer
+    queryset = TorrentRequest.objects.all().select_related(
+        'created_by',
+        'filling_torrent',
+        'source_media',
+        'resolution',
+        'codec',
+        'container',
+    ).prefetch_related(
+        'torrent', 'created_by'
+    ).order_by(
+        'created_at'
+    )
+
+    def perform_create(self, serializer):
+        serializer.validated_data['created_by'] = self.request.user
+        return super(TorrentRequestViewSet, self).perform_create(serializer)
+
+    def get_queryset(self):
+        queryset = super().get_queryset()
+
+        torrent_request_id = self.request.query_params.get('torrent_request_id', None)
+        if torrent_request_id is not None:
+            queryset = queryset.filter(torrent_request_id=torrent_request_id)
+
+        return queryset
 
 
 class TorrentCommentViewset(ModelViewSet):

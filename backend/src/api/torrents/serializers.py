@@ -2,8 +2,10 @@
 
 from django.template.defaultfilters import filesizeformat
 from rest_framework import serializers
+from rest_framework.validators import UniqueTogetherValidator
 
 from mediainfo.serializers import AdminMediainfoSerializer
+from torrent_requests.models import TorrentRequest
 from torrent_stats.models import TorrentStats
 from torrents.models import Torrent, TorrentComment
 
@@ -58,7 +60,48 @@ class AdminTorrentSerializer(serializers.ModelSerializer):
 class TorrentStatSerializer(serializers.ModelSerializer):
     class Meta:
         model = TorrentStats
-        fields = '__all__'
+        fields = (
+            'user',
+            'torrent',
+            'bytes_uploaded',
+            'bytes_downloaded',
+            'first_snatched',
+            'last_snatched',
+            'snatch_count',
+            'last_seeded',
+            'seed_time',
+            'ratio',
+            'hnr_countdown_started_at',
+            'is_hit_and_run',
+        )
+        validators = [
+            UniqueTogetherValidator(
+                queryset=TorrentStats.objects.all(),
+                fields=('user', 'torrent')
+            )
+        ]
+
+
+class TorrentRequestSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = TorrentRequest
+        fields = (
+            'id',
+            'film_title',
+            'film_year',
+            'description',
+            'release_name',
+            'requester_followed_through',
+            'is_source',
+            'created_by',
+            'format',
+            'imdb',
+            'filling_torrent',
+            'source_media',
+            'resolution',
+            'codec',
+            'container'
+        )
 
     # TODO: Getting key error for text. make this torrent serializer updatable. Currently cannot due to
     # Key error with Media Info Serializer as a nested unwritable serializer.

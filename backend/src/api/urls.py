@@ -50,6 +50,8 @@ router.register(r'collection-comments', viewset=films_views.CollectionCommentVie
 router.register(r'torrents', viewset=torrents_views.TorrentViewSet, base_name='torrent')
 router.register(r'torrent-comments', viewset=torrents_views.TorrentCommentViewset, base_name='torrent-comment')
 router.register(r'torrent-stats', viewset=torrents_views.TorrentStatViewSet, base_name='torrent-stat')
+router.register(r'torrent-requests', viewset=torrents_views.TorrentRequestViewSet, base_name='torrent-request')
+
 
 # Tracker
 router.register(r'torrent-clients', viewset=tracker_views.TorrentClientViewSet, base_name='torrent-client')
