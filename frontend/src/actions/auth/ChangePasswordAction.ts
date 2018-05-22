@@ -3,7 +3,7 @@ import { replace } from 'react-router-redux';
 
 import { logout } from './LogoutAction';
 import globals from '../../utilities/globals';
-import { put as putRequest } from '../../utilities/Requestor';
+import { putRequest } from '../../utilities/Requestor';
 import { generateAuthFetch, generateSage } from '../sagas/generators';
 
 interface IActionProps {

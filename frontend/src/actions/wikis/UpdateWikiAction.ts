@@ -1,6 +1,6 @@
 
 import globals from '../../utilities/globals';
-import { put } from '../../utilities/Requestor';
+import { putRequest } from '../../utilities/Requestor';
 import IWiki, { IWikiUpdate } from '../../models/IWiki';
 import { generateAuthFetch, generateSage } from '../sagas/generators';
 
@@ -32,5 +32,5 @@ export const updateWikiSaga = generateSage<RequestWikiUpdate>('REQUEST_WIKI_UPDA
 
 function request(token: string, props: IActionProps): Promise<IWiki> {
     const { id, ...data } = props;
-    return put({ token, data, url: `${globals.apiUrl}/wikis/${id}/` });
+    return putRequest({ token, data, url: `${globals.apiUrl}/wikis/${id}/` });
 }
