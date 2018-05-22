@@ -30,6 +30,7 @@ before_script:
   - pip install virtualenv
   - virtualenv jumpcut
   - source jumpcut/bin/activate
+  - pip install --upgrade pip==9.0.3
   - cd backend
   - python install.py
 
