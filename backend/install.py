@@ -1,7 +1,7 @@
 import pip
 
 _all_ = [
-    # requirements.txt
+    # Requirements
     'Django[argon2]==2.0.5',
     'Markdown==2.6.11',
     'Pillow==5.1.0',
@@ -41,10 +41,11 @@ _all_ = [
     'https://github.com/philipn/django-rest-framework-filters/archive/master.zip',
     # djangorestframework-filters
     'https://github.com/darklow/django-suit/tarball/v2',
-    'djangorestframework-jwt>=1.11.0',
+    'django-rest-knox==3.1.4',
     'drf-yasg[validation]==1.7.4',
     'python-decouple==3.1',
     'django-positions==0.6.0',
+
     # Testing Requirements
     'flake8==3.5.0',
     'ipdb==0.11',
@@ -65,10 +66,10 @@ _all_ = [
     'isort==4.3.4',
 ]
 
-# windows requirements?
+# Windows requirements
 windows = ['mod_wsgi==4.6.4', 'psycopg2-binary', ]
 
-# only install UWSGI on linux
+# Only install UWSGI on Linux
 linux = ['uWSGI==2.0.17', 'psycopg2>=2.7', ]
 
 

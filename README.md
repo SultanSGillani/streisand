@@ -118,7 +118,7 @@ I recommend using Windows PowerShell for most commands.
     
  - Install Requirements:
  
-  Now install the requirements, I have added a new folder at the root of the project, make sure your virtual environment is activated first!!!.
+  Now use the install script, I have added a new file at the backend folder of the project, make sure your virtual environment is activated first!!!.
     
     `cd backend`
     `python -m pip install --upgrade pip==9.0.3`
