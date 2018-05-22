@@ -23,13 +23,13 @@ variables:
 cache:
   paths:
     - .cache/
-    - jumpcut/
+    - venv/
 
 before_script:
   - python -m pip install --upgrade pip==9.0.3
   - pip install virtualenv
-  - virtualenv jumpcut
-  - source jumpcut/bin/activate
+  - virtualenv venv
+  - source venv/bin/activate
   - pip install --upgrade pip==9.0.3
   - cd backend
   - python install.py
