@@ -8,6 +8,7 @@ This project uses npm as its package/dependency manager. So after cloning the pr
 
 ## Building
 We are using [gulp](http://gulpjs.com/) as our task toolkit and since it is one of our npm dependencies, it should already be available. We really only need it for the 'cdn' task right now. We also have npm scripts set up for dev loop builds and prod builds.
+Babel is needed for the webpack development build because the hmr requires it for some reason ([react-hot-loader](https://github.com/gaearon/react-hot-loader#typescript)).
 
 ### Development
 By default, the code is setup for developing. The project adds several helpful debugging tools including a development server that supports module hot loading. If you run `npm run start` it will do an initial development build and startup up the web server opening app in your browser (`http://localhost:3000`). You will then be able to make changes to the code and the server will run incremental builds and update the site (usually) without you having to refresh the page.

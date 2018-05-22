@@ -15,6 +15,15 @@ module.exports = merge(common, {
         historyApiFallback: true,
         hot: true
     },
+    module: {
+        rules: [
+            {
+                test: /\.tsx?$/,
+                use: ['babel-loader', 'ts-loader'],
+                exclude: /node_modules/
+            }
+        ]
+    },
     plugins: [
         new webpack.DefinePlugin({
             'process.env.NODE_ENV': JSON.stringify('development')

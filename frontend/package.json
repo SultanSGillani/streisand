@@ -7,6 +7,7 @@
     "sideEffects": false,
     "scripts": {
         "start": "webpack-dev-server --open --config webpack.dev.js",
+        "dev": "webpack-dev-server --config webpack.dev.js",
         "build": "webpack --config webpack.prod.js"
     },
     "homepage": "https://git.ronzertnert.me/JumpCut-Front/jumpcut-web",
@@ -32,12 +33,17 @@
         "redux-saga": "^0.16.0"
     },
     "devDependencies": {
+        "@babel/core": "^7.0.0-beta.47",
+        "@babel/plugin-syntax-decorators": "^7.0.0-beta.47",
+        "@babel/plugin-syntax-jsx": "^7.0.0-beta.47",
+        "@babel/plugin-syntax-typescript": "^7.0.0-beta.47",
         "@types/object-assign": "^4.0.30",
         "@types/react": "^16.3.14",
         "@types/react-dom": "^16.0.5",
         "@types/react-router": "3.x.x",
         "@types/react-router-redux": "4.x.x",
         "@types/reactstrap": "^5.0.25",
+        "babel-loader": "^8.0.0-beta.3",
         "clean-webpack-plugin": "^0.1.19",
         "express": "^4.15.3",
         "gulp": "^4.0.0",
