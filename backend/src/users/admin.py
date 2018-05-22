@@ -2,10 +2,8 @@
 
 from django.contrib import admin
 from django.contrib.auth.admin import UserAdmin as DjangoUserAdmin
-from django.contrib.auth.models import AbstractUser
 
 from users.models import User, UserAnnounceKey, UserIPAddress, UserAnnounce, WatchedUser
-
 
 
 class UserAdmin(DjangoUserAdmin):
@@ -150,12 +148,8 @@ class WatchedUserAdmin(admin.ModelAdmin):
         )
 
 
-
 admin.site.register(User)
 admin.site.register(UserIPAddress, UserIPAddressAdmin)
 admin.site.register(WatchedUser, WatchedUserAdmin)
 admin.site.register(UserAnnounce, UserAnnounceAdmin)
 admin.site.register(UserAnnounceKey, UserAnnounceKeyAdmin)
-
-
-
