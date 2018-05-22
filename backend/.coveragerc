@@ -1,0 +1,48 @@
+[run]
+source = src
+disable_warnings = module-not-measured
+
+[report]
+
+omit =
+    manage.py
+    */__init__.py
+    */tests.py
+    */migrations/*
+    */urls.py
+    */import_scripts/*
+    */www/management/*
+    */www_wsgi.py
+    */tracker_wsgi.py*
+    */settings/*
+    */apps.py
+    */forms.py
+	install.py
+	
+exclude_lines =
+    pragma: no cover
+    def __repr__
+    if self.debug:
+    if settings.DEBUG
+    raise AssertionError
+    raise ImproperlyConfigured
+    raise TypeError
+    raise NotImplementedError
+    warnings.warn
+    logger.debug
+    logger.info
+    logger.warning
+    logger.error
+    return NotHandled
+	
+	# Don't complain if non-runnable code isn't run:
+    if 0:
+    if __name__ == .__main__.:
+	
+ignore_errors = True
+precision = 2
+show_missing = True
+	
+[paths]
+source =
+    backend/src/
