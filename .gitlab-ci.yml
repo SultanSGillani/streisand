@@ -27,7 +27,7 @@ cache:
 
 before_script:
   - python -m pip install --upgrade pip==9.0.3
-  - pip install virtualenv
+  - pip3 install virtualenv
   - virtualenv jumpcut
   - source jumpcut/bin/activate
   - cd backend
