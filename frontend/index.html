@@ -6,11 +6,10 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
     <title>Phoenix</title>
 
-    <!-- https://www.bootstrapcdn.com/bootswatch/ -->
     <script type="text/javascript">
-        var key = (typeof localStorage !== 'undefined' && localStorage['app.theme.key']) || 'darkly'
         var link = document.createElement('link');
-        link.href = `https://stackpath.bootstrapcdn.com/bootswatch/4.1.1/${key}/bootstrap.min.css`;
+        var key = (typeof localStorage !== 'undefined' && localStorage['app.theme.key']) || 'darkly';
+        link.href = 'https://stackpath.bootstrapcdn.com/bootswatch/4.1.1/' + key + '/bootstrap.min.css';
         link.type = 'text/css';link.rel = 'stylesheet';link.media = 'screen,print';link.id = 'theme';
         document.getElementsByTagName('head')[0].appendChild(link);
     </script>
@@ -28,8 +27,5 @@
 
 <body>
     <div id="index" style="overflow: hidden"></div>
-
-    <!-- Main -->
-    <script src="/dist/bundle.js"></script>
 </body>
 </html>

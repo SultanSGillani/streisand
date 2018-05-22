@@ -1,6 +1,7 @@
 import * as React from 'react';
-import { Provider } from 'react-redux';
 import { Router } from 'react-router';
+import { hot } from 'react-hot-loader';
+import { Provider } from 'react-redux';
 
 import DevTools from '../components/DevTools';
 import * as router from '../router';
@@ -8,9 +9,9 @@ import * as router from '../router';
 interface IOwnProps extends React.Props<Root> {
     store: any; // TODO: type
     history: any; // TODO: type
- }
+}
 
-export default class Root extends React.Component<IOwnProps> {
+class Root extends React.Component<IOwnProps> {
     public render() {
         const { store, history } = this.props;
         return (
@@ -23,3 +24,5 @@ export default class Root extends React.Component<IOwnProps> {
         );
     }
 }
+
+export default hot(module)(Root);
