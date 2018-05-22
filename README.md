@@ -118,10 +118,11 @@ I recommend using Windows PowerShell for most commands.
     
  - Install Requirements:
  
-  Now install the requirements, I have added a new folder at the root of the project.
+  Now install the requirements, I have added a new folder at the root of the project, make sure your virtual environment is activated first!!!.
     
     `cd backend`
-    `pip3 install -r windows_requirements.txt`
+    `python -m pip install --upgrade pip==9.0.3`
+	`python ./install.py`
     
  - Run the Development Server
  

@@ -8,12 +8,13 @@ RUN apt-get update \
 RUN mkdir /code
 
 WORKDIR /code
-COPY requirements.txt ./
-COPY requirements.txt /
-RUN pip install -r requirements.txt
-COPY testing_requirements.txt ./
-COPY testing_requirements.txt /
-RUN pip install -r testing_requirements.txt
+
+COPY install.py ./
+COPY pip.conf /root/.config/pip/pip.conf
+
+RUN python -m pip install --upgrade pip==9.0.3
+RUN export PIP_NO_BINARY=psycopg2
+RUN python ./install.py
 
 COPY . .
 
