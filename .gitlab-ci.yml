@@ -23,16 +23,16 @@ variables:
 cache:
   paths:
     - .cache/
-    - jumpcut/
+    - venv/
 
 before_script:
   - python -m pip install --upgrade pip==9.0.3
   - pip3 install virtualenv
-  - virtualenv jumpcut
-  - cd jumpcut/bin
+  - virtualenv venv
+  - cd venv/bin
   - pip install --upgrade pip==9.0.3
-  - source bin/activate
-  - cd ../../backend
+  - source activate
+  - cd $CI_PROJECT_DIR/backend
   - python install.py
 
 python_linter:
