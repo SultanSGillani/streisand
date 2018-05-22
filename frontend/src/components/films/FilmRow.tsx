@@ -2,9 +2,11 @@ import * as React from 'react';
 import { Link } from 'react-router';
 import { connect } from 'react-redux';
 
+import Store from '../../store';
 import IFilm from '../../models/IFilm';
 import DeleteCell from '../generic/DeleteCell';
 import { IDispatch } from '../../actions/ActionTypes';
+import { ScreenSize } from '../../models/IDeviceInfo';
 import { deleteFilm, IActionProps } from '../../actions/films/DeleteFilmAction';
 
 export type Props = {
@@ -12,7 +14,9 @@ export type Props = {
     page: number;
 };
 
-type ConnectedState = {};
+type ConnectedState = {
+    screenSize: ScreenSize;
+};
 
 type ConnectedDispatch = {
     deleteFilm: (props: IActionProps) => void;
@@ -28,21 +32,26 @@ class FilmRowComponent extends React.Component<CombinedProps> {
                 currentPage: this.props.page
             });
         };
+        const full = this.props.screenSize > ScreenSize.small || undefined;
         return (
             <tr>
                 <td className="align-middle"><img src={film.posterUrl} width="80px" /></td>
                 <td className="align-middle"><Link to={'/film/' + film.id} title={film.title}>{film.title}</Link></td>
-                <td className="align-middle">{film.year}</td>
-                <DeleteCell onDelete={onDelete} />
+                {full && <td className="align-middle">{film.year}</td>}
+                {full && <DeleteCell onDelete={onDelete} />}
             </tr>
         );
     }
 }
+
+const mapStateToProps = (state: Store.All): ConnectedState => ({
+    screenSize: state.deviceInfo.screenSize
+});
 
 const mapDispatchToProps = (dispatch: IDispatch): ConnectedDispatch => ({
     deleteFilm: (props: IActionProps) => dispatch(deleteFilm(props))
 });
 
 const FilmRow: React.ComponentClass<Props> =
-    connect(undefined, mapDispatchToProps)(FilmRowComponent);
+    connect(mapStateToProps, mapDispatchToProps)(FilmRowComponent);
 export default FilmRow;

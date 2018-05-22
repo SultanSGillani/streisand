@@ -6,9 +6,10 @@ import Pager from '../Pager';
 import Store from '../../store';
 import ForumThreadRow from './ForumThreadRow';
 import { getItems } from '../../utilities/mapping';
+import ForumThreadCreator from './ForumThreadCreator';
+import { ScreenSize } from '../../models/IDeviceInfo';
 import IForumTopic from '../../models/forums/IForumTopic';
 import IForumThread from '../../models/forums/IForumThread';
-import ForumThreadCreator from './ForumThreadCreator';
 
 export type Props = {
     page: number;
@@ -19,6 +20,7 @@ type ConnectedState = {
     total: number;
     pageSize: number;
     threads: IForumThread[];
+    screenSize: ScreenSize;
 };
 type ConnectedDispatch = {};
 
@@ -31,6 +33,7 @@ class ForumTopicViewComponent extends React.Component<CombinedProps> {
         const rows = threads.map((thread: IForumThread) => {
             return (<ForumThreadRow thread={thread} key={thread.id} page={page} />);
         });
+        const full = this.props.screenSize > ScreenSize.small || undefined;
         return (
             <div>
                 <h1>{topic.title}</h1>
@@ -40,9 +43,9 @@ class ForumTopicViewComponent extends React.Component<CombinedProps> {
                     <thead>
                         <tr>
                             <th>Thread Activity</th>
-                            <th>Posts</th>
+                            {full && <th>Posts</th>}
                             <th>Author</th>
-                            <th></th>
+                            {full && <th></th>}
                         </tr>
                     </thead>
                     <tbody>
@@ -61,6 +64,7 @@ const mapStateToProps = (state: Store.All, ownProps: Props): ConnectedState => {
     return {
         total: pages ? pages.count : 0,
         pageSize: pages ? pages.pageSize : 0,
+        screenSize: state.deviceInfo.screenSize,
         threads: getItems({
             page: ownProps.page,
             byId: state.sealed.forums.threads.byId,

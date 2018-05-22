@@ -6,6 +6,7 @@ import Pager from '../Pager';
 import Store from '../../store';
 import WikiRow from './WikiRow';
 import IWiki from '../../models/IWiki';
+import { ScreenSize } from '../../models/IDeviceInfo';
 import { getNodeItems } from '../../utilities/mapping';
 
 export type Props = {
@@ -16,6 +17,7 @@ type ConnectedState = {
     total: number;
     pageSize: number;
     wikis: IWiki[];
+    screenSize: ScreenSize;
 };
 type ConnectedDispatch = {};
 
@@ -27,6 +29,7 @@ class WikiListComponent extends React.Component<CombinedProps> {
         const rows = wikis.map((wiki: IWiki) => {
             return (<WikiRow wiki={wiki} key={wiki.id} page={page} />);
         });
+        const full = this.props.screenSize > ScreenSize.small || undefined;
         // TODO: Create issue on reactstrap to fix the typings for Table and include borderless as a prop
         return (
             <div>
@@ -35,7 +38,7 @@ class WikiListComponent extends React.Component<CombinedProps> {
                     <thead>
                         <tr>
                             <th>Title</th>
-                            <th></th>
+                            {full && <th></th>}
                         </tr>
                     </thead>
                     <tbody>
@@ -52,6 +55,7 @@ const mapStateToProps = (state: Store.All, ownProps: Props): ConnectedState => {
     return {
         total: state.sealed.wikis.count,
         pageSize: state.sealed.wikis.pageSize,
+        screenSize: state.deviceInfo.screenSize,
         wikis: getNodeItems({
             page: ownProps.page,
             byId: state.sealed.wikis.byId,

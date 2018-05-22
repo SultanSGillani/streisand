@@ -8,7 +8,7 @@ import IUser from '../models/IUser';
 import UserLink from './links/UserLink';
 import TextView from './bbcode/TextView';
 import { getItem } from '../utilities/mapping';
-import { getDateDiff } from '../utilities/dates';
+import TimeElapsed from './generic/TimeElapsed';
 import { IDispatch } from '../actions/ActionTypes';
 import { getLatestNews } from '../actions/NewsAction';
 import { IForumPost } from '../models/forums/IForumPost';
@@ -60,7 +60,7 @@ class LatestNewsComponent extends React.Component<CombinedProps, void> {
         }
 
         const thread = this.props.thread || { title: '' };
-        const posted = getDateDiff({ past: post.createdAt });
+        const posted = <TimeElapsed date={ post.createdAt } />;
         return (
             <Card>
                 <CardHeader>

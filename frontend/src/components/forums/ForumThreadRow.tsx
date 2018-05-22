@@ -9,6 +9,7 @@ import DeleteCell from '../generic/DeleteCell';
 import EmptyThreadCell from './EmptyThreadCell';
 import { getItem } from '../../utilities/mapping';
 import { IDispatch } from '../../actions/ActionTypes';
+import { ScreenSize } from '../../models/IDeviceInfo';
 import IForumThread from '../../models/forums/IForumThread';
 import { IActionProps, deleteForumThread } from '../../actions/forums/threads/DeleteThreadAction';
 
@@ -19,6 +20,7 @@ export type Props = {
 
 type ConnectedState = {
     author?: IUser;
+    screenSize: ScreenSize;
 };
 type ConnectedDispatch = {
     deleteForumThread: (props: IActionProps) => void;
@@ -40,12 +42,13 @@ class ForumThreadRowComponent extends React.Component<CombinedProps> {
                 });
             }
         };
+        const full = this.props.screenSize > ScreenSize.small || undefined;
         return (
             <tr>
                 {activity}
-                <td className="align-middle">{thread.numberOfPosts}</td>
+                {full && <td className="align-middle">{thread.numberOfPosts}</td>}
                 <td className="align-middle"><UserLink user={this.props.author} /></td>
-                <DeleteCell onDelete={onDelete} />
+                {full && <DeleteCell onDelete={onDelete} />}
             </tr>
         );
     }
@@ -55,9 +58,10 @@ const mapStateToProps = (state: Store.All, ownProps: Props): ConnectedState => {
     return {
         author: getItem({
             fallback: true,
-            id: ownProps.thread && ownProps.thread.createdBy,
-            byId: state.sealed.users.byId
-        })
+            byId: state.sealed.users.byId,
+            id: ownProps.thread && ownProps.thread.createdBy
+        }),
+        screenSize: state.deviceInfo.screenSize
     };
 };
 

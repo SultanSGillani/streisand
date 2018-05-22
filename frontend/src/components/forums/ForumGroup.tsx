@@ -1,11 +1,12 @@
 import * as React from 'react';
+import { Table } from 'reactstrap';
 import { connect } from 'react-redux';
 
 import Store from '../../store';
 import ForumTopicRow from './ForumTopicRow';
+import { ScreenSize } from '../../models/IDeviceInfo';
 import IForumGroup from '../../models/forums/IForumGroup';
 import IForumTopic from '../../models/forums/IForumTopic';
-import { Table } from 'reactstrap';
 
 export type Props = {
     group: IForumGroup;
@@ -13,6 +14,7 @@ export type Props = {
 
 type ConnectedState = {
     topics: IForumTopic[];
+    screenSize: ScreenSize;
 };
 type ConnectedDispatch = {};
 
@@ -33,6 +35,8 @@ class ForumGroupComponent extends React.Component<CombinedProps> {
                 </div>
             );
         }
+
+        const full = this.props.screenSize > ScreenSize.small || undefined;
         return (
             <div>
                 <h2>{group.title}</h2>
@@ -41,9 +45,11 @@ class ForumGroupComponent extends React.Component<CombinedProps> {
                         <tr>
                             <th>Topic</th>
                             <th>Latest Post</th>
-                            <th>Threads</th>
-                            <th>Posts</th>
-                            <th></th>
+                            {full && <>
+                                <th>Threads</th>
+                                <th>Posts</th>
+                                <th></th>
+                            </>}
                         </tr>
                     </thead>
                     <tbody>
@@ -60,7 +66,8 @@ const mapStateToProps = (state: Store.All, ownProps: Props): ConnectedState => {
         return state.sealed.forums.topics.byId[topicId];
     });
     return {
-        topics: topics as IForumTopic[]
+        topics: topics as IForumTopic[],
+        screenSize: state.deviceInfo.screenSize
     };
 };
 

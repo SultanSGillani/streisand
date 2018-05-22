@@ -7,8 +7,8 @@ import Avatar from '../users/Avatar';
 import IUser from '../../models/IUser';
 import UserLink from '../links/UserLink';
 import TextView from '../bbcode/TextView';
+import TimeElapsed from '../generic/TimeElapsed';
 import { getItem } from '../../utilities/mapping';
-import { getDateDiff } from '../../utilities/dates';
 import { ScreenSize } from '../../models/IDeviceInfo';
 import { IDispatch } from '../../actions/ActionTypes';
 import IForumPost from '../../models/forums/IForumPost';
@@ -49,7 +49,6 @@ class ForumPostComponent extends React.Component<CombinedProps, State> {
 
     public render() {
         const { post, author, page } = this.props;
-        const posted = getDateDiff({ past: post.createdAt });
         const onDelete = () => {
             this.props.deleteForumPost({
                 thread: post.thread,
@@ -70,7 +69,7 @@ class ForumPostComponent extends React.Component<CombinedProps, State> {
             return (
                 <Card color="primary" className="mb-2">
                     <CardHeader>
-                        <UserLink user={author} /> {posted}
+                        <UserLink user={author} /> <TimeElapsed date={post.createdAt} />
                     </CardHeader>
                     <CardBody>
                         <Editor content={post.body} size="small" receiveHandle={onHandle} />
@@ -92,7 +91,9 @@ class ForumPostComponent extends React.Component<CombinedProps, State> {
             <Card className="mb-2">
                 <CardHeader>
                     <div className="row">
-                        <div className="col-auto"><UserLink user={author} /> {posted}</div>
+                        <div className="col-auto">
+                            <UserLink user={author} /> <TimeElapsed date={post.createdAt} />
+                        </div>
                         <div className="col-auto ml-auto">
                             <ButtonGroup size="sm">
                                 <Button onClick={onEdit}>
@@ -123,7 +124,7 @@ class ForumPostComponent extends React.Component<CombinedProps, State> {
     private _getStandardFooter() {
         let content;
         const { post, modifiedBy } = this.props;
-        const modified = (post.modifiedAt && post.modifiedAt !== post.createdAt) ? getDateDiff({ past: post.modifiedAt }) : undefined;
+        const modified = (post.modifiedAt && post.modifiedAt !== post.createdAt) ? <TimeElapsed date={ post.modifiedAt } /> : undefined;
         if (modifiedBy) {
             content = (<div>Modified by <UserLink user={modifiedBy} /> {modified}</div>);
         } else if (modified) {

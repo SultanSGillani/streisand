@@ -2,9 +2,11 @@ import * as React from 'react';
 import { Link } from 'react-router';
 import { connect } from 'react-redux';
 
+import Store from '../../store';
 import IWiki from '../../models/IWiki';
 import DeleteCell from '../generic/DeleteCell';
 import { IDispatch } from '../../actions/ActionTypes';
+import { ScreenSize } from '../../models/IDeviceInfo';
 import { IActionProps, deleteWiki } from '../../actions/wikis/DeleteWikiAction';
 
 export type Props = {
@@ -12,7 +14,9 @@ export type Props = {
     page: number;
 };
 
-type ConnectedState = {};
+type ConnectedState = {
+    screenSize: ScreenSize;
+};
 
 type ConnectedDispatch = {
     deleteWiki: (props: IActionProps) => void;
@@ -28,21 +32,26 @@ class WikiRowComponent extends React.Component<CombinedProps> {
                 currentPage: this.props.page
             });
         };
+        const full = this.props.screenSize > ScreenSize.small || undefined;
         return (
             <tr>
                 <td className="align-middle">
                     <Link to={'/wiki/' + wiki.id} title={wiki.title}>{wiki.title}</Link>
                 </td>
-                <DeleteCell onDelete={onDelete} />
+                {full && <DeleteCell onDelete={onDelete} />}
             </tr>
         );
     }
 }
+
+const mapStateToProps = (state: Store.All): ConnectedState => ({
+    screenSize: state.deviceInfo.screenSize
+});
 
 const mapDispatchToProps = (dispatch: IDispatch): ConnectedDispatch => ({
     deleteWiki: (props: IActionProps) => dispatch(deleteWiki(props))
 });
 
 const WikiRow: React.ComponentClass<Props> =
-    connect(undefined, mapDispatchToProps)(WikiRowComponent);
+    connect(mapStateToProps, mapDispatchToProps)(WikiRowComponent);
 export default WikiRow;

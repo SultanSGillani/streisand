@@ -5,10 +5,10 @@ import { connect } from 'react-redux';
 import Store from '../../store';
 import IUser from '../../models/IUser';
 import UserLink from '../links/UserLink';
-import { getDateDiff } from '../../utilities/dates';
+import TimeElapsed from '../generic/TimeElapsed';
+import { getItem } from '../../utilities/mapping';
 import IForumPost from '../../models/forums/IForumPost';
 import IForumThread from '../../models/forums/IForumThread';
-import { getItem } from '../../utilities/mapping';
 
 export type Props = {
     id?: number;
@@ -31,7 +31,7 @@ class ForumPostCellComponent extends React.Component<CombinedProps> {
             return <td className="align-middle">No posts...</td>;
         }
 
-        const posted = getDateDiff({ past: post.createdAt });
+        const posted = <TimeElapsed date={post.createdAt} />;
         const threadLink = <Link to={'/forum/thread/' + thread.id} title={thread.title}>{thread.title}</Link>;
         return (
             <td className="align-middle">

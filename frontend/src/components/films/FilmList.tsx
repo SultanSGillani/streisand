@@ -7,6 +7,7 @@ import Store from '../../store';
 import FilmRow from './FilmRow';
 import IFilm from '../../models/IFilm';
 import { getNodeItems } from '../../utilities/mapping';
+import { ScreenSize } from '../../models/IDeviceInfo';
 
 export type Props = {
     page: number;
@@ -16,6 +17,7 @@ type ConnectedState = {
     total: number;
     pageSize: number;
     films: IFilm[];
+    screenSize: ScreenSize;
 };
 type ConnectedDispatch = {};
 
@@ -27,6 +29,8 @@ class FilmListComponent extends React.Component<CombinedProps> {
         const rows = films.map((film: IFilm) => {
             return (<FilmRow film={film} key={film.id} page={page} />);
         });
+
+        const full = this.props.screenSize > ScreenSize.small || undefined;
         return (
             <div>
                 {pager}
@@ -35,8 +39,8 @@ class FilmListComponent extends React.Component<CombinedProps> {
                         <tr>
                             <th></th>
                             <th>Name</th>
-                            <th>Year</th>
-                            <th></th>
+                            {full && <th>Year</th>}
+                            {full && <th></th>}
                         </tr>
                     </thead>
                     <tbody>
@@ -53,6 +57,7 @@ const mapStateToProps = (state: Store.All, ownProps: Props): ConnectedState => {
     return {
         total: state.sealed.films.count,
         pageSize: state.sealed.films.pageSize,
+        screenSize: state.deviceInfo.screenSize,
         films: getNodeItems({
             page: ownProps.page,
             byId: state.sealed.films.byId,
