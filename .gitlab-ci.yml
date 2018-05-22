@@ -23,14 +23,13 @@ variables:
 cache:
   paths:
     - .cache/
-    - venv/
+    - jumpcut/
 
 before_script:
   - python -m pip install --upgrade pip==9.0.3 
   - pip install virtualenv
-  - virtualenv venv
-  - source venv/bin/activate
-  - export PIP_NO_BINARY=psycopg2
+  - virtualenv jumpcut
+  - source jumpcut/bin/activate
   - cd backend
   - python install.py
 
