@@ -29,8 +29,10 @@ before_script:
   - python -m pip install --upgrade pip==9.0.3
   - pip3 install virtualenv
   - virtualenv jumpcut
+  - cd jumpcut/bin
+  - pip install --upgrade pip==9.0.3
   - source jumpcut/bin/activate
-  - cd backend
+  - cd ../backend
   - python install.py
 
 python_linter:
