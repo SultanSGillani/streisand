@@ -2,10 +2,8 @@
 
 from django.contrib import admin
 from django.contrib.auth.admin import UserAdmin as DjangoUserAdmin
-from django.contrib.auth.models import AbstractUser
 
 from users.models import User, UserAnnounceKey, UserIPAddress, UserAnnounce, WatchedUser
-
 
 
 class UserAdmin(DjangoUserAdmin):
@@ -25,16 +23,11 @@ class UserAdmin(DjangoUserAdmin):
         'invited_by_link',
         'last_seeded',
         'seeding_size',
-
     )
 
-    exclude = (
-        'invited_by',
-    )
+    exclude = ('invited_by', )
 
-    search_fields = (
-        'username',
-    )
+    search_fields = ('username', )
 
     def get_queryset(self, request):
         return super().get_queryset(request).select_related('user_class')
@@ -150,12 +143,8 @@ class WatchedUserAdmin(admin.ModelAdmin):
         )
 
 
-
 admin.site.register(User)
 admin.site.register(UserIPAddress, UserIPAddressAdmin)
 admin.site.register(WatchedUser, WatchedUserAdmin)
 admin.site.register(UserAnnounce, UserAnnounceAdmin)
 admin.site.register(UserAnnounceKey, UserAnnounceKeyAdmin)
-
-
-

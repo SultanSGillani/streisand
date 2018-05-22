@@ -91,7 +91,7 @@ class AdminUserProfileSerializer(AllowFieldLimitingMixin, serializers.ModelSeria
         }
 
         validators = [
-            UniqueTogetherValidator(
+            validators.UniqueTogetherValidator(
                 queryset=UserIPAddress.objects.all(),
                 fields=('user', 'ip_address')
             )
