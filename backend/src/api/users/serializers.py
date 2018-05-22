@@ -1,45 +1,12 @@
 # -*- coding: utf-8 -*-
 
-from django.contrib.auth import authenticate, user_logged_in
+from django.contrib.auth import authenticate
 from django.contrib.auth.models import Group
 from django.contrib.auth.password_validation import validate_password
 from rest_framework import serializers, validators
-from rest_framework_jwt.serializers import JSONWebTokenSerializer, jwt_payload_handler, jwt_encode_handler
-from rest_framework_jwt.settings import api_settings
+
 from api.mixins import AllowFieldLimitingMixin
 from users.models import User, UserIPAddress
-from rest_framework.validators import UniqueTogetherValidator
-
-
-class JWTSerializer(JSONWebTokenSerializer):
-    def validate(self, attrs):
-        credentials = {
-            self.username_field: attrs.get(self.username_field),
-            'password': attrs.get('password')
-        }
-
-        if all(credentials.values()):
-            user = authenticate(request=self.context['request'], **credentials)
-
-            if user:
-                if not user.is_active:
-                    msg = 'User account is disabled.'
-                    raise serializers.ValidationError(msg)
-
-                payload = jwt_payload_handler(user)
-                user_logged_in.send(
-                    sender=user.__class__,
-                    request=self.context['request'],
-                    user=user)
-
-                return {'token': jwt_encode_handler(payload), 'user': user}
-            else:
-                msg = 'Unable to log in with provided credentials.'
-                raise serializers.ValidationError(msg)
-        else:
-            msg = 'Must include "{username_field}" and "password".'
-            msg = msg.format(username_field=self.username_field)
-            raise serializers.ValidationError(msg)
 
 
 class ChangePasswordSerializer(serializers.Serializer):
@@ -124,7 +91,7 @@ class AdminUserProfileSerializer(AllowFieldLimitingMixin, serializers.ModelSeria
         }
 
         validators = [
-            UniqueTogetherValidator(
+            validators.UniqueTogetherValidator(
                 queryset=UserIPAddress.objects.all(),
                 fields=('user', 'ip_address')
             )
@@ -207,7 +174,11 @@ class NewUserSerializer(serializers.ModelSerializer):
         max_length=32,
         validators=[validators.UniqueValidator(queryset=User.objects.all())])
     password = serializers.CharField(min_length=8, write_only=True)
-    token = serializers.SerializerMethodField()
+
+    def create(self, validated_data):
+        user = User.objects.create_user(validated_data['username'], validated_data['email'],
+                                        validated_data['password'])
+        return user
 
     class Meta:
         model = User
@@ -215,20 +186,17 @@ class NewUserSerializer(serializers.ModelSerializer):
             'id',
             'username',
             'email',
-            'password',
-            'token',
+            'password'
         )
 
-    def get_token(self, obj):
-        jwt_payload_handler = api_settings.JWT_PAYLOAD_HANDLER
-        jwt_encode_handler = api_settings.JWT_ENCODE_HANDLER
 
-        payload = jwt_payload_handler(obj)
-        token = jwt_encode_handler(payload)
-        return token
+class LoginUserSerializer(serializers.Serializer):
+    username = serializers.CharField()
+    password = serializers.CharField()
 
-    def create(self, validated_data):
-        user = User.objects.create_user(validated_data['username'],
-                                        validated_data['email'],
-                                        validated_data['password'])
-        return user
+    def validate(self, data):
+        user = authenticate(**data)
+        if user and user.is_active:
+            return user
+
+        raise serializers.ValidationError("Unable to log in with provided credentials.")

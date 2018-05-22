@@ -23,16 +23,11 @@ class UserAdmin(DjangoUserAdmin):
         'invited_by_link',
         'last_seeded',
         'seeding_size',
-
     )
 
-    exclude = (
-        'invited_by',
-    )
+    exclude = ('invited_by', )
 
-    search_fields = (
-        'username',
-    )
+    search_fields = ('username', )
 
     def get_queryset(self, request):
         return super().get_queryset(request).select_related('user_class')

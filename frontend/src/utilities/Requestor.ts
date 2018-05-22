@@ -53,12 +53,12 @@ export interface IGetRequestOptions {
 }
 
 export function get<T>(options: IGetRequestOptions): Promise<T> {
-    const headers = { 'Authorization': `jwt ${options.token}` };
+    const headers = { 'Authorization': `Token ${options.token}` };
     return makeRequest<T>({ url: options.url, method: 'GET', headers });
 }
 
 export function remove<T>(options: IGetRequestOptions): Promise<T> {
-    const headers = { 'Authorization': `jwt ${options.token}` };
+    const headers = { 'Authorization': `Token ${options.token}` };
     return makeRequest<T>({ url: options.url, method: 'DELETE', headers });
 }
 
@@ -70,7 +70,7 @@ export interface IPutRequestOptions {
 
 export function putRequest<T>(options: IPutRequestOptions): Promise<T> {
     const headers = {
-        'Authorization': `jwt ${options.token}`,
+        'Authorization': `Token ${options.token}`,
         'Accept': 'application/json',
         'Content-Type': 'application/json'
     };
@@ -80,7 +80,7 @@ export function putRequest<T>(options: IPutRequestOptions): Promise<T> {
 
 export function patch<T>(options: IPutRequestOptions): Promise<T> {
     const headers = {
-        'Authorization': `jwt ${options.token}`,
+        'Authorization': `Token ${options.token}`,
         'Accept': 'application/json',
         'Content-Type': 'application/json'
     };
@@ -100,7 +100,7 @@ export function post<T>(options: IPostRequestOptions): Promise<T> {
         'Content-Type': 'application/json'
     };
     if (options.token) {
-        headers['Authorization'] = `jwt ${options.token}`;
+        headers['Authorization'] = `Token ${options.token}`;
     }
     const data = typeof options.data === 'string' ? options.data : JSON.stringify(options.data);
     return makeRequest<T>({ url: options.url, method: 'POST', headers, data });

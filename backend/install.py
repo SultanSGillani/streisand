@@ -41,7 +41,7 @@ _all_ = [
     'https://github.com/philipn/django-rest-framework-filters/archive/master.zip',
     # djangorestframework-filters
     'https://github.com/darklow/django-suit/tarball/v2',
-    'djangorestframework-jwt>=1.11.0',
+    'django-rest-knox==3.1.4',
     'drf-yasg[validation]==1.7.4',
     'python-decouple==3.1',
     'django-positions==0.6.0',

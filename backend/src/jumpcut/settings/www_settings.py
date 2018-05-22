@@ -1,10 +1,10 @@
 # -*- coding: utf-8 -*-
 
-import datetime
-
+from datetime import timedelta
 from .common_settings import *
 
-INTERNAL_IPS = config('INTERNAL_IPS', cast=lambda v: [s.strip() for s in v.split(',')])
+INTERNAL_IPS = config(
+    'INTERNAL_IPS', cast=lambda v: [s.strip() for s in v.split(',')])
 
 DEBUG_TOOLBAR_CONFIG = {
     "SHOW_TOOLBAR_CALLBACK": lambda request: True,
@@ -25,7 +25,6 @@ MIDDLEWARE = [
     'www.middleware.CachedUserAuthenticationMiddleware',
     'www.middleware.LoginRequiredMiddleware',
     'www.middleware.IPHistoryMiddleware',
-
 ]
 
 ROOT_URLCONF = 'www.urls'
@@ -40,7 +39,6 @@ LOGIN_EXEMPT_URL_PREFIXES = (
     '/redoc/',
     '/swagger/',
     '/api/v1/',
-
 )
 
 PASSWORD_HASHERS = [
@@ -50,75 +48,55 @@ PASSWORD_HASHERS = [
 
 AUTH_PASSWORD_VALIDATORS = [
     {
-        'NAME': 'django.contrib.auth.password_validation.UserAttributeSimilarityValidator',
+        'NAME':
+        'django.contrib.auth.password_validation.UserAttributeSimilarityValidator',
     },
     {
-        'NAME': 'django.contrib.auth.password_validation.MinimumLengthValidator',
+        'NAME':
+        'django.contrib.auth.password_validation.MinimumLengthValidator',
         'OPTIONS': {
             'min_length': 10,
         }
     },
     {
-        'NAME': 'django.contrib.auth.password_validation.CommonPasswordValidator',
+        'NAME':
+        'django.contrib.auth.password_validation.CommonPasswordValidator',
     },
     {
-        'NAME': 'django.contrib.auth.password_validation.NumericPasswordValidator',
+        'NAME':
+        'django.contrib.auth.password_validation.NumericPasswordValidator',
     },
 ]
 
 REST_FRAMEWORK = {
     'DEFAULT_PERMISSION_CLASSES': [
         'rest_framework.permissions.IsAdminUser',
-    ], 'DEFAULT_FILTER_BACKENDS': (
-        'django_filters.rest_framework.DjangoFilterBackend',
-    ),
-    'PAGE_SIZE': 50,
-    'DEFAULT_PAGINATION_CLASS': 'api.pagination.DetailPagination',
+    ],
+    'DEFAULT_FILTER_BACKENDS':
+    ('django_filters.rest_framework.DjangoFilterBackend', ),
+    'PAGE_SIZE':
+    50,
+    'DEFAULT_PAGINATION_CLASS':
+    'api.pagination.DetailPagination',
     'DEFAULT_AUTHENTICATION_CLASSES': (
-        'rest_framework_jwt.authentication.JSONWebTokenAuthentication',
+        'knox.auth.TokenAuthentication',
         'rest_framework.authentication.SessionAuthentication',
     ),
     'DEFAULT_RENDERER_CLASSES': (
         'djangorestframework_camel_case.render.CamelCaseJSONRenderer',
         'rest_framework.renderers.BrowsableAPIRenderer',
-
     ),
-    'DEFAULT_PARSER_CLASSES': (
-        'djangorestframework_camel_case.parser.CamelCaseJSONParser',
-    ),
-    'URL_FORMAT_OVERRIDE': None,
+    'DEFAULT_PARSER_CLASSES':
+    ('djangorestframework_camel_case.parser.CamelCaseJSONParser', ),
+    'URL_FORMAT_OVERRIDE':
+    None,
 }
 
-# Default JWT preferences
-JWT_AUTH = {
-    'JWT_ENCODE_HANDLER':
-        'rest_framework_jwt.utils.jwt_encode_handler',
-
-    'JWT_DECODE_HANDLER':
-        'rest_framework_jwt.utils.jwt_decode_handler',
-
-    'JWT_PAYLOAD_HANDLER':
-        'rest_framework_jwt.utils.jwt_payload_handler',
-
-    'JWT_PAYLOAD_GET_USER_ID_HANDLER':
-        'rest_framework_jwt.utils.jwt_get_user_id_from_payload_handler',
-
-    'JWT_RESPONSE_PAYLOAD_HANDLER':
-        'rest_framework_jwt.utils.jwt_response_payload_handler',
-
-    'JWT_SECRET_KEY': SECRET_KEY,
-    'JWT_ALGORITHM': 'HS256',
-    'JWT_VERIFY': True,
-    'JWT_VERIFY_EXPIRATION': True,
-    'JWT_LEEWAY': 0,
-    'JWT_EXPIRATION_DELTA': datetime.timedelta(seconds=3600),
-    'JWT_AUDIENCE': None,
-    'JWT_ISSUER': None,
-
-    'JWT_ALLOW_REFRESH': False,
-    'JWT_REFRESH_EXPIRATION_DELTA': datetime.timedelta(days=7),
-
-    'JWT_AUTH_HEADER_PREFIX': 'JWT',
+REST_KNOX = {
+    'SECURE_HASH_ALGORITHM': 'cryptography.hazmat.primitives.hashes.SHA512',
+    'AUTH_TOKEN_CHARACTER_LENGTH': 64,
+    'TOKEN_TTL': timedelta(hours=10),
+    'USER_SERIALIZER': 'api.users.serializers.OwnedUserProfileSerializer',
 }
 
 SWAGGER_SETTINGS = {
@@ -130,7 +108,6 @@ SWAGGER_SETTINGS = {
             'type': 'basic'
         },
     },
-
     'APIS_SORTER': 'alpha',
     'SUPPORTED_SUBMIT_METHODS': ['get', 'post', 'put', 'delete', 'patch'],
     'OPERATIONS_SORTER': 'alpha'
@@ -142,7 +119,8 @@ REDOC_SETTINGS = {
 
 SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
 
-CORS_URL_REGEX = config('CORS_URL_REGEX', cast=lambda v: [s.strip() for s in v.split(',')])
+CORS_URL_REGEX = config(
+    'CORS_URL_REGEX', cast=lambda v: [s.strip() for s in v.split(',')])
 
 # if os.getenv('DJANGO_ENV') == 'PROD':
 #     CORS_ORIGIN_WHITELIST = [
@@ -171,12 +149,14 @@ WSGI_APPLICATION = 'jumpcut.www_wsgi.application'
 
 TEMPLATES = [
     {
-        'BACKEND': 'django.template.backends.django.DjangoTemplates',
+        'BACKEND':
+        'django.template.backends.django.DjangoTemplates',
         'DIRS': [
             os.path.join(BASE_DIR, 'static'),
             os.path.join(BASE_DIR, 'static/frontend')
         ],
-        'APP_DIRS': True,
+        'APP_DIRS':
+        True,
         'OPTIONS': {
             'context_processors': [
                 'django.template.context_processors.request',
@@ -194,9 +174,7 @@ TEMPLATES = [
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/dev/howto/static-files/
 STATIC_URL = '/static/'
-STATICFILES_DIRS = (
-    os.path.join(BASE_DIR, 'static'),
-)
+STATICFILES_DIRS = (os.path.join(BASE_DIR, 'static'), )
 STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
 
 STATICFILES_FINDERS = (

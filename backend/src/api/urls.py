@@ -3,9 +3,9 @@
 from django.conf.urls import url, include
 from drf_yasg import openapi
 from drf_yasg.views import get_schema_view
+from knox import views as knox_views
 from rest_framework import routers, permissions
 from rest_framework.documentation import include_docs_urls
-from rest_framework_jwt.views import refresh_jwt_token, verify_jwt_token
 
 from .films import views as films_views
 from .forums import views as forums_views
@@ -84,7 +84,7 @@ urlpatterns = [
     url(r'^', include(router.urls)),
 
     # DRF browsable API
-    url(r'^auth/', include('rest_framework.urls', namespace='rest_framework')),
+    url(r'^session/auth/', include('rest_framework.urls', namespace='rest_framework')),
     url(r'^swagger(?P<format>\.json|\.yaml)$', SchemaView.without_ui(cache_timeout=None), name='schema-json'),
     url(r'^swagger/$', SchemaView.with_ui('swagger', cache_timeout=None), name='schema-swagger-ui'),
 
@@ -97,8 +97,10 @@ urlpatterns = [
     url(r'^change-password/', users_views.ChangePasswordView.as_view()),
     url(r'^register/$', users_views.UserRegisterView.as_view(), name='user-registration'),
 
-    # JWT
-    url(r'^token-refresh/', refresh_jwt_token),
-    url(r'^token-verify/', verify_jwt_token),
+    # DRF-Knox Authentication
+    url(r'^auth/', include('knox.urls')),
+    url(r'^login/', users_views.UserLoginView.as_view()),
+    url(r'^logout/', knox_views.LogoutView.as_view(), name='knox_logout'),
+    url(r'^logoutall/', knox_views.LogoutAllView.as_view(), name='knox_logoutall'),
 
 ]

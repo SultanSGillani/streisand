@@ -3,9 +3,9 @@
 from django.db import models
 from django.db.models import F
 from django.urls import reverse
-from positions import PositionField
 
 from .managers import ForumGroupQuerySet, ForumTopicQuerySet, ForumThreadQuerySet, ForumPostQuerySet
+from positions import PositionField
 
 
 class ForumGroup(models.Model):

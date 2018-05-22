@@ -47,6 +47,7 @@ THIRD_PARTY_APPS = (
     'rest_framework_filters',
     'docs',
     'drf_yasg',
+    'knox',
 )
 
 LOCAL_APPS = (
