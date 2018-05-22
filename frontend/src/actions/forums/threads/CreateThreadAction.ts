@@ -20,7 +20,7 @@ type Action = CreateThreadAction;
 function* received(response: ISingleForumThreadResponse, props: IActionProps) {
     const id = response.id;
     // We can't just use this response because it doesn't contain author information
-    yield put({ type: 'RECEIVED_NEW_FORUM_THREAD', id });
+    yield put<Action>({ type: 'RECEIVED_NEW_FORUM_THREAD', id });
     yield put(push(`/forum/thread/${id}`));
 }
 

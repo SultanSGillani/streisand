@@ -18,7 +18,7 @@ type Action = ForumGroupsction;
 
 function* received(response: IForumGroupResponse) {
     const data = transformGroups(response);
-    yield put({ type: 'RECEIVED_FORUM_GROUPS', props: { data } });
+    yield put<Action>({ type: 'RECEIVED_FORUM_GROUPS', props: { data } });
     if (data.users.length) {
         yield put(getUsers(data.users));
     }

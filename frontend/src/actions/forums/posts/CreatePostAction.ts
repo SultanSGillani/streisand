@@ -20,7 +20,7 @@ type Action = CreatePostAction;
 
 function* received(response: any, props: IActionProps) {
     const id = response.id;
-    yield put({ type: 'RECEIVED_NEW_FORUM_POST', id });
+    yield put<Action>({ type: 'RECEIVED_NEW_FORUM_POST', id });
 
     // Ideally this response would include the position of the new post so
     // we don't have to guess which page it is going to be on.

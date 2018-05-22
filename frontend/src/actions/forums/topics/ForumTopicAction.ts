@@ -25,7 +25,7 @@ type Action = ForumTopicAction;
 
 function* received(response: IForumTopicResponse, props: IActionProps) {
     const data = transformTopic(response);
-    yield put({
+    yield put<Action>({
         type: 'RECEIVED_FORUM_TOPIC',
         props: {
             id: props.id,

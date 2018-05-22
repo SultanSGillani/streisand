@@ -19,7 +19,7 @@ export default DeleteFilmAction;
 type Action = DeleteFilmAction;
 
 function* received(response: void, props: IActionProps) {
-    yield put({ type: 'RECEIVED_FILM_DELETION', props });
+    yield put<Action>({ type: 'RECEIVED_FILM_DELETION', props });
     yield put(invalidate({ page: props.currentPage }));
 }
 

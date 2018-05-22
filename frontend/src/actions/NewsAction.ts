@@ -17,7 +17,7 @@ type Action = NewsAction;
 
 function* received(news: INewsPostResponse) {
     const data = transformNewsPost(news);
-    yield put({ type: 'RECEIVED_NEWS_POST', props: { data } });
+    yield put<Action>({ type: 'RECEIVED_NEWS_POST', props: { data } });
     if (data.users.length) {
         yield put(getUsers(data.users));
     }

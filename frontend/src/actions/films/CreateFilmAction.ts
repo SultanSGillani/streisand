@@ -20,7 +20,7 @@ type Action = CreateFilmAction;
 function* received(response: IFilm) {
     const id = response.id;
     yield put(receviedFilm(response));
-    yield put({ type: 'RECEIVED_NEW_FILM', id });
+    yield put<Action>({ type: 'RECEIVED_NEW_FILM', id });
     yield put(push(`/film/${id}`));
 }
 

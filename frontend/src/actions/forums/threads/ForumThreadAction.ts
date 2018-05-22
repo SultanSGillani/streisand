@@ -25,13 +25,15 @@ type Action = ForumThreadAction;
 
 function* received(response: IForumThreadResponse, props: IActionProps) {
     const data = transformThread(response);
-    yield put({
+    yield put<Action>({
         type: 'RECEIVED_FORUM_THREAD',
-        id: props.id,
-        page: props.page,
-        pageSize: PAGE_SIZE,
-        count: response.posts.count,
-        data: data
+        props: {
+            id: props.id,
+            page: props.page,
+            pageSize: PAGE_SIZE,
+            count: response.posts.count,
+            data: data
+        }
     });
     if (data.users.length) {
         yield put(getUsers(data.users));

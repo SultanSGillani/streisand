@@ -20,7 +20,7 @@ type Action = CreateWikiAction;
 function* received(response: IWiki) {
     const id = response.id;
     yield put(receviedWiki(response));
-    yield put({ type: 'RECEIVED_NEW_WIKI', id });
+    yield put<Action>({ type: 'RECEIVED_NEW_WIKI', id });
     yield put(push(`/wiki/${id}`));
 }
 

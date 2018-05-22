@@ -22,7 +22,7 @@ export default DeletePostAction;
 type Action = DeletePostAction;
 
 function* received(response: void, props: IActionProps) {
-    yield put({ type: 'RECEIVED_FORUM_POST_DELETION', props });
+    yield put<Action>({ type: 'RECEIVED_FORUM_POST_DELETION', props });
 
     // Ideally this response would include an updated count of posts so
     // we don't have to assume the count hasn't changed.

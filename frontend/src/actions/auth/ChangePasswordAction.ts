@@ -20,7 +20,7 @@ export default ChangePasswordAction;
 type Action = ChangePasswordAction;
 
 function* received() {
-    yield put({ type: 'RECEIVED_PASSWORD_UPDATE' });
+    yield put<Action>({ type: 'RECEIVED_PASSWORD_UPDATE' });
     yield put(logout());
     yield put(replace('/login'));
 }

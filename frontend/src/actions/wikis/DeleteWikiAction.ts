@@ -20,7 +20,7 @@ export default DeleteWikiAction;
 type Action = DeleteWikiAction;
 
 function* received(response: void, props: IActionProps) {
-    yield put({ type: 'RECEIVED_WIKI_DELETION', props });
+    yield put<Action>({ type: 'RECEIVED_WIKI_DELETION', props });
     if (props.currentPage) {
         yield put(invalidate({ page: props.currentPage }));
     } else {

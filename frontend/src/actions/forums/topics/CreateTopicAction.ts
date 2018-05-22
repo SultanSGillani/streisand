@@ -26,7 +26,7 @@ type Action = CreateTopicAction;
 
 function* received(response: ISingleForumTopicResponse) {
     const id = response.id;
-    yield put({ type: 'RECEIVED_NEW_FORUM_TOPIC', id });
+    yield put<Action>({ type: 'RECEIVED_NEW_FORUM_TOPIC', id });
     yield put(push(`/forum/topic/${response.id}`));
     yield put(invalidate());
 }

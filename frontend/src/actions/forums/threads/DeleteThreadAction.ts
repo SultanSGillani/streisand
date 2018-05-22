@@ -22,7 +22,7 @@ export default DeleteThreadAction;
 type Action = DeleteThreadAction;
 
 function* received(response: void, props: IActionProps) {
-    yield put({ type: 'RECEIVED_FORUM_THREAD_DELETION', props });
+    yield put<Action>({ type: 'RECEIVED_FORUM_THREAD_DELETION', props });
 
     // Ideally this response would include an updated count of threads so
     // we don't have to assume the count hasn't changed.
