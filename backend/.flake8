@@ -9,6 +9,10 @@ ignore =
 
         # star imports confuse undefined name detection
         F403, F405
+		
 
-include = kinetic, setup.py
+
+include = kinetic, setup.py, install.py
 exclude = migrations, static, provision, .git, .idea, .vagrant, __pycache__, *.pyc, *.gz
+
+max-line-length = 120

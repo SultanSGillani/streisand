@@ -47,7 +47,7 @@ _all_ = [
     'django-positions==0.6.0',
 
     # Testing Requirements
-    'flake8==3.5.0',
+    'flake8>=3.5.0',
     'ipdb==0.11',
     'ipython==6.4.0',
     'decorator==4.2.1',
@@ -63,7 +63,9 @@ _all_ = [
     'coverage==4.5.1',
     'factory-boy',
     'model_mommy==1.5.1',
-    'isort==4.3.4',
+    'isort>=4.2',
+    'flake8-isort==2.5',
+
 ]
 
 # Windows requirements
