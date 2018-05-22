@@ -92,13 +92,9 @@ gulp.task('copy:build', function() {
     return gulp.src('./dist/**').pipe(gulp.dest('./dist'));
 });
 
-gulp.task('build', (done) => {
-    sequence('clean:dist', 'prod-build', done);
-});
+gulp.task('build', gulp.series('clean:dist', 'prod-build'));
 
-gulp.task('deploy', ['clean:app'], (done) => {
-    sequence('prod-build', 'cdn', 'copy:build', done);
-});
+gulp.task('deploy', gulp.series('clean:app', 'prod-build', 'cdn', 'copy:build'));
 
-gulp.task('dev', ['hot-load']);
-gulp.task('default', ['deploy']);
+gulp.task('dev', gulp.series('hot-load'));
+gulp.task('default', gulp.series('deploy'));

@@ -5,7 +5,8 @@ from django.contrib.auth.models import Group
 from django.contrib.auth.password_validation import validate_password
 from rest_framework import serializers, validators
 
-from users.models import User
+from api.mixins import AllowFieldLimitingMixin
+from users.models import User, UserIPAddress
 
 
 class ChangePasswordSerializer(serializers.Serializer):
@@ -26,8 +27,23 @@ class GroupSerializer(serializers.ModelSerializer):
         fields = ('url', 'name')
 
 
-class AdminUserProfileSerializer(serializers.ModelSerializer):
-    user_class_rank = serializers.PrimaryKeyRelatedField(source='user_class', read_only=True)
+class UserIPSerializer(AllowFieldLimitingMixin, serializers.ModelSerializer):
+    ip_address = serializers.SerializerMethodField()
+
+    class Meta:
+        model = UserIPAddress
+        fields = ('id', 'user', 'first_used', 'last_used', 'ip_address')
+
+    def get_ip_address(self, obj):
+        if obj.user.user_class.is_staff:
+            return '127.0.0.1'
+        return obj.ip_address
+
+
+class AdminUserProfileSerializer(AllowFieldLimitingMixin, serializers.ModelSerializer):
+    user_class_rank = serializers.PrimaryKeyRelatedField(
+        source='user_class', read_only=True)
+    ip_addresses = UserIPSerializer(many=True, read_only=True)
     user_class = serializers.StringRelatedField()
 
     class Meta:
@@ -37,6 +53,7 @@ class AdminUserProfileSerializer(serializers.ModelSerializer):
             'user_class',
             'user_class_rank',
             'last_login',
+            'ip_addresses',
             'username',
             'email',
             'is_superuser',
@@ -52,19 +69,33 @@ class AdminUserProfileSerializer(serializers.ModelSerializer):
             'profile_description',
             'staff_notes',
             'irc_key',
+            'last_seen',
             'invite_count',
+            'invite_tree',
             'bytes_uploaded',
             'bytes_downloaded',
             'last_seeded',
             'average_seeding_size',
             'announce_key',
+            'announce_url',
             'invited_by',
             'watch_queue',
             'user_permissions',
             'torrents',
         )
 
-        extra_kwargs = {'password': {'write_only': True, }}
+        extra_kwargs = {
+            'password': {
+                'write_only': True,
+            }
+        }
+
+        validators = [
+            UniqueTogetherValidator(
+                queryset=UserIPAddress.objects.all(),
+                fields=('user', 'ip_address')
+            )
+        ]
 
 
 class OwnedUserProfileSerializer(AdminUserProfileSerializer):
@@ -138,12 +169,10 @@ class NewUserSerializer(serializers.ModelSerializer):
     # TODO: add invite key
     email = serializers.EmailField(
         required=True,
-        validators=[validators.UniqueValidator(queryset=User.objects.all())]
-    )
+        validators=[validators.UniqueValidator(queryset=User.objects.all())])
     username = serializers.CharField(
         max_length=32,
-        validators=[validators.UniqueValidator(queryset=User.objects.all())]
-    )
+        validators=[validators.UniqueValidator(queryset=User.objects.all())])
     password = serializers.CharField(min_length=8, write_only=True)
 
     def create(self, validated_data):
@@ -169,4 +198,5 @@ class LoginUserSerializer(serializers.Serializer):
         user = authenticate(**data)
         if user and user.is_active:
             return user
+
         raise serializers.ValidationError("Unable to log in with provided credentials.")

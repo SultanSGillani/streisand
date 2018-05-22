@@ -1,38 +1,35 @@
-import { ThunkAction } from '../ActionTypes';
-import globals from '../../utilities/globals';
-import { get } from '../../utilities/Requestor';
 
 import IFilm from '../../models/IFilm';
-import ErrorAction from '../ErrorAction';
-import { fetchData } from '../ActionHelper';
+import globals from '../../utilities/globals';
+import { get } from '../../utilities/Requestor';
+import { generateAuthFetch, generateSage } from '../sagas/generators';
 
-type FilmAction =
-    { type: 'FETCHING_FILM', id: number } |
-    { type: 'RECEIVED_FILM', film: IFilm } |
-    { type: 'FAILED_FILM', id: number };
+interface IActionProps { id: number; }
+
+export type RequestFilm = { type: 'REQUEST_FILM', props: IActionProps };
+export type ReceivedFilm = { type: 'RECEIVED_FILM', film: IFilm };
+export type FailedFilm = { type: 'FAILED_FILM', props: IActionProps };
+
+type FilmAction = RequestFilm | ReceivedFilm | FailedFilm;
 export default FilmAction;
-type Action = FilmAction | ErrorAction;
+type Action = FilmAction;
 
-function fetching(id: number): Action {
-    return { type: 'FETCHING_FILM', id };
+export function received(film: IFilm): Action {
+    return { type: 'RECEIVED_FILM', film };
 }
 
-function received(id: number, response: IFilm): Action {
-    return {
-        type: 'RECEIVED_FILM',
-        film: response
-    };
+function failure(props: IActionProps): Action {
+    return { type: 'FAILED_FILM', props };
 }
 
-function failure(id: number): Action {
-    return { type: 'FAILED_FILM', id };
+export function getFilm(id: number): Action {
+    return { type: 'REQUEST_FILM', props: { id } };
 }
 
-export function getFilm(id: number): ThunkAction<Action> {
-    const errorPrefix = `Fetching film (${id}) failed`;
-    return fetchData({ request, fetching, received, failure, errorPrefix, props: id });
-}
+const errorPrefix = (props: IActionProps) => `Fetching film (${props.id}) failed`;
+const fetch = generateAuthFetch({ errorPrefix, request, received, failure });
+export const filmSaga = generateSage<RequestFilm>('REQUEST_FILM', fetch);
 
-function request(token: string, id: number): Promise<IFilm> {
-    return get({ token, url: `${globals.apiUrl}/films/${id}/` });
+function request(token: string, props: IActionProps): Promise<IFilm> {
+    return get({ token, url: `${globals.apiUrl}/films/${props.id}/` });
 }

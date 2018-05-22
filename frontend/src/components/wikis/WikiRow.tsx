@@ -5,7 +5,7 @@ import { connect } from 'react-redux';
 import IWiki from '../../models/IWiki';
 import DeleteCell from '../generic/DeleteCell';
 import { IDispatch } from '../../actions/ActionTypes';
-import { IDeleteProps, deleteWiki } from '../../actions/wikis/DeleteWikiAction';
+import { IActionProps, deleteWiki } from '../../actions/wikis/DeleteWikiAction';
 
 export type Props = {
     wiki: IWiki;
@@ -15,7 +15,7 @@ export type Props = {
 type ConnectedState = {};
 
 type ConnectedDispatch = {
-    deleteWiki: (props: IDeleteProps) => void;
+    deleteWiki: (props: IActionProps) => void;
 };
 
 type CombinedProps = Props & ConnectedDispatch & ConnectedState;
@@ -40,7 +40,7 @@ class WikiRowComponent extends React.Component<CombinedProps> {
 }
 
 const mapDispatchToProps = (dispatch: IDispatch): ConnectedDispatch => ({
-    deleteWiki: (props: IDeleteProps) => dispatch(deleteWiki(props))
+    deleteWiki: (props: IActionProps) => dispatch(deleteWiki(props))
 });
 
 const WikiRow: React.ComponentClass<Props> =

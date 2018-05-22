@@ -12,7 +12,7 @@ function byId(state: ItemMap = {}, action: Action): ItemMap {
         case 'RECEIVED_FORUM_TOPIC':
         case 'RECEIVED_FORUM_THREAD':
             let map: ItemMap = {};
-            for (const item of action.data.topics) {
+            for (const item of action.props.data.topics) {
                 map[item.id] = item;
             }
             return objectAssign({}, state, map);

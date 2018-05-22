@@ -12,7 +12,7 @@ export function getPageReducer(id: string, getItems?: (action: any) => { id: num
     function items(state: number[] = [], action: any) {
         switch (action.type) {
             case receivedType:
-                const collection: { id: number; }[] = getItems ? getItems(action) : action.items;
+                const collection: { id: number; }[] = getItems ? getItems(action) : action.props.items;
                 return collection.map((item: { id: number }) => {
                     return item.id;
                 });

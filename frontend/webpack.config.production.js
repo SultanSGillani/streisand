@@ -24,9 +24,9 @@ module.exports = {
         new webpack.NormalModuleReplacementPlugin(/.dev$/, function (resource) {
             resource.request = resource.request.replace(/dev/, `prod`);
         }),
-        new UglifyJSPlugin({
-            sourceMap: true
-        }),
+        // new UglifyJSPlugin({
+        //     sourceMap: true
+        // }),
         new webpack.NoEmitOnErrorsPlugin()
     ],
     module: {

@@ -1,38 +1,35 @@
-import { ThunkAction } from '../ActionTypes';
+
+import ITorrent from '../../models/ITorrent';
 import globals from '../../utilities/globals';
 import { get } from '../../utilities/Requestor';
+import { generateAuthFetch, generateSage } from '../sagas/generators';
 
-import ErrorAction from '../ErrorAction';
-import { fetchData } from '../ActionHelper';
-import ITorrent from '../../models/ITorrent';
+interface IActionProps { id: number; }
 
-type TorrentAction =
-    { type: 'FETCHING_TORRENT', id: number } |
-    { type: 'RECEIVED_TORRENT', torrent: ITorrent } |
-    { type: 'FAILED_TORRENT', id: number };
+export type RequestTorrent = { type: 'REQUEST_TORRENT', props: IActionProps };
+export type ReceivedTorrent = { type: 'RECEIVED_TORRENT', torrent: ITorrent };
+export type FailedTorrent = { type: 'FAILED_TORRENT', props: IActionProps };
+
+type TorrentAction = RequestTorrent | ReceivedTorrent | FailedTorrent;
 export default TorrentAction;
-type Action = TorrentAction | ErrorAction;
+type Action = TorrentAction;
 
-function fetching(id: number): Action {
-    return { type: 'FETCHING_TORRENT', id };
+function received(torrent: ITorrent): Action {
+    return { type: 'RECEIVED_TORRENT', torrent };
 }
 
-function received(id: number, response: ITorrent): Action {
-    return {
-        type: 'RECEIVED_TORRENT',
-        torrent: response
-    };
+function failure(props: IActionProps): Action {
+    return { type: 'FAILED_TORRENT', props };
 }
 
-function failure(id: number): Action {
-    return { type: 'FAILED_TORRENT', id };
+export function getTorrent(id: number): Action {
+    return { type: 'REQUEST_TORRENT', props: { id } };
 }
 
-export function getTorrent(id: number): ThunkAction<Action> {
-    const errorPrefix = `Fetching torrent (${id}) failed`;
-    return fetchData({ request, fetching, received, failure, errorPrefix, props: id });
-}
+const errorPrefix = (props: IActionProps) => `Fetching torrent (${props.id}) failed`;
+const fetch = generateAuthFetch({ errorPrefix, request, received, failure });
+export const torrentSaga = generateSage<RequestTorrent>('REQUEST_TORRENT', fetch);
 
-function request(token: string, id: number): Promise<ITorrent> {
-    return get({ token, url: `${globals.apiUrl}/torrents/${id}/` });
+function request(token: string, props: IActionProps): Promise<ITorrent> {
+    return get({ token, url: `${globals.apiUrl}/torrents/${props.id}/` });
 }

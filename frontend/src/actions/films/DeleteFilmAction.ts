@@ -1,50 +1,40 @@
+import { put } from 'redux-saga/effects';
 
-import Store from '../../store';
 import { invalidate } from './FilmsAction';
 import globals from '../../utilities/globals';
 import { remove } from '../../utilities/Requestor';
-import { ThunkAction, IDispatch } from '../ActionTypes';
-import { IUnkownError } from '../../models/base/IError';
-import ErrorAction, { handleError } from '../ErrorAction';
+import { generateAuthFetch, generateSage } from '../sagas/generators';
 
-type DeleteFilmAction =
-    { type: 'DELETING_FILM', id: number } |
-    { type: 'DELETED_FILM', id: number } |
-    { type: 'FAILED_DELETING_FILM', id: number };
-export default DeleteFilmAction;
-type Action = DeleteFilmAction | ErrorAction;
-
-export interface IDeleteProps {
+export interface IActionProps {
     id: number;
     currentPage: number;
 }
 
-function deleting(id: number): Action {
-    return { type: 'DELETING_FILM', id };
+export type RequestFilmDeletion = { type: 'REQUEST_FILM_DELETION', props: IActionProps };
+export type ReceivedFilmDeletion = { type: 'RECEIVED_FILM_DELETION', props: IActionProps };
+export type FailedFilmDeletion = { type: 'FAILED_FILM_DELETION', props: IActionProps };
+
+type DeleteFilmAction = RequestFilmDeletion | ReceivedFilmDeletion | FailedFilmDeletion;
+export default DeleteFilmAction;
+type Action = DeleteFilmAction;
+
+function* received(response: void, props: IActionProps) {
+    yield put<Action>({ type: 'RECEIVED_FILM_DELETION', props });
+    yield put(invalidate({ page: props.currentPage }));
 }
 
-function deleted(id: number): Action {
-    return { type: 'DELETED_FILM', id };
+function failure(props: IActionProps): Action {
+    return { type: 'FAILED_FILM_DELETION', props };
 }
 
-function failure(id: number): Action {
-    return { type: 'FAILED_DELETING_FILM', id };
+export function deleteFilm(props: IActionProps): Action {
+    return { type: 'REQUEST_FILM_DELETION', props };
 }
 
-export function deleteFilm(props: IDeleteProps): ThunkAction<Action> {
-    return (dispatch: IDispatch<Action>, getState: () => Store.All) => {
-        const state = getState();
-        dispatch(deleting(props.id));
-        return request(state.sealed.auth.token, props.id).then(() => {
-            dispatch(invalidate(props.currentPage));
-            return dispatch(deleted(props.id));
-        }, (error: IUnkownError) => {
-            dispatch(failure(props.id));
-            return dispatch(handleError(error));
-        });
-    };
-}
+const errorPrefix = (props: IActionProps) => `Deleting a film (${props.id}) failed`;
+const fetch = generateAuthFetch({ errorPrefix, request, received, failure });
+export const deleteFilmSaga = generateSage<RequestFilmDeletion>('REQUEST_FILM_DELETION', fetch);
 
-function request(token: string, id: number): Promise<void> {
-    return remove({ token, url: `${globals.apiUrl}/films/${id}/` });
+function request(token: string, props: IActionProps): Promise<void> {
+    return remove({ token, url: `${globals.apiUrl}/films/${props.id}/` });
 }

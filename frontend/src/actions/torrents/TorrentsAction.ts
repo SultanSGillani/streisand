@@ -1,43 +1,45 @@
-import { ThunkAction } from '../ActionTypes';
+
+import ITorrent from '../../models/ITorrent';
 import globals from '../../utilities/globals';
 import { get } from '../../utilities/Requestor';
-
-import ErrorAction from '../ErrorAction';
-import { fetchData } from '../ActionHelper';
-import ITorrent from '../../models/ITorrent';
 import IPagedResponse from '../../models/base/IPagedResponse';
+import { generateAuthFetch, generateSage } from '../sagas/generators';
 
+interface IActionProps { page: number; }
 const PAGE_SIZE = globals.pageSize.torrents;
-type TorrentsAction =
-    { type: 'FETCHING_TORRENTS', page: number } |
-    { type: 'RECEIVED_TORRENTS', page: number, pageSize: number, count: number, items: ITorrent[] } |
-    { type: 'FAILED_TORRENTS', page: number };
+
+export type RequestTorrents = { type: 'REQUEST_TORRENTS', props: IActionProps };
+export type ReceivedTorrents = { type: 'RECEIVED_TORRENTS', props: { page: number, pageSize: number, count: number, items: ITorrent[] } };
+export type FailedTorrents = { type: 'FAILED_TORRENTS', props: IActionProps };
+
+type TorrentsAction = RequestTorrents | ReceivedTorrents | FailedTorrents;
 export default TorrentsAction;
-type Action = TorrentsAction | ErrorAction;
+type Action = TorrentsAction;
 
-function fetching(page: number): Action {
-    return { type: 'FETCHING_TORRENTS', page };
-}
-
-function received(page: number, response: IPagedResponse<ITorrent>): Action {
+function received(response: IPagedResponse<ITorrent>, props: IActionProps): Action {
     return {
-        page: page,
-        pageSize: PAGE_SIZE,
-        count: response.count,
         type: 'RECEIVED_TORRENTS',
-        items: response.results
+        props: {
+            page: props.page,
+            pageSize: PAGE_SIZE,
+            count: response.count,
+            items: response.results
+        }
     };
 }
 
-function failure(page: number): Action {
-    return { type: 'FAILED_TORRENTS', page };
+function failure(props: IActionProps): Action {
+    return { type: 'FAILED_TORRENTS', props };
 }
 
-export function getTorrents(page: number = 1): ThunkAction<Action> {
-    const errorPrefix = `Fetching page ${page} of torrents failed`;
-    return fetchData({ request, fetching, received, failure, errorPrefix, props: page });
+export function getTorrents(page: number = 1): Action {
+    return { type: 'REQUEST_TORRENTS', props: { page } };
 }
 
-function request(token: string, page: number): Promise<IPagedResponse<ITorrent>> {
-    return get({ token, url: `${globals.apiUrl}/torrents/?page=${page}&size=${PAGE_SIZE}` });
+const errorPrefix = (props: IActionProps) => `Fetching page ${props.page} of torrents failed`;
+const fetch = generateAuthFetch({ errorPrefix, request, received, failure });
+export const torrentsSaga = generateSage<RequestTorrents>('REQUEST_TORRENTS', fetch);
+
+function request(token: string, props: IActionProps): Promise<IPagedResponse<ITorrent>> {
+    return get({ token, url: `${globals.apiUrl}/torrents/?page=${props.page}&size=${PAGE_SIZE}` });
 }

@@ -68,7 +68,7 @@ export interface IPutRequestOptions {
     token: string;
 }
 
-export function put<T>(options: IPutRequestOptions): Promise<T> {
+export function putRequest<T>(options: IPutRequestOptions): Promise<T> {
     const headers = {
         'Authorization': `Token ${options.token}`,
         'Accept': 'application/json',

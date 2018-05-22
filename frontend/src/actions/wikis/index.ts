@@ -1,8 +1,20 @@
-import WikiAction from './WikiAction';
-import WikisAction from './WikisAction';
-import CreateWikiAction from './CreateWikiAction';
-import UpdateWikiAction from './UpdateWikiAction';
-import DeleteWikiAction from './DeleteWikiAction';
+import { all } from 'redux-saga/effects';
+
+import WikiAction, { wikiSaga } from './WikiAction';
+import WikisAction, { wikisSaga } from './WikisAction';
+import CreateWikiAction, { creatWikiSaga } from './CreateWikiAction';
+import UpdateWikiAction, { updateWikiSaga } from './UpdateWikiAction';
+import DeleteWikiAction, { deleteWikiSaga } from './DeleteWikiAction';
 
 type Action = WikisAction | CreateWikiAction | WikiAction | UpdateWikiAction | DeleteWikiAction;
 export default Action;
+
+export function* allWikiSaga() {
+    yield all([
+        wikiSaga(),
+        wikisSaga(),
+        updateWikiSaga(),
+        creatWikiSaga(),
+        deleteWikiSaga()
+    ]);
+}

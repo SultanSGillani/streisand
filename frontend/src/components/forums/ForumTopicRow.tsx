@@ -6,7 +6,7 @@ import ForumPostCell from './ForumPostCell';
 import DeleteCell from '../generic/DeleteCell';
 import { IDispatch } from '../../actions/ActionTypes';
 import IForumTopic from '../../models/forums/IForumTopic';
-import { deleteForumTopic, IDeleteTopicProps } from '../../actions/forums/topics/DeleteTopicAction';
+import { deleteForumTopic, IActionProps } from '../../actions/forums/topics/DeleteTopicAction';
 
 export type Props = {
     topic: IForumTopic;
@@ -15,7 +15,7 @@ export type Props = {
 type ConnectedState = {};
 
 type ConnectedDispatch = {
-    deleteForumTopic: (props: IDeleteTopicProps) => void;
+    deleteForumTopic: (props: IActionProps) => void;
 };
 
 type CombinedProps = Props & ConnectedDispatch & ConnectedState;
@@ -41,7 +41,7 @@ class ForumTopicRowComponent extends React.Component<CombinedProps> {
 }
 
 const mapDispatchToProps = (dispatch: IDispatch): ConnectedDispatch => ({
-    deleteForumTopic: (props: IDeleteTopicProps) => dispatch(deleteForumTopic(props))
+    deleteForumTopic: (props: IActionProps) => dispatch(deleteForumTopic(props))
 });
 
 const ForumTopicRow: React.ComponentClass<Props> =

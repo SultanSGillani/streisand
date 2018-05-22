@@ -1,7 +1,18 @@
-import ForumGroupsAction from './ForumGroupsAction';
-import ForumTopicAction from './topics';
-import ForumThreadAction from './threads';
-import ForumPostAction from './posts';
+import { all } from 'redux-saga/effects';
+
+import ForumGroupsAction, { forumGroupsSaga } from './ForumGroupsAction';
+import ForumTopicAction, { allTopicSaga } from './topics';
+import ForumThreadAction, { allThreadSaga } from './threads';
+import ForumPostAction, { allPostSaga } from './posts';
 
 type Action = ForumGroupsAction | ForumTopicAction | ForumThreadAction | ForumPostAction;
 export default Action;
+
+export function* allForumSaga() {
+    yield all([
+        forumGroupsSaga(),
+        allTopicSaga(),
+        allThreadSaga(),
+        allPostSaga()
+    ]);
+}

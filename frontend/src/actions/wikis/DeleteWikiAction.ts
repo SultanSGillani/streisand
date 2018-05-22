@@ -1,55 +1,45 @@
 import { push } from 'react-router-redux';
+import { put } from 'redux-saga/effects';
 
-import Store from '../../store';
 import { invalidate } from './WikisAction';
 import globals from '../../utilities/globals';
 import { remove } from '../../utilities/Requestor';
-import { ThunkAction, IDispatch } from '../ActionTypes';
-import { IUnkownError } from '../../models/base/IError';
-import ErrorAction, { handleError } from '../ErrorAction';
+import { generateSage, generateAuthFetch } from '../sagas/generators';
 
-type DeleteWikiAction =
-    { type: 'DELETING_WIKI', id: number } |
-    { type: 'DELETED_WIKI', id: number } |
-    { type: 'FAILED_DELETING_WIKI', id: number };
-export default DeleteWikiAction;
-type Action = DeleteWikiAction | ErrorAction;
-
-export interface IDeleteProps {
+export interface IActionProps {
     id: number;
     currentPage?: number;
 }
 
-function deleting(id: number): Action {
-    return { type: 'DELETING_WIKI', id };
+export type RequestWikiDeletion = { type: 'REQUEST_WIKI_DELETION', props: IActionProps };
+export type ReceivedWikiDeletion = { type: 'RECEIVED_WIKI_DELETION', props: IActionProps };
+export type FailedWikiDeletion = { type: 'FAILED_WIKI_DELETION', props: IActionProps };
+
+type DeleteWikiAction = RequestWikiDeletion | ReceivedWikiDeletion | FailedWikiDeletion;
+export default DeleteWikiAction;
+type Action = DeleteWikiAction;
+
+function* received(response: void, props: IActionProps) {
+    yield put<Action>({ type: 'RECEIVED_WIKI_DELETION', props });
+    if (props.currentPage) {
+        yield put(invalidate({ page: props.currentPage }));
+    } else {
+        yield put(push('/wikis'));
+    }
 }
 
-function deleted(id: number): Action {
-    return { type: 'DELETED_WIKI', id };
+function failure(props: IActionProps): Action {
+    return { type: 'FAILED_WIKI_DELETION', props };
 }
 
-function failure(id: number): Action {
-    return { type: 'FAILED_DELETING_WIKI', id };
+export function deleteWiki(props: IActionProps): Action {
+    return { type: 'REQUEST_WIKI_DELETION', props };
 }
 
-export function deleteWiki(props: IDeleteProps): ThunkAction<Action> {
-    return (dispatch: IDispatch<Action>, getState: () => Store.All) => {
-        const state = getState();
-        dispatch(deleting(props.id));
-        return request(state.sealed.auth.token, props.id).then(() => {
-            if (props.currentPage) {
-                dispatch(invalidate(props.currentPage));
-            } else {
-                dispatch(push('/wikis'));
-            }
-            return dispatch(deleted(props.id));
-        }, (error: IUnkownError) => {
-            dispatch(failure(props.id));
-            return dispatch(handleError(error));
-        });
-    };
-}
+const errorPrefix = (props: IActionProps) => `Deleting a wiki (${props.id}) failed`;
+const fetch = generateAuthFetch({ errorPrefix, request, received, failure });
+export const deleteWikiSaga = generateSage<RequestWikiDeletion>('REQUEST_WIKI_DELETION', fetch);
 
-function request(token: string, id: number): Promise<void> {
-    return remove({ token, url: `${globals.apiUrl}/wikis/${id}/` });
+function request(token: string, props: IActionProps): Promise<void> {
+    return remove({ token, url: `${globals.apiUrl}/wikis/${props.id}/` });
 }
