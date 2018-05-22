@@ -49,3 +49,5 @@ cleanslate:
 test:
 	 docker-compose run --rm api invoke run-python-tests --coverage
 
+flake8:
+	flake8 src .
