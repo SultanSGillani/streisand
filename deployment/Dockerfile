@@ -8,11 +8,12 @@ RUN apt-get update \
     && rm -rf /var/lib/apt/lists/*
 
 WORKDIR /code
-COPY backend/requirements.txt ./
-COPY backend/testing_requirements.txt ./
+COPY backend/install.py ./
+COPY backend/pip.conf /root/.config/pip/pip.conf
 
-RUN pip install -r requirements.txt
-RUN pip install -r testing_requirements.txt
+RUN export PIP_NO_BINARY=psycopg2
+RUN python -m pip install --upgrade pip==9.0.3
+RUN python ./install.py
 
 COPY deployment/uwsgi ./uwsgi
 COPY backend .
