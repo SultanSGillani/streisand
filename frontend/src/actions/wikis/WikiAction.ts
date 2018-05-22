@@ -1,38 +1,35 @@
-import { ThunkAction } from '../ActionTypes';
-import globals from '../../utilities/globals';
-import { get } from '../../utilities/Requestor';
 
 import IWiki from '../../models/IWiki';
-import ErrorAction from '../ErrorAction';
-import { fetchData } from '../ActionHelper';
+import globals from '../../utilities/globals';
+import { get } from '../../utilities/Requestor';
+import { generateAuthFetch, generateSage } from '../sagas/generators';
 
-type WikiAction =
-    { type: 'FETCHING_WIKI', id: number } |
-    { type: 'RECEIVED_WIKI', wiki: IWiki } |
-    { type: 'FAILED_WIKI', id: number };
+interface IActionProps { id: number; }
+
+export type RequestWiki = { type: 'REQUEST_WIKI', props: IActionProps };
+export type ReceivedtWiki = { type: 'RECEIVED_WIKI', wiki: IWiki };
+export type FailedWiki = { type: 'FAILED_WIKI', props: IActionProps };
+
+type WikiAction = RequestWiki | ReceivedtWiki | FailedWiki;
 export default WikiAction;
-type Action = WikiAction | ErrorAction;
+type Action = WikiAction;
 
-function fetching(id: number): Action {
-    return { type: 'FETCHING_WIKI', id };
+export function received(wiki: IWiki): Action {
+    return { type: 'RECEIVED_WIKI', wiki };
 }
 
-function received(id: number, response: IWiki): Action {
-    return {
-        type: 'RECEIVED_WIKI',
-        wiki: response
-    };
+function failure(props: IActionProps): Action {
+    return { type: 'FAILED_WIKI', props };
 }
 
-function failure(id: number): Action {
-    return { type: 'FAILED_WIKI', id };
+export function getWiki(id: number): Action {
+    return { type: 'REQUEST_WIKI', props: { id } };
 }
 
-export function getWiki(id: number): ThunkAction<Action> {
-    const errorPrefix = `Fetching wiki (${id}) failed`;
-    return fetchData({ request, fetching, received, failure, errorPrefix, props: id });
-}
+const errorPrefix = (props: IActionProps) => `Fetching wiki (${props.id}) failed`;
+const fetch = generateAuthFetch({ errorPrefix, request, received, failure });
+export const wikiSaga = generateSage<RequestWiki>('REQUEST_WIKI', fetch);
 
-function request(token: string, id: number): Promise<IWiki> {
-    return get({ token, url: `${globals.apiUrl}/wikis/${id}/` });
+function request(token: string, props: IActionProps): Promise<IWiki> {
+    return get({ token, url: `${globals.apiUrl}/wikis/${props.id}/` });
 }

@@ -1,36 +1,27 @@
-import Store from '../../store';
-import ErrorAction from '../ErrorAction';
+import { put } from 'redux-saga/effects';
+
 import globals from '../../utilities/globals';
 import { transformGroups } from './transforms';
 import { get } from '../../utilities/Requestor';
-import { simplefetchData } from '../ActionHelper';
-import { ThunkAction, IDispatch } from '../ActionTypes';
-import BulkUserAction, { getUsers } from '../users/BulkUserAction';
+import { getUsers } from '../users/BulkUserAction';
+import { generateAuthFetch, generateSage } from '../sagas/generators';
 import { IForumGroupResponse, IForumGroupData } from '../../models/forums/IForumGroup';
 
-type ForumGroupsction =
-    { type: 'FETCHING_FORUM_GROUPS' } |
-    { type: 'RECEIVED_FORUM_GROUPS', data: IForumGroupData } |
-    { type: 'FAILED_FORUM_GROUPS' } |
-    { type: 'INVALIDATE_FORUM_GROUPS' };
+export type RequestForumGroups = { type: 'REQUEST_FORUM_GROUPS' };
+export type ReceivedForumGroups = { type: 'RECEIVED_FORUM_GROUPS', props: { data: IForumGroupData } };
+export type FailedForumGroups = { type: 'FAILED_FORUM_GROUPS' };
+export type InvalidateForumGroups = { type: 'INVALIDATE_FORUM_GROUPS' };
+
+type ForumGroupsction = RequestForumGroups | ReceivedForumGroups | FailedForumGroups | InvalidateForumGroups;
 export default ForumGroupsction;
-type Action = ForumGroupsction | BulkUserAction | ErrorAction;
+type Action = ForumGroupsction;
 
-function fetching(): Action {
-    return { type: 'FETCHING_FORUM_GROUPS' };
-}
-
-function received(response: IForumGroupResponse): ThunkAction<Action> {
-    return (dispatch: IDispatch<Action>, getState: () => Store.All) => {
-        const data = transformGroups(response);
-        if (data.users.length) {
-            dispatch(getUsers(data.users));
-        }
-        return dispatch({
-            type: 'RECEIVED_FORUM_GROUPS',
-            data: data
-        });
-    };
+function* received(response: IForumGroupResponse) {
+    const data = transformGroups(response);
+    yield put<Action>({ type: 'RECEIVED_FORUM_GROUPS', props: { data } });
+    if (data.users.length) {
+        yield put(getUsers(data.users));
+    }
 }
 
 function failure(): Action {
@@ -41,10 +32,12 @@ export function invalidate() {
     return { type: 'INVALIDATE_FORUM_GROUPS' };
 }
 
-export function getForumGroups(): ThunkAction<Action> {
-    const errorPrefix = 'Fetching the list of forums failed';
-    return simplefetchData({ request, fetching, received, failure, errorPrefix });
+export function getForumGroups(): Action {
+    return { type: 'REQUEST_FORUM_GROUPS' };
 }
+const errorPrefix = 'Fetching the list of forums failed';
+const fetch = generateAuthFetch({ errorPrefix, request, received, failure });
+export const forumGroupsSaga = generateSage<RequestForumGroups>('REQUEST_FORUM_GROUPS', fetch);
 
 function request(token: string): Promise<IForumGroupResponse> {
     return get({ token, url: `${globals.apiUrl}/forum-index/` });

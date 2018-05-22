@@ -7,7 +7,7 @@ import { getPageReducer } from '../utilities/page';
 import { IForumThread } from '../../models/forums/IForumThread';
 import { ForumThreadData } from '../../models/forums/IForumData';
 import { INestedPages, IPage, INestedPage } from '../../models/base/IPagedItemSet';
-import ForumTopicAction, { ForumTopicReceivedAction } from '../../actions/forums/topics/ForumTopicAction';
+import ForumTopicAction, { ReceivedForumTopic } from '../../actions/forums/topics/ForumTopicAction';
 
 type Action = ForumAction | NewsAction;
 
@@ -19,7 +19,7 @@ function byId(state: ItemMap = {}, action: Action): ItemMap {
         case 'RECEIVED_FORUM_THREAD':
         case 'RECEIVED_NEWS_POST':
             let map: ItemMap = {};
-            for (const item of action.data.threads) {
+            for (const item of action.props.data.threads) {
                 map[item.id] = item;
             }
             return objectAssign({}, state, map);
@@ -32,11 +32,11 @@ type Items = INestedPages;
 function byTopic(state: Items = {}, action: ForumTopicAction): Items {
     switch (action.type) {
         case 'FAILED_FORUM_TOPIC':
-        case 'FETCHING_FORUM_TOPIC':
+        case 'REQUEST_FORUM_TOPIC':
         case 'INVALIDATE_FORUM_TOPIC':
             return processThreads({ state , action });
         case 'RECEIVED_FORUM_TOPIC':
-            return processThreads({ state, action, count: action.count, pageSize: action.pageSize });
+            return processThreads({ state, action, count: action.props.count, pageSize: action.props.pageSize });
         default:
             return state;
     }
@@ -49,17 +49,17 @@ interface IThreadProcessingParams {
     pageSize?: number;
 }
 
-const pageReducer = getPageReducer('FORUM_TOPIC', (action: ForumTopicReceivedAction) => {
-    return action.data.threads || [];
+const pageReducer = getPageReducer('FORUM_TOPIC', (action: ReceivedForumTopic) => {
+    return action.props.data.threads || [];
 });
 
 type Pages = { [page: number]: IPage };
 function processThreads(params: IThreadProcessingParams): INestedPages {
     const { action, count, pageSize } = params;
-    const current = params.state[action.id] || { count, pageSize, pages: {} };
-    const currentPage = current.pages[action.page];
+    const current = params.state[action.props.id] || { count, pageSize, pages: {} };
+    const currentPage = current.pages[action.props.page];
     const itemSet: Pages = objectAssign({}, current.pages, {
-        [action.page]: pageReducer(currentPage, params.action)
+        [action.props.page]: pageReducer(currentPage, params.action)
     });
     const nestedPage: INestedPage = {
         pages: itemSet,
@@ -67,7 +67,7 @@ function processThreads(params: IThreadProcessingParams): INestedPages {
         pageSize: pageSize !== undefined ? pageSize : current.pageSize
     };
     return objectAssign({}, params.state, {
-        [action.id]: nestedPage
+        [action.props.id]: nestedPage
     });
 }
 

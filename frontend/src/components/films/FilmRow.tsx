@@ -5,7 +5,7 @@ import { connect } from 'react-redux';
 import IFilm from '../../models/IFilm';
 import DeleteCell from '../generic/DeleteCell';
 import { IDispatch } from '../../actions/ActionTypes';
-import { deleteFilm, IDeleteProps } from '../../actions/films/DeleteFilmAction';
+import { deleteFilm, IActionProps } from '../../actions/films/DeleteFilmAction';
 
 export type Props = {
     film: IFilm;
@@ -15,7 +15,7 @@ export type Props = {
 type ConnectedState = {};
 
 type ConnectedDispatch = {
-    deleteFilm: (props: IDeleteProps) => void;
+    deleteFilm: (props: IActionProps) => void;
 };
 
 type CombinedProps = Props & ConnectedDispatch & ConnectedState;
@@ -40,7 +40,7 @@ class FilmRowComponent extends React.Component<CombinedProps> {
 }
 
 const mapDispatchToProps = (dispatch: IDispatch): ConnectedDispatch => ({
-    deleteFilm: (props: IDeleteProps) => dispatch(deleteFilm(props))
+    deleteFilm: (props: IActionProps) => dispatch(deleteFilm(props))
 });
 
 const FilmRow: React.ComponentClass<Props> =

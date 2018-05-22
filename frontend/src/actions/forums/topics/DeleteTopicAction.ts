@@ -1,48 +1,37 @@
 
-import Store from '../../../store';
 import globals from '../../../utilities/globals';
 import { remove } from '../../../utilities/Requestor';
-import { IUnkownError } from '../../../models/base/IError';
-import { ThunkAction, IDispatch } from '../../ActionTypes';
-import ErrorAction, { handleError } from '../../ErrorAction';
+import { generateAuthFetch, generateSage } from '../../sagas/generators';
 
-type DeleteTopicAction =
-    { type: 'DELETING_FORUM_TOPIC', group?: number, topic: number } |
-    { type: 'DELETED_FORUM_TOPIC', group?: number, topic: number } |
-    { type: 'FAILED_DELETING_FORUM_TOPIC', group?: number, topic: number };
-export default DeleteTopicAction;
-type Action = DeleteTopicAction | ErrorAction;
-
-export interface IDeleteTopicProps {
+export interface IActionProps {
     group?: number;
     topic: number;
 }
 
-function deleting(props: IDeleteTopicProps): Action {
-    return { type: 'DELETING_FORUM_TOPIC', ...props };
+export type RequestTopicDeletion = { type: 'REQUEST_FORUM_TOPIC_DELETION', props: IActionProps } ;
+export type ReceivedTopicDeletion = { type: 'RECEIVED_FORUM_TOPIC_DELETION', props: IActionProps } ;
+export type FailedTopicDeletion = { type: 'FAILED_FORUM_TOPIC_DELETION', props: IActionProps };
+
+type DeleteTopicAction = RequestTopicDeletion | ReceivedTopicDeletion | FailedTopicDeletion;
+export default DeleteTopicAction;
+type Action = DeleteTopicAction;
+
+function received(response: void, props: IActionProps): Action {
+    return { type: 'RECEIVED_FORUM_TOPIC_DELETION', props };
 }
 
-function deleted(props: IDeleteTopicProps): Action {
-    return { type: 'DELETED_FORUM_TOPIC', ...props };
+function failure(props: IActionProps): Action {
+    return { type: 'FAILED_FORUM_TOPIC_DELETION', props };
 }
 
-function failure(props: IDeleteTopicProps): Action {
-    return { type: 'FAILED_DELETING_FORUM_TOPIC', ...props };
+export function deleteForumTopic(props: IActionProps): Action {
+    return { type: 'REQUEST_FORUM_TOPIC_DELETION', props };
 }
 
-export function deleteForumTopic(props: IDeleteTopicProps): ThunkAction<Action> {
-    return (dispatch: IDispatch<Action>, getState: () => Store.All) => {
-        const state = getState();
-        dispatch(deleting(props));
-        return request(state.sealed.auth.token, props.topic).then(() => {
-            return dispatch(deleted(props));
-        }, (error: IUnkownError) => {
-            dispatch(failure(props));
-            return dispatch(handleError(error));
-        });
-    };
-}
+const errorPrefix = (props: IActionProps) => `Deleting a forum topic (${props.topic}) failed`;
+const fetch = generateAuthFetch({ errorPrefix, request, received, failure });
+export const deleteForumTopicSaga = generateSage<RequestTopicDeletion>('REQUEST_FORUM_TOPIC_DELETION', fetch);
 
-function request(token: string, id: number): Promise<void> {
-    return remove({ token, url: `${globals.apiUrl}/forum-topic-items/${id}/` });
+function request(token: string, props: IActionProps): Promise<void> {
+    return remove({ token, url: `${globals.apiUrl}/forum-topic-items/${props.topic}/` });
 }

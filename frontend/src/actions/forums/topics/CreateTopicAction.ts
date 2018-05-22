@@ -1,14 +1,14 @@
+import { put } from 'redux-saga/effects';
 import { push } from 'react-router-redux';
 
 import Store from '../../../store';
 import globals from '../../../utilities/globals';
 import { invalidate } from '../ForumGroupsAction';
 import { post } from '../../../utilities/Requestor';
-import { IUnkownError } from '../../../models/base/IError';
-import { ThunkAction, IDispatch } from '../../ActionTypes';
-import ErrorAction, { handleError } from '../../ErrorAction';
+import { generateAuthFetch, generateSage } from '../../sagas/generators';
 import { ISingleForumTopicResponse } from '../../../models/forums/IForumTopic';
 
+interface IActionProps extends INewForumTopicPayload { }
 export interface INewForumTopicPayload {
     group: number;
     title: string;
@@ -16,52 +16,52 @@ export interface INewForumTopicPayload {
     sortOrder?: number;
 }
 
-type CreateTopicAction =
-    { type: 'CREATING_FORUM_TOPIC', payload: INewForumTopicPayload } |
-    { type: 'CREATED_FORUM_TOPIC', id: number } |
-    { type: 'FAILED_CREATING_FORUM_TOPIC' };
+export type RequestNewTopic = { type: 'REQUEST_NEW_FORUM_TOPIC', props: IActionProps } ;
+export type ReceivedNewTopic = { type: 'RECEIVED_NEW_FORUM_TOPIC', id: number } ;
+export type FailedNewTopic = { type: 'FAILED_NEW_FORUM_TOPIC', props: IActionProps };
+
+type CreateTopicAction = RequestNewTopic | ReceivedNewTopic | FailedNewTopic;
 export default CreateTopicAction;
-type Action = CreateTopicAction | ErrorAction;
+type Action = CreateTopicAction;
 
-function creating(payload: INewForumTopicPayload): Action {
-    return { type: 'CREATING_FORUM_TOPIC', payload };
+function* received(response: ISingleForumTopicResponse) {
+    const id = response.id;
+    yield put<Action>({ type: 'RECEIVED_NEW_FORUM_TOPIC', id });
+    yield put(push(`/forum/topic/${response.id}`));
+    yield put(invalidate());
 }
 
-function created(id: number): Action {
-    return { type: 'CREATED_FORUM_TOPIC', id };
+function failure(props: IActionProps): Action {
+    return { type: 'FAILED_NEW_FORUM_TOPIC', props };
 }
 
-function failure(): Action {
-    return { type: 'FAILED_CREATING_FORUM_TOPIC' };
+export function createForumTopic(props: INewForumTopicPayload): Action {
+    return { type: 'REQUEST_NEW_FORUM_TOPIC', props };
 }
 
-export function createForumTopic(payload: INewForumTopicPayload): ThunkAction<Action> {
-    return (dispatch: IDispatch<Action>, getState: () => Store.All) => {
-        const state = getState();
-        dispatch(creating(payload));
-        const group = state.sealed.forums.groups.byId[payload.group];
-        const lastTopicId = group && group.topics && group.topics.length && group.topics[group.topics.length - 1];
-        const lastTopic = state.sealed.forums.topics.byId[lastTopicId || -1];
-        const sortOrder = ((lastTopic && lastTopic.sortOrder) || 1) + 1;
-        payload.sortOrder = payload.sortOrder || sortOrder;
-        return create(state.sealed.auth.token, payload).then((response: ISingleForumTopicResponse) => {
-            const action = dispatch(created(response.id));
-            dispatch(push(`/forum/topic/${response.id}`));
-            dispatch(invalidate());
-            return action;
-        }, (error: IUnkownError) => {
-            dispatch(failure());
-            return dispatch(handleError(error));
-        });
+function filter(state: Store.All, props: IActionProps): IActionProps {
+    const group = state.sealed.forums.groups.byId[props.group];
+    const lastTopicId = group && group.topics && group.topics.length && group.topics[group.topics.length - 1];
+    const lastTopic = state.sealed.forums.topics.byId[lastTopicId || -1];
+    const sortOrder = ((lastTopic && lastTopic.sortOrder) || 1) + 1;
+    return {
+        group: props.group,
+        title: props.title,
+        description: props.description,
+        sortOrder: props.sortOrder || sortOrder
     };
 }
 
-function create(token: string, payload: INewForumTopicPayload): Promise<ISingleForumTopicResponse> {
+const errorPrefix = 'Creating a new forum topic failed';
+const fetch = generateAuthFetch({ errorPrefix, request, received, failure, filter });
+export const creatForumTopicSaga = generateSage<RequestNewTopic>('REQUEST_NEW_FORUM_TOPIC', fetch);
+
+function request(token: string, props: IActionProps): Promise<ISingleForumTopicResponse> {
     const data = {
-        sortOrder: payload.sortOrder,
-        name: payload.title,
-        description: payload.description,
-        group: payload.group
+        sortOrder: props.sortOrder,
+        name: props.title,
+        description: props.description,
+        group: props.group
     };
     return post({ token, data, url: `${globals.apiUrl}/forum-topic-items/` });
 }

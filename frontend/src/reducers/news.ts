@@ -5,8 +5,8 @@ import { combineReducers } from './helpers';
 function latest(state: number | null = null, action: Action): number | null {
     switch (action.type) {
         case 'RECEIVED_NEWS_POST':
-            if (action.data.posts.length) {
-                return action.data.posts[0].id;
+            if (action.props.data.posts.length) {
+                return action.props.data.posts[0].id;
             }
             return state;
         default:
@@ -16,7 +16,7 @@ function latest(state: number | null = null, action: Action): number | null {
 
 function loading(state: boolean = false, action: Action): boolean {
     switch (action.type) {
-        case 'FETCHING_NEWS_POST':
+        case 'REQUEST_NEWS_POST':
             return true;
         case 'FAILED_NEWS_POST':
         case 'RECEIVED_NEWS_POST':

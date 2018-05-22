@@ -20,9 +20,9 @@ function auth(state: IAuthInfo = defaultValue, action: Action): IAuthInfo {
                 isAuthenticating: false,
                 token: ''
             };
-        case 'AUTHENTICATING':
+        case 'REQUEST_AUTHENTICATION':
             return assign({}, state, { isAuthenticating: true });
-        case 'AUTHENTICATED':
+        case 'RECEIVED_AUTHENTICATION':
             return {
                 isAuthenticated: true,
                 isAuthenticating: false,

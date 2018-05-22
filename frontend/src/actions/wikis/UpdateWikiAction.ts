@@ -1,45 +1,36 @@
-import Store from '../../store';
+
 import globals from '../../utilities/globals';
-import { put } from '../../utilities/Requestor';
-import { ThunkAction, IDispatch } from '../ActionTypes';
-
-import WikiAction from './WikiAction';
+import { putRequest } from '../../utilities/Requestor';
 import IWiki, { IWikiUpdate } from '../../models/IWiki';
-import { IUnkownError } from '../../models/base/IError';
-import ErrorAction, { handleError } from '../ErrorAction';
+import { generateAuthFetch, generateSage } from '../sagas/generators';
 
-type UpdateWikiAction = { type: 'UDATING_WIKI', id: number };
-export default UpdateWikiAction;
-type Action = UpdateWikiAction | WikiAction | ErrorAction;
+interface IActionProps extends IWikiUpdate { id: number; }
 
-function updating(id: number): Action {
-    return { type: 'UDATING_WIKI', id };
+export type RequestWikiUpdate = { type: 'REQUEST_WIKI_UPDATE', props: IActionProps };
+export type ReceivedtWikiUpdate = { type: 'RECEIVED_WIKI_UPDATE', wiki: IWiki };
+export type FailedWikiUpdate = { type: 'FAILED_WIKI_UPDATE', props: IActionProps };
+
+type WikiUpdateAction = RequestWikiUpdate | ReceivedtWikiUpdate | FailedWikiUpdate;
+export default WikiUpdateAction;
+type Action = WikiUpdateAction;
+
+function received(wiki: IWiki): Action {
+    return { type: 'RECEIVED_WIKI_UPDATE', wiki };
 }
 
-function received(id: number, response: IWiki): Action {
-    return {
-        type: 'RECEIVED_WIKI',
-        wiki: response
-    };
+function failure(props: IActionProps): Action {
+    return { type: 'FAILED_WIKI_UPDATE', props };
 }
 
-function failure(id: number): Action {
-    return { type: 'FAILED_WIKI', id };
+export function updateWiki(id: number, wiki: IWikiUpdate): Action {
+    return { type: 'REQUEST_WIKI_UPDATE', props: { id, ...wiki } };
 }
 
-export function updateWiki(id: number, wiki: IWikiUpdate): ThunkAction<Action> {
-    return (dispatch: IDispatch<Action>, getState: () => Store.All) => {
-        const state = getState();
-        dispatch(updating(id));
-        return request(state.sealed.auth.token, id, wiki).then((response: IWiki) => {
-            return dispatch(received(id, response));
-        }, (error: IUnkownError) => {
-            dispatch(failure(id));
-            return dispatch(handleError(error));
-        });
-    };
-}
+const errorPrefix = (props: IActionProps) => `Updating a wiki (${props.id}) failed`;
+const fetch = generateAuthFetch({ errorPrefix, request, received, failure });
+export const updateWikiSaga = generateSage<RequestWikiUpdate>('REQUEST_WIKI_UPDATE', fetch);
 
-function request(token: string, id: number, data: IWikiUpdate): Promise<IWiki> {
-    return put({ token, data, url: `${globals.apiUrl}/wikis/${id}/` });
+function request(token: string, props: IActionProps): Promise<IWiki> {
+    const { id, ...data } = props;
+    return putRequest({ token, data, url: `${globals.apiUrl}/wikis/${id}/` });
 }

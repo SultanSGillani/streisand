@@ -1,48 +1,52 @@
-import { ThunkAction } from '../ActionTypes';
-import globals from '../../utilities/globals';
-import { get } from '../../utilities/Requestor';
 
 import IWiki from '../../models/IWiki';
-import ErrorAction from '../ErrorAction';
-import { fetchData } from '../ActionHelper';
+import globals from '../../utilities/globals';
+import { get } from '../../utilities/Requestor';
 import IPagedResponse from '../../models/base/IPagedResponse';
+import { generateAuthFetch, generateSage } from '../sagas/generators';
 
+interface IActionProps { page: number; }
 const PAGE_SIZE = globals.pageSize.wikis;
-type WikisAction =
-    { type: 'FETCHING_WIKIS', page: number } |
-    { type: 'RECEIVED_WIKIS', page: number, pageSize: number, count: number, items: IWiki[] } |
-    { type: 'FAILED_WIKIS', page: number } |
-    { type: 'INVALIDATE_WIKIS', page: number };
+
+export type RequestWikis = { type: 'REQUEST_WIKIS', props: IActionProps };
+export type ReceivedWikis = {
+    type: 'RECEIVED_WIKIS',
+    props: { page: number, pageSize: number, count: number, items: IWiki[] }
+};
+export type FailedWikis = { type: 'FAILED_WIKIS', props: IActionProps };
+export type InvalidateWikis = { type: 'INVALIDATE_WIKIS', props: IActionProps };
+type WikisAction = RequestWikis | ReceivedWikis | FailedWikis | InvalidateWikis;
 export default WikisAction;
-type Action = WikisAction | ErrorAction;
+type Action = WikisAction;
 
-function fetching(page: number): Action {
-    return { type: 'FETCHING_WIKIS', page };
-}
-
-function received(page: number, response: IPagedResponse<IWiki>): Action {
+function received(response: IPagedResponse<IWiki>, props: IActionProps): Action {
     return {
-        page: page,
-        pageSize: PAGE_SIZE,
-        count: response.count,
         type: 'RECEIVED_WIKIS',
-        items: response.results
+        props: {
+            page: props.page,
+            pageSize: PAGE_SIZE,
+            count: response.count,
+            items: response.results
+        }
     };
 }
 
-function failure(page: number): Action {
-    return { type: 'FAILED_WIKIS', page };
+function failure(props: IActionProps): Action {
+    return { type: 'FAILED_WIKIS', props };
 }
 
-export function invalidate(page: number): Action {
-    return { type: 'INVALIDATE_WIKIS', page };
+export function invalidate(props: IActionProps): Action {
+    return { type: 'INVALIDATE_WIKIS', props };
 }
 
-export function getWikis(page: number = 1): ThunkAction<Action> {
-    const errorPrefix = `Fetching page ${page} of wikis failed`;
-    return fetchData({ request, fetching, received, failure, errorPrefix, props: page });
+export function getWikis(page: number = 1): Action {
+    return { type: 'REQUEST_WIKIS', props: { page } };
 }
 
-function request(token: string, page: number): Promise<IPagedResponse<IWiki>> {
-    return get({ token, url: `${globals.apiUrl}/wiki-articles/?page=${page}&size=${PAGE_SIZE}` });
+const errorPrefix = (props: IActionProps) => `Fetching page ${props.page} of wikis failed`;
+const fetch = generateAuthFetch({ errorPrefix, request, received, failure });
+export const wikisSaga = generateSage<RequestWikis>('REQUEST_WIKIS', fetch);
+
+function request(token: string, props: IActionProps): Promise<IPagedResponse<IWiki>> {
+    return get({ token, url: `${globals.apiUrl}/wiki-articles/?page=${props.page}&size=${PAGE_SIZE}` });
 }
