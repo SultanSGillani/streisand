@@ -67,7 +67,7 @@ class LatestNewsComponent extends React.Component<CombinedProps, void> {
                     <div className="row">
                         <div className="col-auto">Latest news</div>
                         <div className="col-auto ml-auto">
-                            <small>posted by <UserLink user={this.props.author} /> {posted}</small>
+                            <small>posted bydss <UserLink user={this.props.author} /> {posted}</small>
                         </div>
                     </div>
                 </CardHeader>

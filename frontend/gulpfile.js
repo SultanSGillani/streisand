@@ -1,35 +1,25 @@
 'use strict';
 
-const del = require('del');
 const gulp = require('gulp');
 const gutil = require('gutil');
 const webpack = require('webpack');
 const connect = require('gulp-connect');
 const replace = require('gulp-replace');
-const sequence = require('run-sequence');
 const WebpackDevServer = require('webpack-dev-server');
 
 // Start dev server
+console.log('HERE', {a: 1})
 gulp.task('hot-load', (done) => {
-    const webpackConfig = require('./webpack.config.js');
-    const config = Object.create(webpackConfig);
-    new WebpackDevServer(webpack(config), {
-        publicPath: config.output.publicPath,
-        hot: true,
-        historyApiFallback: true,
-        quiet: false,
-        noInfo: false,
-        stats: 'minimal'
-    }).listen(3000, '0.0.0.0', function (err) {
-        if (err) throw new gutil.PluginError('webpack-dev-server', err);
-        gutil.log('[webpack-dev-server]', 'http://localhost:3000/webpack-dev-server/index.html');
+    const config = require('./webpack.dev.js');
+    console.log(config);
+    new WebpackDevServer(webpack(config)).listen(3000, '0.0.0.0', function (err) {
+        if (err) throw new gutil.PluginError('hot-load', err);
     });
 });
 
 // production build
 gulp.task('prod-build', (done) => {
-    const webpackConfig = require('./webpack.config.production.js');
-    const config = Object.create(webpackConfig);
+    const config = require('./webpack.prod.js');
     webpack(config, (error, stats) => {
         if (error) {
             console.log(error);
@@ -53,21 +43,6 @@ gulp.task('connect', () => {
     connect.server({ port: 4000 });
 });
 
-// startup simple webserver for deployment build
-gulp.task('connect:app', () => {
-    connect.server({ root: 'app', port: 4000 });
-});
-
-// delete dist folder
-gulp.task('clean:dist', () => {
-    return del(['dist']);
-});
-
-// delete app folder
-gulp.task('clean:app', () => {
-    return del(['app']);
-});
-
 const packages = [
     { name: 'react', cdn: 'https://cdnjs.cloudflare.com/ajax/libs/react/{version}/umd/react.production.min.js' },
     { name: 'react-dom', cdn: 'https://cdnjs.cloudflare.com/ajax/libs/react-dom/{version}/umd/react-dom.production.min.js' },
@@ -77,7 +52,7 @@ const packages = [
 
 // Make a copy of index.html and replace the local node_module dependencies with the cdn urls above
 gulp.task('cdn', () => {
-    let stream = gulp.src('./index.html')
+    let stream = gulp.src('./dist/index.html')
     for (const data of packages) {
         const version = require(`${data.name}/package.json`).version;
         const cdn = data.cdn.replace('{version}', version);
@@ -88,13 +63,7 @@ gulp.task('cdn', () => {
     return stream.pipe(gulp.dest('./dist'))
 });
 
-gulp.task('copy:build', function() {
-    return gulp.src('./dist/**').pipe(gulp.dest('./dist'));
-});
-
-gulp.task('build', gulp.series('clean:dist', 'prod-build'));
-
-gulp.task('deploy', gulp.series('clean:app', 'prod-build', 'cdn', 'copy:build'));
+gulp.task('deploy', gulp.series('prod-build', 'cdn'));
 
 gulp.task('dev', gulp.series('hot-load'));
 gulp.task('default', gulp.series('deploy'));
