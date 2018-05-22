@@ -1,8 +1,6 @@
 [run]
-
-source = jumpcut
-branch = True
-
+source = src
+disable_warnings = module-not-measured
 
 [report]
 
@@ -19,6 +17,7 @@ omit =
     */settings/*
     */apps.py
     */forms.py
+	install.py
 	
 exclude_lines =
     pragma: no cover
@@ -26,6 +25,24 @@ exclude_lines =
     if self.debug:
     if settings.DEBUG
     raise AssertionError
+    raise ImproperlyConfigured
+    raise TypeError
     raise NotImplementedError
+    warnings.warn
+    logger.debug
+    logger.info
+    logger.warning
+    logger.error
+    return NotHandled
+	
+	# Don't complain if non-runnable code isn't run:
     if 0:
     if __name__ == .__main__.:
+	
+ignore_errors = True
+precision = 2
+show_missing = True
+	
+[paths]
+source =
+    backend/src/
