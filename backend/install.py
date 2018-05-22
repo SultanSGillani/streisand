@@ -1,10 +1,5 @@
 import pip
 
-try:
-    from pip import main as pipmain
-except ImportError:
-    from pip._internal import main as pipmain
-
 _all_ = [
     'pip==10.0.1',
     'Django[argon2]==2.0.5',
