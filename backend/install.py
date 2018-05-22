@@ -1,7 +1,7 @@
 import pip
 
 _all_ = [
-    'pip==10.0.1',
+    # requirements.txt
     'Django[argon2]==2.0.5',
     'Markdown==2.6.11',
     'Pillow==5.1.0',
@@ -22,7 +22,6 @@ _all_ = [
     'django-su==0.6.0',
     'djangorestframework==3.8.2',
     'kombu==4.1.0',
-    'psycopg2>=2.7',
     'pycparser==2.18',
     'pytz==2018.4',
     'redis==2.10.6',
@@ -66,11 +65,11 @@ _all_ = [
     'isort==4.3.4',
 ]
 
-windows = []
+# windows requirements?
+windows = ['mod_wsgi==4.6.4', 'psycopg2-binary', ]
 
-linux = ['uWSGI==2.0.17', ]
-
-darwin = []
+# only install UWSGI on linux
+linux = ['uWSGI==2.0.17', 'psycopg2>=2.7', ]
 
 
 def install(packages):
@@ -88,4 +87,4 @@ if __name__ == '__main__':
     if platform.startswith('linux'):
         install(linux)
     if platform == 'darwin':  # MacOS
-        install(darwin)
+        install(linux)
