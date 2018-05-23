@@ -19,7 +19,6 @@ COPY deployment/uwsgi ./uwsgi
 COPY backend .
 
 COPY deployment/frontend_out/* src/static/frontend/dist/
-COPY deployment/frontend_out/* src/static/frontend/dist/
 
 ENV DOCKER_CONTAINER=1
 ENV DJANGO_ENV=DEBUG
