@@ -37,5 +37,18 @@ services:
         environment:
             - C_FORCE_ROOT=true
         restart: always
+    nginx:
+            build:
+                context: ../
+                dockerfile: ./nginx/Dockerfile
+            depends_on:
+                - www
+            volumes:
+                - "./backend/src/static:/static"
+                - "./frontend/dist:/static"
+                - "./logs/nginx:/tmp/logs"
+            ports:
+                - "80:80"
+                - "443:443"
 volumes:
     pgdata:

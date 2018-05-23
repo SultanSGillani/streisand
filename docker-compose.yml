@@ -18,6 +18,7 @@ services:
         build: backend
         volumes:
             - ./backend:/code
+            - "./backend/src/static:/static"
         depends_on:
             - postgres
             - redis
@@ -45,5 +46,20 @@ services:
             - "8001:3000"
         volumes:
             - ./frontend/src:/code/src
+            - ./frontend/dist:/code/dist
+    nginx:
+        build:
+            context: ./
+            dockerfile: ./nginx/Dockerfile
+        depends_on:
+            - api
+            - frontend
+        volumes:
+            - "./backend/src/static:/static"
+            - "./frontend/dist:/static"
+            - "./logs/nginx:/tmp/logs"
+        ports:
+            - "80:80"
+            - "443:443"
 volumes:
     pgdata:
