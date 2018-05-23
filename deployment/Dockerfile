@@ -18,8 +18,8 @@ RUN python ./install.py
 COPY deployment/uwsgi ./uwsgi
 COPY backend .
 
-COPY deployment/frontend_out/bundle.js src/static/frontend/dist/
-COPY deployment/frontend_out/bundle.js.map src/static/frontend/dist/
+COPY deployment/frontend_out/* src/static/frontend/dist/
+COPY deployment/frontend_out/* src/static/frontend/dist/
 
 ENV DOCKER_CONTAINER=1
 ENV DJANGO_ENV=DEBUG
