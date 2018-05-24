@@ -9,4 +9,4 @@ RUN npm install
 ENV PATH="/code/node_modules/.bin:$PATH"
 EXPOSE 3000
 COPY . .
-CMD ["gulp", "dev"]
+CMD ["npm", "run", "dev"]
