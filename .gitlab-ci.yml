@@ -54,11 +54,15 @@ python_tests:
 ## TODO frontend linter/tests?
 
 release_develop:
-  image: docker:stable
+  image: tmaier/docker-compose:latest
+  
+  services:
+  	- docker:dind
+  
   stage: release
   cache: {}
   before_script:
-      - echo hi
+      - docker-compose --version
       - docker login -u gitlab-ci-token  -p $CI_JOB_TOKEN $CI_REGISTRY
   script:
     - ls -lA
