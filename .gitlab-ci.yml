@@ -60,9 +60,9 @@ release_develop:
   before_script:
       - echo hi
       - cd scripts
-      - docker login -u $CI_USERNAME -p $CI_PASS $CI_REGISTRY
+      - docker login -u gitlab-ci-token $CI_JOB_TOKEN $CI_REGISTRY
   script:
-    - ./build.sh $CI_REGISTRY_IMAGE:$CI_COMMIT_REF_NAME
+    - scripts/build.sh $CI_REGISTRY_IMAGE:$CI_COMMIT_REF_NAME
    # - docker push $CI_REGISTRY_IMAGE:$CI_COMMIT_REF_NAME
   only:
     - master
