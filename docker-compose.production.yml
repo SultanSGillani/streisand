@@ -19,23 +19,23 @@ services:
     www:
             container_name: www
             image: registry.pinigseu.xyz/saltman/jumpcut:latest
+            env_file: .env
             build:
                 context: ./backend
                 dockerfile: Dockerfile-production
             depends_on:
                 - postgres
                 - redis
-            env_file: .env
             volumes:
               - "./backend/src:/code/src"
               - "./backend/src/static:/code/src/static"
+              - "./backend:/code"
             ports:
                 - "8000:8000"
                 - "7070:7070"
             restart: always
     nginx:
             container_name: nginx
-            image: registry.pinigseu.xyz/saltman/jumpcut:latest
             build:
                 context: ./nginx
                 dockerfile: Dockerfile
@@ -44,6 +44,7 @@ services:
             volumes:
                 - "static:/code/dist"
                 - "static:/code/src/static/"
+                - "./backend:/django"
             ports:
                 - "80:80"
                 - "443:443"
