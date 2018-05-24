@@ -59,10 +59,12 @@ release_develop:
   cache: {}
   before_script:
       - echo hi
-      - cd scripts
       - docker login -u gitlab-ci-token $CI_JOB_TOKEN $CI_REGISTRY
   script:
-    - scripts/build.sh $CI_REGISTRY_IMAGE:$CI_COMMIT_REF_NAME
+    - ls -lA
+    - whoami
+    - chmod +x -R ./scripts
+    - ./scripts/build.sh $CI_REGISTRY_IMAGE:$CI_COMMIT_REF_NAME
    # - docker push $CI_REGISTRY_IMAGE:$CI_COMMIT_REF_NAME
   only:
     - master
