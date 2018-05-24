@@ -22,11 +22,21 @@ services:
         depends_on:
             - postgres
             - redis
+        volumes:
+          - "static:/code/src"
         env_file: .env
         ports:
             - "8000:8000"
             - "7070:7070"
         restart: always
+    frontend:
+          build:
+              context: ../frontend
+              dockerfile: ./Dockerfile
+          depends_on:
+            - www
+          volumes:
+              - "static:/code/dist"
     celery:
         image: registry.pinigseu.xyz/jumpcut/jumpcut:master
         command: celery worker --workdir /code/src -A jumpcut -l info
@@ -42,13 +52,13 @@ services:
                 context: ../
                 dockerfile: ./nginx/Dockerfile
             depends_on:
-                - www
+                - frontend
             volumes:
-                - "./backend/src/static:/static"
-                - "./frontend/dist:/static"
-                - "./logs/nginx:/tmp/logs"
+                - "static:/code/dist/"
+                - "static:/code/src/static"
             ports:
                 - "80:80"
                 - "443:443"
 volumes:
     pgdata:
+    static:
