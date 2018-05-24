@@ -1,6 +1,6 @@
 #!/bin/bash
 
 #run npm command. use this to install new packages to dev
-source env.sh
+source ./scripts/env.sh
 
-dcdev run --rm frontend npm $@
+dcprod run --rm frontend npm $@

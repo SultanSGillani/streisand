@@ -1,6 +1,6 @@
 #!/bin/bash
 
 #run npm command. use this to install new packages to dev
-source env.sh
+source ./scripts/env.sh
 
-dcdev run --rm frontend gulp deploy $@
+dcprod run --rm frontend docker run --rm -v "$(pwd)/frontend_out:/code/dist/" frontend gulp deploy $@

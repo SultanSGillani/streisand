@@ -8,7 +8,7 @@ RUN apt-get update \
 RUN mkdir /code
 
 WORKDIR /code
-
+VOLUME  /code/src/static
 COPY install.py ./
 COPY pip.conf /root/.config/pip/pip.conf
 
