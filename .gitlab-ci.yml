@@ -57,7 +57,7 @@ release_develop:
   image: docker:stable
   stage: release
   cache: {}
-  # before_script:
+  before_script:
       - echo hi
     # - docker login -u gitlab-ci-token -p $CI_PASS $CI_REGISTRY
   script:
