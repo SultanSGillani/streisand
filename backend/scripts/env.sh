@@ -1,7 +1,4 @@
-#!/bin/sh
-set -eu -o pipefail
-set -x
-
+#!/usr/bin/env bash
 export DOCKER_CONFIG_DEV=${DOCKER_CONFIG_DEV:-docker-compose.yml}
 export DOCKER_CONFIG_PROD=${DOCKER_CONFIG_PROD:-docker-compose.production.yml}
 
@@ -20,4 +17,8 @@ dcdev() {
 
 dcprod() {
     docker-compose -f docker-compose.production.yml -f $DOCKER_CONFIG_PROD "$@"
+}
+
+dctest() {
+    docker-compose -f docker-compose.yml -f $DOCKER_CONFIG_TEST "$@"
 }

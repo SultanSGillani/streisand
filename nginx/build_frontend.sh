@@ -1,6 +1,5 @@
 #!/bin/sh
-
-set -eu -o
+set -eu -o pipefail
 set -x
 
 IMAGE=${1:-jumpcut}
