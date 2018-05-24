@@ -58,6 +58,7 @@ release_develop:
   stage: release
   cache: {}
   # before_script:
+      - echo hi
     # - docker login -u gitlab-ci-token -p $CI_PASS $CI_REGISTRY
   script:
     - ./scripts/build.sh $CI_REGISTRY_IMAGE:$CI_COMMIT_REF_NAME
