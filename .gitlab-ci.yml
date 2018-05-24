@@ -57,11 +57,11 @@ release_develop:
   image: docker:stable
   stage: release
   cache: {}
-  before_script:
-    - docker login -u gitlab-ci-token -p $CI_PASS $CI_REGISTRY
+  # before_script:
+    # - docker login -u gitlab-ci-token -p $CI_PASS $CI_REGISTRY
   script:
-    - scripts/build.sh $CI_REGISTRY_IMAGE:$CI_COMMIT_REF_NAME
-    - docker push $CI_REGISTRY_IMAGE:$CI_COMMIT_REF_NAME
+    - ./scripts/build.sh $CI_REGISTRY_IMAGE:$CI_COMMIT_REF_NAME
+   # - docker push $CI_REGISTRY_IMAGE:$CI_COMMIT_REF_NAME
   only:
     - master
     - nginx # testing this
