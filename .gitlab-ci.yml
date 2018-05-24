@@ -49,7 +49,6 @@ python_tests:
     - invoke foundation
     - invoke fixtures
     - invoke run-python-tests --coverage
-  allow_failure: true # for now
 
 ## TODO frontend linter/tests?
 
@@ -68,7 +67,6 @@ release_develop:
    # - docker push $CI_REGISTRY_IMAGE:$CI_COMMIT_REF_NAME
   only:
     - master
-    - nginx # testing this
 
 deploy-develop:
   stage: deploy
