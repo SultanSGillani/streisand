@@ -58,10 +58,10 @@ release_develop:
   stage: release
   cache: {}
   before_script:
-    - docker login -u saltman -p $CI_PASS registry.pinigseu.xyz/saltman/jumpcut
+    - docker login -u gitlab-ci-token -p $CI_PASS $CI_REGISTRY
   script:
-    - scripts/build.sh registry.pinigseu.xyz/saltman/jumpcut:nginx
-    - docker push registry.pinigseu.xyz/saltman/jumpcut:nginx
+    - scripts/build.sh $CI_REGISTRY_IMAGE:$CI_COMMIT_REF_NAME
+    - docker push $CI_REGISTRY_IMAGE:$CI_COMMIT_REF_NAME
   only:
     - master
     - nginx # testing this
