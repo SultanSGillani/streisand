@@ -55,10 +55,6 @@ python_tests:
 
 release_develop:
   image: tmaier/docker-compose:latest
-  
-  services:
-  	- docker:dind
-  
   stage: release
   cache: {}
   before_script:
