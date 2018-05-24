@@ -16,8 +16,6 @@ RUN python ./install.py
 COPY ./uwsgi ./uwsgi
 COPY . .
 
-COPY ./frontend_out/dist/* src/static/frontend/dist/
-
 ENV DOCKER_CONTAINER=1
 ENV DJANGO_ENV=DEBUG
 
