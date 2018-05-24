@@ -59,7 +59,7 @@ release_develop:
   cache: {}
   before_script:
       - echo hi
-      - docker login -u gitlab-ci-token $CI_JOB_TOKEN $CI_REGISTRY
+      - docker login -u gitlab-ci-token  -p $CI_JOB_TOKEN $CI_REGISTRY
   script:
     - ls -lA
     - whoami
