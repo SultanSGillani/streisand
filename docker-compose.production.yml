@@ -18,6 +18,7 @@ services:
         restart: always
     www:
             container_name: www
+            image: registry.pinigseu.xyz/saltman/jumpcut:latest
             build:
                 context: ./backend
                 dockerfile: Dockerfile-production
@@ -34,6 +35,7 @@ services:
             restart: always
     nginx:
             container_name: nginx
+            image: registry.pinigseu.xyz/saltman/jumpcut:latest
             build:
                 context: ./nginx
                 dockerfile: Dockerfile
