@@ -65,7 +65,7 @@ release_develop:
     - whoami
     - chmod +x -R ./scripts
     - source scripts/env.sh
-    - ./build_jumpcut.sh $CI_REGISTRY_IMAGE:$CI_COMMIT_REF_NAME
+    - dcprod build $CI_REGISTRY_IMAGE:$CI_COMMIT_REF_NAME
    # - docker push $CI_REGISTRY_IMAGE:$CI_COMMIT_REF_NAME
   only:
     - master
