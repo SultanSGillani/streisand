@@ -10,7 +10,7 @@ if (!process.argv || process.argv.length < 3) {
 }
 
 var proxyUrl = process.argv[2];
-var port = process.argv.length >= 4 ? process.argv[3] : '5000';
+var port = process.argv.length >= 4 ? process.argv[3] : '8000';
 
 var app = express();
 app.use(function (req, res, next) {

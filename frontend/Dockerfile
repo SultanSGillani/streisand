@@ -2,11 +2,12 @@
 
 FROM node:8
 
-WORKDIR /code
+WORKDIR /var/www
 
-COPY package*.json ./
-RUN npm install
-ENV PATH="/code/node_modules/.bin:$PATH"
+COPY ./package.json ./package.json
+RUN npm i
+ENV PATH="/var/www/node_modules/.bin:$PATH"
 EXPOSE 3000
 COPY . .
-CMD ["npm", "run", "dev"]
+
+CMD ["npm", "run", "start"]

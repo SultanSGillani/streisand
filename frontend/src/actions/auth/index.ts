@@ -11,5 +11,6 @@ export function* allAuthSaga() {
     yield all([
         authenticateSaga(),
         changePasswordSaga()
+        // logoutSaga()
     ]);
 }

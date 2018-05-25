@@ -4,10 +4,10 @@ import FilmAction from './films';
 import UserAction from './users';
 import ForumAction from './forums';
 import TorrentAction from './torrents';
-import ErrorAction from './ErrorAction';
 import DeviceAction from './DeviceAction';
+import MessageAction from './MessageAction';
 
-type Action = ErrorAction
+type Action = MessageAction
     | AuthAction
     | UserAction
     | FilmAction

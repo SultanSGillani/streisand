@@ -4,14 +4,14 @@ import Store from '../store';
 import { combineReducers } from './helpers';
 
 import sealed from './sealed';
-import errors from './errors';
+import messages from './messages';
 import location from './location';
 import deviceInfo from './deviceInfo';
 
 export default combineReducers<Store.All>({
     routing,
     location,
-    errors,
+    messages,
     sealed,
     deviceInfo
 });
