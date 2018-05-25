@@ -29,8 +29,9 @@ before_script:
   - pip install virtualenv
   - virtualenv venv
   - source venv/bin/activate
-  - pip install -r backend/requirements.txt
-  - pip install -r backend/testing_requirements.txt
+  - cd backend
+  - pip install -r requirements.txt
+  - pip install -r testing_requirements.txt
 
 python_linter:
   stage: test
