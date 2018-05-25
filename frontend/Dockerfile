@@ -9,4 +9,5 @@ RUN npm i
 ENV PATH="/var/www/node_modules/.bin:$PATH"
 EXPOSE 3000
 COPY . .
+
 CMD ["npm", "run", "start"]
