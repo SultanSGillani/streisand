@@ -5,21 +5,18 @@ RUN apt-get update \
         postgresql-client netcat screen vim libpq-dev \
     && rm -rf /var/lib/apt/lists/*
 
-
 RUN mkdir /code
 
 WORKDIR /code
-COPY ./requirements.txt ./requirements.txt
-COPY ./testing_requirements.txt ./testing_requirements.txt
+
+COPY ./requirements.txt ./
+COPY ./testing_requirements.txt ./
 
 RUN pip install -r requirements.txt
 RUN pip install -r testing_requirements.txt
 
-COPY ./uwsgi ./uwsgi
+COPY ./uwsgi ./
 COPY . .
-
-ENV DOCKER_CONTAINER=1
-ENV DJANGO_ENV=DEBUG
 
 EXPOSE 8000 7070
 ENV PYTHONPATH /code/src

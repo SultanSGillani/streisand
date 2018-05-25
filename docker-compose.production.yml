@@ -4,6 +4,7 @@ version: '3'
 
 services:
   api:
+    image: registry.pinigseu.xyz/saltman/jumpcut:latest
     build:
       context: ./backend
       dockerfile: Dockerfile-production
@@ -11,7 +12,7 @@ services:
     depends_on:
     - postgres
     - redis
-    env_file: .env
+    env_file: ./backend/.env
     ports:
     - 7070:7070
     - 8000:8000
@@ -22,7 +23,10 @@ services:
   celery:
     image: registry.pinigseu.xyz/saltman/jumpcut:latest
     command: celery worker --workdir /code/src -A jumpcut -l info
-    env_file: .env
+    env_file: ./backend/.env
+    container_name: celery
+    volumes:
+    - ./backend/src:/django/src
     environment:
     - C_FORCE_ROOT=true
     depends_on:
@@ -34,8 +38,7 @@ services:
       dockerfile: Dockerfile-production
     container_name: frontend
     volumes:
-    - ./frontend/dist:/usr/share/nginx/html/
-    - ./frontend/src:/usr/share/nginx/
+    - ./frontend/dist:/code/dist/
   nginx:
     build:
       context: ./nginx
@@ -48,7 +51,7 @@ services:
     - 443:443
     - 80:80
     volumes:
-    - ./backend:/django
+    - ./backend/src:/django/src
     - ./frontend/dist/:/usr/share/nginx/html/
     - ./backend/src/static:/django/src/static/
   postgres:
@@ -58,7 +61,7 @@ services:
     - pgdata:/var/lib/postgresql/data/
     ports:
     - 5432:5432
-    env_file: .env
+    env_file: ./backend/.env
     restart: always
   redis:
     image: redis:latest

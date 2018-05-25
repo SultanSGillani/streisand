@@ -31,5 +31,5 @@ const fetch = generateAuthFetch({ errorPrefix, request, received, failure });
 export const logoutSaga = generateSage<RequestLogout>('REQUEST_LOGOUT', fetch);
 
 function request(token: string): Promise<void> {
-    return post({ token, url: `${globals.apiUrl}/api/v1/logout/` });
+    return post({ token, url: `${globals.apiUrl}/knox/logout/` });
 }

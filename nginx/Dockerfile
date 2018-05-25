@@ -4,6 +4,7 @@ FROM nginx:latest
 RUN rm -rf /etc/nginx/ssl
 RUN mkdir /etc/nginx/ssl
 ADD ./ssl /etc/nginx/ssl/
+ADD ./ssl/ssl_params.conf /etc/nginx/ssl/
 ADD ./nginx-develop.conf /etc/nginx/
 ADD ./nginx-production.conf /etc/nginx/
 RUN rm -rf /etc/nginx/sites-enabled/default
