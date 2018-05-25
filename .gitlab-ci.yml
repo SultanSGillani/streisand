@@ -64,7 +64,7 @@ release_develop:
     - whoami
     - chmod +x -R ./scripts
     - source scripts/env.sh
-    - dcprod build $CI_REGISTRY_IMAGE:latest
+    - dcprod build 
    # - docker push $CI_REGISTRY_IMAGE:$CI_COMMIT_REF_NAME
   only:
     - master
