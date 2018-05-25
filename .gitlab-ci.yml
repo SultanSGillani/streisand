@@ -26,13 +26,11 @@ cache:
     - venv/
 
 before_script:
-  - python -m pip install --upgrade pip==9.0.3
   - pip install virtualenv
   - virtualenv venv
   - source venv/bin/activate
-  - pip install --upgrade pip==9.0.3
-  - cd backend
-  - python install.py
+  - pip install -r backend/requirements.txt
+  - pip install -r backend/testing_requirements.txt
 
 python_linter:
   stage: test
