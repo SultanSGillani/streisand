@@ -1,0 +1,12 @@
+# Dockerfile for production
+
+FROM node:8
+
+WORKDIR /usr/share/nginx
+
+COPY ./package.json ./package.json
+RUN npm i
+ENV PATH="/usr/share/nginx/node_modules/.bin:$PATH"
+COPY . .
+RUN gulp deploy
+

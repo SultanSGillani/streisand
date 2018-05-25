@@ -2,11 +2,11 @@
 
 FROM node:8
 
-WORKDIR /code
+WORKDIR /var/www
 
-COPY ./package.json ./
+COPY ./package.json ./package.json
 RUN npm i
-ENV PATH="/code/node_modules/.bin:$PATH"
+ENV PATH="/var/www/node_modules/.bin:$PATH"
 EXPOSE 3000
 COPY . .
-CMD ["gulp", "dev"]
+CMD ["npm", "run", "start"]

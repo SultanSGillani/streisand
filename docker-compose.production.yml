@@ -3,52 +3,66 @@
 version: '3'
 
 services:
-    postgres:
-        container_name: db
-        restart: always
-        image: postgres:latest
-        env_file: .env
-        ports:
-            - 5432:5432
-        volumes:
-            - pgdata:/var/lib/postgresql/data/
-    redis:
-        container_name: redis
-        image: redis:latest
-        restart: always
-    www:
-            container_name: www
-            image: registry.pinigseu.xyz/saltman/jumpcut:latest
-            env_file: .env
-            build:
-                context: ./backend
-                dockerfile: Dockerfile-production
-            depends_on:
-                - postgres
-                - redis
-            volumes:
-              - "./backend/src:/code/src"
-              - "./backend/src/static:/code/src/static"
-              - "./backend:/code"
-            ports:
-                - "8000:8000"
-                - "7070:7070"
-            restart: always
-    nginx:
-            container_name: nginx
-            build:
-                context: ./nginx
-                dockerfile: Dockerfile
-            depends_on:
-                - www
-            volumes:
-                - "static:/code/dist"
-                - "static:/code/src/static/"
-                - "./backend:/django"
-            ports:
-                - "80:80"
-                - "443:443"
+  api:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile-production
+    container_name: api
+    depends_on:
+    - postgres
+    - redis
+    env_file: .env
+    ports:
+    - 7070:7070
+    - 8000:8000
+    restart: always
+    volumes:
+    - ./backend/src/static:/code/src/static/
+    - ./backend:/code/
+  celery:
+    image: registry.pinigseu.xyz/saltman/jumpcut:latest
+    command: celery worker --workdir /code/src -A jumpcut -l info
+    env_file: .env
+    environment:
+    - C_FORCE_ROOT=true
+    depends_on:
+    - postgres
+    - redis
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile-production
+    container_name: frontend
+    volumes:
+    - ./frontend/dist:/usr/share/nginx/html/
+    - ./frontend/src:/usr/share/nginx/
+  nginx:
+    build:
+      context: ./nginx
+      dockerfile: Dockerfile
+    container_name: nginx
+    depends_on:
+    - api
+    - frontend
+    ports:
+    - 443:443
+    - 80:80
+    volumes:
+    - ./backend:/django
+    - ./frontend/dist/:/usr/share/nginx/html/
+    - ./backend/src/static:/django/src/static/
+  postgres:
+    image: postgres:latest
+    container_name: db
+    volumes:
+    - pgdata:/var/lib/postgresql/data/
+    ports:
+    - 5432:5432
+    env_file: .env
+    restart: always
+  redis:
+    image: redis:latest
+    container_name: redis
+    restart: always
 volumes:
-    pgdata:
-    static:
-
+  pgdata:
