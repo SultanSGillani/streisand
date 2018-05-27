@@ -2,7 +2,7 @@ import { takeEvery, ForkEffect, select, call, put } from 'redux-saga/effects';
 
 import Store from '../../store';
 import { getAuthToken } from './selectors';
-import { handleError } from '../MessageAction';
+import { handleError } from '../ErrorAction';
 
 interface IBasicAction { type: string; }
 export function generateSage<T extends IBasicAction>(type: T['type'], worker: (action: T) => IterableIterator<any>): () => IterableIterator<ForkEffect> {

@@ -2,21 +2,20 @@ FROM python:3.6
 ENV PYTHONUNBUFFERED 1
 RUN apt-get update \
     && apt-get install -y --no-install-recommends \
-        postgresql-client netcat libpq-dev \
+        postgresql-client netcat \
     && rm -rf /var/lib/apt/lists/*
 
 RUN mkdir /code
 
 WORKDIR /code
 
-COPY ./requirements.txt ./requirements.txt
-COPY ./testing_requirements.txt ./testing_requirements.txt
+COPY install.py ./
+COPY pip.conf /root/.config/pip/pip.conf
 
-RUN pip install -r requirements.txt
-RUN pip install -r testing_requirements.txt
+RUN python -m pip install --upgrade pip==9.0.3
+RUN export PIP_NO_BINARY=psycopg2
+RUN python ./install.py
 
-ENV DJANGO_ENV=DEBUG
-ENV PYTHONPATH /code/src
 COPY . .
 
 EXPOSE 8000

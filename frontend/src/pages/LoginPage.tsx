@@ -36,7 +36,7 @@ class LoginComponent extends React.Component<CombinedProps, State> {
                     <Form onKeyPress={login}>
                         <FormGroup>
                             <Label for="inputUsername">Username</Label>
-                            <Input type="text" id="inputUsername" placeholder="Username"
+                            <Input type="email" id="inputUsername" placeholder="Username"
                                 value={this.state.username} onChange={(event) => this.setState({ username: event.target.value })} />
                         </FormGroup>
                         <FormGroup>
