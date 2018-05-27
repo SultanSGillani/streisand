@@ -26,12 +26,13 @@ cache:
     - venv/
 
 before_script:
+  - python -m pip install --upgrade pip==9.0.3
   - pip install virtualenv
   - virtualenv venv
   - source venv/bin/activate
+  - pip install --upgrade pip==9.0.3
   - cd backend
-  - pip install -r requirements.txt
-  - pip install -r testing_requirements.txt
+  - python install.py
 
 python_linter:
   stage: test
@@ -48,24 +49,18 @@ python_tests:
     - invoke foundation
     - invoke fixtures
     - invoke run-python-tests --coverage
-  allow_failure: true # for now
 
 ## TODO frontend linter/tests?
 
 release_develop:
-  image: tmaier/docker-compose:latest
+  image: docker:stable
   stage: release
   cache: {}
   before_script:
-      - docker-compose --version
-      - docker login -u gitlab-ci-token  -p $CI_JOB_TOKEN $CI_REGISTRY
+    - docker login -u gitlab-ci-token -p $CI_PASS $CI_REGISTRY
   script:
-    - ls -lA
-    - whoami
-    - chmod +x -R ./scripts
-    - source scripts/env.sh
-    - dcprod build
-   # - docker push $CI_REGISTRY_IMAGE:$CI_COMMIT_REF_NAME
+    - deployment/docker_build.sh $CI_REGISTRY_IMAGE:$CI_COMMIT_REF_NAME
+    - docker push $CI_REGISTRY_IMAGE:$CI_COMMIT_REF_NAME
   only:
     - master
 

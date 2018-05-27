@@ -8,8 +8,10 @@ const replace = require('gulp-replace');
 const WebpackDevServer = require('webpack-dev-server');
 
 // Start dev server
+console.log('HERE', {a: 1})
 gulp.task('hot-load', (done) => {
     const config = require('./webpack.dev.js');
+    console.log(config);
     new WebpackDevServer(webpack(config)).listen(3000, '0.0.0.0', function (err) {
         if (err) throw new gutil.PluginError('hot-load', err);
     });

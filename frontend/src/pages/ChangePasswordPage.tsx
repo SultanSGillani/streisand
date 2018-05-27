@@ -2,8 +2,8 @@ import * as React from 'react';
 import { connect } from 'react-redux';
 import { Card, Form, FormGroup, Input, Label, CardBody, CardFooter, Button, CardTitle } from 'reactstrap';
 
+import { showError } from '../actions/ErrorAction';
 import { IDispatch } from '../actions/ActionTypes';
-import { showError } from '../actions/MessageAction';
 import { changePassword } from '../actions/auth/ChangePasswordAction';
 
 export type Props = {};

@@ -3,7 +3,6 @@ import { RouterState } from 'react-router-redux';
 import IUser from '../models/IUser';
 import IFilm from '../models/IFilm';
 import IWiki from '../models/IWiki';
-import IMessage from '../models/IMessage';
 import IAuthInfo from '../models/IAuthInfo';
 import IDeviceInfo from '../models/IDeviceInfo';
 import ILocationInfo from '../models/ILocationInfo';
@@ -32,7 +31,7 @@ namespace Store {
     };
 
     export type All = {
-        messages: IMessage[];
+        errors: string[];
         routing: RouterState;
         location: ILocationInfo;
         deviceInfo: IDeviceInfo;
