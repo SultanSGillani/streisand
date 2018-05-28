@@ -1,0 +1,72 @@
+# Docker compose for the dev server
+#
+version: '3'
+
+services:
+  api:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile-production
+    container_name: api
+    depends_on:
+    - postgres
+    - redis
+    env_file: ./backend/.env
+    ports:
+    - 7070:7070
+    - 8000:8000
+    restart: always
+    volumes:
+    - ./backend/src/static:/code/src/static/
+    - ./backend:/code/
+  celery:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile-production
+    env_file: ./backend/.env
+    container_name: celery
+    volumes:
+    - ./backend/src:/django/src
+    environment:
+    - C_FORCE_ROOT=true
+    depends_on:
+    - postgres
+    - redis
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile-production
+    container_name: frontend
+    volumes:
+    - ./frontend/dist:/code/dist/
+  nginx:
+    build:
+      context: ./nginx
+      dockerfile: Dockerfile
+    container_name: nginx
+    depends_on:
+    - api
+    - frontend
+    ports:
+    - 8001:8001
+    - 4000:4000
+    volumes:
+    - ./backend:/django/
+    - ./backend/src:/django/src
+    - ./frontend/dist/:/usr/share/nginx/html/
+    - ./backend/src/static:/django/src/static/
+  postgres:
+    image: postgres:latest
+    container_name: db
+    volumes:
+    - pgdata:/var/lib/postgresql/data/
+    ports:
+    - 5432:5432
+    env_file: ./backend/.env
+    restart: always
+  redis:
+    image: redis:latest
+    container_name: redis
+    restart: always
+volumes:
+  pgdata:
