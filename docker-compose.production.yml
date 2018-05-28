@@ -48,7 +48,8 @@ services:
     - api
     - frontend
     ports:
-    - 80:8001
+    - 8001:8001
+    - 4000:4000
     volumes:
     - ./backend/src:/django/src
     - ./frontend/dist/:/usr/share/nginx/html/
