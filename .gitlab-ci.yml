@@ -49,14 +49,18 @@ release_develop:
   cache: {}
   before_script:
       - docker-compose --version
-      - docker login -u gitlab-ci-token  -p $CI_JOB_TOKEN $CI_REGISTRY
+      - docker version
+      - "docker info"
+      - "docker login -u gitlab-ci-token -p $CI_BUILD_TOKEN $CI_REGISTRY"
   script:
-    - ls -lA
-    - whoami
-    - chmod +x -R ./scripts
-    - source scripts/env.sh
-    - dcprod build
-   # - docker push $CI_REGISTRY_IMAGE:$CI_COMMIT_REF_NAME
+    - "ls -lA"
+    - "whoami"
+    - "chmod +x -R ./scripts"
+    - "source scripts/env.sh"
+    - "dcprod build -t ${CI_REGISTRY}/${CI_PROJECT_PATH}:latest--pull ."
+    - "docker push ${CI_REGISTRY}/${CI_PROJECT_PATH}:latest"
+  after_script:
+    - "docker logout ${CI_REGISTRY}"
   only:
     - master
 deploy-develop:
