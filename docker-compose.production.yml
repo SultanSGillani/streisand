@@ -51,6 +51,7 @@ services:
     - 8001:8001
     - 4000:4000
     volumes:
+    - ./backend:/django/
     - ./backend/src:/django/src
     - ./frontend/dist/:/usr/share/nginx/html/
     - ./backend/src/static:/django/src/static/
