@@ -119,8 +119,6 @@ REDOC_SETTINGS = {
 
 SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
 
-CORS_URL_REGEX = config(
-    'CORS_URL_REGEX', cast=lambda v: [s.strip() for s in v.split(',')])
 
 # if os.getenv('DJANGO_ENV') == 'PROD':
 #     CORS_ORIGIN_WHITELIST = [
