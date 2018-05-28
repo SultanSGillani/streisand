@@ -59,14 +59,14 @@ class ForumTopicViewComponent extends React.Component<CombinedProps> {
     }
 }
 
-const mapStateToProps = (state: Store.All, ownProps: Props): ConnectedState => {
-    const pages = state.sealed.forums.threads.byTopic[ownProps.topic.id];
+const mapStateToProps = (state: Store.All, props: Props): ConnectedState => {
+    const pages = state.sealed.forums.threads.byTopic[props.topic.id];
     return {
         total: pages ? pages.count : 0,
         pageSize: pages ? pages.pageSize : 0,
         screenSize: state.deviceInfo.screenSize,
         threads: getItems({
-            page: ownProps.page,
+            page: props.page,
             byId: state.sealed.forums.threads.byId,
             pages: pages ? pages.pages : {}
         })

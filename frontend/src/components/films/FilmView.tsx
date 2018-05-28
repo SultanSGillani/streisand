@@ -78,12 +78,12 @@ class FilmViewComponent extends React.Component<CombinedProps> {
     }
 }
 
-const mapStateToProps = (state: Store.All, ownProps: Props): ConnectedState => {
+const mapStateToProps = (state: Store.All, props: Props): ConnectedState => {
     return {
         torrents: getNodeItems({
-            page: ownProps.film.id,
-            byId: state.sealed.torrents.byId,
-            pages: state.sealed.torrents.byFilmId
+            page: props.film.id,
+            byId: state.sealed.torrent.byId,
+            pages: state.sealed.torrent.byFilmId
         })
      };
 };

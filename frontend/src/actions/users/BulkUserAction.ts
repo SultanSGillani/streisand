@@ -39,7 +39,7 @@ function uniqueTruthy<T>(value: T, index: number, array: T[]): boolean {
 
 function filter(state: Store.All, props: IActionProps): IActionProps {
     const ids = props.ids.filter(uniqueTruthy).filter((id: number) => {
-        const node = state.sealed.users.byId[id];
+        const node = state.sealed.user.byId[id];
         const loaded = node && node.item && node.item.details;
         const loading = node && node.status.loading;
         return !loading && !loaded;

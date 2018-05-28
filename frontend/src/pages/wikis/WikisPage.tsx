@@ -2,8 +2,8 @@ import * as React from 'react';
 import { connect } from 'react-redux';
 
 import Store from '../../store';
-import Empty from '../../components/Empty';
 import { IDispatch } from '../../actions/ActionTypes';
+import Loading from '../../components/generic/Loading';
 import WikisView from '../../components/wikis/WikisView';
 import { getWikis } from '../../actions/wikis/WikisAction';
 import ILoadingStatus, { defaultStatus } from '../../models/base/ILoadingStatus';
@@ -42,7 +42,7 @@ class WikisPage extends React.Component<CombinedProps> {
 
     public render() {
         if (!this.props.status.loaded) {
-            return <Empty loading={this.props.status.loading} />;
+            return <Loading />;
         }
 
         return (
@@ -51,9 +51,9 @@ class WikisPage extends React.Component<CombinedProps> {
     }
 }
 
-const mapStateToProps = (state: Store.All, ownProps: Props): ConnectedState => {
-    const pageNumber = Number((ownProps.params && ownProps.params.page) || 1);
-    const page = state.sealed.wikis.pages[pageNumber];
+const mapStateToProps = (state: Store.All, props: Props): ConnectedState => {
+    const pageNumber = Number((props.params && props.params.page) || 1);
+    const page = state.sealed.wiki.list.pages[pageNumber];
     return {
         page: pageNumber,
         status: page ? page.status : defaultStatus

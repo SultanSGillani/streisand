@@ -2,8 +2,9 @@ import * as React from 'react';
 import { connect } from 'react-redux';
 
 import Store from '../../store';
-import Empty from '../../components/Empty';
+import Empty from '../../components/generic/Empty';
 import { IDispatch } from '../../actions/ActionTypes';
+import Loading from '../../components/generic/Loading';
 import { numericIdentifier } from '../../utilities/shim';
 import IForumTopic from '../../models/forums/IForumTopic';
 import ForumTopicView from '../../components/forums/ForumTopicView';
@@ -47,8 +48,8 @@ class ForumTopicPageComponent extends React.Component<CombinedProps, void> {
 
     public render() {
         const topic = this.props.topic;
-        if (!topic || !this.props.status.loaded) {
-            return <Empty loading={this.props.status.loading} />;
+        if (!topic) {
+            return this.props.status.loading ? <Loading /> : <Empty />;
         }
 
         return (
@@ -57,9 +58,9 @@ class ForumTopicPageComponent extends React.Component<CombinedProps, void> {
     }
 }
 
-const mapStateToProps = (state: Store.All, ownProps: Props): ConnectedState => {
-    const pageNumber = Number((ownProps.params && ownProps.params.page) || 1);
-    const topicId = numericIdentifier(ownProps.params.topicId);
+const mapStateToProps = (state: Store.All, props: Props): ConnectedState => {
+    const pageNumber = Number((props.params && props.params.page) || 1);
+    const topicId = numericIdentifier(props.params.topicId);
     const topicPages = state.sealed.forums.threads.byTopic[topicId];
     const page = topicPages && topicPages.pages[pageNumber];
     const item = state.sealed.forums.topics.byId[topicId];

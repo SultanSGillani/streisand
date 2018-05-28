@@ -51,15 +51,16 @@ class WikiListComponent extends React.Component<CombinedProps> {
     }
 }
 
-const mapStateToProps = (state: Store.All, ownProps: Props): ConnectedState => {
+const mapStateToProps = (state: Store.All, props: Props): ConnectedState => {
+    const list = state.sealed.wiki.list;
     return {
-        total: state.sealed.wikis.count,
-        pageSize: state.sealed.wikis.pageSize,
+        total: list.count,
+        pageSize: list.pageSize,
         screenSize: state.deviceInfo.screenSize,
         wikis: getNodeItems({
-            page: ownProps.page,
-            byId: state.sealed.wikis.byId,
-            pages: state.sealed.wikis.pages
+            page: props.page,
+            byId: state.sealed.wiki.byId,
+            pages: list.pages
         })
     };
 };

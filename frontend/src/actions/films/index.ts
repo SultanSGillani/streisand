@@ -4,8 +4,9 @@ import FilmAction, { filmSaga } from './FilmAction';
 import FilmsAction, { filmsSaga } from './FilmsAction';
 import CreateFilmAction, { creatFilmSaga } from './CreateFilmAction';
 import DeleteFilmAction, { deleteFilmSaga } from './DeleteFilmAction';
+import FilmSearchAction, { filmSearchSaga } from './FilmsSearchAction';
 
-type Action = FilmAction | FilmsAction | CreateFilmAction | DeleteFilmAction;
+type Action = FilmAction | FilmsAction | CreateFilmAction | DeleteFilmAction | FilmSearchAction;
 export default Action;
 
 export function* allFilmSaga() {
@@ -13,6 +14,7 @@ export function* allFilmSaga() {
         filmSaga(),
         filmsSaga(),
         deleteFilmSaga(),
-        creatFilmSaga()
+        creatFilmSaga(),
+        filmSearchSaga()
     ]);
 }

@@ -24,6 +24,7 @@ import ForumPage from './pages/forums/ForumPage';
 import ForumTopicPage from './pages/forums/ForumTopicPage';
 import ForumThreadPage from './pages/forums/ForumThreadPage';
 import CreateWikiView from './components/wikis/CreateWikiView';
+import SearchFilmView from './components/films/SearchFilmView';
 
 export function createRoutes(store: ReduxStore<Store.All>) {
     function requireAuth(nextState: RouterState, replace: RedirectFunction) {
@@ -54,6 +55,7 @@ export function createRoutes(store: ReduxStore<Store.All>) {
                     <Route path="/films/:page" component={FilmsPage} />
                     <Redirect from="/films" to="/films/1" />
                     <Route path="/film/create" component={CreateFilmView} />
+                    <Route path="/film/search" component={SearchFilmView} />
                     <Route path="/film/:filmId" component={FilmPage} />
                     <Route path="/film/:filmId/:torrentId" component={FilmPage} />
                     <Redirect from="/film" to="/films/1" />

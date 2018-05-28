@@ -4,8 +4,9 @@ import Action from '../actions/torrents';
 import ITorrent from '../models/ITorrent';
 import { combineReducers } from './helpers';
 import { getPageReducer } from './utilities/page';
+import { INodeMap } from '../models/base/ItemSet';
 import ITorrentItemSet from '../models/ITorrentItemSet';
-import { IPage, INodeMap } from '../models/base/IPagedItemSet';
+import { IPage, INestedPage } from '../models/base/IPagedItemSet';
 import { addLoadedNode, addLoadedNodes, markLoading, markFailed } from './utilities/mutations';
 
 type ItemMap = INodeMap<ITorrent>;
@@ -73,4 +74,5 @@ function count(state: number = 0, action: Action): number {
     }
 }
 
-export default combineReducers<ITorrentItemSet>({ byId, byFilmId, pageSize, count, pages });
+const list = combineReducers<INestedPage>({ count, pageSize, pages });
+export default combineReducers<ITorrentItemSet>({ byId, byFilmId, list });

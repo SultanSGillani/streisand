@@ -61,7 +61,7 @@ const mapStateToProps = (state: Store.All): ConnectedState => ({
     isAuthenticated: state.sealed.auth.isAuthenticated,
     currentUser: getItem({
         id: state.sealed.currentUser.id,
-        byId: state.sealed.users.byId
+        byId: state.sealed.user.byId
     })
 });
 

@@ -2,7 +2,6 @@ import * as React from 'react';
 import { connect } from 'react-redux';
 
 import Store from '../../store';
-import Empty from '../../components/Empty';
 import { IDispatch } from '../../actions/ActionTypes';
 import FilmsView from '../../components/films/FilmsView';
 import { getFilms } from '../../actions/films/FilmsAction';
@@ -41,19 +40,15 @@ class FilmsPage extends React.Component<CombinedProps> {
     }
 
     public render() {
-        if (!this.props.status.loaded) {
-            return <Empty loading={this.props.status.loading} />;
-        }
-
         return (
             <FilmsView page={this.props.page} />
         );
     }
 }
 
-const mapStateToProps = (state: Store.All, ownProps: Props): ConnectedState => {
-    const pageNumber = Number((ownProps.params && ownProps.params.page) || 1);
-    const page = state.sealed.films.pages[pageNumber];
+const mapStateToProps = (state: Store.All, props: Props): ConnectedState => {
+    const pageNumber = Number((props.params && props.params.page) || 1);
+    const page = state.sealed.film.list.pages[pageNumber];
     return {
         page: pageNumber,
         status: page ? page.status : defaultStatus

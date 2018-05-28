@@ -4,20 +4,20 @@ import { combineReducers } from './helpers';
 
 import news from './news';
 import auth from './auth';
-import films from './films';
-import wikis from './wikis';
+import wiki from './wiki';
 import forums from './forums';
-import torrents from './torrents';
-import users from './users/users';
+import film from './films/film';
+import torrent from './torrent';
+import user from './users/user';
 import currentUser from './users/currentUser';
 
 const combined = combineReducers<Store.UserSealed>({
     auth,
     currentUser,
-    users,
-    films,
-    torrents,
-    wikis,
+    user,
+    film,
+    torrent,
+    wiki,
     news,
     forums
 });

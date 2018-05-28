@@ -9,11 +9,13 @@ import IDeviceInfo from '../models/IDeviceInfo';
 import ILocationInfo from '../models/ILocationInfo';
 import IForumData from '../models/forums/IForumData';
 import ITorrentItemSet from '../models/ITorrentItemSet';
-import IPagedItemSet from '../models/base/IPagedItemSet';
+import IPagedItemSet, { INestedPage } from '../models/base/IPagedItemSet';
 
 namespace Store {
     export type Users = IPagedItemSet<IUser>;
-    export type Films = IPagedItemSet<IFilm>;
+    export type Films = IPagedItemSet<IFilm> & {
+        search: INestedPage;
+    };
     export type Wikis = IPagedItemSet<IWiki> & {
         creating: boolean;
     };
@@ -23,10 +25,10 @@ namespace Store {
     export type UserSealed = {
         currentUser: CurrentUser;
         auth: IAuthInfo;
-        users: Users;
-        films: Films;
-        torrents: ITorrentItemSet;
-        wikis: Wikis;
+        user: Users;
+        film: Films;
+        torrent: ITorrentItemSet;
+        wiki: Wikis;
         news: News;
         forums: IForumData;
     };

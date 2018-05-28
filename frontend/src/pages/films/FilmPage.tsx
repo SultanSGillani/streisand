@@ -3,9 +3,10 @@ import { connect } from 'react-redux';
 
 import Store from '../../store';
 import IFilm from '../../models/IFilm';
-import Empty from '../../components/Empty';
 import { getNode } from '../../utilities/mapping';
+import Empty from '../../components/generic/Empty';
 import { IDispatch } from '../../actions/ActionTypes';
+import Loading from '../../components/generic/Loading';
 import FilmView from '../../components/films/FilmView';
 import { numericIdentifier } from '../../utilities/shim';
 import { getFilm } from '../../actions/films/FilmAction';
@@ -48,8 +49,8 @@ class FilmPageComponent extends React.Component<CombinedProps, void> {
 
     public render() {
         const film = this.props.film;
-        if (this.props.loading || !film) {
-            return <Empty loading={this.props.loading} />;
+        if (!film) {
+            return this.props.loading ? <Loading /> : <Empty />;
         }
 
         return (
@@ -58,14 +59,14 @@ class FilmPageComponent extends React.Component<CombinedProps, void> {
     }
 }
 
-const mapStateToProps = (state: Store.All, ownProps: Props): ConnectedState => {
-    const filmId = numericIdentifier(ownProps.params.filmId);
-    const node = getNode({ id: filmId, byId: state.sealed.films.byId });
+const mapStateToProps = (state: Store.All, props: Props): ConnectedState => {
+    const filmId = numericIdentifier(props.params.filmId);
+    const node = getNode({ id: filmId, byId: state.sealed.film.byId });
     return {
         film: node.item,
         loading: node.status.loading,
-        filmId: numericIdentifier(ownProps.params.filmId),
-        torrentId: numericIdentifier(ownProps.params.torrentId)
+        filmId: numericIdentifier(props.params.filmId),
+        torrentId: numericIdentifier(props.params.torrentId)
     };
 };
 

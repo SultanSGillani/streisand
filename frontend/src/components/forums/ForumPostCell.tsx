@@ -41,8 +41,8 @@ class ForumPostCellComponent extends React.Component<CombinedProps> {
     }
 }
 
-const mapStateToProps = (state: Store.All, ownProps: Props): ConnectedState => {
-    const postId = ownProps.id || ownProps.id === 0 ? ownProps.id : -1;
+const mapStateToProps = (state: Store.All, props: Props): ConnectedState => {
+    const postId = props.id || props.id === 0 ? props.id : -1;
     const post = state.sealed.forums.posts.byId[postId];
     const thread = post && state.sealed.forums.threads.byId[post.thread];
     return {
@@ -51,7 +51,7 @@ const mapStateToProps = (state: Store.All, ownProps: Props): ConnectedState => {
         author: getItem({
             fallback: true,
             id: post && post.author,
-            byId: state.sealed.users.byId
+            byId: state.sealed.user.byId
         })
     };
 };

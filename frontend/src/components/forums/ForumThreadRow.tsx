@@ -54,12 +54,12 @@ class ForumThreadRowComponent extends React.Component<CombinedProps> {
     }
 }
 
-const mapStateToProps = (state: Store.All, ownProps: Props): ConnectedState => {
+const mapStateToProps = (state: Store.All, props: Props): ConnectedState => {
     return {
         author: getItem({
             fallback: true,
-            byId: state.sealed.users.byId,
-            id: ownProps.thread && ownProps.thread.createdBy
+            byId: state.sealed.user.byId,
+            id: props.thread && props.thread.createdBy
         }),
         screenSize: state.deviceInfo.screenSize
     };
