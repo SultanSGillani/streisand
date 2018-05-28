@@ -98,7 +98,7 @@ urlpatterns = [
     url(r'^register/$', users_views.UserRegisterView.as_view(), name='user-registration'),
 
     # DRF-Knox Authentication
-    url(r'^auth/', include('knox.urls')),
+    url(r'^knox/', include('knox.urls')),
     url(r'^login/', users_views.UserLoginView.as_view()),
     url(r'^logout/', knox_views.LogoutView.as_view(), name='knox_logout'),
     url(r'^logoutall/', knox_views.LogoutAllView.as_view(), name='knox_logoutall'),
