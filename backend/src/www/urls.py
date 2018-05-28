@@ -23,7 +23,9 @@ urlpatterns = [
 
     # Authentication
     url(r'^su/', include('django_su.urls')),
-    url(r'^', TemplateView.as_view(template_name="index.html")),
+    url(r'^dev/', TemplateView.as_view(template_name="dev.html")),
+    url(r'^frontend/', TemplateView.as_view(template_name="index.html")),
+
 ]
 
 DEBUG = config('DEBUG', cast=bool)
