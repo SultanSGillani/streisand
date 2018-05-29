@@ -8,7 +8,7 @@ from pytz import UTC
 from import_scripts.management.commands import MySQLCommand
 from films.models import Film
 from mediainfo.models import Mediainfo
-from torrents.models import Torrent, TorrentMetaInfo
+from torrents.models import Release, TorrentFile
 from tracker.models import Swarm
 from users.models import User
 
@@ -27,7 +27,7 @@ class Command(MySQLCommand):
     }
 
     def pre_sql(self):
-        last_torrent = Torrent.objects.order_by('old_id').last()
+        last_torrent = Release.objects.order_by('old_id').last()
         last_old_id = last_torrent.old_id if last_torrent else 0
         self.SQL += ' WHERE ID > {id} ORDER BY ID LIMIT 1000'.format(id=last_old_id)
 
@@ -67,7 +67,6 @@ class Command(MySQLCommand):
         if codec == 'h.264':
             codec = 'H.264'
 
-        metainfo_dict = dict()
         file_list = []
 
         nfo_text = ''
@@ -94,8 +93,8 @@ class Command(MySQLCommand):
         else:
             description = ''
 
-        swarm = Swarm.objects.create(torrent_info_hash=info_hash)
-        metainfo = TorrentMetaInfo.objects.create(dictionary=metainfo_dict)
+        metainfo = TorrentFile.objects.create()
+        swarm = Swarm.objects.create(torrent_id=info_hash)
         uploader = User.objects.filter(old_id=uploader_id).first()
         moderator = User.objects.filter(username=last_moderated_by_username).first()
 
@@ -109,7 +108,7 @@ class Command(MySQLCommand):
         else:
             mediainfo = None
 
-        torrent = Torrent.objects.create(
+        torrent = Release.objects.create(
             old_id=torrent_id,
             film=film,
             cut=special_edition_title if is_special_edition else 'Theatrical',

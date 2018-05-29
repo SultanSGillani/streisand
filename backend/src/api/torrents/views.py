@@ -1,13 +1,16 @@
+# -*- coding: utf-8 -*-
+
 from django_filters import rest_framework as filters
 from rest_framework.permissions import IsAdminUser, IsAuthenticated
 from rest_framework.viewsets import ModelViewSet
 
 from torrent_requests.models import TorrentRequest
 from torrent_stats.models import TorrentStats
-from torrents.models import Torrent, TorrentComment
+from torrents.models import TorrentFile, TorrentComment
+from torrents.utils import TorrentFileUploadParser
+
 from .filters import TorrentFilter
-from .serializers import AdminTorrentSerializer, TorrentCommentSerializer, TorrentStatSerializer, \
-    TorrentRequestSerializer
+from .serializers import AdminTorrentSerializer, TorrentCommentSerializer, TorrentStatSerializer, TorrentRequestSerializer, TorrentUploadSerializer
 
 
 class TorrentStatViewSet(ModelViewSet):
@@ -51,8 +54,7 @@ class TorrentRequestViewSet(ModelViewSet):
 
         return queryset
 
-
-class TorrentCommentViewset(ModelViewSet):
+class TorrentCommentViewSet(ModelViewSet):
     """
     API That Allows Torrent Comments to be viewed, created, or deleted. If you delete the associated film or torrent,
     The comment will be deleted as well.
@@ -61,9 +63,9 @@ class TorrentCommentViewset(ModelViewSet):
     serializer_class = TorrentCommentSerializer
     queryset = TorrentComment.objects.all().select_related(
         'torrent',
-        'torrent__film',
+        'torrent__release__film',
         'author',
-    ).prefetch_related('torrent', 'author').order_by('id').distinct('id')
+    ).order_by('id').distinct('id')
 
     """
     This will automatically associate the comment author with the torrent comment on creation,
@@ -72,14 +74,14 @@ class TorrentCommentViewset(ModelViewSet):
 
     def perform_create(self, serializer):
         serializer.validated_data['author'] = self.request.user
-        return super(TorrentCommentViewset, self).perform_create(serializer)
+        return super(TorrentCommentViewSet, self).perform_create(serializer)
 
     def get_queryset(self):
         queryset = super().get_queryset()
 
         film_id = self.request.query_params.get('film_id', None)
         if film_id is not None:
-            queryset = queryset.filter(film_id=film_id)
+            queryset = queryset.filter(torrent__release__film_id=film_id)
 
         return queryset
 
@@ -91,29 +93,34 @@ class TorrentViewSet(ModelViewSet):
     """
     permission_classes = [IsAdminUser]
     serializer_class = AdminTorrentSerializer
-    filter_backends = (filters.DjangoFilterBackend,)
+    filter_backends = [filters.DjangoFilterBackend]
     filter_class = TorrentFilter
-    queryset = Torrent.objects.all().select_related(
-        'film',
-        'mediainfo',
-        'source_media',
+    queryset = TorrentFile.objects.all().select_related(
+        'release__film',
+        'release__mediainfo',
+        'release__source_media',
         'uploaded_by',
         'moderated_by',
     ).prefetch_related(
-        'film',
-        'uploaded_by',
-        'moderated_by',
-        'source_media',
-        'mediainfo',
         'comments',
         'comments__author',
-    ).order_by('id', 'source_media', ).distinct('id', 'source_media', )
+    ).order_by(
+        'release__film_id',
+        'release__source_media_id',
+    ).distinct(
+        'release__film_id',
+        'release__source_media_id',
+    )
 
-    def get_queryset(self):
-        queryset = super().get_queryset()
 
-        film_id = self.request.query_params.get('film_id', None)
-        if film_id is not None:
-            queryset = queryset.filter(film_id=film_id)
+class TorrentUploadViewSet(ModelViewSet):
+    """
+    API for uploading torrent files.
+    """
+    permission_classes = [IsAdminUser]
+    serializer_class = TorrentUploadSerializer
+    parser_classes = [TorrentFileUploadParser]
+    queryset = TorrentFile.objects.all()
 
-        return queryset
+    def get_serializer_context(self):
+        return {'request': self.request}

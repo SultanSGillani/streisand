@@ -237,3 +237,22 @@ LOGGING = {
         }
     }
 }
+
+
+if 'test' in sys.argv:
+
+    TEST_RUNNER = 'tests.test_utils.CustomTestSuiteRunner'
+
+    DDF_FILL_NULLABLE_FIELDS = False
+
+    # Make the tests faster by using a fast, insecure hashing algorithm
+    PASSWORD_HASHERS = [
+        'django.contrib.auth.hashers.MD5PasswordHasher',
+    ]
+
+    CACHES = {
+        'default': {
+            'BACKEND': 'django.core.cache.backends.locmem.LocMemCache',
+            'TIMEOUT': None,
+        }
+    }

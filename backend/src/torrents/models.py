@@ -1,44 +1,43 @@
 # -*- coding: utf-8 -*-
 
+from binascii import a2b_base64, b2a_hex
+
+from django.contrib.postgres.fields import JSONField
 from django.db import models
 from django.urls import reverse
 from django.utils.timezone import now, timedelta
 
-from picklefield import PickledObjectField
-
-from tracker.bencoding import bencode
+from tracker.bencoding import bencode, sha1
 from users.models import User
 from comments.models import Comment
 
+from .utils import generate_unique_download_key
 
-class Torrent(models.Model):
 
-    old_id = models.PositiveIntegerField(null=True, db_index=True)
+class TorrentFile(models.Model):
 
-    # Film information
-    film = models.ForeignKey(
-        to='films.Film',
-        null=False,
-        db_index=True,
-        related_name='torrents',
-        on_delete=models.CASCADE,
-    )
-    cut = models.CharField(max_length=128, default='Theatrical')
+    # File information
+    info_hash = models.CharField(max_length=40, unique=True)
+    created_by = models.CharField(null=True, max_length=128)
+    is_single_file = models.BooleanField()
+    file = JSONField(null=True)
+    files = JSONField(null=True)
+    directory_name = models.CharField(null=True, max_length=512)
+    total_size_in_bytes = models.BigIntegerField(null=False)
+    piece_size_in_bytes = models.BigIntegerField(null=False)
+    pieces = models.TextField(null=False, help_text="base64 encoded binary pieces data")
 
     # Site information
+    release = models.ForeignKey(
+        to='releases.Release',
+        related_name='torrents',
+        on_delete=models.PROTECT,
+    )
     uploaded_at = models.DateTimeField(auto_now_add=True)
     uploaded_by = models.ForeignKey(
         to='users.User',
-        null=True,
-        blank=False,
+        null=False,
         related_name='uploaded_torrents',
-        on_delete=models.PROTECT,
-    )
-    encoded_by = models.ForeignKey(
-        to='users.User',
-        null=True,
-        blank=True,
-        related_name='encodes',
         on_delete=models.PROTECT,
     )
     moderated_by = models.ForeignKey(
@@ -64,65 +63,6 @@ class Torrent(models.Model):
     )
     snatch_count = models.IntegerField(default=0)
 
-    # Release information
-    release_name = models.CharField(max_length=1024)
-    release_group = models.CharField(max_length=32)
-    is_scene = models.NullBooleanField(default=False)
-    description = models.TextField()
-    nfo = models.TextField()
-    mediainfo = models.OneToOneField(
-        to='mediainfo.Mediainfo',
-        null=True,
-        on_delete=models.PROTECT,
-    )
-
-    # Format information
-    is_3d = models.BooleanField(default=False)
-    is_source = models.BooleanField(default=False)
-    source_media = models.ForeignKey(
-        to='media_formats.SourceMedia',
-        related_name='torrents',
-        null=True,
-        blank=False,
-        on_delete=models.SET_NULL,
-    )
-    resolution = models.ForeignKey(
-        to='media_formats.Resolution',
-        related_name='torrents',
-        null=True,
-        blank=False,
-        on_delete=models.SET_NULL,
-    )
-    codec = models.ForeignKey(
-        to='media_formats.Codec',
-        related_name='torrents',
-        null=True,
-        blank=False,
-        on_delete=models.SET_NULL,
-    )
-    container = models.ForeignKey(
-        to='media_formats.Container',
-        related_name='torrents',
-        null=True,
-        blank=False,
-        on_delete=models.SET_NULL,
-    )
-
-    # BitTorrent information
-    swarm = models.OneToOneField(
-        to='tracker.Swarm',
-        related_name='torrent',
-        db_index=True,
-        on_delete=models.PROTECT,
-    )
-    metainfo = models.OneToOneField(
-        to='torrents.TorrentMetaInfo',
-        related_name='torrent',
-        on_delete=models.PROTECT,
-    )
-    file_list = PickledObjectField(null=False)
-    size_in_bytes = models.BigIntegerField(null=False)
-
     class Meta:
         permissions = (
             ('can_upload', "Can upload new torrents"),
@@ -131,25 +71,99 @@ class Torrent(models.Model):
         )
 
     def __str__(self):
-        return self.swarm_id
+        return str(self.info_hash)
 
-    def get_absolute_url(self):
+    def save(self, *args, **kwargs):
+
+        if not self.pk:
+
+            # Calculate info hash
+            self.info_hash = self.get_info_hash(self.get_info_dict())
+
+            # Calculate total size
+            if self.is_single_file:
+                self.total_size_in_bytes = self.file['size_in_bytes']
+            else:
+                self.total_size_in_bytes = sum(
+                    file['size_in_bytes']
+                    for file in self.files
+                )
+
+        super().save(*args, **kwargs)
+
+    def download_url_for_user(self, user):
+
+        unique_download_key = generate_unique_download_key(
+            info_hash=self.info_hash,
+            user_download_key=user.torrent_download_key_id,
+        )
+
         return reverse(
-            viewname='film_torrent_details',
+            viewname='torrent_download',
             kwargs={
-                'film_id': self.film_id,
+                'user_id': user.id,
                 'torrent_id': self.id,
+                'unique_download_key': unique_download_key,
             }
         )
 
     @property
-    def format(self):
-        return '{codec} / {container} / {resolution} / {source_media}'.format(
-            codec=self.codec_id,
-            container=self.container_id,
-            resolution=self.resolution_id,
-            source_media=self.source_media_id,
-        )
+    def file_name_for_download(self):
+        if hasattr(self, 'torrent'):
+            return self.release.name
+        else:
+            return self.info_hash
+
+    @staticmethod
+    def get_info_hash(info_dict):
+        return b2a_hex(sha1(bencode(info_dict))).decode('utf-8')
+
+    def get_info_dict(self):
+
+        info_dict = {
+            'private': 1,
+            'source': 'JumpCut',
+            'piece length': self.piece_size_in_bytes,
+            'pieces': a2b_base64(self.pieces),
+        }
+
+        if self.is_single_file:
+
+            info_dict['name'] = self.file['name']
+            info_dict['length'] = self.file['size_in_bytes']
+
+        else:
+
+            info_dict['name'] = self.directory_name
+            info_dict['files'] = [
+                {
+                    'length': file['size_in_bytes'],
+                    'path': file['path_components'],
+                }
+                for file in self.files
+            ]
+
+        return info_dict
+
+    def get_metainfo_dict(self, user):
+
+        metainfo_dict = {
+            'announce': user.announce_url,
+            'creation date': int(self.uploaded_at.timestamp()),
+            'comment': self.file_name_for_download,
+            'info': self.get_info_dict(),
+        }
+
+        if self.created_by:
+            metainfo_dict['created by'] = self.created_by
+
+        return metainfo_dict
+
+    def for_user_download(self, user):
+
+        metainfo_dict = self.get_metainfo_dict(user)
+        assert self.info_hash == self.get_info_hash(metainfo_dict['info'])
+        return bencode(metainfo_dict)
 
     @property
     def is_accepting_reseed_requests(self):
@@ -171,26 +185,7 @@ class Torrent(models.Model):
         self.reseed_request = self.reseed_requests.create(
             created_by=user,
         )
-        self.save()
-
-
-class TorrentMetaInfo(models.Model):
-
-    dictionary = PickledObjectField(null=False)
-
-    def __str__(self):
-        return str(self.torrent)
-
-    def for_user_download(self, user):
-
-        # Make sure the private flag is set
-        self.dictionary['metainfo']['private'] = 1
-
-        # Set the announce url
-        self.dictionary['announce'] = user.announce_url
-
-        # Return the bencoded version
-        return bencode(self.dictionary)
+        self.save(update_fields=['reseed_request'])
 
 
 class ReseedRequest(models.Model):
@@ -198,7 +193,7 @@ class ReseedRequest(models.Model):
     # TODO: notify the torrent's uploader and the snatch list when one of these is created
 
     torrent = models.ForeignKey(
-        to='torrents.Torrent',
+        to='torrents.TorrentFile',
         related_name='reseed_requests',
         on_delete=models.CASCADE,
         null=True,
@@ -215,7 +210,7 @@ class ReseedRequest(models.Model):
 
 class TorrentComment(Comment):
     torrent = models.ForeignKey(
-        Torrent,
+        to='torrents.TorrentFile',
         related_name='comments',
         on_delete=models.CASCADE,
     )

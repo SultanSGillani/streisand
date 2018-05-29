@@ -1,3 +1,5 @@
+# -*- coding: utf-8 -*-
+
 from django_filters import rest_framework as filters
 from users.models import User, UserClass
 
@@ -14,7 +16,7 @@ class PublicUserFilter(filters.FilterSet):
 
 class UserFilter(filters.FilterSet):
 
-    is_staff = filters.BooleanFilter(field_name='is_staff',)
+    is_staff = filters.BooleanFilter(field_name='is_staff')
 
     class Meta:
         model = User

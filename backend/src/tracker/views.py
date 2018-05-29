@@ -77,11 +77,11 @@ class AnnounceView(View):
 
         # Fail if the torrent is not registered
         try:
-            swarm = Swarm.objects.get(torrent_info_hash=info_hash)
+            swarm = Swarm.objects.get(torrent_id=info_hash)
         except Swarm.DoesNotExist:
             if info_hash == unquote_to_hex('ffffffffffffffffffff'):
                 return self.failure('Unregistered torrent')
-            swarm = Swarm.objects.create(torrent_info_hash=info_hash)
+            swarm = Swarm.objects.create(torrent_id=info_hash)
 
         #
         # Get announce data

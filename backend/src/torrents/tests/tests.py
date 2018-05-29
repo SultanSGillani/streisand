@@ -5,7 +5,7 @@ from django_dynamic_fixture import G
 from django.test import TestCase
 from django.utils.timezone import now
 
-from torrents.models import Torrent
+from torrents.models import TorrentFile
 from torrent_stats.models import TorrentStats
 from users.models import User
 
@@ -16,12 +16,12 @@ class TorrentAnnounceTests(TestCase):
 
     def setUp(self):
         self.user = G(User)
-        self.torrent = G(Torrent, uploaded_by=self.user)
+        self.torrent = G(TorrentFile, uploaded_by=self.user, directory_name='', pieces='', files=[])
 
     def upload(self, amount):
         handle_announce(
             announce_key=self.user.announce_key_id,
-            torrent_info_hash=self.torrent.swarm_id,
+            torrent_info_hash=self.torrent.info_hash,
             peer_id='baz',
             ip_address='0.0.0.0',
             port='1234',
@@ -47,7 +47,7 @@ class TorrentAnnounceTests(TestCase):
         self.upload(100)
         log = self.user.logged_announces.get()
         self.assertEqual(log.announce_key, self.user.announce_key_id)
-        self.assertEqual(log.swarm_id, self.torrent.swarm_id)
+        self.assertEqual(log.torrent_id, self.torrent.info_hash)
         self.assertEqual(log.new_bytes_uploaded, 100)
         self.assertEqual(log.new_bytes_downloaded, 0)
         self.assertEqual(log.bytes_remaining, 0)

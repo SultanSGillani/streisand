@@ -3,30 +3,23 @@
 from django.contrib import admin
 from django.template.defaultfilters import filesizeformat
 
-from .models import Torrent
+from .models import TorrentFile
 
 
-class TorrentAdmin(admin.ModelAdmin):
+class TorrentFileAdmin(admin.ModelAdmin):
 
     list_display = (
-        'id',
-        'swarm',
-        'film',
-        'codec',
-        'container',
-        'resolution',
-        'source_media',
+        'release',
+        'info_hash',
         'size',
     )
 
     fields = (
         'swarm',
-        'film',
-        'codec',
-        'container',
-        'resolution',
-        'source_media',
+        'release',
         'size',
+        'piece_size',
+        'is_single_file',
         'file_list',
         'last_seeded',
         'uploaded_by',
@@ -35,6 +28,8 @@ class TorrentAdmin(admin.ModelAdmin):
     readonly_fields = (
         'swarm',
         'size',
+        'piece_size',
+        'is_single_file',
         'file_list',
         'last_seeded',
         'uploaded_by',
@@ -42,17 +37,28 @@ class TorrentAdmin(admin.ModelAdmin):
 
     @staticmethod
     def size(torrent):
-        return filesizeformat(torrent.size_in_bytes)
+        return filesizeformat(torrent.total_size_in_bytes)
+
+    @staticmethod
+    def piece_size(torrent):
+        return filesizeformat(torrent.piece_size_in_bytes)
+
+    @staticmethod
+    def file_list(torrent):
+        if torrent.is_single_file:
+            return [torrent.file]
+        else:
+            return torrent.files
 
     def get_queryset(self, request):
         return super().get_queryset(request).select_related(
             'swarm',
-            'film',
-            'codec',
-            'container',
-            'resolution',
-            'source_media',
+            'release__film',
+            'release__codec',
+            'release__container',
+            'release__resolution',
+            'release__source_media',
         )
 
 
-admin.site.register(Torrent, TorrentAdmin)
+admin.site.register(TorrentFile, TorrentFileAdmin)

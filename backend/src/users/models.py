@@ -71,7 +71,7 @@ class User(AbstractUser):
     bytes_uploaded = models.BigIntegerField(default=0)
     bytes_downloaded = models.BigIntegerField(default=0)
     torrents = models.ManyToManyField(
-        to='torrents.Torrent',
+        to='torrents.TorrentFile',
         through='torrent_stats.TorrentStats',
         related_name='users',
     )
@@ -149,7 +149,7 @@ class User(AbstractUser):
     @property
     def admin_link(self):
         return '<a href="{admin_url}">{username}</a>'.format(
-            admin_url=reverse('admin:www_user_change', args=[self.id]),
+            admin_url=reverse('admin:users_user_change', args=[self.id]),
             username=self.username,
         )
 
@@ -311,8 +311,9 @@ class UserAnnounce(models.Model):
         related_name='logged_announces',
         on_delete=models.CASCADE,
     )
-    swarm = models.ForeignKey(
-        to='tracker.Swarm',
+    torrent = models.ForeignKey(
+        to='torrents.TorrentFile',
+        to_field='info_hash',
         null=False,
         db_index=True,
         on_delete=models.CASCADE,

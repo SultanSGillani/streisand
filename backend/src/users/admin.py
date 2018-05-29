@@ -109,7 +109,7 @@ class UserAnnounceAdmin(admin.ModelAdmin):
     list_display = (
         'time_stamp',
         'announce_key',
-        'swarm',
+        'torrent',
         'ip_address',
         'port',
         'peer_id',

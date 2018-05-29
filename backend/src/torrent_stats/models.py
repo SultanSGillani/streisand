@@ -22,7 +22,8 @@ class TorrentStats(models.Model):
         on_delete=models.CASCADE,
     )
     torrent = models.ForeignKey(
-        to='torrents.Torrent',
+        to='torrents.TorrentFile',
+        to_field='info_hash',
         null=False,
         related_name='torrent_stats',
         on_delete=models.CASCADE,
