@@ -8,7 +8,14 @@ from .managers import PeerQuerySet, TorrentClientManager, SwarmManager
 
 
 class Swarm(models.Model):
-    torrent_info_hash = models.CharField(max_length=40, primary_key=True)
+
+    torrent = models.OneToOneField(
+        to='torrents.TorrentFile',
+        to_field='info_hash',
+        related_name='swarm',
+        primary_key=True,
+        on_delete=models.CASCADE,
+    )
 
     objects = SwarmManager()
 
@@ -18,7 +25,7 @@ class Swarm(models.Model):
         )
 
     def __str__(self):
-        return self.torrent_info_hash
+        return self.torrent_id
 
     def __repr__(self):
         return self.__str__()

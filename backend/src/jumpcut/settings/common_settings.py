@@ -60,6 +60,7 @@ LOCAL_APPS = (
     'invites',
     'media_formats',
     'mediainfo',
+    'releases',
     'rotten_tomatoes',
     'tests',
     'torrent_requests',

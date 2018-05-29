@@ -1,10 +1,15 @@
 # -*- coding: utf-8 -*-
+
 import debug_toolbar
 from decouple import config
+
 from django.conf.urls import include, url
 from django.contrib import admin
 from django.contrib.admin.views.decorators import staff_member_required
 from django.views.generic import TemplateView
+
+from api.torrents.views import TorrentUploadViewSet
+from torrents.views import TorrentDownloadView
 
 urlpatterns = [
     # API
@@ -14,7 +19,16 @@ urlpatterns = [
     url(r'^model-docs/', include('docs.urls')),
 
     # torrent urls
-    url(r'^torrent-actions/', include('torrents.urls')),
+    url(
+        regex=r'^torrent-download/(?P<torrent_id>\d+)/(?P<user_id>\d+)/(?P<unique_download_key>[0-9a-f]{64})/$',
+        view=TorrentDownloadView.as_view(),
+        name='torrent_download',
+    ),
+    url(
+        regex=r'^torrent-upload/$',
+        view=TorrentUploadViewSet.as_view({'post': 'create'}),
+        name='torrent_upload',
+    ),
     url(r'^announce/', include('tracker.urls')),
 
     # Admin

@@ -6,7 +6,7 @@ from django.conf import settings
 from django.db.models import F
 from django.utils.timezone import timedelta
 
-from torrents.models import Torrent
+from torrents.models import TorrentFile
 from torrent_stats.models import TorrentStats
 from users.models import User, UserIPAddress
 
@@ -36,14 +36,14 @@ def handle_announce(announce_key, torrent_info_hash, new_bytes_uploaded, new_byt
         # Get everything in one query, if it exists
         torrent_stats = TorrentStats.objects.filter(
             user__announce_key_id=announce_key,
-            torrent__swarm_id=torrent_info_hash,
+            torrent_id=torrent_info_hash,
         ).select_related(
             'user',
             'torrent',
         ).get()
     except TorrentStats.DoesNotExist:
         user = User.objects.get(announce_key_id=announce_key)
-        torrent = Torrent.objects.get(swarm_id=torrent_info_hash)
+        torrent = TorrentFile.objects.get(info_hash=torrent_info_hash)
         torrent_stats = TorrentStats.objects.create(
             user=user,
             torrent=torrent,
@@ -72,7 +72,7 @@ def handle_announce(announce_key, torrent_info_hash, new_bytes_uploaded, new_byt
     if bytes_remaining == 0:
         percent_completed = 100
     else:
-        percent_completed = 100 * (torrent.size_in_bytes - bytes_remaining) / torrent.size_in_bytes
+        percent_completed = 100 * (torrent.total_size_in_bytes - bytes_remaining) / torrent.total_size_in_bytes
 
     # Track HNRs
     if (torrent_stats.is_hit_and_run is not False) and (percent_completed >= 90):
@@ -113,7 +113,7 @@ def handle_announce(announce_key, torrent_info_hash, new_bytes_uploaded, new_byt
     if user.log_successful_announces:
         user.logged_announces.create(
             time_stamp=time_stamp,
-            swarm_id=torrent_info_hash,
+            torrent_id=torrent_info_hash,
             announce_key=announce_key,
             ip_address=ip_address,
             port=port,

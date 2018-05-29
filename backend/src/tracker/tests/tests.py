@@ -9,6 +9,7 @@ from django_dynamic_fixture import G
 from django.test import TestCase, RequestFactory
 
 from users.models import User
+from torrents.models import TorrentFile
 
 from tracker.models import Swarm, TorrentClient
 from tracker.views import AnnounceView
@@ -21,11 +22,12 @@ class AnnounceHandlerTests(TestCase):
     def setUp(self):
         self.factory = RequestFactory()
         self.announce_view = AnnounceView.as_view()
-        self.swarm = G(Swarm, torrent_info_hash='894985f97cc25c246e37a07cd7c785993982a7cb')
+        self.torrent = G(TorrentFile, pieces='', directory_name='', files=[])
+        self.swarm = G(Swarm, torrent=self.torrent)
         self.user = G(User)
         self.client = G(TorrentClient, peer_id_prefix='-DE1360-', is_whitelisted=True)
         self.announce_data = {
-            'info_hash': a2b_hex(self.swarm.torrent_info_hash),
+            'info_hash': a2b_hex(self.swarm.torrent_id),
             'peer_id': '-DE1360-m8vgv0uzHUF0',
             'uploaded': '422',
             'downloaded': '381',
@@ -54,7 +56,7 @@ class AnnounceHandlerTests(TestCase):
         self.announce_view(request, announce_key=self.user.announce_key_id)
         handler_mock.assert_called_once_with(
             announce_key=self.user.announce_key_id,
-            torrent_info_hash=self.swarm.torrent_info_hash,
+            torrent_info_hash=self.swarm.torrent_id,
             new_bytes_uploaded=422,
             new_bytes_downloaded=381,
             bytes_remaining=0,

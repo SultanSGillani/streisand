@@ -31,7 +31,7 @@ class TorrentRequest(models.Model):
     description = models.TextField()
     release_name = models.CharField(max_length=255)
     filling_torrent = models.ForeignKey(
-        to='torrents.Torrent',
+        to='torrents.TorrentFile',
         null=True,
         related_name='requests_filled',
         on_delete=models.SET_NULL,

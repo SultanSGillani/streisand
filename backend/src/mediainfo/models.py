@@ -3,10 +3,9 @@
 from decimal import Decimal
 from io import StringIO
 
+from django.contrib.postgres.fields import JSONField
 from django.db import models
 from django.utils.timezone import timedelta
-
-from picklefield import PickledObjectField
 
 
 class Mediainfo(models.Model):
@@ -23,8 +22,8 @@ class Mediainfo(models.Model):
     has_chapters = models.BooleanField()
     is_dxva_compliant = models.BooleanField()
     is_quality_encode = models.BooleanField()
-    audio = PickledObjectField(default=[])
-    subtitles = PickledObjectField(default=[])
+    audio = JSONField(default=[])
+    subtitles = JSONField(default=[])
 
     def __repr__(self):
         return self.file_path

@@ -7,22 +7,36 @@ from rest_framework.validators import UniqueTogetherValidator
 from mediainfo.serializers import AdminMediainfoSerializer
 from torrent_requests.models import TorrentRequest
 from torrent_stats.models import TorrentStats
-from torrents.models import Torrent, TorrentComment
+from torrents.models import TorrentComment, TorrentFile
 
+from ..users.serializers import DisplayUserProfileSerializer
 
 # from mediainfo.models import Mediainfo
 
 
 class AdminTorrentSerializer(serializers.ModelSerializer):
     size = serializers.SerializerMethodField()
-    info_hash = serializers.CharField(source='swarm_id')
-    file_list = serializers.ListField()
-    mediainfo = AdminMediainfoSerializer()
+    mediainfo = AdminMediainfoSerializer(source='release.mediainfo')
+    film_id = serializers.PrimaryKeyRelatedField(source='release.film_id', read_only=True)
+    cut = serializers.CharField(source='release.cut')
+    format = serializers.CharField(source='release.format')
+    codec = serializers.CharField(source='release.codec_id')
+    container = serializers.CharField(source='release.container_id')
+    resolution = serializers.CharField(source='release.resolution_id')
+    source_media = serializers.CharField(source='release.source_media_id')
+    is_source = serializers.BooleanField(source='release.is_source')
+    is_scene = serializers.BooleanField(source='release.is_scene')
+    is_3d = serializers.BooleanField(source='release.is_3d')
+    release_name = serializers.CharField(source='release.name')
+    release_group = serializers.CharField(source='release.group')
+    nfo = serializers.CharField(source='release.nfo')
+    description = serializers.CharField(source='release.description')
 
     class Meta:
-        model = Torrent
+        model = TorrentFile
         fields = (
             'id',
+            'info_hash',
             'film_id',
             'cut',
             'codec',
@@ -44,8 +58,10 @@ class AdminTorrentSerializer(serializers.ModelSerializer):
             'release_name',
             'release_group',
             'is_scene',
-            'info_hash',
-            'file_list',
+            'is_single_file',
+            'directory_name',
+            'file',
+            'files',
             'nfo',
             'mediainfo',
             'description',
@@ -53,8 +69,19 @@ class AdminTorrentSerializer(serializers.ModelSerializer):
         )
 
     @staticmethod
-    def get_size(obj):
-        return filesizeformat(obj.size_in_bytes)
+    def get_size(torrent):
+        return filesizeformat(torrent.total_size_in_bytes)
+
+    @staticmethod
+    def get_piece_size(torrent):
+        return filesizeformat(torrent.piece_size_in_bytes)
+
+    @staticmethod
+    def get_file_list(torrent):
+        if torrent.is_single_file:
+            return [torrent.file]
+        else:
+            return torrent.files
 
 
 class TorrentStatSerializer(serializers.ModelSerializer):
@@ -146,6 +173,46 @@ class PublicTorrentSerializer(AdminTorrentSerializer):
             self.fields.pop(field_name)
 
 
+class TorrentUploadSerializer(serializers.ModelSerializer):
+
+    EXT_BLACKLIST = ('.txt', '.exe', '.rar')
+    uploaded_by = DisplayUserProfileSerializer(default=serializers.CurrentUserDefault())
+    pieces = serializers.CharField(write_only=True)
+    info_hash = serializers.CharField(read_only=True)
+
+    class Meta:
+        model = TorrentFile
+        fields = (
+            'uploaded_by',
+            'created_by',
+            'is_single_file',
+            'file',
+            'directory_name',
+            'files',
+            'pieces',
+            'piece_size_in_bytes',
+            'info_hash',
+        )
+
+    def validate_file(self, file):
+        if file['name'].endswith(self.EXT_BLACKLIST):
+            raise serializers.ValidationError(
+                'Your torrent may not contain files with the following '
+                'extensions: {blacklist}'.format(blacklist=self.EXT_BLACKLIST)
+            )
+        return file
+
+    def validate_files(self, files):
+        for file in files:
+            if file['path_components'][-1].endswith(self.EXT_BLACKLIST):
+                raise serializers.ValidationError(
+                    'Your torrent may not contain files with the following '
+                    'extensions: {blacklist}'.format(blacklist=self.EXT_BLACKLIST)
+                )
+        return files
+
+
+
 class TorrentCommentSerializer(serializers.ModelSerializer):
     """
     Serializer for Torrent Comments. Author is the users foreign key to Torrent comments.
@@ -153,7 +220,7 @@ class TorrentCommentSerializer(serializers.ModelSerializer):
     """
     film_id = serializers.PrimaryKeyRelatedField(source='torrent.film', read_only=True)
     torrent_name = serializers.StringRelatedField(
-        source='torrent.release_name',
+        source='torrent.release.name',
         read_only=True,
         help_text="Read only field that shows the torrent release name."
     )

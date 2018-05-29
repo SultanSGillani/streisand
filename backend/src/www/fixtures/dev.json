@@ -43,28 +43,45 @@
   },
   {
     "pk": 1,
-    "model": "torrents.torrentmetainfo",
+    "model": "torrents.torrentfile",
     "fields": {
-      "dictionary": {}
+      "release": 1,
+      "uploaded_at": "2018-05-29T12:58Z",
+      "uploaded_by": 1,
+      "is_single_file": true,
+      "file": {
+        "name": "Pulp.Fiction.1994.1080p.BluRay.DTS.x264-CtrlHD.mkv",
+        "size_in_bytes": 16
+      },
+      "total_size_in_bytes": 1000,
+      "piece_size_in_bytes": 16,
+      "info_hash": "af9fec34bcb251b90343140fddd942808b8589e2"
     }
   },
   {
     "pk": 2,
-    "model": "torrents.torrentmetainfo",
+    "model": "torrents.torrentfile",
     "fields": {
-      "dictionary": {}
+      "release": 2,
+      "uploaded_at": "2018-05-29T12:59Z",
+      "uploaded_by": 1,
+      "is_single_file": true,
+      "file": {
+        "name": "Pulp.Fiction.1994.1080p.BluRay.DTS.x264-EbP.mkv",
+        "size_in_bytes": 16
+      },
+      "total_size_in_bytes": 2000,
+      "piece_size_in_bytes": 16,
+      "info_hash": "af9fec34bcb251b90343140fddd942808b8589e3"
     }
   },
   {
     "pk": 1,
-    "model": "torrents.torrent",
+    "model": "releases.release",
     "fields": {
-      "size_in_bytes": 4096,
       "film": 1,
-      "swarm": "894985f97cc25c246e37a07cd7c785993982a7cb",
-      "metainfo": 1,
-      "uploaded_at": "2014-09-19T14:52:58.484Z",
-      "uploaded_by": 1,
+      "name": "Pulp.Fiction.1994.1080p.BluRay.DTS.x264-CtrlHD",
+      "group": "CtrlHD",
       "codec": "x264",
       "container": "MKV",
       "resolution": "720p",
@@ -73,14 +90,11 @@
   },
   {
     "pk": 2,
-    "model": "torrents.torrent",
+    "model": "releases.release",
     "fields": {
-      "size_in_bytes": 2048,
       "film": 1,
-      "swarm": "884985f97cc25c246e37a07cd7c785993982a7cb",
-      "metainfo": 2,
-      "uploaded_at": "2014-09-18T14:52:58.484Z",
-      "uploaded_by": 1,
+      "name": "Pulp.Fiction.1994.1080p.BluRay.DTS.x264-EbP",
+      "group": "EbP",
       "codec": "x264",
       "container": "MKV",
       "resolution": "720p",
@@ -88,14 +102,18 @@
     }
   },
   {
-    "pk": "894985f97cc25c246e37a07cd7c785993982a7cb",
+    "pk": "af9fec34bcb251b90343140fddd942808b8589e2",
     "model": "tracker.swarm",
-    "fields": {}
+    "fields": {
+      "torrent": "af9fec34bcb251b90343140fddd942808b8589e2"
+    }
   },
   {
-    "pk": "884985f97cc25c246e37a07cd7c785993982a7cb",
+    "pk": "af9fec34bcb251b90343140fddd942808b8589e3",
     "model": "tracker.swarm",
-    "fields": {}
+    "fields": {
+      "torrent": "af9fec34bcb251b90343140fddd942808b8589e3"
+    }
   },
   {
     "model": "forums.forumgroup",

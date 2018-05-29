@@ -1,3 +1,5 @@
+# -*- coding: utf-8 -*-
+
 from django.core.management import call_command
 from django.test.runner import DiscoverRunner
 
@@ -8,7 +10,6 @@ class CustomTestSuiteRunner(DiscoverRunner):
         config = super().setup_databases()
 
         # Load fixture data for tests
-        call_command('loaddata', 'foundation.json', )
-        call_command('loaddata', 'dev.json', )
+        call_command('loaddata', 'foundation.json')
 
         return config

@@ -20,7 +20,7 @@ class SwarmManager(models.Manager):
         if peer_list is None:
 
             # Get the peer list from the database, and cache it
-            swarm = self.get(torrent_info_hash=info_hash)
+            swarm = self.get(torrent_id=info_hash)
             peer_list = swarm.peers.all()
             cache.set(cache_key, peer_list)
 
