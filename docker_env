@@ -1,6 +1,6 @@
 SECRET_KEY=jumpcut
-DEBUG=True
-PRODUCTION=False
+DEBUG=False
+PRODUCTION=True
 ALLOWED_HOSTS=*
 DB_HOST=postgres
 DB_NAME=postgres
