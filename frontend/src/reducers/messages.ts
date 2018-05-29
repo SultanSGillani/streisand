@@ -10,7 +10,8 @@ function messages(state: IMessage[] = [], action: Action): IMessage[] {
             const result = [action.message];
             for (const message of state) {
                 if (message.content !== action.message.content) {
-                    result.push(message);
+                    // We found a duplicate message. Replace the new one with the exisiting message.
+                    result[0] = message;
                 }
             }
             return result;
