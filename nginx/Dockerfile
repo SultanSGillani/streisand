@@ -12,4 +12,8 @@ ADD ./setupconf.sh .
 RUN ./setupconf.sh
 
 
+VOLUME ./backend/src:/usr/share/nginx/django/
+VOLUME ./frontend/dist:/usr/share/nginx/html/
+VOLUME ./backend/src/static:/usr/share/nginx/django/static/
+
 EXPOSE 8001 4000

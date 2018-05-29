@@ -4,9 +4,7 @@ version: '3'
 
 services:
   api:
-    build:
-      context: ./backend
-      dockerfile: Dockerfile-production
+    image: registry.pinigseu.xyz/jumpcut/jumpcut/production:master
     container_name: api
     depends_on:
     - postgres
@@ -22,18 +20,18 @@ services:
     - ./backend/src/static:/code/src/static/
     - ./frontend/dist:/code/src/static/frontend/dist/
   celery:
-    build:
-      context: ./backend
-      dockerfile: Dockerfile-production
+    image: registry.pinigseu.xyz/jumpcut/jumpcut/production:master
+    environment:
+      PYTHONPATH: /code/src
+      DJANGO_SETTINGS_MODULE: jumpcut.settings.www_settings
     env_file: ./backend/.env
     container_name: celery
     volumes:
     - ./backend/src:/code/src
-    environment:
-    - C_FORCE_ROOT=true
     depends_on:
     - postgres
     - redis
+    - api
   frontend:
     build:
       context: ./frontend
@@ -45,8 +43,8 @@ services:
     - ./frontend/dist:/code/dist/
   nginx:
     build:
-      context: ./nginx
-      dockerfile: Dockerfile
+          context: ./nginx
+          dockerfile: Dockerfile
     container_name: nginx
     depends_on:
     - api
