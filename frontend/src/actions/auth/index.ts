@@ -1,6 +1,6 @@
 import { all } from 'redux-saga/effects';
 
-import LogoutAction from './LogoutAction';
+import LogoutAction, { logoutSaga } from './LogoutAction';
 import AuthAction, { authenticateSaga } from './AuthenticateAction';
 import ChangePasswordAction, { changePasswordSaga } from './ChangePasswordAction';
 
@@ -10,6 +10,7 @@ export default Action;
 export function* allAuthSaga() {
     yield all([
         authenticateSaga(),
-        changePasswordSaga()
+        changePasswordSaga(),
+        logoutSaga()
     ]);
 }

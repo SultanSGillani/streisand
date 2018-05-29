@@ -23,7 +23,7 @@ const combined = combineReducers<Store.UserSealed>({
 });
 
 export default (state: Store.UserSealed, action: Action) => {
-    if (action.type === 'LOGOUT') {
+    if (action.type === 'RECEIVED_LOGOUT') {
         return combined(undefined as any, action);
     }
     return combined(state, action);

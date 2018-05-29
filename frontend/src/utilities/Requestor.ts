@@ -89,7 +89,7 @@ export function patch<T>(options: IPutRequestOptions): Promise<T> {
 }
 
 export interface IPostRequestOptions {
-    data: any;
+    data?: any;
     url: string;
     token?: string;
 }
@@ -102,6 +102,6 @@ export function post<T>(options: IPostRequestOptions): Promise<T> {
     if (options.token) {
         headers['Authorization'] = `Token ${options.token}`;
     }
-    const data = typeof options.data === 'string' ? options.data : JSON.stringify(options.data);
+    const data = options.data && (typeof options.data === 'string' ? options.data : JSON.stringify(options.data));
     return makeRequest<T>({ url: options.url, method: 'POST', headers, data });
 }

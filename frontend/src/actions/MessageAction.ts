@@ -1,20 +1,29 @@
 import { put } from 'redux-saga/effects';
 import { replace } from 'react-router-redux';
 
+import guid from '../utilities/guid';
+import IMessage from '../models/IMessage';
 import { logout } from './auth/LogoutAction';
 import { IUnkownError } from '../models/base/IError';
 
-type ErrorAction =
-    { type: 'ADD_ERROR', message: string } |
-    { type: 'REMOVE_ERROR', index: number };
-export default ErrorAction;
+type MessageAction =
+    { type: 'ADD_MESSAGE', message: IMessage } |
+    { type: 'REMOVE_MESSAGE', id: string };
+export default MessageAction;
 
-export function removeError(index: number): ErrorAction {
-    return { type: 'REMOVE_ERROR', index };
+export function removeError(id: string): MessageAction {
+    return { type: 'REMOVE_MESSAGE', id };
 }
 
-export function showError(message: string): ErrorAction {
-    return { type: 'ADD_ERROR', message };
+export function showError(message: string): MessageAction {
+    return {
+        type: 'ADD_MESSAGE',
+        message: {
+            id: guid(),
+            level: 'danger',
+            content: message
+        }
+    };
 }
 
 export function* handleError(error: IUnkownError, prefix?: string) {
