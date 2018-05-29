@@ -56,8 +56,8 @@ release_develop:
     - whoami
     - chmod +x -R ./scripts
     - source scripts/env.sh
-    - dcprod build
-    - "docker push ${CI_REGISTRY}:latest"
+    - ./scripts/build_jumpcut.sh
+    - docker push registry.pinigseu.xyz/jumpcut/jumpcut/production:master
   only:
     - master
 deploy-develop:
