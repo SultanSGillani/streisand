@@ -6,7 +6,14 @@ from django.contrib.auth.password_validation import validate_password
 from rest_framework import serializers, validators
 
 from api.mixins import AllowFieldLimitingMixin
-from users.models import User, UserIPAddress
+from users.models import User, UserIPAddress, UserTorrentDownloadKey
+
+
+class UserTorrentDownloadKeySerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = UserTorrentDownloadKey
+        fields = ('id', 'user', 'issued_at', 'revoked_at', 'revocation_notes')
 
 
 class ChangePasswordSerializer(serializers.Serializer):
@@ -45,6 +52,7 @@ class AdminUserProfileSerializer(AllowFieldLimitingMixin, serializers.ModelSeria
         source='user_class', read_only=True)
     ip_addresses = UserIPSerializer(many=True, read_only=True)
     user_class = serializers.StringRelatedField()
+    torrent_download_key = UserTorrentDownloadKeySerializer(read_only=True, many=False)
 
     class Meta:
         model = User
@@ -82,6 +90,7 @@ class AdminUserProfileSerializer(AllowFieldLimitingMixin, serializers.ModelSeria
             'watch_queue',
             'user_permissions',
             'torrents',
+            'torrent_download_key',
         )
 
         extra_kwargs = {
