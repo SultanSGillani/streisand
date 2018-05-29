@@ -18,6 +18,8 @@ RUN pip install -r testing_requirements.txt
 COPY ./uwsgi ./
 COPY . .
 
+RUN python /code/src/manage.py collectstatic --noinput
+
 EXPOSE 8000 7070
 ENV PYTHONPATH /code/src
 ENV DJANGO_SETTINGS_MODULE jumpcut.settings.www_settings

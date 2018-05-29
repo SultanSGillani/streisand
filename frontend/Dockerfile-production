@@ -1,13 +1,12 @@
 # Dockerfile for production
 
-FROM node:8
+FROM node:latest
 
-WORKDIR /var/www
+WORKDIR /code
 
 COPY package.json ./
 RUN npm install
-ENV PATH="/var/www/node_modules/.bin:$PATH"
+ENV PATH="/code/node_modules/.bin:$PATH"
 ENV NODE_ENV=production
 COPY . .
-CMD ["gulp"]
-
+CMD ["gulp", "deploy"]

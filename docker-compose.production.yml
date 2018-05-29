@@ -17,8 +17,10 @@ services:
     - 8000:8000
     restart: always
     volumes:
-    - ./backend/src/static:/code/src/static/
     - ./backend:/code/
+    - ./backend/src:/code/src/
+    - ./backend/src/static:/code/src/static/
+    - ./frontend/dist:/code/src/static/frontend/dist/
   celery:
     build:
       context: ./backend
@@ -26,7 +28,7 @@ services:
     env_file: ./backend/.env
     container_name: celery
     volumes:
-    - ./backend/src:/django/src
+    - ./backend/src:/code/src
     environment:
     - C_FORCE_ROOT=true
     depends_on:
@@ -37,6 +39,8 @@ services:
       context: ./frontend
       dockerfile: Dockerfile-production
     container_name: frontend
+    environment:
+      NODE_ENV: production
     volumes:
     - ./frontend/dist:/code/dist/
   nginx:
@@ -51,10 +55,9 @@ services:
     - 8001:8001
     - 4000:4000
     volumes:
-    - ./backend:/django/
-    - ./backend/src:/django/src
-    - ./frontend/dist/:/usr/share/nginx/html/
-    - ./backend/src/static:/django/src/static/
+    - ./backend/src:/usr/share/nginx/django/
+    - ./backend/src/static:/usr/share/nginx/django/static/
+    - ./frontend/dist:/usr/share/nginx/html/
   postgres:
     image: postgres:latest
     container_name: db

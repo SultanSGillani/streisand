@@ -1,6 +1,6 @@
 # Dockerfile for development
 
-FROM node:8
+FROM node:latest
 
 WORKDIR /code
 
