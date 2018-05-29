@@ -57,7 +57,7 @@ release_develop:
     - chmod +x -R ./scripts
     - source scripts/env.sh
     - dcprod build
-    - "docker push ${CI_REGISTRY}:$CI_COMMIT_REF_NAME"
+    - "docker push ${CI_REGISTRY}:latest"
   only:
     - master
 deploy-develop:
