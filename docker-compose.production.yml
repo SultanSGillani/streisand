@@ -57,6 +57,7 @@ services:
     volumes:
     - ./backend/src:/usr/share/nginx/django/
     - ./backend/src/static:/usr/share/nginx/django/static/
+    - ./backend/src/static/frontend/dist:/usr/share/nginx/django/static/frontend/dist/
     - ./frontend/dist:/usr/share/nginx/html/
   postgres:
     image: postgres:latest
