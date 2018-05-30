@@ -6,7 +6,7 @@ services:
   api:
     build:
       context: ./backend
-      dockerfile: Dockerfile-production
+      dockerfile: ./production/Dockerfile
     container_name: api
     depends_on:
     - postgres
@@ -37,7 +37,7 @@ services:
   frontend:
     build:
       context: ./frontend
-      dockerfile: Dockerfile-production
+      dockerfile: ./production/Dockerfile
     container_name: frontend
     environment:
       NODE_ENV: production
