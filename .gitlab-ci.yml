@@ -56,8 +56,11 @@ release_develop:
     - whoami
     - chmod +x -R ./scripts
     - source scripts/env.sh
-    - ./scripts/build_jumpcut.sh
-    - docker push registry.pinigseu.xyz/jumpcut/jumpcut/production:master
+    - docker push registry.pinigseu.xyz/jumpcut/jumpcut
+  tags:
+    - latest
+    - master
+    - release
   only:
     - master
 deploy-develop:
