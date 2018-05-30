@@ -1,6 +1,7 @@
 import IItemNode from '../models/base/IItemNode';
+import { INodeMap } from '../models/base/ItemSet';
+import { IPage } from '../models/base/IPagedItemSet';
 import { defaultStatus } from '../models/base/ILoadingStatus';
-import { IPage, INodeMap } from '../models/base/IPagedItemSet';
 
 export interface IGetItemsProps<T> {
     page: number;

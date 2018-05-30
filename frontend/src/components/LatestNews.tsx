@@ -2,10 +2,11 @@ import * as React from 'react';
 import { connect } from 'react-redux';
 import { Card, CardHeader, CardBody, CardTitle } from 'reactstrap';
 
-import Empty from './Empty';
 import Store from '../store';
+import Empty from './generic/Empty';
 import IUser from '../models/IUser';
 import UserLink from './links/UserLink';
+import Loading from './generic/Loading';
 import TextView from './bbcode/TextView';
 import { getItem } from '../utilities/mapping';
 import TimeElapsed from './generic/TimeElapsed';
@@ -44,8 +45,8 @@ class LatestNewsComponent extends React.Component<CombinedProps, void> {
 
     public render() {
         const post = this.props.post;
-        if (this.props.loading || !post) {
-            return <Empty loading={this.props.loading} />;
+        if (!post) {
+            return this.props.loading ? <Loading /> : <Empty />;
         }
 
         if (post.id === undefined) {
@@ -80,14 +81,14 @@ class LatestNewsComponent extends React.Component<CombinedProps, void> {
     }
 }
 
-const mapStateToProps = (state: Store.All, ownProps: Props): ConnectedState => {
+const mapStateToProps = (state: Store.All, props: Props): ConnectedState => {
     const loading = state.sealed.news.loading;
     const loaded = !loading && !!state.sealed.news.latest;
     const post = state.sealed.news.latest ? state.sealed.forums.posts.byId[state.sealed.news.latest] : undefined;
     const author = getItem({
         fallback: true,
         id: post && post.author,
-        byId: state.sealed.users.byId
+        byId: state.sealed.user.byId
     });
     const thread = post && state.sealed.forums.threads.byId[post.thread] as IForumThread;
 

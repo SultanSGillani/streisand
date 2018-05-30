@@ -33,14 +33,15 @@ class TorrentsViewComponent extends React.Component<CombinedProps> {
     }
 }
 
-const mapStateToProps = (state: Store.All, ownProps: Props): ConnectedState => {
+const mapStateToProps = (state: Store.All, props: Props): ConnectedState => {
+    const list = state.sealed.torrent.list;
     return {
-        total: state.sealed.torrents.count,
-        pageSize: state.sealed.torrents.pageSize,
+        total: list.count,
+        pageSize: list.pageSize,
         torrents: getNodeItems({
-            page: ownProps.page,
-            byId: state.sealed.torrents.byId,
-            pages: state.sealed.torrents.pages
+            page: props.page,
+            byId: state.sealed.torrent.byId,
+            pages: list.pages
         })
     };
 };

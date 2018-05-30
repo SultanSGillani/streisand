@@ -3,9 +3,10 @@ import { connect } from 'react-redux';
 
 import Store from '../../store';
 import IWiki from '../../models/IWiki';
-import Empty from '../../components/Empty';
 import { getNode } from '../../utilities/mapping';
+import Empty from '../../components/generic/Empty';
 import { IDispatch } from '../../actions/ActionTypes';
+import Loading from '../../components/generic/Loading';
 import WikiView from '../../components/wikis/WikiView';
 import { numericIdentifier } from '../../utilities/shim';
 import { getWiki } from '../../actions/wikis/WikiAction';
@@ -44,8 +45,8 @@ class WikiPageComponent extends React.Component<CombinedProps, void> {
 
     public render() {
         const wiki = this.props.wiki;
-        if (!wiki || !wiki.body || this.props.loading) {
-            return <Empty loading={this.props.loading} />;
+        if (!wiki || !wiki.body) {
+            return this.props.loading ? <Loading /> : <Empty />;
         }
 
         return (
@@ -54,9 +55,9 @@ class WikiPageComponent extends React.Component<CombinedProps, void> {
     }
 }
 
-const mapStateToProps = (state: Store.All, ownProps: Props): ConnectedState => {
-    const wikiId = numericIdentifier(ownProps.params.wikiId);
-    const node = getNode({ id: wikiId, byId: state.sealed.wikis.byId });
+const mapStateToProps = (state: Store.All, props: Props): ConnectedState => {
+    const wikiId = numericIdentifier(props.params.wikiId);
+    const node = getNode({ id: wikiId, byId: state.sealed.wiki.byId });
     return {
         wikiId: wikiId,
         wiki: node.item,

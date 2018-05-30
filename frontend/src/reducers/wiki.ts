@@ -5,7 +5,8 @@ import IWiki from '../models/IWiki';
 import Action from '../actions/wikis';
 import { combineReducers } from './helpers';
 import { getPageReducer } from './utilities/page';
-import { IPage, INodeMap } from '../models/base/IPagedItemSet';
+import { INodeMap } from '../models/base/ItemSet';
+import { IPage, INestedPage } from '../models/base/IPagedItemSet';
 import { addLoadedNode, addLoadedNodes } from './utilities/mutations';
 
 type ItemMap = INodeMap<IWiki>;
@@ -68,5 +69,5 @@ function creating(state: boolean = false, action: Action): boolean {
             return state;
     }
 }
-
-export default combineReducers<Store.Wikis>({ byId, pages, pageSize, count, creating });
+const list = combineReducers<INestedPage>({ count, pageSize, pages });
+export default combineReducers<Store.Wikis>({ byId, list, creating });

@@ -29,7 +29,7 @@ class ForumViewComponent extends React.Component<CombinedProps> {
     }
 }
 
-const mapStateToProps = (state: Store.All, ownProps: Props): ConnectedState => {
+const mapStateToProps = (state: Store.All, props: Props): ConnectedState => {
     const data = state.sealed.forums.groups;
     const forumGroups = data.items.map((id: number) => {
         return state.sealed.forums.groups.byId[id];

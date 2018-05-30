@@ -52,11 +52,11 @@ class ForumReplyComponent extends React.Component<CombinedProps> {
     }
 }
 
-const mapStateToProps = (state: Store.All, ownProps: Props): ConnectedState => {
+const mapStateToProps = (state: Store.All, props: Props): ConnectedState => {
     return {
         author: getItem({
             id: state.sealed.currentUser.id,
-            byId: state.sealed.users.byId
+            byId: state.sealed.user.byId
         })
     };
 };

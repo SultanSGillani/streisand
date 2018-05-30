@@ -1,6 +1,6 @@
 import * as objectAssign from 'object-assign';
 import IItemNode from '../../models/base/IItemNode';
-import { INodeMap } from '../../models/base/IPagedItemSet';
+import { INodeMap } from '../../models/base/ItemSet';
 
 export function markLoading<T>(current: INodeMap<T>, id: number): INodeMap<T> {
     const node = current[id];

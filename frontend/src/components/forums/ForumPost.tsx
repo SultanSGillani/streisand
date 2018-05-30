@@ -142,18 +142,18 @@ class ForumPostComponent extends React.Component<CombinedProps, State> {
     }
 }
 
-const mapStateToProps = (state: Store.All, ownProps: Props): ConnectedState => {
+const mapStateToProps = (state: Store.All, props: Props): ConnectedState => {
     return {
         screenSize: state.deviceInfo.screenSize,
         author: getItem({
             fallback: true,
-            id: ownProps.post.author,
-            byId: state.sealed.users.byId
+            id: props.post.author,
+            byId: state.sealed.user.byId
         }),
         modifiedBy: getItem({
             fallback: true,
-            id: ownProps.post.modifiedBy,
-            byId: state.sealed.users.byId
+            id: props.post.modifiedBy,
+            byId: state.sealed.user.byId
         })
     };
 };

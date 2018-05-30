@@ -5,7 +5,8 @@ import { combineReducers } from '../helpers';
 import UserAction from '../../actions/users';
 import ForumAction from '../../actions/forums';
 import NewsAction from '../../actions/NewsAction';
-import { IPage, INodeMap } from '../../models/base/IPagedItemSet';
+import { INodeMap } from '../../models/base/ItemSet';
+import { IPage, INestedPage } from '../../models/base/IPagedItemSet';
 import { addLoadedNodes, addLoadedNode } from '../utilities/mutations';
 
 type Action = UserAction | ForumAction | NewsAction;
@@ -36,4 +37,5 @@ function pageSize(state: number = 0, action: Action): number {
     return state;
 }
 
-export default combineReducers<Store.Users>({ byId, count, pages, pageSize });
+const list = combineReducers<INestedPage>({ count, pageSize, pages });
+export default combineReducers<Store.Users>({ byId, list });

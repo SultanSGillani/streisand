@@ -42,13 +42,13 @@ class ForumThreadViewComponent extends React.Component<CombinedProps> {
     }
 }
 
-const mapStateToProps = (state: Store.All, ownProps: Props): ConnectedState => {
-    const pages = state.sealed.forums.posts.byThread[ownProps.thread.id];
+const mapStateToProps = (state: Store.All, props: Props): ConnectedState => {
+    const pages = state.sealed.forums.posts.byThread[props.thread.id];
     return {
         total: pages ? pages.count : 0,
         pageSize: pages ? pages.pageSize : 0,
         posts: getItems({
-            page: ownProps.page,
+            page: props.page,
             byId: state.sealed.forums.posts.byId,
             pages: pages ? pages.pages : {}
         })

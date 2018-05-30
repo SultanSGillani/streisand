@@ -3,9 +3,10 @@ import { connect } from 'react-redux';
 
 import Store from '../store';
 import IUser from '../models/IUser';
-import Empty from '../components/Empty';
 import { getNode } from '../utilities/mapping';
+import Empty from '../components/generic/Empty';
 import { IDispatch } from '../actions/ActionTypes';
+import Loading from '../components/generic/Loading';
 import UserView from '../components/users/UserView';
 import { numericIdentifier } from '../utilities/shim';
 import { getUser } from '../actions/users/UserAction';
@@ -44,8 +45,8 @@ class UserPageComponent extends React.Component<CombinedProps, void> {
 
     public render() {
         const user = this.props.user;
-        if (!user || !user.details || this.props.loading) {
-            return <Empty loading={this.props.loading} />;
+        if (!user || !user.details) {
+            return this.props.loading ? <Loading /> : <Empty />;
         }
 
         return (
@@ -54,9 +55,9 @@ class UserPageComponent extends React.Component<CombinedProps, void> {
     }
 }
 
-const mapStateToProps = (state: Store.All, ownProps: Props): ConnectedState => {
-    const userId = numericIdentifier(ownProps.params.userId);
-    const node = getNode({ id: userId, byId: state.sealed.users.byId });
+const mapStateToProps = (state: Store.All, props: Props): ConnectedState => {
+    const userId = numericIdentifier(props.params.userId);
+    const node = getNode({ id: userId, byId: state.sealed.user.byId });
     return {
         userId: userId,
         user: node.item,

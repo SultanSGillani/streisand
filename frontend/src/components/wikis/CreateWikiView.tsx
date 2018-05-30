@@ -58,8 +58,8 @@ class CreateWikiViewComponent extends React.Component<CombinedProps, State> {
     }
 }
 
-const mapStateToProps = (state: Store.All, ownProps: Props): ConnectedState => ({
-    creating: state.sealed.wikis.creating
+const mapStateToProps = (state: Store.All, props: Props): ConnectedState => ({
+    creating: state.sealed.wiki.creating
 });
 
 const mapDispatchToProps = (dispatch: IDispatch): ConnectedDispatch => ({
