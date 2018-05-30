@@ -5,6 +5,7 @@ import { Collapse, Navbar, NavbarToggler, Nav, NavItem, NavbarBrand, NavLink } f
 
 import Store from '../store';
 import CurrentUserLink from './users/CurrentUserLink';
+import SearchBox from './SearchBox';
 
 export type Props = {};
 type State = {
@@ -31,18 +32,21 @@ class SiteNavComponent extends React.Component<CombinedProps, State> {
         const isAuthenticated = this.props.isAuthenticated;
         const toggle = () => { this.setState({ isOpen: !this.state.isOpen }); };
         return (
-            <Navbar color="primary" dark expand="lg">
-                <div className="container">
-                    <LinkContainer to="/"><NavbarBrand>Phoenix</NavbarBrand></LinkContainer>
-                    <NavbarToggler onClick={toggle} />
-                    <Collapse isOpen={this.state.isOpen} navbar>
-                        {isAuthenticated && this._getLinks()}
-                        <Nav className="ml-auto" navbar>
-                            <CurrentUserLink />
-                        </Nav>
-                    </Collapse>
-                </div>
-            </Navbar>
+            <div className="mb-2">
+                <Navbar color="primary" dark expand="sm">
+                    <div className="container">
+                        <LinkContainer to="/"><NavbarBrand>Phoenix</NavbarBrand></LinkContainer>
+                        <NavbarToggler onClick={toggle} />
+                        <Collapse isOpen={this.state.isOpen} navbar>
+                            {isAuthenticated && this._getLinks()}
+                            <Nav className="ml-auto" navbar>
+                                <CurrentUserLink />
+                            </Nav>
+                        </Collapse>
+                    </div>
+                </Navbar>
+                {isAuthenticated && <SearchBox />}
+            </div>
         );
     }
 
