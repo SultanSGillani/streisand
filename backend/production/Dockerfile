@@ -15,14 +15,10 @@ COPY ./testing_requirements.txt ./
 RUN pip install -r requirements.txt > /dev/null
 RUN pip install -r testing_requirements.txt > /dev/null
 
-COPY ./uwsgi ./
-COPY ./celery.sh /code/celery.sh
+COPY ./uwsgi /code/uwsgi
 
-RUN sed -i 's/\r//' /code/celery.sh
-RUN chmod +x /code/celery.sh
 COPY . .
 
-RUN /code/celery.sh
 RUN python /code/src/manage.py collectstatic --noinput
 
 EXPOSE 8000 7070

@@ -18,13 +18,15 @@ services:
     restart: always
     volumes:
     - ./backend:/code/
-    - ./backend/src:/code/src/
-    - ./backend/src/static:/code/src/static/
-    - ./frontend/dist:/code/src/static/frontend/dist/
+    - ./frontend:/code/src/static/frontend/
   celery:
-    image: registry.pinigseu.xyz/jumpcut/jumpcut/production:master
+    build:
+      context: ./backend
+      dockerfile: ./production/Dockerfile
+    command: bash -c "celery worker --workdir /code/src -A jumpcut -l info"
     environment:
       PYTHONPATH: /code/src
+      C_FORCE_ROOT: "true"
       DJANGO_SETTINGS_MODULE: jumpcut.settings.www_settings
     env_file: ./backend/.env
     container_name: celery
@@ -42,11 +44,11 @@ services:
     environment:
       NODE_ENV: production
     volumes:
-    - ./frontend/dist:/code/dist/
+    - ./frontend:/code
   nginx:
     build:
-          context: ./nginx
-          dockerfile: Dockerfile
+      context: ./nginx
+      dockerfile: Dockerfile
     container_name: nginx
     depends_on:
     - api
@@ -56,8 +58,6 @@ services:
     - 4000:4000
     volumes:
     - ./backend/src:/usr/share/nginx/django/
-    - ./backend/src/static:/usr/share/nginx/django/static/
-    - ./backend/src/static/frontend/dist:/usr/share/nginx/django/static/frontend/dist/
     - ./frontend/dist:/usr/share/nginx/html/
   postgres:
     image: postgres:latest
