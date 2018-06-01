@@ -55,8 +55,8 @@ release_develop:
     - ls -lA
     - whoami
     - echo "$CI_REGISTRY_IMAGE"
-    - docker build -t $CI_REGISTRY_IMAGE -f frontend frontend/production/Dockerfile
-    - docker build -t $CI_REGISTRY_IMAGE -f backend backend/production/Dockerfile
+    - docker build -t $CI_REGISTRY_IMAGE -f frontend frontend/production
+    - docker build -t $CI_REGISTRY_IMAGE -f backend backend/production
     - docker push $CI_REGISTRY_IMAGE:CI_COMMIT_REF_NAME
   tags:
     - latest
