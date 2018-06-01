@@ -41,7 +41,7 @@ https://github.com/philipn/django-rest-framework-filters/archive/master.zip
 # djangorestframework-filters
 https://github.com/darklow/django-suit/tarball/v2
 django-rest-knox==3.1.4
-drf-yasg[validation]==1.7.4
+drf-yasg[validation]==1.8.0
 python-decouple==3.1
 django-positions==0.6.0
 newrelic
