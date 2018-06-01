@@ -16,7 +16,7 @@ sudo chown www-data:www-data ./config/nginx.conf ./backend/config/jumpcut.conf .
 # Copy all files in config for nginx bare metal
 sudo cp ./config/uwsgi_params /etc/nginx/
 sudo cp ./config/nginx.conf /etc/nginx/
-sudo cp ./config ssl/ssl_params /etc/nginx/ssl/
+sudo cp ./config/ssl/ssl_params /etc/nginx/ssl/
 sudo cp ./backend/config/jumpcut.conf /etc/nginx/conf.d/
 sudo cp ./frontend/config/frontend.conf /etc/nginx/conf.d/
 
