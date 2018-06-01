@@ -4,6 +4,7 @@ version: '3'
 
 services:
   api:
+    image: registry.pinigseu.xyz/jumpcut/jumpcut:latest
     build:
       context: ./backend
       dockerfile: ./production/Dockerfile
@@ -19,24 +20,25 @@ services:
     volumes:
     - ./backend:/code/
     - ./frontend:/code/src/static/frontend/
-  celery:
-    build:
-      context: ./backend
-      dockerfile: ./production/Dockerfile
-    command: bash -c "celery worker --workdir /code/src -A jumpcut -l info"
-    environment:
-      PYTHONPATH: /code/src
-      C_FORCE_ROOT: "true"
-      DJANGO_SETTINGS_MODULE: jumpcut.settings.www_settings
-    env_file: ./backend/.env
-    container_name: celery
-    volumes:
-    - ./backend/src:/code/src
     depends_on:
-    - postgres
-    - redis
-    - api
+    - frontend
+    - celery
+  celery:
+      image: registry.pinigseu.xyz/jumpcut/jumpcut:latest
+      command: bash -c "celery worker --workdir /code/src -A jumpcut -l info"
+      environment:
+        PYTHONPATH: /code/src
+        C_FORCE_ROOT: "true"
+        DJANGO_SETTINGS_MODULE: jumpcut.settings.www_settings
+      env_file: ./backend/.env
+      container_name: celery
+      volumes:
+      - ./backend/src:/code/src
+      depends_on:
+      - postgres
+      - redis
   frontend:
+    image: registry.pinigseu.xyz/jumpcut/jumpcut:latest
     build:
       context: ./frontend
       dockerfile: ./production/Dockerfile
@@ -45,20 +47,6 @@ services:
       NODE_ENV: production
     volumes:
     - ./frontend:/code
-  nginx:
-    build:
-      context: ./nginx
-      dockerfile: Dockerfile
-    container_name: nginx
-    depends_on:
-    - api
-    - frontend
-    ports:
-    - 8001:8001
-    - 4000:4000
-    volumes:
-    - ./backend/src:/usr/share/nginx/django/
-    - ./frontend/dist:/usr/share/nginx/html/
   postgres:
     image: postgres:latest
     container_name: db
