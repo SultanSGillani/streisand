@@ -4,9 +4,17 @@ FROM node:latest
 
 WORKDIR /code
 
-COPY package.json ./
+COPY package*.json ./
+COPY gulpfile.js ./
+
 RUN npm install
+
 ENV PATH="/code/node_modules/.bin:$PATH"
-ENV NODE_ENV=production
+EXPOSE 5000
 COPY . .
-CMD ["gulp", "deploy"]
+
+RUN gulp deploy
+
+CMD ["gulp", "connect"]
+
+

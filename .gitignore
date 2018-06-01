@@ -1,11 +1,12 @@
-deployment/frontend_out
+backend/frontend_out
 backend/src/staticfiles
-deployment/.env
-deployment/env
+backend/.env
+backend/env
 *.env
 
 # Byte-compiled / optimized / DLL files
 __pycache__/
+*.pyc
 
 # C extensions
 *.so
@@ -101,3 +102,4 @@ frontend/temp
 /.vs/ProjectSettings.json
 /.vs/config/applicationhost.config
 /.vs/.gitlab
+./frontend/*.vs
