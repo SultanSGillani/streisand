@@ -19,7 +19,7 @@ services:
     restart: always
     volumes:
     - ./backend:/code/
-    - ./frontend:/code/src/static/frontend/
+    - ./frontend/dist:/code/src/static/frontend/dist/
     depends_on:
     - frontend
     - celery
