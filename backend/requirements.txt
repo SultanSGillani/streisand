@@ -17,7 +17,7 @@ django-ratelimit==1.1.0
 django-redis==4.9.0
 django-su==0.6.0
 djangorestframework==3.8.2
-kombu==4.1.0
+kombu==4.2.1
 pycparser==2.18
 pytz==2018.4
 redis==2.10.6
