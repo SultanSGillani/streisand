@@ -27,7 +27,7 @@ sqlparse==0.2.4
 tqdm==4.23.3
 uWSGI==2.0.17; sys_platform == 'linux'
 psycopg2
-psycopg2-binary; sys_platform == 'win'
+psycopg2-binary==2.7.4; sys_platform == 'win'
 django-cors-headers==2.2.0
 django-filter==2.0.0.dev1
 coreschema==0.0.4
