@@ -3,4 +3,4 @@
 set -eu -o pipefail
 set -x
 
-echo Please set me up to do whatever needs doing on deploy
+./scripts/build_jumpcut.sh

@@ -1,4 +1,6 @@
-#!/bin/sh
+#!/bin/bash
+set -eu -o
+set -x
 
 export DOCKER_CONFIG_DEV=${DOCKER_CONFIG_DEV:-docker-compose.yml}
 export DOCKER_CONFIG_PROD=${DOCKER_CONFIG_PROD:-docker-compose.production.yml}

@@ -1,27 +1,36 @@
-#!/bin/sh
+#!/bin/bash
 
-set -eu -o pipefail
+set -eu -o
 set -x
-
-IMAGE=${1:-jumpcut}
-
 
 # Ensure we are in the right (root) directory
 cd "${0%/*}"
 cd ..
 
-source scripts/env.sh
-dcprod build
-# Build frontend distribution
-docker build --pull -t frontend frontend --file frontend/Dockerfile-production
+# Reformat config files for nginx
+./config/nginxfmt.py ./config/nginx.conf ./backend/config/jumpcut.conf ./frontend/config/frontend.conf ./config/uwsgi_params ./config/ssl/ssl_params
 
-# Build nginx distribution
+# Make sure www-data is the owner of these files
+sudo chown www-data:www-data ./config/nginx.conf ./backend/config/jumpcut.conf ./frontend/config/frontend.conf ./config/uwsgi_params ./config/ssl/ssl_params
 
-docker build --pull -t nginx nginx --file nginx/Dockerfile
+# Copy all files in config for nginx bare metal
+sudo cp ./config/uwsgi_params /etc/nginx/
+sudo cp ./config/nginx.conf /etc/nginx/
+sudo cp ./config ssl/ssl_params /etc/nginx/ssl/
+sudo cp ./backend/config/jumpcut.conf /etc/nginx/conf.d/
+sudo cp ./frontend/config/frontend.conf /etc/nginx/conf.d/
 
-cd "${0%/*}"
-cd ..
-cd backend
-# Build production image
-docker build --pull -t ${IMAGE} -f Dockerfile-production .
+# Remove old bundle dist since next step builds this again
+sudo rm -rf ./frontend/dist
 
+# Build production
+docker-compose -f docker-compose.production.yml -f docker-compose.production.yml build --no-cache
+
+# Start Production
+docker-compose -f docker-compose.production.yml -f docker-compose.production.yml up -d --force-recreate
+
+# Test nginx config files
+sudo nginx -t
+
+# Reload nginx
+sudo nginx -s reload

@@ -54,10 +54,10 @@ release_develop:
   script:
     - ls -lA
     - whoami
-    - chmod +x -R ./scripts
-    - source scripts/env.sh
-    - dcprod build
-    - docker push registry.pinigseu.xyz/jumpcut/jumpcut
+    - echo "$CI_REGISTRY_IMAGE"
+    - docker build -t $CI_REGISTRY_IMAGE -f frontend frontend/production/Dockerfile
+    - docker build -t $CI_REGISTRY_IMAGE -f backend backend/production/Dockerfile
+    - docker push $CI_REGISTRY_IMAGE:CI_COMMIT_REF_NAME
   tags:
     - latest
     - master
