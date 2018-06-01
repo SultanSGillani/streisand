@@ -1,10 +1,10 @@
-Django[argon2]==2.0.5
+Django[argon2]==2.0.6
 Markdown==2.6.11
 Pillow==5.1.0
 Pygments==2.2.0
 Werkzeug==0.14.1
 anyjson==0.3.3
-amqp==2.2.2
+amqp==2.3.2
 beautifulsoup4==4.6.0
 billiard==3.5.0.3
 celery==4.1.1
