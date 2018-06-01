@@ -4,7 +4,7 @@ version: '3'
 
 services:
   api:
-    image: registry.pinigseu.xyz/jumpcut/jumpcut:master
+    image: registry.pinigseu.xyz/jumpcut/jumpcut:latest
     build:
       context: ./backend
       dockerfile: ./production/Dockerfile
@@ -24,7 +24,7 @@ services:
     - frontend
     - celery
   celery:
-      image: registry.pinigseu.xyz/jumpcut/jumpcut:master
+      image: registry.pinigseu.xyz/jumpcut/jumpcut:latest
       command: bash -c "celery worker --workdir /code/src -A jumpcut -l info"
       environment:
         PYTHONPATH: /code/src
@@ -38,7 +38,7 @@ services:
       - postgres
       - redis
   frontend:
-    image: registry.pinigseu.xyz/jumpcut/jumpcut:master
+    image: node:latest
     build:
       context: ./frontend
       dockerfile: ./production/Dockerfile
@@ -46,7 +46,10 @@ services:
     environment:
       NODE_ENV: production
     volumes:
-    - ./frontend:/code
+    - ./frontend:/react/
+    - ./frontend/dist:/react/dist/
+    ports:
+    - 4000:4000
   postgres:
     image: postgres:latest
     container_name: db

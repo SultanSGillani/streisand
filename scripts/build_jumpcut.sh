@@ -21,7 +21,7 @@ sudo cp ./backend/config/jumpcut.conf /etc/nginx/conf.d/
 sudo cp ./frontend/config/frontend.conf /etc/nginx/conf.d/
 
 # Remove old bundle dist since next step builds this again
-sudo rm -rf ./frontend/dist
+sudo rm -rf ./frontend/dist/
 
 # Build production
 docker-compose -f docker-compose.production.yml -f docker-compose.production.yml build --no-cache

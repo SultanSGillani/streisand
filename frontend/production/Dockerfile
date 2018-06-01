@@ -1,20 +1,17 @@
 # Dockerfile for production
-
 FROM node:latest
 
-WORKDIR /code
+WORKDIR /react
 
 COPY package.json ./
 COPY gulpfile.js ./
 
 RUN npm install
 
-ENV PATH="/code/node_modules/.bin:$PATH"
-EXPOSE 5000
+ENV PATH="/react/node_modules/.bin:$PATH"
+EXPOSE 4000
 COPY . .
 
-RUN gulp deploy
-
-CMD ["gulp", "connect"]
+CMD ["gulp", "deploy"]
 
 
