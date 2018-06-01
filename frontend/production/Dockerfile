@@ -4,7 +4,7 @@ FROM node:latest
 
 WORKDIR /code
 
-COPY package*.json ./
+COPY package.json ./
 COPY gulpfile.js ./
 
 RUN npm install

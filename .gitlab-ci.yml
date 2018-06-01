@@ -9,6 +9,8 @@ stages:
  - deploy
 variables:
   PIP_CACHE_DIR: "$CI_PROJECT_DIR/.cache"
+  CONTAINER_COMMIT_IMAGE: $CI_REGISTRY_IMAGE:$CI_COMMIT_REF_NAME
+  CONTAINER_RELEASE_IMAGE: $CI_REGISTRY_IMAGE:latest
   DB_NAME: postgres
   DB_USER: postgres
   DB_HOST: postgres
@@ -42,9 +44,14 @@ python_tests:
     - invoke fixtures
     - invoke run-python-tests --coverage
   allow_failure: true # for now
-## TODO frontend linter/tests?
+
 release_develop:
   image: tmaier/docker-compose:latest
+  variables:
+    DOCKER_DRIVER: overlay2
+    FRONTEND_DIR: /builds/jumpcut/jumpcut/frontend/
+    BACKEND_DIR: /builds/jumpcut/jumpcut/backend/
+    PROD_DOCKER_FILE: production/Dockerfile
   stage: release
   cache: {}
   before_script:
@@ -54,16 +61,21 @@ release_develop:
   script:
     - ls -lA
     - whoami
-    - echo "$CI_REGISTRY_IMAGE"
-    - docker build -t $CI_REGISTRY_IMAGE -f frontend frontend/production
-    - docker build -t $CI_REGISTRY_IMAGE -f backend backend/production
-    - docker push $CI_REGISTRY_IMAGE:CI_COMMIT_REF_NAME
+    - echo "$CONTAINER_COMMIT_IMAGE"
+    - cd $FRONTEND_DIR
+    - docker build --pull -t $CONTAINER_COMMIT_IMAGE -f $PROD_DOCKER_FILE .
+    - cd $BACKEND_DIR
+    - docker build --pull -t $CONTAINER_COMMIT_IMAGE -f $PROD_DOCKER_FILE .
+    - docker push $CI_REGISTRY_IMAGE:$CI_COMMIT_REF_NAME
+    - docker tag $CONTAINER_COMMIT_IMAGE $CONTAINER_RELEASE_IMAGE
+    - docker push $CONTAINER_RELEASE_IMAGE
   tags:
     - latest
     - master
     - release
   only:
     - master
+
 deploy-develop:
   stage: deploy
   cache: {}
