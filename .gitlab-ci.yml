@@ -49,8 +49,8 @@ release_develop:
   image: tmaier/docker-compose:latest
   variables:
     DOCKER_DRIVER: overlay2
-    FRONTEND_DIR: /builds/jumpcut/jumpcut/frontend/
-    BACKEND_DIR: /builds/jumpcut/jumpcut/backend/
+    FRONTEND_DIR: /builds/jumpcut/jumpcut/frontend
+    BACKEND_DIR: /builds/jumpcut/jumpcut/backend
     PROD_DOCKER_FILE: production/Dockerfile
   stage: release
   cache: {}
