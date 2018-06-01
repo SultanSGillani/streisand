@@ -12,6 +12,6 @@ ENV PATH="/react/node_modules/.bin:$PATH"
 EXPOSE 4000
 COPY . .
 
-CMD ["gulp", "deploy"]
+CMD ["gulp"]
 
 
