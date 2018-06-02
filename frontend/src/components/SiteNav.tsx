@@ -4,8 +4,8 @@ import { LinkContainer } from 'react-router-bootstrap';
 import { Collapse, Navbar, NavbarToggler, Nav, NavItem, NavbarBrand, NavLink } from 'reactstrap';
 
 import Store from '../store';
+import SearchBox from './search/SearchBox';
 import CurrentUserLink from './users/CurrentUserLink';
-import SearchBox from './SearchBox';
 
 export type Props = {};
 type State = {
