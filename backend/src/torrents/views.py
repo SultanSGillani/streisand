@@ -26,7 +26,7 @@ class TorrentDownloadView(View):
 
         # Make sure we have a valid torrent id
         try:
-            torrent_file = TorrentFile.objects.select_related('release').get(torrent_id=torrent_id)
+            torrent_file = TorrentFile.objects.select_related('release').get(id=torrent_id)
         except TorrentFile.DoesNotExist:
             raise PermissionDenied
 
