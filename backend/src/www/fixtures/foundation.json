@@ -1230,6 +1230,86 @@
       "rank": 14
     }
   },
+    {
+    "model": "users.usertorrentdownloadkey",
+    "pk": "1ef0be11-cb9e-4138-a75f-ece3bd79c939",
+    "fields": {
+      "user": 7,
+      "issued_at": "2018-05-18T21:26:35.330Z",
+      "revoked_at": null,
+      "revocation_notes": ""
+    }
+  },
+  {
+    "model": "users.usertorrentdownloadkey",
+    "pk": "29920575-8bc2-465c-ac29-f602e5c0d9a4",
+    "fields": {
+      "user": 4,
+      "issued_at": "2018-05-13T23:44:53.977Z",
+      "revoked_at": null,
+      "revocation_notes": ""
+    }
+  },
+  {
+    "model": "users.usertorrentdownloadkey",
+    "pk": "31474517-6d27-4994-9d25-167867336083",
+    "fields": {
+      "user": 6,
+      "issued_at": "2018-05-18T17:42:02.029Z",
+      "revoked_at": null,
+      "revocation_notes": ""
+    }
+  },
+  {
+    "model": "users.usertorrentdownloadkey",
+    "pk": "39487625-1c62-4646-8093-ed0b5309fa65",
+    "fields": {
+      "user": 2,
+      "issued_at": "2018-05-13T23:44:53.944Z",
+      "revoked_at": null,
+      "revocation_notes": ""
+    }
+  },
+  {
+    "model": "users.usertorrentdownloadkey",
+    "pk": "b1e840fb-c719-4fae-9462-6320a5031e66",
+    "fields": {
+      "user": 5,
+      "issued_at": "2018-05-13T23:44:53.989Z",
+      "revoked_at": null,
+      "revocation_notes": ""
+    }
+  },
+  {
+    "model": "users.usertorrentdownloadkey",
+    "pk": "b44759bb-fbcb-4575-989a-fe2926ca2fc6",
+    "fields": {
+      "user": 1,
+      "issued_at": "2018-05-10T03:35:34.878Z",
+      "revoked_at": null,
+      "revocation_notes": ""
+    }
+  },
+  {
+    "model": "users.usertorrentdownloadkey",
+    "pk": "548860de-17b6-43cd-9b8a-9e6acf3f8a83",
+    "fields": {
+      "user": 8,
+      "issued_at": "2018-05-21T15:17:45.665Z",
+      "revoked_at": null,
+      "revocation_notes": ""
+    }
+  },
+  {
+    "model": "users.usertorrentdownloadkey",
+    "pk": "cb3d2bcf-2efe-427b-88c5-b2fee0ebd36e",
+    "fields": {
+      "user": 3,
+      "issued_at": "2018-05-13T23:44:53.963Z",
+      "revoked_at": null,
+      "revocation_notes": ""
+    }
+  },
   {
     "model": "users.userannouncekey",
     "pk": "1ef0be11-cb9e-4138-a75f-ece3bd79c939",
