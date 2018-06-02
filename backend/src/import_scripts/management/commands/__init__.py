@@ -3,17 +3,17 @@
 import MySQLdb
 from MySQLdb.cursors import SSDictCursor
 from tqdm import tqdm
-
+from decouple import config
 from django.core.management.base import BaseCommand
 
 
 class MySQLCommand(BaseCommand):
 
     DB_CONFIG = {
-        'user': 'root',
-        'password': 'fuckneebs',
-        'host': '10.0.2.2',
-        'db': 'tc',
+        'user': config('MYSQL_DB_USER'),
+        'password': config('MYSQL_DB_PASSWORD'),
+        'db': config('MYSQL_DB'),
+        'host': config('MYSQL_HOST'),
         'cursorclass': SSDictCursor,
         'charset': 'latin1',
     }

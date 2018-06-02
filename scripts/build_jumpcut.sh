@@ -26,6 +26,10 @@ docker-compose -f docker-compose.production.yml -f docker-compose.production.yml
 # Start Production
 docker-compose -f docker-compose.production.yml -f docker-compose.production.yml up -d --force-recreate
 
+# Migrations
+./prod.sh m makemigrations
+./prod.sh m migrate
+
 # Test nginx config files
 sudo nginx -t
 
