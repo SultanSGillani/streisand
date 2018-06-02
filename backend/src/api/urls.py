@@ -14,6 +14,7 @@ from .torrents import views as torrents_views
 from .tracker import views as tracker_views
 from .users import views as users_views
 from .wiki import views as wiki_views
+from .private_messages import views as pm_views
 
 swagger_info = openapi.Info(
     title="Streisand API",
@@ -36,6 +37,9 @@ router = routers.DefaultRouter()
 router.register(r'users', viewset=users_views.AdminUserViewSet, base_name='user')
 router.register(r'user-profiles', viewset=users_views.PublicUserProfileViewSet, base_name='user-profile')
 router.register(r'groups', viewset=users_views.GroupViewSet, base_name='group')
+
+# PMs
+router.register(r'conversations', viewset=pm_views.ConversationViewSet, base_name='conversation')
 
 # Invites
 router.register(r'invites', viewset=invites_views.InviteViewSet, base_name='invite')
