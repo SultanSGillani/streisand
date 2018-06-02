@@ -1,7 +1,11 @@
+# -*- coding: utf-8 -*-
+
 from rest_framework.viewsets import ModelViewSet
 from rest_framework.permissions import IsAdminUser
-from .serializers import TorrentClientSerializer, SwarmSerializer, PeerSerializer
+
 from tracker.models import Peer, Swarm, TorrentClient
+
+from .serializers import TorrentClientSerializer, SwarmSerializer, PeerSerializer
 
 
 class TorrentClientViewSet(ModelViewSet):

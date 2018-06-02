@@ -2,19 +2,24 @@
 
 from django.contrib.auth.models import Group
 from django.http import Http404
+
 from django_filters import rest_framework as filters
+from knox.auth import TokenAuthentication
+from knox.models import AuthToken
 from rest_framework import status
 from rest_framework.generics import UpdateAPIView, RetrieveAPIView, CreateAPIView
-from knox.models import AuthToken
 from rest_framework.permissions import IsAdminUser, IsAuthenticated, AllowAny
 from rest_framework.response import Response
 from rest_framework.viewsets import ModelViewSet
+
 from api.permissions import IsOwnerOrReadOnly
 from users.models import User
+
 from .filters import UserFilter, PublicUserFilter
-from .serializers import GroupSerializer, AdminUserProfileSerializer, \
-    OwnedUserProfileSerializer, PublicUserProfileSerializer, ChangePasswordSerializer, NewUserSerializer, LoginUserSerializer
-from knox.auth import TokenAuthentication
+from .serializers import (
+    GroupSerializer, AdminUserProfileSerializer, OwnedUserProfileSerializer,
+    PublicUserProfileSerializer, ChangePasswordSerializer, NewUserSerializer, LoginUserSerializer
+)
 
 
 class UserRegisterView(CreateAPIView):

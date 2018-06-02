@@ -1,11 +1,12 @@
 # -*- coding: utf-8 -*-
 
+from positions import PositionField
+
 from django.db import models
 from django.db.models import F
 from django.urls import reverse
 
 from .managers import ForumGroupQuerySet, ForumTopicQuerySet, ForumThreadQuerySet, ForumPostQuerySet
-from positions import PositionField
 
 
 class ForumGroup(models.Model):

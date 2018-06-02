@@ -1,12 +1,16 @@
 # -*- coding: utf-8 -*-
+
+from knox.models import AuthToken
+
 from django.contrib.auth.models import Permission
 from django.core.cache import cache
 from django.db import models
 from django.db.models.signals import post_save, post_delete
 from django.dispatch import receiver
+
 from users.models import User, WatchedUser, UserClass
 from www.models import Feature, LoginAttempt
-from knox.models import AuthToken
+
 from .signals import successful_login, failed_login
 
 

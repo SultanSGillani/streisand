@@ -55,7 +55,7 @@
       },
       "total_size_in_bytes": 1000,
       "piece_size_in_bytes": 16,
-      "info_hash": "af9fec34bcb251b90343140fddd942808b8589e2"
+      "info_hash": "e6504d31dedeffe8318651fcfcfa54afe6da129c"
     }
   },
   {
@@ -72,7 +72,7 @@
       },
       "total_size_in_bytes": 2000,
       "piece_size_in_bytes": 16,
-      "info_hash": "af9fec34bcb251b90343140fddd942808b8589e3"
+      "info_hash": "5bb0cdea515b32d291c1ff25bcf5a491561e5ade"
     }
   },
   {
@@ -102,17 +102,17 @@
     }
   },
   {
-    "pk": "af9fec34bcb251b90343140fddd942808b8589e2",
+    "pk": "e6504d31dedeffe8318651fcfcfa54afe6da129c",
     "model": "tracker.swarm",
     "fields": {
-      "torrent": "af9fec34bcb251b90343140fddd942808b8589e2"
+      "torrent": "e6504d31dedeffe8318651fcfcfa54afe6da129c"
     }
   },
   {
-    "pk": "af9fec34bcb251b90343140fddd942808b8589e3",
+    "pk": "5bb0cdea515b32d291c1ff25bcf5a491561e5ade",
     "model": "tracker.swarm",
     "fields": {
-      "torrent": "af9fec34bcb251b90343140fddd942808b8589e3"
+      "torrent": "5bb0cdea515b32d291c1ff25bcf5a491561e5ade"
     }
   },
   {
