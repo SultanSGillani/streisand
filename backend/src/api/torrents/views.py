@@ -96,7 +96,7 @@ class TorrentViewSet(ModelViewSet):
     filter_backends = [filters.DjangoFilterBackend]
     filter_class = TorrentFilter
     queryset = TorrentFile.objects.filter(
-        release__insull=False,
+        release__isnull=False,
     ).select_related(
         'release__film',
         'release__mediainfo',
