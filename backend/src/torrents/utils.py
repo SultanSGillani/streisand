@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 
-from binascii import b2a_base64
+from binascii import b2a_base64, a2b_hex
 from hashlib import sha3_256
 
 from rest_framework.parsers import FileUploadParser, DataAndFiles
@@ -10,9 +10,17 @@ from tracker.bencoding import bdecode, BencodeError
 
 
 def generate_unique_download_key(info_hash, user_download_key):
+
+    if isinstance(info_hash, str):
+        info_hash = a2b_hex(info_hash)
+
+    if isinstance(user_download_key, str):
+        user_download_key = a2b_hex(user_download_key)
+
     m = sha3_256()
-    m.update(info_hash.encode('utf-8'))
-    m.update(user_download_key.encode('utf-8'))
+    m.update(info_hash)
+    m.update(user_download_key)
+
     return m.hexdigest()
 
 
