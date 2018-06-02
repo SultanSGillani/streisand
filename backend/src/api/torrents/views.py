@@ -95,7 +95,9 @@ class TorrentViewSet(ModelViewSet):
     serializer_class = AdminTorrentSerializer
     filter_backends = [filters.DjangoFilterBackend]
     filter_class = TorrentFilter
-    queryset = TorrentFile.objects.all().select_related(
+    queryset = TorrentFile.objects.filter(
+        release__insull=False,
+    ).select_related(
         'release__film',
         'release__mediainfo',
         'release__source_media',
@@ -111,6 +113,9 @@ class TorrentViewSet(ModelViewSet):
         'release__film_id',
         'release__source_media_id',
     )
+
+    def get_serializer_context(self):
+        return {'request': self.request}
 
 
 class TorrentUploadViewSet(ModelViewSet):

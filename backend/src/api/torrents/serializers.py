@@ -31,12 +31,14 @@ class AdminTorrentSerializer(serializers.ModelSerializer):
     release_group = serializers.CharField(source='release.group')
     nfo = serializers.CharField(source='release.nfo')
     description = serializers.CharField(source='release.description')
+    download_url = serializers.SerializerMethodField(read_only=True)
 
     class Meta:
         model = TorrentFile
         fields = (
             'id',
             'info_hash',
+            'download_url',
             'film_id',
             'cut',
             'codec',
@@ -67,6 +69,10 @@ class AdminTorrentSerializer(serializers.ModelSerializer):
             'description',
             'comments',
         )
+
+    def get_download_url(self, torrent):
+        request = self.context['request']
+        return torrent.download_url_for_user(request.user)
 
     @staticmethod
     def get_size(torrent):
@@ -214,7 +220,8 @@ class TorrentUploadSerializer(serializers.ModelSerializer):
         return files
 
     def get_download_url(self, torrent):
-        return torrent.download_url_for_user(user=self.uploaded_by)
+        request = self.context['request']
+        return torrent.download_url_for_user(request.user)
 
 
 class TorrentCommentSerializer(serializers.ModelSerializer):
