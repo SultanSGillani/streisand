@@ -179,10 +179,12 @@ class TorrentUploadSerializer(serializers.ModelSerializer):
     uploaded_by = DisplayUserProfileSerializer(default=serializers.CurrentUserDefault())
     pieces = serializers.CharField(write_only=True)
     info_hash = serializers.CharField(read_only=True)
+    download_url = serializers.SerializerMethodField(read_only=True)
 
     class Meta:
         model = TorrentFile
         fields = (
+            'download_url',
             'uploaded_by',
             'created_by',
             'is_single_file',
@@ -211,6 +213,8 @@ class TorrentUploadSerializer(serializers.ModelSerializer):
                 )
         return files
 
+    def get_download_url(self, torrent):
+        return torrent.download_url_for_user(user=self.request.user)
 
 
 class TorrentCommentSerializer(serializers.ModelSerializer):
