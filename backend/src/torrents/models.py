@@ -31,6 +31,7 @@ class TorrentFile(models.Model):
     release = models.ForeignKey(
         to='releases.Release',
         related_name='torrents',
+        null=True,
         on_delete=models.PROTECT,
     )
     uploaded_at = models.DateTimeField(auto_now_add=True)
