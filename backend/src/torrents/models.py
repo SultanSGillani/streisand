@@ -96,7 +96,7 @@ class TorrentFile(models.Model):
 
         unique_download_key = generate_unique_download_key(
             info_hash=self.info_hash,
-            user_download_key=user.torrent_download_key_id.hex,
+            user_download_key=user.torrent_download_key_id,
         )
 
         return reverse(

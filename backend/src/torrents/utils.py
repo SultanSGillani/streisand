@@ -2,6 +2,7 @@
 
 from binascii import b2a_base64, a2b_hex
 from hashlib import sha3_256
+from uuid import UUID
 
 from rest_framework.parsers import FileUploadParser, DataAndFiles
 from rest_framework.exceptions import ParseError
@@ -14,7 +15,9 @@ def generate_unique_download_key(info_hash, user_download_key):
     if isinstance(info_hash, str):
         info_hash = a2b_hex(info_hash)
 
-    if isinstance(user_download_key, str):
+    if isinstance(user_download_key, UUID):
+        user_download_key = user_download_key.bytes
+    elif isinstance(user_download_key, str):
         user_download_key = a2b_hex(user_download_key)
 
     m = sha3_256()
