@@ -11,8 +11,8 @@ from tracker.bencoding import bdecode, BencodeError
 
 def generate_unique_download_key(info_hash, user_download_key):
     m = sha3_256()
-    m.update(info_hash)
-    m.update(user_download_key)
+    m.update(info_hash.encode('utf-8'))
+    m.update(user_download_key.encode('utf-8'))
     return m.hexdigest()
 
 
