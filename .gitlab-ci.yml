@@ -43,7 +43,7 @@ python_tests:
     - invoke foundation
     - invoke fixtures
     - invoke run-python-tests --coverage
-  allow_failure: true # for now
+  allow_failure: false # for now
 
 release_develop:
   image: tmaier/docker-compose:latest
