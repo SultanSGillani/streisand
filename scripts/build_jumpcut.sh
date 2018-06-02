@@ -21,7 +21,7 @@ sudo cp ./backend/config/jumpcut.conf /etc/nginx/conf.d/
 sudo cp ./frontend/config/frontend.conf /etc/nginx/conf.d/
 
 # Build production
-docker-compose -f docker-compose.production.yml -f docker-compose.production.yml build --no-cache
+docker-compose -f docker-compose.production.yml -f docker-compose.production.yml build
 
 # Start Production
 docker-compose -f docker-compose.production.yml -f docker-compose.production.yml up -d --force-recreate
