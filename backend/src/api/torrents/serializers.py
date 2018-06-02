@@ -214,7 +214,7 @@ class TorrentUploadSerializer(serializers.ModelSerializer):
         return files
 
     def get_download_url(self, torrent):
-        return torrent.download_url_for_user(user=self.request.user)
+        return torrent.download_url_for_user(user=self.uploaded_by)
 
 
 class TorrentCommentSerializer(serializers.ModelSerializer):
