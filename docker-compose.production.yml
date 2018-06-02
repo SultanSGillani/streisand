@@ -48,8 +48,6 @@ services:
     volumes:
     - ./frontend:/react/
     - ./frontend/dist:/react/dist/
-    ports:
-    - 4000:4000
   postgres:
     image: postgres:latest
     container_name: db

@@ -19,5 +19,5 @@ ENV DJANGO_ENV=DEBUG
 ENV PYTHONPATH /code/src
 COPY . .
 
-EXPOSE 8000
+EXPOSE 8000 7070
 CMD ["python", "src/manage.py", "runserver_plus", "0.0.0.0:8000"]
