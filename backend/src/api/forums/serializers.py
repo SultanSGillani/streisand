@@ -1,9 +1,11 @@
 # -*- coding: utf-8 -*-
+
+from rest_framework import serializers
+from rest_framework.serializers import ModelSerializer
+
 from api import mixins as api_mixins
 from api.utils import PaginatedRelationField, RelationPaginator
 from forums.models import ForumGroup, ForumPost, ForumThread, ForumTopic, ForumThreadSubscription, ForumReport
-from rest_framework import serializers
-from rest_framework.serializers import ModelSerializer
 from users.models import User
 
 
