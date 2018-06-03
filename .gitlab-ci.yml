@@ -11,13 +11,14 @@ variables:
   PIP_CACHE_DIR: "$CI_PROJECT_DIR/.cache"
   CONTAINER_COMMIT_IMAGE: $CI_REGISTRY_IMAGE:$CI_COMMIT_REF_NAME
   CONTAINER_RELEASE_IMAGE: $CI_REGISTRY_IMAGE:latest
-  DB_NAME: postgres
-  DB_USER: postgres
-  DB_HOST: postgres
-  DB_PASS: postgres
-  DB_PORT: 5432
+  ALLOWED_HOSTS: "*"
+  DATABASE_URL: "postgres://postgres:postgres@postgres:5432/postgres"
   DEBUG: "True"
+  PRODUCTION: "False"
   REDIS_URL: "redis://redis:6379"
+  SECRET_KEY: "jumpcut"
+  TESTING_DATABASE_URL: "postgres://postgres:postgres@postgres:5432/postgres"
+  TESTING_WSGI_APPLICATION: "jumpcut.testing_wsgi.application"
 cache:
   paths:
     - .cache/

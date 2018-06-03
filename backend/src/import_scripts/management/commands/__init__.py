@@ -10,10 +10,10 @@ from django.core.management.base import BaseCommand
 class MySQLCommand(BaseCommand):
 
     DB_CONFIG = {
-        'user': config('MYSQL_DB_USER'),
-        'password': config('MYSQL_DB_PASSWORD'),
-        'db': config('MYSQL_DB'),
-        'host': config('MYSQL_HOST'),
+        'user': config('MYSQL_DB_USER', default=''),
+        'password': config('MYSQL_DB_PASSWORD', default=''),
+        'db': config('MYSQL_DB', default=''),
+        'host': config('MYSQL_HOST', default=''),
         'cursorclass': SSDictCursor,
         'charset': 'latin1',
     }
