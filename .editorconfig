@@ -12,16 +12,12 @@ insert_final_newline = true
 charset = utf-8
 max-line-length = 120
 
-
-# isort
+# python
 [*.py]
 indent_style = space
 indent_size = 4
-skip = .eggs,.tox,docs,env,venv
+skip = .eggs,.tox,docs,.env,venv
 skip_glob = **/migrations/*
-not_skip = __init__.py
-atomic = true
-multi_line_output = 5
 line_length = 120
 known_future_library = future,six
 known_standard_library = collections,copy,distutils,functools,inspect,io,json,logging,operator,os,pkg_resources,re,setuptools,sys,types,warnings
