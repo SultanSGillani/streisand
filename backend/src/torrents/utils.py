@@ -2,7 +2,7 @@
 
 from binascii import b2a_base64, a2b_hex
 from hashlib import sha3_256
-from uuid import UUID
+from uuid import UUID, uuid4
 
 from rest_framework.parsers import FileUploadParser, DataAndFiles
 from rest_framework.exceptions import ParseError
@@ -10,18 +10,18 @@ from rest_framework.exceptions import ParseError
 from tracker.bencoding import bdecode, BencodeError
 
 
-def generate_unique_download_key(info_hash, user_download_key):
+def generate_unique_download_key(torrent_info_hash, user_download_key):
 
-    if isinstance(info_hash, str):
-        info_hash = a2b_hex(info_hash)
+    if isinstance(torrent_info_hash, str):
+        torrent_info_hash = a2b_hex(torrent_info_hash)
 
     if isinstance(user_download_key, UUID):
         user_download_key = user_download_key.bytes
     elif isinstance(user_download_key, str):
-        user_download_key = a2b_hex(user_download_key)
+        user_download_key = a2b_hex(user_download_key.replace('-', ''))
 
     m = sha3_256()
-    m.update(info_hash)
+    m.update(torrent_info_hash)
     m.update(user_download_key)
 
     return m.hexdigest()
@@ -32,7 +32,8 @@ class TorrentFileUploadParser(FileUploadParser):
     Is this a valid torrent file?  If so, let's parse it into a data dictionary.
     """
 
-    media_type = 'application/x-bittorrent'
+    def get_filename(self, *args, **kwargs):
+        return uuid4().hex
 
     def parse(self, stream, media_type=None, parser_context=None):
         """
@@ -50,17 +51,13 @@ class TorrentFileUploadParser(FileUploadParser):
     @staticmethod
     def parse_torrent_file(torrent_file):
 
-        if not torrent_file.name.endswith('.torrent'):
-            raise ParseError("The file extension is not .torrent")
-
         torrent_file_contents = torrent_file.read()
 
         try:
             metainfo_dict = bdecode(torrent_file_contents)
-        except BencodeError:
+            assert isinstance(metainfo_dict, dict)
+        except (BencodeError, AssertionError):
             raise ParseError("The file is not a valid bencoded torrent file")
-
-        assert isinstance(metainfo_dict, dict)
 
         return metainfo_dict
 
@@ -97,7 +94,8 @@ class TorrentFileUploadParser(FileUploadParser):
 
         return data
 
-    def _get_file_list(self, metainfo_files):
+    @staticmethod
+    def _get_file_list(metainfo_files):
 
         try:
 
@@ -114,7 +112,8 @@ class TorrentFileUploadParser(FileUploadParser):
 
         return file_list
 
-    def _get_file_dict(self, metainfo_info):
+    @staticmethod
+    def _get_file_dict(metainfo_info):
 
         try:
 

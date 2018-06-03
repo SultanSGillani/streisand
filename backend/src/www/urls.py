@@ -11,6 +11,7 @@ from django.views.generic import TemplateView
 from api.torrents.views import TorrentUploadViewSet
 from torrents.views import TorrentDownloadView
 
+
 urlpatterns = [
     # API
     url(r'^api/v1/', include('api.urls')),
