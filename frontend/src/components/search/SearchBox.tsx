@@ -54,6 +54,7 @@ class SearchBoxComponent extends React.Component<CombinedProps, State> {
                                 data-toggle="dropdown"
                                 aria-haspopup="true"
                                 aria-expanded={this.state.dropdownOpen}
+                                onFocus={() => this.setState({ dropdownOpen: true })}
                                 value={this.state.searchText} onChange={(event) => this._onChange(event.target.value)} />
                         </div>
                     </Target>

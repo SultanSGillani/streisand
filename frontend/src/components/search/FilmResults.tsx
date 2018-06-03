@@ -1,6 +1,7 @@
 import * as React from 'react';
 import { connect } from 'react-redux';
 import { DropdownItem } from 'reactstrap';
+import { LinkContainer } from 'react-router-bootstrap';
 
 import Store from '../../store';
 import IFilm from '../../models/IFilm';
@@ -34,7 +35,13 @@ class FilmResultsComponent extends React.Component<CombinedProps> {
     public render() {
         const spinner = this.props.status.loading ? <i className="ml-2 fas fa-spinner fa-spin"></i> : null;
         const items = this.props.films.map((film: IFilm) => {
-            return <DropdownItem key={film.id} style={{ overflowX: 'hidden', textOverflow: 'ellipsis' }}>{film.title}</DropdownItem>;
+            return (
+                <LinkContainer key={film.id} to={'/film/' + film.id}>
+                    <DropdownItem title={film.title} style={{ overflowX: 'hidden', textOverflow: 'ellipsis' }} >
+                        {film.title}
+                    </DropdownItem>
+                </LinkContainer>
+            );
         });
         return (
             <>
