@@ -13,6 +13,21 @@ A private BitTorrent tracker written with Python, Django, Redis, and React.
   [Mac](https://docs.docker.com/docker-for-mac/install/),
   [Windows](https://store.docker.com/editions/community/docker-ce-desktop-windows),
   [compose](https://docs.docker.com/compose/install/))
+  
+
+
+### Environment Files:
+
+* Before you get started make sure and set your environment variables. There is an .env.template file in the root of
+the project. First copy the file as .env 
+
+``cp .env.template .env`` and then set and save these. 
+
+ Once that is complete you can build the project. For the production server, to test production, or if you are not using docker,
+ there is an .env.template file in the backend folder that should be updated as well.
+ 
+## Building the project
+
 - Run `docker-compose build` to build the images
 - Run `docker-compose run --rm api invoke setup-db` to create the db tables and load in some development data
 - Run `docker-compose run --rm api python src/manage.py passwd admin` to set yourself a password for the admin user
