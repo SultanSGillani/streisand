@@ -75,6 +75,7 @@ release_develop:
     - cd $FRONTEND_DIR
     - docker build --pull -t $CONTAINER_COMMIT_IMAGE -f $PROD_DOCKER_FILE .
     - cd $BACKEND_DIR
+    - cp .env.template .env
     - docker build --pull -t $CONTAINER_COMMIT_IMAGE -f $PROD_DOCKER_FILE .
     - docker push $CI_REGISTRY_IMAGE:$CI_COMMIT_REF_NAME
     - docker tag $CONTAINER_COMMIT_IMAGE $CONTAINER_RELEASE_IMAGE
