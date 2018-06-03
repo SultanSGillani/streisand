@@ -23,12 +23,13 @@ AUTH_USER_MODEL = 'users.User'
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.dirname(__file__)))
 
 TESTING = sys.argv[1:2] == ['test']
-# Build paths inside the project like this: os.path.join(BASE_DIR, ...)
+
 SECRET_KEY = config('SECRET_KEY')
 
 DEBUG = config('DEBUG', cast=bool)
 PRODUCTION = config('PRODUCTION', cast=bool)
-DJANGO_APPS = (
+
+DJANGO_APPS = [
     'django.contrib.admin',
     'django.contrib.admindocs',
     'django.contrib.auth',
@@ -36,23 +37,24 @@ DJANGO_APPS = (
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-)
+]
 
-THIRD_PARTY_APPS = (
+THIRD_PARTY_APPS = [
+    'corsheaders',
     'debug_toolbar',
     'decouple',
     'django_extensions',
-    'django_su',
-    'rest_framework',
-    'corsheaders',
     'django_filters',
-    'rest_framework_filters',
+    'django_su',
     'docs',
     'drf_yasg',
     'knox',
-)
+    'rest_framework',
+    'rest_framework_filters',
+    'suit.apps.DjangoSuitConfig',
+]
 
-LOCAL_APPS = (
+LOCAL_APPS = [
     'comments',
     'films',
     'forums',
@@ -72,14 +74,14 @@ LOCAL_APPS = (
     'users',
     'wiki',
     'www',
-)
+]
 
-INSTALLED_APPS = DJANGO_APPS + THIRD_PARTY_APPS + LOCAL_APPS
+INSTALLED_APPS = THIRD_PARTY_APPS + DJANGO_APPS + LOCAL_APPS
 
 ALLOWED_HOSTS = config('ALLOWED_HOSTS', cast=lambda v: [s.strip() for s in v.split(',')])
 
 if DEBUG and not TESTING:
-    INSTALLED_APPS = DJANGO_APPS + THIRD_PARTY_APPS + LOCAL_APPS + ('bandit',)
+    INSTALLED_APPS.append('bandit')
     EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
     BANDIT_EMAIL = config('BANDIT_EMAIL', '')
 
