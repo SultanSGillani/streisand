@@ -21,10 +21,10 @@ sudo cp ./backend/config/jumpcut.conf /etc/nginx/conf.d/
 sudo cp ./frontend/config/frontend.conf /etc/nginx/conf.d/
 
 # Build production
-docker-compose -f docker-compose.production.yml -f docker-compose.production.yml build
+sudo docker-compose -f docker-compose.production.yml -f docker-compose.production.yml build
 
 # Start Production
-docker-compose -f docker-compose.production.yml -f docker-compose.production.yml up -d --force-recreate
+sudo docker-compose -f docker-compose.production.yml -f docker-compose.production.yml up -d --force-recreate
 
 # Migrations
 ./prod.sh m makemigrations
