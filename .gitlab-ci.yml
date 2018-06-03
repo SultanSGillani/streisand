@@ -59,8 +59,7 @@ release_develop:
       - docker version
       - "docker login -u gitlab-ci-token -p $CI_BUILD_TOKEN $CI_REGISTRY"
   script:
-    - ls -lA
-    - whoami
+    - cp backend/.env .env
     - echo "$CONTAINER_COMMIT_IMAGE"
     - cd $FRONTEND_DIR
     - docker build --pull -t $CONTAINER_COMMIT_IMAGE -f $PROD_DOCKER_FILE .
