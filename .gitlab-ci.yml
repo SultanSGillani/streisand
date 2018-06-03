@@ -11,13 +11,14 @@ variables:
   PIP_CACHE_DIR: "$CI_PROJECT_DIR/.cache"
   CONTAINER_COMMIT_IMAGE: $CI_REGISTRY_IMAGE:$CI_COMMIT_REF_NAME
   CONTAINER_RELEASE_IMAGE: $CI_REGISTRY_IMAGE:latest
-  DB_NAME: postgres
-  DB_USER: postgres
-  DB_HOST: postgres
-  DB_PASS: postgres
-  DB_PORT: 5432
+  ALLOWED_HOSTS: "*"
+  DATABASE_URL: "postgres://postgres:postgres@postgres:5432/postgres"
   DEBUG: "True"
+  PRODUCTION: "False"
   REDIS_URL: "redis://redis:6379"
+  SECRET_KEY: "jumpcut"
+  TESTING_DATABASE_URL: "postgres://postgres:postgres@postgres:5432/postgres"
+  TESTING_WSGI_APPLICATION: "jumpcut.testing_wsgi.application"
 cache:
   paths:
     - .cache/
@@ -33,7 +34,7 @@ python_linter:
   stage: test
   script:
     - invoke run-python-linter
-  allow_failure: true # for now
+  allow_failure: false
 python_tests:
   stage: test
   script:
@@ -43,7 +44,7 @@ python_tests:
     - invoke foundation
     - invoke fixtures
     - invoke run-python-tests --coverage
-  allow_failure: false # for now
+  allow_failure: false
 
 release_develop:
   image: tmaier/docker-compose:latest
@@ -52,6 +53,17 @@ release_develop:
     FRONTEND_DIR: /builds/jumpcut/jumpcut/frontend
     BACKEND_DIR: /builds/jumpcut/jumpcut/backend
     PROD_DOCKER_FILE: production/Dockerfile
+    CONTAINER_COMMIT_IMAGE: $CI_REGISTRY_IMAGE:$CI_COMMIT_REF_NAME
+    CONTAINER_RELEASE_IMAGE: $CI_REGISTRY_IMAGE:latest
+    ALLOWED_HOSTS: "*"
+    DATABASE_URL: "postgres://postgres:postgres@postgres:5432/postgres"
+    DEBUG: "True"
+    PRODUCTION: "False"
+    REDIS_URL: "redis://redis:6379"
+    SECRET_KEY: "jumpcut"
+    TESTING_DATABASE_URL: "postgres://postgres:postgres@postgres:5432/postgres"
+    TESTING_WSGI_APPLICATION: "jumpcut.testing_wsgi.application"
+
   stage: release
   cache: {}
   before_script:

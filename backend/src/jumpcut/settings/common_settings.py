@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 """
 Django settings for jumpcut project.
 
@@ -11,10 +12,12 @@ https://docs.djangoproject.com/en/dev/ref/settings/
 import os
 import sys
 from urllib.parse import urljoin
-from decouple import config
+
 import dj_database_url
+from decouple import config
 
 from django.utils.timezone import timedelta
+
 
 AUTH_USER_MODEL = 'users.User'
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.dirname(__file__)))
@@ -26,7 +29,6 @@ SECRET_KEY = config('SECRET_KEY')
 DEBUG = config('DEBUG', cast=bool)
 PRODUCTION = config('PRODUCTION', cast=bool)
 DJANGO_APPS = (
-    'www.apps.SuitConfig',  # For admin site template
     'django.contrib.admin',
     'django.contrib.admindocs',
     'django.contrib.auth',
@@ -81,13 +83,13 @@ if DEBUG and not TESTING:
     EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
     BANDIT_EMAIL = config('BANDIT_EMAIL', '')
 
-EMAIL_USE_TLS = config('EMAIL_USE_TLS', cast=bool)
-EMAIL_PORT = config('EMAIL_PORT', cast=int)
-EMAIL_HOST = config('EMAIL_HOST')
-EMAIL_HOST_USER = config('EMAIL_HOST_USER')
-EMAIL_HOST_PASSWORD = config('EMAIL_HOST_PASSWORD')
-DEFAULT_FROM_EMAIL = config('DEFAULT_FROM_EMAIL')
-DEFAULT_REPLY_TO_EMAIL = config('DEFAULT_REPLY_TO_EMAIL')
+EMAIL_USE_TLS = config('EMAIL_USE_TLS', cast=bool, default=True)
+EMAIL_PORT = config('EMAIL_PORT', cast=int, default=587)
+EMAIL_HOST = config('EMAIL_HOST', default='')
+EMAIL_HOST_USER = config('EMAIL_HOST_USER', default='')
+EMAIL_HOST_PASSWORD = config('EMAIL_HOST_PASSWORD', default='')
+DEFAULT_FROM_EMAIL = config('DEFAULT_FROM_EMAIL', default='')
+DEFAULT_REPLY_TO_EMAIL = config('DEFAULT_REPLY_TO_EMAIL', default='')
 
 LANGUAGE_CODE = 'en-us'
 USE_I18N = True
@@ -102,7 +104,7 @@ DATABASES = {
         default=config('DATABASE_URL'))
 }
 
-CELERY_ALWAYS_EAGER = config('CELERY_ALWAYS_EAGER', cast=bool)
+CELERY_ALWAYS_EAGER = config('CELERY_ALWAYS_EAGER', cast=bool, default=True)
 CELERY_IGNORE_RESULT = True
 CELERY_TASK_SERIALIZER = 'pickle'
 CELERY_ACCEPT_CONTENT = ['pickle']
@@ -123,8 +125,8 @@ if PRODUCTION:
     DATABASES['default']['CONN_MAX_AGE'] = None
 
 SITE_ID = 1
-SITE_NAME = config('SITE_NAME')
-SITE_URL = config('SITE_URL')
-TRACKER_URL = config('TRACKER_URL')
+SITE_NAME = config('SITE_NAME', default='jumpcut')
+SITE_URL = config('SITE_URL', default='http://localhost:8000/')
+TRACKER_URL = config('TRACKER_URL', default='http://localhost:7070/')
 TRACKER_ANNOUNCE_INTERVAL = timedelta(minutes=40)
 TRACKER_ANNOUNCE_URL_TEMPLATE = urljoin(TRACKER_URL, '{announce_key}/announce')

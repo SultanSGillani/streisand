@@ -1,7 +1,10 @@
 # -*- coding:utf-8 -*-
-from django.test import TestCase
-from imdb.models import FilmIMDb
+
 from model_mommy import mommy
+
+from django.test import TestCase
+
+from imdb.models import FilmIMDb
 
 
 class FilmIMDbTestMommy(TestCase):

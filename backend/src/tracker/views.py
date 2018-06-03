@@ -9,6 +9,7 @@ from django.views.generic import View
 
 from users.models import User
 from www.tasks import handle_announce
+
 from .bencoding import bencode
 from .models import Peer, Swarm, TorrentClient
 from .utils import unquote_to_hex

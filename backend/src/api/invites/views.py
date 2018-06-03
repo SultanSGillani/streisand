@@ -1,8 +1,11 @@
+# -*- coding: utf-8 -*-
+
 from rest_framework.viewsets import ModelViewSet
 from rest_framework.permissions import IsAuthenticated
-from .serializers import InviteSerializer
 
 from invites.models import Invite
+
+from .serializers import InviteSerializer
 
 
 class InviteViewSet(ModelViewSet):

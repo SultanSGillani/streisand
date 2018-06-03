@@ -1,15 +1,16 @@
+# -*- coding: utf-8 -*-
+
 from django.db.models import OuterRef, Subquery
 from django.db.models import Q
+
 from rest_framework import mixins
-from rest_framework.filters import (
-    SearchFilter,
-    OrderingFilter,
-)
+from rest_framework.filters import SearchFilter, OrderingFilter
 from rest_framework.permissions import IsAuthenticated, IsAdminUser
 from rest_framework.viewsets import ModelViewSet, GenericViewSet
 
 from api.permissions import IsOwnerOrReadOnly
 from forums.models import ForumGroup, ForumTopic, ForumThread, ForumPost, ForumThreadSubscription, ForumReport
+
 from .serializers import (
     ForumIndexSerializer,
     ForumGroupItemSerializer,
