@@ -67,7 +67,7 @@ class ForumPostComponent extends React.Component<CombinedProps, State> {
 
         if (this.state.editMode) {
             return (
-                <Card color="primary" className="mb-2">
+                <Card className="border-primary mb-2">
                     <CardHeader>
                         <UserLink user={author} /> <TimeElapsed date={post.createdAt} />
                     </CardHeader>
@@ -86,7 +86,7 @@ class ForumPostComponent extends React.Component<CombinedProps, State> {
             );
         }
 
-        const avatar = this.props.screenSize >= ScreenSize.medium ? <Avatar /> : undefined;
+        const avatar = this.props.screenSize >= ScreenSize.medium ? <Avatar user={author} /> : undefined;
         return (
             <Card className="mb-2">
                 <CardHeader>
@@ -95,9 +95,9 @@ class ForumPostComponent extends React.Component<CombinedProps, State> {
                             <UserLink user={author} /> <TimeElapsed date={post.createdAt} />
                         </div>
                         <div className="col-auto ml-auto">
-                            <ButtonGroup size="sm">
+                            <ButtonGroup color="default" size="sm">
                                 <Button onClick={onEdit}>
-                                    <i className="fas fa-inverse fa-pencil-alt fa-lg" />
+                                    <i className="fas fa-pencil-alt fa-lg" />
                                 </Button>
                                 <Button color="danger" onClick={onDelete}>
                                     <i className="fas fa-trash fa-lg" />

@@ -33,7 +33,7 @@ class ForumThreadCreatorComponent extends React.Component<CombinedProps, State> 
     public render() {
         const createThread = this._createThread.bind(this);
         return (
-            <Card color="primary" className="mb-3">
+            <Card className="border-primary mb-3">
                 <CardBody>
                     <CardTitle>Create new forum thread</CardTitle>
                     <Form onKeyPress={createThread} autoComplete="off">

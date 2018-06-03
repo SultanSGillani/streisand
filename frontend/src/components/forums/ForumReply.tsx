@@ -37,7 +37,7 @@ class ForumReplyComponent extends React.Component<CombinedProps> {
             });
         };
         return (
-            <Card color="primary" className="mb-3">
+            <Card className="border-primary mb-3">
                 <CardBody>
                     <CardTitle>Post your reply</CardTitle>
                     <Editor content={''} size="small" receiveHandle={onHandle} />

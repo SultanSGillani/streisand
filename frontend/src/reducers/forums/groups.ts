@@ -6,10 +6,10 @@ import IForumGroup from '../../models/forums/IForumGroup';
 import { IForumGroupData } from '../../models/forums/IForumData';
 import { getLoadingStatusReducer } from '../utilities/loadingStatus';
 
-function addGroups(groups: IForumGroup[]) {
+function addGroups(current: ItemMap, groups: IForumGroup[]): ItemMap {
     let map: ItemMap = {};
     for (const item of groups) {
-        map[item.id] = item;
+        map[item.id] = objectAssign({}, current[item.id], item);
     }
     return map;
 }
@@ -33,7 +33,7 @@ function byId(state: ItemMap = {}, action: Action): ItemMap {
     switch (action.type) {
         case 'RECEIVED_FORUM_GROUPS':
         case 'RECEIVED_FORUM_TOPIC':
-            return combineMap(state, addGroups(action.props.data.groups));
+            return combineMap(state, addGroups(state, action.props.data.groups));
         case 'RECEIVED_FORUM_TOPIC_DELETION':
             if (action.props.group) {
                 return combineMap(state, { [action.props.group]: removeTopic(state[action.props.group], action.props.topic) });

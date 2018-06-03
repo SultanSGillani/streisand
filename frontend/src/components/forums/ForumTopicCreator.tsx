@@ -42,7 +42,7 @@ class ForumTopicCreatorComponent extends React.Component<CombinedProps, State> {
             return <option value={group.id} key={group.id}>{group.title}</option>;
         });
         return (
-            <Card color="primary" className="mb-3">
+            <Card className="border-primary mb-3">
                 <CardBody>
                     <CardTitle>Create new forum topic</CardTitle>
                     <Form onKeyPress={createTopic} autoComplete="off">

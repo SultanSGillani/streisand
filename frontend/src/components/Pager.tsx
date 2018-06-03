@@ -20,8 +20,8 @@ type ConnectedState = {
 type CombinedProps = Props & ConnectedState;
 class PagerComponent extends React.Component<CombinedProps> {
     public render() {
-        const { uri, page, total, pageSize } = this.props;
-        const pageCount = Math.ceil(total / pageSize);
+        const { uri, page, total = 0, pageSize = 0 } = this.props;
+        const pageCount = Math.ceil(total / (pageSize || 1));
         if (pageCount <= 1) {
             // No need to render paging controls if there is only one page
             return null;
