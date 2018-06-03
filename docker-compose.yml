@@ -19,11 +19,13 @@ services:
   frontend:
     build: frontend
     container_name: frontend_dev
-    command: gulp dev
+    command: npm run dev
     environment:
       NODE_ENV: development
     ports:
     - 8001:3000
+    volumes:                                                                                           
+    - ./frontend/src:/react/src               
   postgres:
     image: postgres:latest
     container_name: db_dev
