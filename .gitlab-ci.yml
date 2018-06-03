@@ -37,7 +37,7 @@ python_linter:
 python_tests:
   stage: test
   variables:
-    SECRET_KEY: jumpcut
+    .env: .env.template
   script:
     # Test for missing migrations
     - src/manage.py makemigrations --check --dry-run || (echo "Missing migrations"; false)
