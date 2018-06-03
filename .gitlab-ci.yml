@@ -11,13 +11,17 @@ variables:
   PIP_CACHE_DIR: "$CI_PROJECT_DIR/.cache"
   CONTAINER_COMMIT_IMAGE: $CI_REGISTRY_IMAGE:$CI_COMMIT_REF_NAME
   CONTAINER_RELEASE_IMAGE: $CI_REGISTRY_IMAGE:latest
+  ALLOWED_HOSTS: "*"
   DB_NAME: postgres
   DB_USER: postgres
   DB_HOST: postgres
   DB_PASS: postgres
   DB_PORT: 5432
   DEBUG: "True"
+  PRODUCTION: "False"
   REDIS_URL: "redis://redis:6379"
+  SECRET_KEY: "jumpcut"
+  TESTING_DATABASE_URL: "postgres://postgres:postgres@postgres:5432/postgres"
 cache:
   paths:
     - .cache/
@@ -36,8 +40,6 @@ python_linter:
   allow_failure: false
 python_tests:
   stage: test
-  variables:
-    .env: .env.template
   script:
     # Test for missing migrations
     - src/manage.py makemigrations --check --dry-run || (echo "Missing migrations"; false)
