@@ -252,6 +252,8 @@ if 'test' in sys.argv:
         'django.contrib.auth.hashers.MD5PasswordHasher',
     ]
 
+    REST_KNOX['SECURE_HASH_ALGORITHM'] = 'cryptography.hazmat.primitives.hashes.MD5'
+
     CACHES = {
         'default': {
             'BACKEND': 'django.core.cache.backends.locmem.LocMemCache',
