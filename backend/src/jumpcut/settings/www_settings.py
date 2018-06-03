@@ -120,7 +120,8 @@ REDOC_SETTINGS = {
 }
 
 SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
-
+SESSION_COOKIE_SECURE = config('SESSION_COOKIE_SECURE', cast=bool, default=True)
+CSRF_COOKIE_SECURE = config('CSRF_COOKIE_SECURE', cast=bool, default=True)
 
 # if os.getenv('DJANGO_ENV') == 'PROD':
 #     CORS_ORIGIN_WHITELIST = [

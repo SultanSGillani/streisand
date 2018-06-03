@@ -126,7 +126,6 @@ CACHES = {
 if PRODUCTION:
     DATABASES['default']['CONN_MAX_AGE'] = None
 
-SITE_ID = 1
 SITE_NAME = config('SITE_NAME', default='jumpcut')
 SITE_URL = config('SITE_URL', default='http://localhost:8000/')
 TRACKER_URL = config('TRACKER_URL', default='http://localhost:7070/')
