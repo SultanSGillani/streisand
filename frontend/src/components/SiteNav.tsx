@@ -4,6 +4,7 @@ import { LinkContainer } from 'react-router-bootstrap';
 import { Collapse, Navbar, NavbarToggler, Nav, NavItem, NavbarBrand, NavLink } from 'reactstrap';
 
 import Store from '../store';
+import SearchBox from './search/SearchBox';
 import CurrentUserLink from './users/CurrentUserLink';
 
 export type Props = {};
@@ -13,9 +14,16 @@ type State = {
 
 type ConnectedState = {
     isAuthenticated: boolean;
+    location: string;
 };
 
 type ConnectedDispatch = {};
+
+const excludeSearch = [
+    '/themes',
+    '/changepassword',
+    '/film/search'
+];
 
 type CombinedProps = Props & ConnectedState & ConnectedDispatch;
 class SiteNavComponent extends React.Component<CombinedProps, State> {
@@ -29,20 +37,24 @@ class SiteNavComponent extends React.Component<CombinedProps, State> {
 
     public render() {
         const isAuthenticated = this.props.isAuthenticated;
+        const includeSearch = isAuthenticated && excludeSearch.indexOf(this.props.location) < 0;
         const toggle = () => { this.setState({ isOpen: !this.state.isOpen }); };
         return (
-            <Navbar color="primary" dark expand="lg">
-                <div className="container">
-                    <LinkContainer to="/"><NavbarBrand>Phoenix</NavbarBrand></LinkContainer>
-                    <NavbarToggler onClick={toggle} />
-                    <Collapse isOpen={this.state.isOpen} navbar>
-                        {isAuthenticated && this._getLinks()}
-                        <Nav className="ml-auto" navbar>
-                            <CurrentUserLink />
-                        </Nav>
-                    </Collapse>
-                </div>
-            </Navbar>
+            <div className="mb-2">
+                <Navbar color="primary" dark expand="sm">
+                    <div className="container">
+                        <LinkContainer to="/"><NavbarBrand>Phoenix</NavbarBrand></LinkContainer>
+                        <NavbarToggler onClick={toggle} />
+                        <Collapse isOpen={this.state.isOpen} navbar>
+                            {isAuthenticated && this._getLinks()}
+                            <Nav className="ml-auto" navbar>
+                                <CurrentUserLink />
+                            </Nav>
+                        </Collapse>
+                    </div>
+                </Navbar>
+                {includeSearch && <SearchBox />}
+            </div>
         );
     }
 
@@ -59,7 +71,8 @@ class SiteNavComponent extends React.Component<CombinedProps, State> {
 }
 
 const mapStateToProps = (state: Store.All): ConnectedState => ({
-    isAuthenticated: state.sealed.auth.isAuthenticated
+    isAuthenticated: state.sealed.auth.isAuthenticated,
+    location: state.routing.locationBeforeTransitions.pathname
 });
 
 const SiteNav: React.ComponentClass<Props> =

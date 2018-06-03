@@ -3,7 +3,7 @@ import { replace } from 'react-router-redux';
 
 import guid from '../utilities/guid';
 import IMessage from '../models/IMessage';
-import { received as loggedout } from './auth/LogoutAction';
+import { loggedOut } from './auth/LoggedOutAction';
 import { IUnkownError } from '../models/base/IError';
 
 type MessageAction =
@@ -28,7 +28,7 @@ export function showError(message: string): MessageAction {
 
 export function* handleError(error: IUnkownError, prefix?: string) {
     if (error.status === 401) {
-        yield loggedout();
+        yield loggedOut();
         yield put(showError('Authentication expired'));
         yield put(replace('/login'));
     } else {

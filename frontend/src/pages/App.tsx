@@ -23,7 +23,7 @@ class AppComponent extends React.Component<CombinedProps> {
         return (
             <div>
                 <SiteNav />
-                <div className="container mt-3">
+                <div className="container">
                     <MessageBanner />
                     {this.props.children}
                 </div>
