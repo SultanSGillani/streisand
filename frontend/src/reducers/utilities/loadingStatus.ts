@@ -6,7 +6,7 @@ import ILoadingStatus from '../../models/base/ILoadingStatus';
 // WARNING: We are abadoning type safety here, so be very careful.
 // Ideally we wouldn't, but I don't know how to do this otherwise.
 export function getLoadingStatusReducer(id: string): Reducer<ILoadingStatus> {
-    const fetchingType = `FETCHING_${id}`;
+    const fetchingType = `REQUEST_${id}`;
     const receivedType = `RECEIVED_${id}`;
     const failedType = `FAILED_${id}`;
     const invalidateType = `INVALIDATE_${id}`;

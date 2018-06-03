@@ -7,6 +7,19 @@ import IFilm from '../../models/IFilm';
 import { getNodeItems } from '../../utilities/mapping';
 import ILoadingStatus, { defaultStatus } from '../../models/base/ILoadingStatus';
 
+export const hasFilmResults = (state: Store.All): boolean => {
+    const page = state.sealed.film.search.pages[1];
+    if (page && page.status.loading) {
+        return true;
+    }
+    const films = getNodeItems({
+        page: 1,
+        byId: state.sealed.film.byId,
+        pages: state.sealed.film.search.pages
+    });
+    return films.length > 0;
+};
+
 export type Props = {};
 
 type ConnectedState = {
@@ -20,10 +33,6 @@ type CombinedProps = Props & ConnectedState & ConnectedDispatch;
 class FilmResultsComponent extends React.Component<CombinedProps> {
     public render() {
         const spinner = this.props.status.loading ? <i className="ml-2 fas fa-spinner fa-spin"></i> : null;
-        if (spinner) {
-            // The spinner is never seen for some reason
-            console.log('spinner');
-        }
         const items = this.props.films.map((film: IFilm) => {
             return <DropdownItem key={film.id} style={{ overflowX: 'hidden', textOverflow: 'ellipsis' }}>{film.title}</DropdownItem>;
         });

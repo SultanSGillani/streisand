@@ -14,9 +14,16 @@ type State = {
 
 type ConnectedState = {
     isAuthenticated: boolean;
+    location: string;
 };
 
 type ConnectedDispatch = {};
+
+const excludeSearch = [
+    '/themes',
+    '/changepassword',
+    '/film/search'
+];
 
 type CombinedProps = Props & ConnectedState & ConnectedDispatch;
 class SiteNavComponent extends React.Component<CombinedProps, State> {
@@ -30,6 +37,7 @@ class SiteNavComponent extends React.Component<CombinedProps, State> {
 
     public render() {
         const isAuthenticated = this.props.isAuthenticated;
+        const includeSearch = isAuthenticated && excludeSearch.indexOf(this.props.location) < 0;
         const toggle = () => { this.setState({ isOpen: !this.state.isOpen }); };
         return (
             <div className="mb-2">
@@ -45,7 +53,7 @@ class SiteNavComponent extends React.Component<CombinedProps, State> {
                         </Collapse>
                     </div>
                 </Navbar>
-                {isAuthenticated && <SearchBox />}
+                {includeSearch && <SearchBox />}
             </div>
         );
     }
@@ -63,7 +71,8 @@ class SiteNavComponent extends React.Component<CombinedProps, State> {
 }
 
 const mapStateToProps = (state: Store.All): ConnectedState => ({
-    isAuthenticated: state.sealed.auth.isAuthenticated
+    isAuthenticated: state.sealed.auth.isAuthenticated,
+    location: state.routing.locationBeforeTransitions.pathname
 });
 
 const SiteNav: React.ComponentClass<Props> =
