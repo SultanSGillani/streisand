@@ -18,7 +18,7 @@ variables:
   REDIS_URL: "redis://redis:6379"
   SECRET_KEY: "jumpcut"
   TESTING_DATABASE_URL: "postgres://postgres:postgres@postgres:5432/postgres"
-  TESTING_WSGI_APPLICATION=jumpcu.testing_wsgi.application
+  TESTING_WSGI_APPLICATION: "jumpcut.testing_wsgi.application"
 cache:
   paths:
     - .cache/
@@ -53,16 +53,17 @@ release_develop:
     FRONTEND_DIR: /builds/jumpcut/jumpcut/frontend
     BACKEND_DIR: /builds/jumpcut/jumpcut/backend
     PROD_DOCKER_FILE: production/Dockerfile
-  	CONTAINER_COMMIT_IMAGE: $CI_REGISTRY_IMAGE:$CI_COMMIT_REF_NAME
-  	CONTAINER_RELEASE_IMAGE: $CI_REGISTRY_IMAGE:latest
-  	ALLOWED_HOSTS: "*"
-  	DATABASE_URL: "postgres://postgres:postgres@postgres:5432/postgres"
-  	DEBUG: "True"
-  	PRODUCTION: "False"
-  	REDIS_URL: "redis://redis:6379"
-  	SECRET_KEY: "jumpcut"
-  	TESTING_DATABASE_URL: "postgres://postgres:postgres@postgres:5432/postgres"
-  	TESTING_WSGI_APPLICATION=jumpcu.testing_wsgi.application
+    CONTAINER_COMMIT_IMAGE: $CI_REGISTRY_IMAGE:$CI_COMMIT_REF_NAME
+    CONTAINER_RELEASE_IMAGE: $CI_REGISTRY_IMAGE:latest
+    ALLOWED_HOSTS: "*"
+    DATABASE_URL: "postgres://postgres:postgres@postgres:5432/postgres"
+    DEBUG: "True"
+    PRODUCTION: "False"
+    REDIS_URL: "redis://redis:6379"
+    SECRET_KEY: "jumpcut"
+    TESTING_DATABASE_URL: "postgres://postgres:postgres@postgres:5432/postgres"
+    TESTING_WSGI_APPLICATION: "jumpcut.testing_wsgi.application"
+
   stage: release
   cache: {}
   before_script:
