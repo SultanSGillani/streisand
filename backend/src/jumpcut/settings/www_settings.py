@@ -6,7 +6,7 @@ from .common_settings import *
 
 
 INTERNAL_IPS = config(
-    'INTERNAL_IPS', cast=lambda v: [s.strip() for s in v.split(',')])
+    'INTERNAL_IPS', cast=lambda v: [s.strip() for s in v.split(',')], default='10.0.0.2')
 
 DEBUG_TOOLBAR_CONFIG = {
     "SHOW_TOOLBAR_CALLBACK": lambda request: True,
@@ -130,10 +130,10 @@ SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
 #     ]
 # else:
 #     DEBUG = True
-CORS_ORIGIN_ALLOW_ALL = config('CORS_ORIGIN_ALLOW_ALL', cast=bool)
+CORS_ORIGIN_ALLOW_ALL = config('CORS_ORIGIN_ALLOW_ALL', cast=bool, default=False)
 
-RT_API_KEY = config('RT_API_KEY')
-OLD_SITE_SECRET_KEY = config('OLD_SITE_HASH')
+RT_API_KEY = config('RT_API_KEY', default='')
+OLD_SITE_SECRET_KEY = config('OLD_SITE_HASH', default='')
 
 AUTHENTICATION_BACKENDS = [
     # Case insensitive authentication, custom permissions
