@@ -95,7 +95,7 @@ class TorrentFile(models.Model):
     def download_url_for_user(self, user):
 
         unique_download_key = generate_unique_download_key(
-            info_hash=self.info_hash,
+            torrent_info_hash=self.info_hash,
             user_download_key=user.torrent_download_key_id,
         )
 

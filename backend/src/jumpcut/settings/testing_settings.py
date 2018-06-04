@@ -1,4 +1,7 @@
-from .common_settings import *  # noqa
+# -*- coding: utf-8 -*-
+
+from .www_settings import *
+
 
 WSGI_APPLICATION = config('TESTING_WSGI_APPLICATION'),
 FIXTURE_DIRS = ('/tests/fixtures/',)
@@ -18,15 +21,8 @@ if DEBUG:
 DATABASES = {
     'default': dj_database_url.config(
         default=config('TESTING_DATABASE_URL'))
-}  # CACHES
-# ------------------------------------------------------------------------------
-# https://docs.djangoproject.com/en/dev/ref/settings/#caches
-# http://django-dynamic-fixture.readthedocs.org/en/latest/data_fixtures.html#custom-field-fixture
-DDF_FIELD_FIXTURES = {
-    'picklefield.fields.PickledObjectField': {
-        'ddf_fixture': lambda: [],
-    },
 }
+
 DDF_FILL_NULLABLE_FIELDS = False
 
 # Make the tests faster by using a fast, insecure hashing algorithm

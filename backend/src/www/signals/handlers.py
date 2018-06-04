@@ -38,6 +38,7 @@ def handle_new_user(**kwargs):
             user.user_class = UserClass.objects.get(name='Administrator')
 
         user.reset_announce_key()
+        user.reset_torrent_download_key()
 
 
 @receiver(models.signals.post_save, sender='www.Feature')
