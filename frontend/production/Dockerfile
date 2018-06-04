@@ -9,9 +9,8 @@ COPY gulpfile.js ./
 RUN npm install
 
 ENV PATH="/react/node_modules/.bin:$PATH"
-EXPOSE 4000
 COPY . .
 
-CMD ["gulp"]
+CMD ["gulp", "deploy"]
 
 
