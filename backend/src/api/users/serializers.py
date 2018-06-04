@@ -10,7 +10,6 @@ from users.models import User, UserIPAddress, UserTorrentDownloadKey
 
 
 class UserTorrentDownloadKeySerializer(serializers.ModelSerializer):
-
     class Meta:
         model = UserTorrentDownloadKey
         fields = ('id', 'user', 'issued_at', 'revoked_at', 'revocation_notes')
@@ -65,7 +64,6 @@ class AdminUserProfileSerializer(AllowFieldLimitingMixin, serializers.ModelSeria
             'username',
             'email',
             'is_superuser',
-            'password',
             'is_staff',
             'is_active',
             'date_joined',
@@ -92,19 +90,6 @@ class AdminUserProfileSerializer(AllowFieldLimitingMixin, serializers.ModelSeria
             'torrents',
             'torrent_download_key',
         )
-
-        extra_kwargs = {
-            'password': {
-                'write_only': True,
-            }
-        }
-
-        validators = [
-            validators.UniqueTogetherValidator(
-                queryset=UserIPAddress.objects.all(),
-                fields=('user', 'ip_address')
-            )
-        ]
 
 
 class OwnedUserProfileSerializer(AdminUserProfileSerializer):

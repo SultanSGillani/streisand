@@ -33,6 +33,7 @@ SchemaView = get_schema_view(
 router = routers.DefaultRouter()
 
 # Users
+router.register(r'^current-user', viewset=users_views.CurrentUserViewSet, base_name='current-user')
 router.register(r'users', viewset=users_views.AdminUserViewSet, base_name='user')
 router.register(r'user-profiles', viewset=users_views.PublicUserProfileViewSet, base_name='user-profile')
 router.register(r'groups', viewset=users_views.GroupViewSet, base_name='group')
@@ -51,7 +52,6 @@ router.register(r'torrents', viewset=torrents_views.TorrentViewSet, base_name='t
 router.register(r'torrent-comments', viewset=torrents_views.TorrentCommentViewSet, base_name='torrent-comment')
 router.register(r'torrent-stats', viewset=torrents_views.TorrentStatViewSet, base_name='torrent-stat')
 router.register(r'torrent-requests', viewset=torrents_views.TorrentRequestViewSet, base_name='torrent-request')
-
 
 # Tracker
 router.register(r'torrent-clients', viewset=tracker_views.TorrentClientViewSet, base_name='torrent-client')
@@ -93,7 +93,6 @@ urlpatterns = [
 
     # Login and user items
     url(r'^login/', users_views.UserLoginView.as_view()),
-    url(r'^current-user/', users_views.CurrentUserView.as_view(), name='current-user'),
     url(r'^change-password/', users_views.ChangePasswordView.as_view()),
     url(r'^register/$', users_views.UserRegisterView.as_view(), name='user-registration'),
 
