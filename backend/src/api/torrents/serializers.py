@@ -1,9 +1,12 @@
 # -*- coding: utf-8 -*-
 
+from django.db.utils import IntegrityError
 from django.template.defaultfilters import filesizeformat
+
 from rest_framework import serializers
 from rest_framework.validators import UniqueTogetherValidator
 
+from api.exceptions import AlreadyExistsException
 from mediainfo.serializers import AdminMediainfoSerializer
 from torrent_requests.models import TorrentRequest
 from torrent_stats.models import TorrentStats
@@ -218,6 +221,12 @@ class TorrentUploadSerializer(serializers.ModelSerializer):
                     'extensions: {blacklist}'.format(blacklist=self.EXT_BLACKLIST)
                 )
         return files
+
+    def save(self, **kwargs):
+        try:
+            return super().save(**kwargs)
+        except IntegrityError:
+            raise AlreadyExistsException("A torrent with this info hash already exists.")
 
     def get_download_url(self, torrent):
         request = self.context['request']
