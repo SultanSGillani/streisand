@@ -2,11 +2,17 @@
 
 from binascii import b2a_base64, a2b_hex
 from hashlib import sha3_256
+from io import BytesIO
 from uuid import UUID, uuid4
 
 from rest_framework.parsers import FileUploadParser, DataAndFiles
 from rest_framework.exceptions import ParseError
 
+from django.conf import settings
+from django.core.files.uploadhandler import FileUploadHandler, StopFutureHandlers
+from django.core.files.uploadedfile import InMemoryUploadedFile
+
+from api.exceptions import TorrentFileTooLargeException
 from tracker.bencoding import bdecode, BencodeError
 
 
@@ -42,10 +48,16 @@ class TorrentFileUploadParser(FileUploadParser):
         `.data` will be the parsed content of the torrent's metainfo dictionary.
         `.files` will be None.
         """
+
+        request = parser_context['request']
+        request.upload_handlers = [TorrentFileUploadHandler()]
+
         data_and_files = super().parse(stream, media_type, parser_context)
+
         torrent_file = data_and_files.files['file']
         metainfo_dict = self.parse_torrent_file(torrent_file)
         data = self.parse_metainfo_dict(metainfo_dict)
+
         return DataAndFiles(data, {})
 
     @staticmethod
@@ -126,3 +138,30 @@ class TorrentFileUploadParser(FileUploadParser):
             raise ParseError("Failed to parse file info!")
 
         return file_dict
+
+
+class TorrentFileUploadHandler(FileUploadHandler):
+
+    def handle_raw_input(self, input_data, meta, content_length, boundary, encoding=None):
+        if content_length > settings.TORRENT_FILE_UPLOAD_MAX_SIZE:
+            raise TorrentFileTooLargeException()
+
+    def new_file(self, *args, **kwargs):
+        super().new_file(*args, **kwargs)
+        self.file = BytesIO()
+        raise StopFutureHandlers()
+
+    def receive_data_chunk(self, raw_data, start):
+        self.file.write(raw_data)
+
+    def file_complete(self, file_size):
+        self.file.seek(0)
+        return InMemoryUploadedFile(
+            file=self.file,
+            field_name=self.field_name,
+            name=self.file_name,
+            content_type=self.content_type,
+            size=file_size,
+            charset=self.charset,
+            content_type_extra=self.content_type_extra
+        )

@@ -74,24 +74,27 @@ REST_FRAMEWORK = {
     'DEFAULT_PERMISSION_CLASSES': [
         'rest_framework.permissions.IsAdminUser',
     ],
-    'DEFAULT_FILTER_BACKENDS':
-    ('django_filters.rest_framework.DjangoFilterBackend', ),
-    'PAGE_SIZE':
-    50,
-    'DEFAULT_PAGINATION_CLASS':
-    'api.pagination.DetailPagination',
-    'DEFAULT_AUTHENTICATION_CLASSES': (
+    'DEFAULT_FILTER_BACKENDS': [
+        'django_filters.rest_framework.DjangoFilterBackend',
+    ],
+    'DEFAULT_AUTHENTICATION_CLASSES': [
         'knox.auth.TokenAuthentication',
         'rest_framework.authentication.SessionAuthentication',
-    ),
-    'DEFAULT_RENDERER_CLASSES': (
+    ],
+    'DEFAULT_THROTTLE_RATES': {
+        'torrent_file_upload': '1/sec',
+    },
+    'DEFAULT_RENDERER_CLASSES': [
         'djangorestframework_camel_case.render.CamelCaseJSONRenderer',
         'rest_framework.renderers.BrowsableAPIRenderer',
-    ),
-    'DEFAULT_PARSER_CLASSES':
-    ('djangorestframework_camel_case.parser.CamelCaseJSONParser', ),
-    'URL_FORMAT_OVERRIDE':
-    None,
+    ],
+    'DEFAULT_PARSER_CLASSES': [
+        'djangorestframework_camel_case.parser.CamelCaseJSONParser'
+    ],
+    'DEFAULT_PAGINATION_CLASS': 'api.pagination.DetailPagination',
+    'PAGE_SIZE': 50,
+    'URL_FORMAT_OVERRIDE': None,
+    'EXCEPTION_HANDLER': 'api.exceptions.custom_exception_handler',
 }
 
 REST_KNOX = {
@@ -182,8 +185,11 @@ STATICFILES_FINDERS = (
     'django.contrib.staticfiles.finders.FileSystemFinder',
     'django.contrib.staticfiles.finders.AppDirectoriesFinder',
 )
+
 MEDIA_URL = '/media/'
 MEDIA_ROOT = os.path.join(BASE_DIR, 'mediafiles')
+
+TORRENT_FILE_UPLOAD_MAX_SIZE = 1024 * 1024 * 5  # 5MB
 
 ITEMS_PER_PAGE = 50
 
