@@ -12,7 +12,7 @@ class Migration(migrations.Migration):
     dependencies = [
         ('imdb', '0001_initial'),
         migrations.swappable_dependency(settings.AUTH_USER_MODEL),
-        ('torrents', '0002_auto_20180604_1322'),
+        ('torrents', '0001_initial'),
         ('media_formats', '0001_initial'),
     ]
 
