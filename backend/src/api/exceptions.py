@@ -16,7 +16,7 @@ def custom_exception_handler(exc, context):
 
     # Add the error code to the response.
     if isinstance(exc, APIException):
-        response.data['error_code'] = exc.detail.code
+        response.data['error_code'] = exc.get_codes()
 
     # If the user was throttled while trying to upload a torrent file, they
     # could be attempting a DOS attack.  Let's log them out! :]
