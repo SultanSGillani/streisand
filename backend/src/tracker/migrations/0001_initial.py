@@ -10,7 +10,7 @@ class Migration(migrations.Migration):
     initial = True
 
     dependencies = [
-        ('torrents', '0002_auto_20180604_1322'),
+        ('torrents', '0001_initial'),
     ]
 
     operations = [
