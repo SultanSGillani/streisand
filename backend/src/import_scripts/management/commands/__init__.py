@@ -9,11 +9,11 @@ from tqdm import tqdm
 
 class MySQLCommand(BaseCommand):
     DB_CONFIG = {
-        'db': config('MYSQLDB_NAME'),
-        'user': config('MYSQL_USER'),
-        'password': config('MYSQL_PWD'),
-        'host': config('MYSQL_HOST'),
-        'port': config('MYSQL_PORT', cast=int),
+        'db': config('MYSQLDB_NAME', default=''),
+        'user': config('MYSQL_USER', default=''),
+        'password': config('MYSQL_PWD', default=''),
+        'host': config('MYSQL_HOST', default=''),
+        'port': config('MYSQL_PORT', cast=int, default=3306),
         'cursorclass': SSDictCursor,
         'charset': 'latin1',
 
