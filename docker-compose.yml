@@ -18,7 +18,7 @@ services:
     - ./backend:/code
   frontend:
     build: frontend
-    container_name: frontend_dev
+    container_name: frontend
     command: npm run dev
     environment:
       NODE_ENV: development
