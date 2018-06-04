@@ -4,6 +4,7 @@ from django_filters import rest_framework as filters
 from rest_framework.permissions import IsAdminUser, IsAuthenticated
 from rest_framework.viewsets import ModelViewSet
 
+from api.throttling import ScopedUserRateThrottle
 from torrent_requests.models import TorrentRequest
 from torrent_stats.models import TorrentStats
 from torrents.models import TorrentFile, TorrentComment
@@ -123,9 +124,11 @@ class TorrentUploadViewSet(ModelViewSet):
     """
     API for uploading torrent files.
     """
-    permission_classes = [IsAdminUser]
+    permission_classes = [IsAuthenticated]
     serializer_class = TorrentUploadSerializer
     parser_classes = [TorrentFileUploadParser]
+    throttle_classes = [ScopedUserRateThrottle]
+    throttle_scope = 'torrent_file_upload'
     queryset = TorrentFile.objects.all()
 
     def get_serializer_context(self):

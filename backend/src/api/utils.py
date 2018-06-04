@@ -1,3 +1,5 @@
+# -*- coding: utf-8 -*-
+
 from rest_framework import pagination
 from rest_framework.fields import Field
 from rest_framework.pagination import _positive_int
