@@ -5,10 +5,12 @@ declare const process: {
 };
 
 const isProd = process.env.NODE_ENV === 'production';
+const baseUrl = isProd ? 'https://api.pinigseu.xyz' : 'http://localhost:8000';
 
 const defaultPageSize = 25;
 export default {
-    apiUrl: isProd ? 'https://api.pinigseu.xyz/api/v1' : 'http://localhost:8000/api/v1',
+    baseUrl: baseUrl,
+    apiUrl: `${baseUrl}/api/v1`,
     pageSize: {
         wikis: defaultPageSize,
         films: defaultPageSize,
