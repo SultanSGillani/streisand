@@ -1,24 +1,20 @@
 # -*- coding: utf-8 -*-
 
 from django.contrib.auth.models import Group
-from django.http import Http404
-
 from django_filters import rest_framework as filters
 from knox.auth import TokenAuthentication
 from knox.models import AuthToken
 from rest_framework import status
-from rest_framework.generics import UpdateAPIView, RetrieveAPIView, CreateAPIView
+from rest_framework.generics import UpdateAPIView, CreateAPIView, RetrieveUpdateAPIView
 from rest_framework.permissions import IsAdminUser, IsAuthenticated, AllowAny
 from rest_framework.response import Response
 from rest_framework.viewsets import ModelViewSet
-
 from api.permissions import IsOwnerOrReadOnly
 from users.models import User
-
 from .filters import UserFilter, PublicUserFilter
 from .serializers import (
     GroupSerializer, AdminUserProfileSerializer, OwnedUserProfileSerializer,
-    PublicUserProfileSerializer, ChangePasswordSerializer, NewUserSerializer, LoginUserSerializer
+    PublicUserProfileSerializer, ChangePasswordSerializer, NewUserSerializer, LoginUserSerializer, CurrentUserSerializer
 )
 
 
@@ -83,30 +79,17 @@ class ChangePasswordView(UpdateAPIView):
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 
-class CurrentUserView(RetrieveAPIView):
-    serializer_class = OwnedUserProfileSerializer
+class CurrentUserView(RetrieveUpdateAPIView):
+    queryset = User.objects.all()
+    serializer_class = CurrentUserSerializer
     permission_classes = [IsOwnerOrReadOnly]
 
-    def get_queryset(self):
-        return User.objects.filter(user=self.request.user)
-
-    def get_object(self, queryset=None):
-        obj = self.request.user
-        return obj
-
-    def retrieve_last(self):
-
+    def get_object(self):
         queryset = self.filter_queryset(self.get_queryset())
-
-        try:
-            obj = queryset.latest('salted_token_id_and_user')
-        except queryset.model.DoesNotExist:
-            raise Http404('No %s matches the given query.' % queryset.model._meta.object_name)
-
+        # make sure to catch 404's below
+        obj = queryset.get(pk=self.request.user.id)
         self.check_object_permissions(self.request, obj)
-
-        serializer = self.get_serializer(self.request.user, obj)
-        return Response(serializer.data)
+        return obj
 
 
 class PublicUserProfileViewSet(ModelViewSet):
