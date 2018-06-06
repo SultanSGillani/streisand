@@ -19,6 +19,7 @@ services:
     restart: always
     volumes:
     - ./backend:/code/
+    - ./backend/src/static:/code/src/static/
     - ./frontend/dist:/code/src/static/frontend/dist/
     depends_on:
     - react
@@ -38,7 +39,6 @@ services:
       - postgres
       - redis
   react:
-    image: node:latest
     build:
       context: ./frontend
       dockerfile: ./production/Dockerfile

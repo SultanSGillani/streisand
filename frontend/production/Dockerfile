@@ -1,6 +1,6 @@
 # Dockerfile for production
 FROM node:latest
-
+MAINTAINER jumpcut
 WORKDIR /react
 
 COPY package.json ./
