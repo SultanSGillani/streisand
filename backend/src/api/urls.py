@@ -33,7 +33,6 @@ SchemaView = get_schema_view(
 router = routers.DefaultRouter()
 
 # Users
-router.register(r'^current-user', viewset=users_views.CurrentUserViewSet, base_name='current-user')
 router.register(r'users', viewset=users_views.AdminUserViewSet, base_name='user')
 router.register(r'user-profiles', viewset=users_views.PublicUserProfileViewSet, base_name='user-profile')
 router.register(r'groups', viewset=users_views.GroupViewSet, base_name='group')
@@ -92,6 +91,7 @@ urlpatterns = [
     url(r'^schema/', include_docs_urls(title='streisand API v1', public=False)),
 
     # Login and user items
+    url(r'^current-user/', users_views.CurrentUserView.as_view()),
     url(r'^login/', users_views.UserLoginView.as_view()),
     url(r'^change-password/', users_views.ChangePasswordView.as_view()),
     url(r'^register/$', users_views.UserRegisterView.as_view(), name='user-registration'),

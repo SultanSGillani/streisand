@@ -92,6 +92,37 @@ class AdminUserProfileSerializer(AllowFieldLimitingMixin, serializers.ModelSeria
         )
 
 
+class CurrentUserSerializer(AllowFieldLimitingMixin, serializers.ModelSerializer):
+    user_class = serializers.StringRelatedField()
+    torrent_download_key = UserTorrentDownloadKeySerializer(read_only=True, many=False)
+
+    class Meta:
+        model = User
+        fields = (
+            'id',
+            'username',
+            'date_joined',
+            'is_donor',
+            'invite_count',
+            'invite_tree',
+            'bytes_uploaded',
+            'bytes_downloaded',
+            'last_seeded',
+            'average_seeding_size',
+            'announce_key',
+            'announce_url',
+            'user_class',
+            'avatar_url',
+            'custom_title',
+            'profile_description',
+            'irc_key',
+            'torrent_download_key',
+            'invited_by',
+            'watch_queue',
+            'torrents',
+        )
+
+
 class OwnedUserProfileSerializer(AdminUserProfileSerializer):
     class Meta:
         model = User(AdminUserProfileSerializer.Meta)

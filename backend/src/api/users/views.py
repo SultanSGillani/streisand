@@ -4,19 +4,17 @@ from django.contrib.auth.models import Group
 from django_filters import rest_framework as filters
 from knox.auth import TokenAuthentication
 from knox.models import AuthToken
-from rest_framework import mixins, viewsets
 from rest_framework import status
-from rest_framework.generics import UpdateAPIView, CreateAPIView
+from rest_framework.generics import UpdateAPIView, CreateAPIView, RetrieveUpdateAPIView
 from rest_framework.permissions import IsAdminUser, IsAuthenticated, AllowAny
 from rest_framework.response import Response
 from rest_framework.viewsets import ModelViewSet
-
 from api.permissions import IsOwnerOrReadOnly
 from users.models import User
 from .filters import UserFilter, PublicUserFilter
 from .serializers import (
     GroupSerializer, AdminUserProfileSerializer, OwnedUserProfileSerializer,
-    PublicUserProfileSerializer, ChangePasswordSerializer, NewUserSerializer, LoginUserSerializer
+    PublicUserProfileSerializer, ChangePasswordSerializer, NewUserSerializer, LoginUserSerializer, CurrentUserSerializer
 )
 
 
@@ -81,27 +79,17 @@ class ChangePasswordView(UpdateAPIView):
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 
-class CurrentUserViewSet(mixins.RetrieveModelMixin, mixins.UpdateModelMixin, viewsets.GenericViewSet):
-    serializer_class = AdminUserProfileSerializer
+class CurrentUserView(RetrieveUpdateAPIView):
+    queryset = User.objects.all()
+    serializer_class = CurrentUserSerializer
     permission_classes = [IsOwnerOrReadOnly]
 
-    queryset = User.objects.all().select_related(
-        'user_class',
-        'invited_by',
-        'announce_key',
-    ).prefetch_related(
-        'groups',
-        'torrents',
-        'user_class',
-        'user_permissions',
-        'user_class__permissions',
-        'announce_key',
-    ).order_by(
-        '-date_joined', 'id',
-    ).distinct('date_joined', 'id')
-
     def get_object(self):
-        return self.request.user
+        queryset = self.filter_queryset(self.get_queryset())
+        # make sure to catch 404's below
+        obj = queryset.get(pk=self.request.user.id)
+        self.check_object_permissions(self.request, obj)
+        return obj
 
 
 class PublicUserProfileViewSet(ModelViewSet):
