@@ -30,6 +30,8 @@ DEBUG = config('DEBUG', cast=bool)
 PRODUCTION = config('PRODUCTION', cast=bool)
 
 DJANGO_APPS = [
+    'jet.dashboard',
+    'jet',
     'django.contrib.admin',
     'django.contrib.admindocs',
     'django.contrib.auth',
@@ -46,12 +48,10 @@ THIRD_PARTY_APPS = [
     'django_extensions',
     'django_filters',
     'django_su',
-    'docs',
     'drf_yasg',
     'knox',
     'rest_framework',
     'rest_framework_filters',
-    'suit.apps.DjangoSuitConfig',
 ]
 
 LOCAL_APPS = [

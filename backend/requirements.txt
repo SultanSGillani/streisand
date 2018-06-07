@@ -25,6 +25,7 @@ django-rest-knox==3.1.4
 django-su==0.6.0
 djangorestframework==3.8.2
 djangorestframework-camel-case==1.0b1
+djangorestframework-filters
 drf-yasg[validation]==1.8.0
 kombu==4.2.1.0
 newrelic==3.2.1.93
@@ -40,6 +41,5 @@ sphinx_rtd_theme==0.3.0
 sqlparse==0.2.4
 tqdm==4.23.4
 uWSGI==2.0.17; sys_platform == 'linux'
-https://github.com/littlepea/django-docs/archive/master.zip  # updated version
-https://github.com/philipn/django-rest-framework-filters/archive/master.zip
-https://github.com/darklow/django-suit/tarball/v2
+django-jet==1.0.7
+
