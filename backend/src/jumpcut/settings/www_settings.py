@@ -4,7 +4,6 @@ from datetime import timedelta
 
 from .common_settings import *
 
-
 INTERNAL_IPS = config(
     'INTERNAL_IPS', cast=lambda v: [s.strip() for s in v.split(',')], default='10.0.0.2')
 
@@ -51,22 +50,22 @@ PASSWORD_HASHERS = [
 AUTH_PASSWORD_VALIDATORS = [
     {
         'NAME':
-        'django.contrib.auth.password_validation.UserAttributeSimilarityValidator',
+            'django.contrib.auth.password_validation.UserAttributeSimilarityValidator',
     },
     {
         'NAME':
-        'django.contrib.auth.password_validation.MinimumLengthValidator',
+            'django.contrib.auth.password_validation.MinimumLengthValidator',
         'OPTIONS': {
             'min_length': 10,
         }
     },
     {
         'NAME':
-        'django.contrib.auth.password_validation.CommonPasswordValidator',
+            'django.contrib.auth.password_validation.CommonPasswordValidator',
     },
     {
         'NAME':
-        'django.contrib.auth.password_validation.NumericPasswordValidator',
+            'django.contrib.auth.password_validation.NumericPasswordValidator',
     },
 ]
 
@@ -101,7 +100,7 @@ REST_KNOX = {
     'SECURE_HASH_ALGORITHM': 'cryptography.hazmat.primitives.hashes.SHA512',
     'AUTH_TOKEN_CHARACTER_LENGTH': 64,
     'TOKEN_TTL': timedelta(hours=10),
-    'USER_SERIALIZER': 'api.users.serializers.OwnedUserProfileSerializer',
+    'USER_SERIALIZER': 'api.users.serializers.CurrentUserSerializer',
 }
 
 SWAGGER_SETTINGS = {
@@ -121,10 +120,41 @@ SWAGGER_SETTINGS.update({'VALIDATOR_URL': 'http://localhost:8189'})
 REDOC_SETTINGS = {
     'LAZY_RENDERING': True,
 }
+JET_SIDE_MENU_COMPACT = True
 
+JET_SIDE_MENU_ITEMS = [
+    {'app_label': 'auth', 'items': [
+        {'name': 'group'},
+    ]},
+    {'app_label': 'films', 'items': [
+        {'name': 'film'},
+    ]},
+    {'app_label': 'invites', 'items': [
+        {'name': 'invite'},
+    ]},
+    {'app_label': 'knox', 'items': [
+        {'name': 'authtoken'},
+    ]},
+    {'app_label': 'releases', 'items': [
+        {'name': 'release'},
+    ]},
+    {'app_label': 'torrents', 'items': [
+        {'name': 'torrentfile'},
+    ]},
+    {'app_label': 'tracker', 'items': [
+        {'name': 'torrentclient'},
+    ]},
+    {'app_label': 'users', 'items': [
+        {'name': 'userannouncekey'},
+        {'name': 'userannounce'},
+        {'name': 'useripaddress'},
+        {'name': 'user'},
+        {'name': 'watcheduser'},
+    ]},
+]
 SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
-SESSION_COOKIE_SECURE = config('SESSION_COOKIE_SECURE', cast=bool, default=True)
-CSRF_COOKIE_SECURE = config('CSRF_COOKIE_SECURE', cast=bool, default=True)
+SESSION_COOKIE_SECURE = config('SESSION_COOKIE_SECURE', cast=bool, default=False)
+CSRF_COOKIE_SECURE = config('CSRF_COOKIE_SECURE', cast=bool, default=False)
 
 # if os.getenv('DJANGO_ENV') == 'PROD':
 #     CORS_ORIGIN_WHITELIST = [
@@ -154,13 +184,13 @@ WSGI_APPLICATION = 'jumpcut.www_wsgi.application'
 TEMPLATES = [
     {
         'BACKEND':
-        'django.template.backends.django.DjangoTemplates',
+            'django.template.backends.django.DjangoTemplates',
         'DIRS': [
             os.path.join(BASE_DIR, 'static'),
             os.path.join(BASE_DIR, 'static/frontend/dist')
         ],
         'APP_DIRS':
-        True,
+            True,
         'OPTIONS': {
             'context_processors': [
                 'django.template.context_processors.request',
@@ -178,7 +208,7 @@ TEMPLATES = [
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/dev/howto/static-files/
 STATIC_URL = '/static/'
-STATICFILES_DIRS = (os.path.join(BASE_DIR, 'static'), )
+STATICFILES_DIRS = (os.path.join(BASE_DIR, 'static'),)
 STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
 
 STATICFILES_FINDERS = (
@@ -192,9 +222,6 @@ MEDIA_ROOT = os.path.join(BASE_DIR, 'mediafiles')
 TORRENT_FILE_UPLOAD_MAX_SIZE = 1024 * 1024 * 5  # 5MB
 
 ITEMS_PER_PAGE = 50
-
-DOCS_ROOT = os.path.join(BASE_DIR, 'docs/build/html')
-DOCS_ACCESS = 'staff'
 
 LOGGING = {
     'version': 1,
@@ -247,9 +274,7 @@ LOGGING = {
     }
 }
 
-
 if 'test' in sys.argv:
-
     TEST_RUNNER = 'tests.test_utils.CustomTestSuiteRunner'
 
     DDF_FILL_NULLABLE_FIELDS = False
