@@ -51,8 +51,7 @@ class AdminUserProfileSerializer(AllowFieldLimitingMixin, serializers.ModelSeria
         source='user_class', read_only=True)
     ip_addresses = UserIPSerializer(many=True, read_only=True)
     user_class = serializers.StringRelatedField()
-    torrent_download_key = UserTorrentDownloadKeySerializer(read_only=True, many=False)
-
+    
     class Meta:
         model = User
         fields = (
@@ -88,13 +87,11 @@ class AdminUserProfileSerializer(AllowFieldLimitingMixin, serializers.ModelSeria
             'watch_queue',
             'user_permissions',
             'torrents',
-            'torrent_download_key',
         )
 
 
 class CurrentUserSerializer(AllowFieldLimitingMixin, serializers.ModelSerializer):
     user_class = serializers.StringRelatedField()
-    torrent_download_key = UserTorrentDownloadKeySerializer(read_only=True, many=False)
 
     class Meta:
         model = User
@@ -116,7 +113,6 @@ class CurrentUserSerializer(AllowFieldLimitingMixin, serializers.ModelSerializer
             'custom_title',
             'profile_description',
             'irc_key',
-            'torrent_download_key',
             'invited_by',
             'watch_queue',
             'torrents',

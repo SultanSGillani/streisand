@@ -32,7 +32,6 @@ urlpatterns = [
     # Admin
     url(r'^admin/', admin.site.urls),
     url(r'^admin/docs/', include('django.contrib.admindocs.urls')),
-    url(r'^jet/dashboard/', include('jet.dashboard.urls', 'jet-dashboard')),  # Django JET dashboard URLS
     url(r'^jet/', include('jet.urls', 'jet')),  # Django JET URLS
 
     # Authentication

@@ -95,12 +95,12 @@ REST_FRAMEWORK = {
     'URL_FORMAT_OVERRIDE': None,
     'EXCEPTION_HANDLER': 'api.exceptions.custom_exception_handler',
 }
-JET_SIDE_MENU_COMPACT = True
+
 REST_KNOX = {
     'SECURE_HASH_ALGORITHM': 'cryptography.hazmat.primitives.hashes.SHA512',
     'AUTH_TOKEN_CHARACTER_LENGTH': 64,
     'TOKEN_TTL': timedelta(hours=10),
-    'USER_SERIALIZER': 'api.users.serializers.OwnedUserProfileSerializer',
+    'USER_SERIALIZER': 'api.users.serializers.CurrentUserSerializer',
 }
 
 SWAGGER_SETTINGS = {
@@ -120,7 +120,7 @@ SWAGGER_SETTINGS.update({'VALIDATOR_URL': 'http://localhost:8189'})
 REDOC_SETTINGS = {
     'LAZY_RENDERING': True,
 }
-JET_INDEX_DASHBOARD = 'www.dashboard.CustomIndexDashboard'
+JET_SIDE_MENU_COMPACT = True
 
 JET_SIDE_MENU_ITEMS = [
     {'app_label': 'auth', 'items': [

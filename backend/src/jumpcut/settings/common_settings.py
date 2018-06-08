@@ -30,7 +30,6 @@ DEBUG = config('DEBUG', cast=bool)
 PRODUCTION = config('PRODUCTION', cast=bool)
 
 DJANGO_APPS = [
-    'jet.dashboard',
     'jet',
     'django.contrib.admin',
     'django.contrib.admindocs',
