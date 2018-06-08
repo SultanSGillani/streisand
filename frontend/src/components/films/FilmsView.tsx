@@ -38,8 +38,8 @@ class FilmsViewComponent extends React.Component<CombinedProps> {
 }
 
 const mapDispatchToProps = (dispatch: IDispatch): ConnectedDispatch => ({
-    createFilm: () => dispatch(push('/film/create')),
-    searchFilm: () => dispatch(push('/film/search'))
+    createFilm: () => dispatch(push('/films/create')),
+    searchFilm: () => dispatch(push('/films/search'))
 });
 
 const FilmsView: React.ComponentClass<Props> =

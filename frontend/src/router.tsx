@@ -19,6 +19,7 @@ import FilmPage from './pages/films/FilmPage';
 import FilmsPage from './pages/films/FilmsPage';
 import TorrentsPage from './pages/TorrentsPage';
 import CreateFilmView from './components/films/CreateFilmView';
+import TorrentUploadPage from './pages/films/TorrentUploadPage';
 
 import ForumPage from './pages/forums/ForumPage';
 import ForumTopicPage from './pages/forums/ForumTopicPage';
@@ -52,20 +53,21 @@ export function createRoutes(store: ReduxStore<Store.All>) {
                     <Route path="/user/:userId" component={UserPage} />
                     <Redirect from="/user" to="/home" />
 
+                    <Route path="/films/create" component={CreateFilmView} />
+                    <Route path="/films/search" component={SearchFilmView} />
                     <Route path="/films/:page" component={FilmsPage} />
                     <Redirect from="/films" to="/films/1" />
-                    <Route path="/film/create" component={CreateFilmView} />
-                    <Route path="/film/search" component={SearchFilmView} />
                     <Route path="/film/:filmId" component={FilmPage} />
                     <Route path="/film/:filmId/:torrentId" component={FilmPage} />
                     <Redirect from="/film" to="/films/1" />
 
+                    <Route path="/torrents/upload/:filmId" component={TorrentUploadPage} />
                     <Route path="/torrents/:page" component={TorrentsPage} />
                     <Redirect from="/torrents" to="/torrents/1" />
 
                     <Route path="/wikis/:page" component={WikisPage} />
                     <Redirect from="/wikis" to="/wikis/1" />
-                    <Route path="/wiki/create" component={CreateWikiView} />
+                    <Route path="/wikis/create" component={CreateWikiView} />
                     <Route path="/wiki/:wikiId" component={WikiPage} />
                     <Redirect from="/wiki" to="/wikis/1" />
 

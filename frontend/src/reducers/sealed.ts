@@ -9,6 +9,7 @@ import forums from './forums';
 import film from './films/film';
 import torrent from './torrent';
 import user from './users/user';
+import torrentUpload from './torrentUpload';
 import currentUser from './users/currentUser';
 
 const combined = combineReducers<Store.UserSealed>({
@@ -19,7 +20,8 @@ const combined = combineReducers<Store.UserSealed>({
     torrent,
     wiki,
     news,
-    forums
+    forums,
+    torrentUpload
 });
 
 export default (state: Store.UserSealed, action: Action) => {

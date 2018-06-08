@@ -5,13 +5,15 @@ import { INodeMap } from '../../models/base/ItemSet';
 export function markLoading<T>(current: INodeMap<T>, id: number): INodeMap<T> {
     const node = current[id];
     const status = objectAssign({}, node ? node.status : {}, { loading: true });
-    return objectAssign({}, node, { status });
+    const newNode = objectAssign({}, node, { status });
+    return objectAssign({}, current, { [id]: newNode });
 }
 
 export function markFailed<T>(current: INodeMap<T>, id: number): INodeMap<T> {
     const node = current[id];
-    const status = objectAssign({}, node ? node.status : {}, { failed: true });
-    return objectAssign({}, node, { status });
+    const status = objectAssign({}, node ? node.status : {}, { loading: false, failed: true });
+    const newNode = objectAssign({}, node, { status });
+    return objectAssign({}, current, { [id]: newNode });
 }
 
 export interface IItem { id: number; }
