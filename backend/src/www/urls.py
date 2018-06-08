@@ -16,9 +16,6 @@ urlpatterns = [
     # API
     url(r'^api/v1/', include('api.urls')),
 
-    # Docs that need updating. Made with Sphinx
-    url(r'^model-docs/', include('docs.urls')),
-
     # torrent urls
     url(
         regex=r'^torrent-download/(?P<torrent_id>\d+)/(?P<user_id>\d+)/(?P<unique_download_key>[0-9a-f]{64})/$',
@@ -35,6 +32,7 @@ urlpatterns = [
     # Admin
     url(r'^admin/', admin.site.urls),
     url(r'^admin/docs/', include('django.contrib.admindocs.urls')),
+    url(r'^jet/', include('jet.urls', 'jet')),  # Django JET URLS
 
     # Authentication
     url(r'^su/', include('django_su.urls')),

@@ -46,12 +46,12 @@ class UserIPSerializer(AllowFieldLimitingMixin, serializers.ModelSerializer):
         return obj.ip_address
 
 
-class AdminUserProfileSerializer(AllowFieldLimitingMixin, serializers.ModelSerializer):
+class AdminUserProfileSerializer(AllowFieldLimitingMixin,
+                                 serializers.ModelSerializer):
     user_class_rank = serializers.PrimaryKeyRelatedField(
         source='user_class', read_only=True)
     ip_addresses = UserIPSerializer(many=True, read_only=True)
     user_class = serializers.StringRelatedField()
-    torrent_download_key = UserTorrentDownloadKeySerializer(read_only=True, many=False)
 
     class Meta:
         model = User
@@ -88,13 +88,12 @@ class AdminUserProfileSerializer(AllowFieldLimitingMixin, serializers.ModelSeria
             'watch_queue',
             'user_permissions',
             'torrents',
-            'torrent_download_key',
         )
 
 
-class CurrentUserSerializer(AllowFieldLimitingMixin, serializers.ModelSerializer):
+class CurrentUserSerializer(AllowFieldLimitingMixin,
+                            serializers.ModelSerializer):
     user_class = serializers.StringRelatedField()
-    torrent_download_key = UserTorrentDownloadKeySerializer(read_only=True, many=False)
 
     class Meta:
         model = User
@@ -116,7 +115,6 @@ class CurrentUserSerializer(AllowFieldLimitingMixin, serializers.ModelSerializer
             'custom_title',
             'profile_description',
             'irc_key',
-            'torrent_download_key',
             'invited_by',
             'watch_queue',
             'torrents',
@@ -201,18 +199,14 @@ class NewUserSerializer(serializers.ModelSerializer):
     password = serializers.CharField(min_length=8, write_only=True)
 
     def create(self, validated_data):
-        user = User.objects.create_user(validated_data['username'], validated_data['email'],
+        user = User.objects.create_user(validated_data['username'],
+                                        validated_data['email'],
                                         validated_data['password'])
         return user
 
     class Meta:
         model = User
-        fields = (
-            'id',
-            'username',
-            'email',
-            'password'
-        )
+        fields = ('id', 'username', 'email', 'password')
 
 
 class LoginUserSerializer(serializers.Serializer):
@@ -224,4 +218,5 @@ class LoginUserSerializer(serializers.Serializer):
         if user and user.is_active:
             return user
 
-        raise serializers.ValidationError("Unable to log in with provided credentials.")
+        raise serializers.ValidationError(
+            "Unable to log in with provided credentials.")
