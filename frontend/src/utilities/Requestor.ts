@@ -102,6 +102,7 @@ export function post<T>(options: IPostRequestOptions): Promise<T> {
     if (options.token) {
         headers['Authorization'] = `Token ${options.token}`;
     }
-    const data = options.data && (typeof options.data === 'string' ? options.data : JSON.stringify(options.data));
+    const formatted = !options.data || typeof options.data === 'string' || options.data instanceof File;
+    const data = formatted ? options.data : JSON.stringify(options.data);
     return makeRequest<T>({ url: options.url, method: 'POST', headers, data });
 }

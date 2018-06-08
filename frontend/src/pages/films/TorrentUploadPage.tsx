@@ -7,38 +7,32 @@ import { getNode } from '../../utilities/mapping';
 import Empty from '../../components/generic/Empty';
 import { IDispatch } from '../../actions/ActionTypes';
 import Loading from '../../components/generic/Loading';
-import FilmView from '../../components/films/FilmView';
 import { numericIdentifier } from '../../utilities/shim';
 import { getFilm } from '../../actions/films/FilmAction';
 import ILoadingStatus from '../../models/base/ILoadingStatus';
-import { getTorrents } from '../../actions/torrents/FilmTorrentsAction';
-import ILoadingStatus from '../../models/base/ILoadingStatus';
+import TorrentUploadView from '../../components/films/TorrentUploadView';
 
 export type Props = {
     params: {
         filmId: string;
-        torrentId: string;
     };
 };
 
 type ConnectedState = {
     filmId: number;
-    torrentId: number;
     film?: IFilm;
     status: ILoadingStatus;
 };
 
 type ConnectedDispatch = {
     getFilm: (id: number) => void;
-    getTorrents: (filmId: number) => void;
 };
 
 type CombinedProps = ConnectedState & ConnectedDispatch & Props;
-class FilmPageComponent extends React.Component<CombinedProps, void> {
+class TorrentUploadPageComponent extends React.Component<CombinedProps, void> {
     public componentWillMount() {
         if (!this.props.status.loading) {
             this.props.getFilm(this.props.filmId);
-            this.props.getTorrents(this.props.filmId);
         }
     }
 
@@ -48,7 +42,6 @@ class FilmPageComponent extends React.Component<CombinedProps, void> {
         const needUpdate = !status.failed && (!status.loaded || status.outdated);
         if (!status.loading && (changed || needUpdate)) {
             this.props.getFilm(props.filmId);
-            this.props.getTorrents(props.filmId);
         }
     }
 
@@ -59,7 +52,7 @@ class FilmPageComponent extends React.Component<CombinedProps, void> {
         }
 
         return (
-            <FilmView film={film} torrentId={this.props.torrentId} />
+            <TorrentUploadView film={film} />
         );
     }
 }
@@ -70,16 +63,14 @@ const mapStateToProps = (state: Store.All, props: Props): ConnectedState => {
     return {
         filmId: filmId,
         film: node.item,
-        status: node.status,
-        torrentId: numericIdentifier(props.params.torrentId)
+        status: node.status
     };
 };
 
 const mapDispatchToProps = (dispatch: IDispatch): ConnectedDispatch => ({
-    getFilm: (id: number) => dispatch(getFilm(id)),
-    getTorrents: (filmId: number) => dispatch(getTorrents(filmId))
+    getFilm: (id: number) => dispatch(getFilm(id))
 });
 
-const FilmPage: React.ComponentClass<Props> =
-    connect(mapStateToProps, mapDispatchToProps)(FilmPageComponent);
-export default FilmPage;
+const TorrentUploadPage: React.ComponentClass<Props> =
+    connect(mapStateToProps, mapDispatchToProps)(TorrentUploadPageComponent);
+export default TorrentUploadPage;
