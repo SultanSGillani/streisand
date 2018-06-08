@@ -2,20 +2,21 @@
 
 import MySQLdb
 from MySQLdb.cursors import SSDictCursor
-from tqdm import tqdm
 from decouple import config
 from django.core.management.base import BaseCommand
+from tqdm import tqdm
 
 
 class MySQLCommand(BaseCommand):
-
     DB_CONFIG = {
-        'user': config('MYSQL_DB_USER', default=''),
-        'password': config('MYSQL_DB_PASSWORD', default=''),
-        'db': config('MYSQL_DB', default=''),
+        'db': config('MYSQLDB_NAME', default=''),
+        'user': config('MYSQL_USER', default=''),
+        'password': config('MYSQL_PWD', default=''),
         'host': config('MYSQL_HOST', default=''),
+        'port': config('MYSQL_PORT', cast=int, default=3306),
         'cursorclass': SSDictCursor,
         'charset': 'latin1',
+
     }
 
     SQL = ""

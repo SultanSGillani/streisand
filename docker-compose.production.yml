@@ -19,9 +19,10 @@ services:
     restart: always
     volumes:
     - ./backend:/code/
+    - ./backend/src/static:/code/src/static/
     - ./frontend/dist:/code/src/static/frontend/dist/
     depends_on:
-    - frontend
+    - react
     - celery
   celery:
       image: registry.pinigseu.xyz/jumpcut/jumpcut:latest
@@ -37,16 +38,15 @@ services:
       depends_on:
       - postgres
       - redis
-  frontend:
-    image: node:latest
+  react:
     build:
       context: ./frontend
       dockerfile: ./production/Dockerfile
-    container_name: frontend
+    container_name: react
     environment:
       NODE_ENV: production
     volumes:
-    - ./frontend:/react/
+    - ./frontend/src:/react/src/
     - ./frontend/dist:/react/dist/
   postgres:
     image: postgres:latest

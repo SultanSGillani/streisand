@@ -1,13 +1,11 @@
 # -*- coding: utf-8 -*-
 
-from import_scripts.management.commands import MySQLCommand
-
 from films.models import Film
 from imdb.models import FilmIMDb
+from import_scripts.management.commands import MySQLCommand
 
 
 class Command(MySQLCommand):
-
     SQL = """
         SELECT * FROM torrents_group
     """
@@ -18,7 +16,6 @@ class Command(MySQLCommand):
     help = "Import films"
 
     def handle_row(self, row):
-
         tags = row['TagList'].strip('|').split('|')
 
         title = row['Name'].encode('latin-1').decode('utf-8')

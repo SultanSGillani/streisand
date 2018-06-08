@@ -21,7 +21,7 @@ A private BitTorrent tracker written with Python, Django, Redis, and React.
 * Before you get started make sure and set your environment variables. There is an .env.template file in the root of
 the project. First copy the file as .env 
 
-``cp .env.template .env`` and then set and save these. 
+- Run `cp .env.template .env` and then set and save these. 
 
  Once that is complete you can build the project. For the production server, to test production, or if you are not using docker,
  there is an .env.template file in the backend folder that should be updated as well.
@@ -31,7 +31,10 @@ the project. First copy the file as .env
 - Run `docker-compose build` to build the images
 - Run `docker-compose run --rm api invoke setup-db` to create the db tables and load in some development data
 - Run `docker-compose run --rm api python src/manage.py passwd admin` to set yourself a password for the admin user
+- Run or you can run `docker-compose run --rm api python src/manage.py createsuperuser` for a new user account
 - Run `docker-compose up` to start everything, and visit <localhost:8001> to log in
+
+* I Highly recommend however, that you use the below script in wsl/linux
 
 These commands will build all the containers and set up the database with our core fixtures.
 This may take a while, but afterwards subsequent commands will be much faster.
@@ -86,7 +89,9 @@ There is no need to do this if you just change the source code for either the fr
 
 ## Windows
 
-Install Docker for Windows and set it up to use linux containers. You will probably have to [share
+- Note: I strongly recommend you install wsl for windows which you can read instructions for docker and wsl setup on the next section.
+
+Install Docker for Windows and set it up to use linux containers. You will have to [share
 the drive](https://docs.docker.com/docker-for-windows/#shared-drives) where you have the git
 repository.
 
@@ -102,6 +107,77 @@ instead of
     docker-compose run api src/manage.py
 
 in the following instructions.
+
+# wsl-docker-git-setup
+
+I have added a shell script that can be run in the **Ubuntu for Windows Bash** running on the **Windows Subsystem for Linux (WSL)** to configure Bash for development using commandline **Docker** and **Git** commands in **Windows 10**.
+
+## Prerequisits and Configuration
+
+- Windows 10 Professional
+- Windows Subsystem for Linux (WSL)
+- Docker for Windows
+
+### Installing the Windows Subsystem For Linux
+
+Instructions for installing the Windows Subsystem for Linux on Windows 10 and Ubuntu for Windows can be found at the official WSL website:
+ 
+https://msdn.microsoft.com/en-us/commandline/wsl/install_guide 
+
+(The installation may require a system restart)
+
+Once installation is complete, you should be able to start Ubuntu for Windows from the start menu. This project also includes an example shortcut for starting Ubuntu Bash.
+
+### Installing and Configuring Docker for Windows
+
+Instructions for installing Docker for Windows can be found at the official Docker website:
+
+https://store.docker.com/editions/community/docker-ce-desktop-windows
+
+(The installation may require a system restart to enable Hyper-V)
+
+Once Docker for Windows has been installed, you will need to configure it so that it can be accessed from the WSL bash.
+
+- Right click the Docker Whale icon in system tray
+- Select "Settings..."
+- Under the "General" section
+  - Check the option to "Expose daemon on tcp://localhost:2375 without TLS"
+- Under the "Shared Drives" section
+  - Check the C Drive
+- Apply Changes (You may be prompted for your login credentials)
+
+## WSL Docker Git Setup Script
+
+Git comes installed by default with Ubuntu for Windows. You can clone this repository immediately from your WSL Bash by running:
+
+`git clone git@git.pinigseu.xyz:jumpcut/jumpcut.git`
+
+Make sure you have added your ssh key to git.
+
+Once the code has been cloned you can run `wsl.sh` to configure your WSL Bash to be able to communicate with Docker for Windows and install a git-enabled commandline prompt that makes it easier to work with git from WSL.
+
+`cd jumpcut`
+
+`chmod +x ./scripts/wsl.sh`
+
+`./scripts/wsl.sh`
+
+The shell script:
+
+- Adds a `DOCKER_HOST` environment variable in `.bashrc` to allow docker to connect to Docker for Windows
+- Creates a mount from /mnt/c to /c so make sure that when you log back in after it is complete you will need to exit bash and start it again for some of the changes to be applied.
+- Sets the default directory when WSL Bash starts
+
+You should be able to run `docker` and `docker-compose` commands from the WSL Ubuntu commandline on Windows as well as see git branch information in the command prompt.
+
+You can test them by running:
+ 
+`docker info`
+
+`docker-compose version`
+
+`docker run hello-world`
+
 
 ## Windows Instructions with No Docker
 

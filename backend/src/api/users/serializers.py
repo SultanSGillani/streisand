@@ -10,7 +10,6 @@ from users.models import User, UserIPAddress, UserTorrentDownloadKey
 
 
 class UserTorrentDownloadKeySerializer(serializers.ModelSerializer):
-
     class Meta:
         model = UserTorrentDownloadKey
         fields = ('id', 'user', 'issued_at', 'revoked_at', 'revocation_notes')
@@ -47,12 +46,12 @@ class UserIPSerializer(AllowFieldLimitingMixin, serializers.ModelSerializer):
         return obj.ip_address
 
 
-class AdminUserProfileSerializer(AllowFieldLimitingMixin, serializers.ModelSerializer):
+class AdminUserProfileSerializer(AllowFieldLimitingMixin,
+                                 serializers.ModelSerializer):
     user_class_rank = serializers.PrimaryKeyRelatedField(
         source='user_class', read_only=True)
     ip_addresses = UserIPSerializer(many=True, read_only=True)
     user_class = serializers.StringRelatedField()
-    torrent_download_key = UserTorrentDownloadKeySerializer(read_only=True, many=False)
 
     class Meta:
         model = User
@@ -65,7 +64,6 @@ class AdminUserProfileSerializer(AllowFieldLimitingMixin, serializers.ModelSeria
             'username',
             'email',
             'is_superuser',
-            'password',
             'is_staff',
             'is_active',
             'date_joined',
@@ -90,21 +88,37 @@ class AdminUserProfileSerializer(AllowFieldLimitingMixin, serializers.ModelSeria
             'watch_queue',
             'user_permissions',
             'torrents',
-            'torrent_download_key',
         )
 
-        extra_kwargs = {
-            'password': {
-                'write_only': True,
-            }
-        }
 
-        validators = [
-            validators.UniqueTogetherValidator(
-                queryset=UserIPAddress.objects.all(),
-                fields=('user', 'ip_address')
-            )
-        ]
+class CurrentUserSerializer(AllowFieldLimitingMixin,
+                            serializers.ModelSerializer):
+    user_class = serializers.StringRelatedField()
+
+    class Meta:
+        model = User
+        fields = (
+            'id',
+            'username',
+            'date_joined',
+            'is_donor',
+            'invite_count',
+            'invite_tree',
+            'bytes_uploaded',
+            'bytes_downloaded',
+            'last_seeded',
+            'average_seeding_size',
+            'announce_key',
+            'announce_url',
+            'user_class',
+            'avatar_url',
+            'custom_title',
+            'profile_description',
+            'irc_key',
+            'invited_by',
+            'watch_queue',
+            'torrents',
+        )
 
 
 class OwnedUserProfileSerializer(AdminUserProfileSerializer):
@@ -185,18 +199,14 @@ class NewUserSerializer(serializers.ModelSerializer):
     password = serializers.CharField(min_length=8, write_only=True)
 
     def create(self, validated_data):
-        user = User.objects.create_user(validated_data['username'], validated_data['email'],
+        user = User.objects.create_user(validated_data['username'],
+                                        validated_data['email'],
                                         validated_data['password'])
         return user
 
     class Meta:
         model = User
-        fields = (
-            'id',
-            'username',
-            'email',
-            'password'
-        )
+        fields = ('id', 'username', 'email', 'password')
 
 
 class LoginUserSerializer(serializers.Serializer):
@@ -208,4 +218,5 @@ class LoginUserSerializer(serializers.Serializer):
         if user and user.is_active:
             return user
 
-        raise serializers.ValidationError("Unable to log in with provided credentials.")
+        raise serializers.ValidationError(
+            "Unable to log in with provided credentials.")

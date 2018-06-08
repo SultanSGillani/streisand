@@ -56,7 +56,6 @@ router.register(r'torrent-comments', viewset=torrents_views.TorrentCommentViewSe
 router.register(r'torrent-stats', viewset=torrents_views.TorrentStatViewSet, base_name='torrent-stat')
 router.register(r'torrent-requests', viewset=torrents_views.TorrentRequestViewSet, base_name='torrent-request')
 
-
 # Tracker
 router.register(r'torrent-clients', viewset=tracker_views.TorrentClientViewSet, base_name='torrent-client')
 router.register(r'tracker-swarm', viewset=tracker_views.SwarmViewSet, base_name='tracker-swarm')
@@ -96,8 +95,8 @@ urlpatterns = [
     url(r'^schema/', include_docs_urls(title='streisand API v1', public=False)),
 
     # Login and user items
+    url(r'^current-user/', users_views.CurrentUserView.as_view()),
     url(r'^login/', users_views.UserLoginView.as_view()),
-    url(r'^current-user/', users_views.CurrentUserView.as_view(), name='current-user'),
     url(r'^change-password/', users_views.ChangePasswordView.as_view()),
     url(r'^register/$', users_views.UserRegisterView.as_view(), name='user-registration'),
 
