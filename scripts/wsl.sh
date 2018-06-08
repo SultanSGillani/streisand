@@ -29,7 +29,7 @@ sudo apt-get -y install apt-transport-https ca-certificates curl software-proper
 
 sudo mkdir /c;
 sudo mount --bind /mnt/c /c
-echo "sudo mount --bind /mnt/c /c" >> ~/.bashrc;
+
 
 echo 'Add this to sudoers file in a sec: $USER ALL=(root) NOPASSWD: /bin/mount'
 echo ''
@@ -60,8 +60,9 @@ curl -sL https://deb.nodesource.com/setup_10.x | sudo -E bash -
 sudo apt-get install -y nodejs
 
 grep -q -F 'export GOPATH' ~/.bashrc || echo 'export GOPATH=/c/dev/go' >> ~/.bashrc
-echo "export DOCKER_HOST=tcp://0.0.0.0:2375" >> ~/.bashrc
-echo "cp -R ~/jumpcut /c/" > ~/.bashrc
-echo "cd /c/jumpcut/" > ~/.bashrc
+echo 'sudo mount --bind /mnt/c /c' >> ~/.bashrc
+echo 'export DOCKER_HOST=tcp://0.0.0.0:2375' >> ~/.bashrc
+echo 'cp -R ~/jumpcut /c/' >> ~/.bashrc
+echo 'cd /c/jumpcut/' >> ~/.bashrc
 echo 'NOTE: Bash configuration changes will not be applied until WSL Bash is closed and restarted'
 echo ''
