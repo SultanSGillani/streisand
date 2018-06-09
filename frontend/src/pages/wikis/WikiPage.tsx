@@ -10,6 +10,7 @@ import Loading from '../../components/generic/Loading';
 import WikiView from '../../components/wikis/WikiView';
 import { numericIdentifier } from '../../utilities/shim';
 import { getWiki } from '../../actions/wikis/WikiAction';
+import ILoadingStatus from '../../models/base/ILoadingStatus';
 
 export type Props = {
     params: {
@@ -20,7 +21,7 @@ export type Props = {
 type ConnectedState = {
     wikiId: number;
     wiki?: IWiki;
-    loading: boolean;
+    status: ILoadingStatus;
 };
 
 type ConnectedDispatch = {
@@ -30,23 +31,26 @@ type ConnectedDispatch = {
 type CombinedProps = ConnectedState & ConnectedDispatch & Props;
 class WikiPageComponent extends React.Component<CombinedProps, void> {
     public componentWillMount() {
-        const hasContent = this.props.wiki && this.props.wiki.body;
-        if (!this.props.loading && !hasContent) {
+        const hasContent = this.props.wiki && (this.props.wiki.body || this.props.wiki.body === '');
+        if (!this.props.status.loading && !hasContent) {
             this.props.getWiki(this.props.wikiId);
         }
     }
 
     public componentWillReceiveProps(props: CombinedProps) {
-        const hasContent = props.wiki && props.wiki.body;
-        if (!props.loading && !hasContent) {
+        const status = props.status;
+        const hasContent = props.wiki && (props.wiki.body || props.wiki.body === '');
+        const changed = props.wikiId !== this.props.wikiId;
+        const needUpdate = !status.failed && (!status.loaded || status.outdated);
+        if (!status.loading && (changed || needUpdate || !hasContent)) {
             this.props.getWiki(props.wikiId);
         }
     }
 
     public render() {
         const wiki = this.props.wiki;
-        if (!wiki || !wiki.body) {
-            return this.props.loading ? <Loading /> : <Empty />;
+        if (!wiki || !(wiki.body || wiki.body === '')) {
+            return this.props.status.loading ? <Loading /> : <Empty />;
         }
 
         return (
@@ -61,7 +65,7 @@ const mapStateToProps = (state: Store.All, props: Props): ConnectedState => {
     return {
         wikiId: wikiId,
         wiki: node.item,
-        loading: node.status.loading
+        status: node.status
     };
 };
 

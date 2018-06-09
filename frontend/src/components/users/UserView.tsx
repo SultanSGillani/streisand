@@ -109,8 +109,8 @@ class UserViewComponent extends React.Component<CombinedProps, State> {
                                     <StringInput type="email" id="email" label="Email" placeholder="email"
                                         value={email} setValue={(value: string) => this.setState({ email: value })} />
                                     <Label>Profile description</Label>
-                                    <Editor content={description} receiveHandle={onHandle} size="large" />
                                 </Form>
+                                <Editor content={description} receiveHandle={onHandle} size="small" />
                             </CardBody>
                             <CardFooter>
                                 <div className="row m-0 justify-content-end">
@@ -142,7 +142,7 @@ class UserViewComponent extends React.Component<CombinedProps, State> {
         let { avatarUrl, email } = this.state;
         const content = this._editorHandle.getContent();
         const currentContent = this.props.user.details ? this.props.user.details.profileDescription : '';
-        let update: IUserUpdate = {};
+        let update: IUserUpdate = { };
         if (avatarUrl) { update.avatarUrl = avatarUrl; }
         if (email) { update.email = email; }
         if (content !== currentContent) { update.profileDescription = content; }

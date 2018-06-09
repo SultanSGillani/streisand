@@ -10,6 +10,7 @@ import Loading from '../../components/generic/Loading';
 import FilmView from '../../components/films/FilmView';
 import { numericIdentifier } from '../../utilities/shim';
 import { getFilm } from '../../actions/films/FilmAction';
+import ILoadingStatus from '../../models/base/ILoadingStatus';
 import { getTorrents } from '../../actions/torrents/FilmTorrentsAction';
 
 export type Props = {
@@ -23,7 +24,7 @@ type ConnectedState = {
     filmId: number;
     torrentId: number;
     film?: IFilm;
-    loading: boolean;
+    status: ILoadingStatus;
 };
 
 type ConnectedDispatch = {
@@ -34,14 +35,17 @@ type ConnectedDispatch = {
 type CombinedProps = ConnectedState & ConnectedDispatch & Props;
 class FilmPageComponent extends React.Component<CombinedProps, void> {
     public componentWillMount() {
-        if (!this.props.loading) {
+        if (!this.props.status.loading) {
             this.props.getFilm(this.props.filmId);
             this.props.getTorrents(this.props.filmId);
         }
     }
 
     public componentWillReceiveProps(props: CombinedProps) {
-        if (!props.loading && props.params.filmId !== this.props.params.filmId) {
+        const status = props.status;
+        const changed = props.filmId !== this.props.filmId;
+        const needUpdate = !status.failed && (!status.loaded || status.outdated);
+        if (!status.loading && (changed || needUpdate)) {
             this.props.getFilm(props.filmId);
             this.props.getTorrents(props.filmId);
         }
@@ -50,7 +54,7 @@ class FilmPageComponent extends React.Component<CombinedProps, void> {
     public render() {
         const film = this.props.film;
         if (!film) {
-            return this.props.loading ? <Loading /> : <Empty />;
+            return this.props.status.loading ? <Loading /> : <Empty />;
         }
 
         return (
@@ -63,9 +67,9 @@ const mapStateToProps = (state: Store.All, props: Props): ConnectedState => {
     const filmId = numericIdentifier(props.params.filmId);
     const node = getNode({ id: filmId, byId: state.sealed.film.byId });
     return {
+        filmId: filmId,
         film: node.item,
-        loading: node.status.loading,
-        filmId: numericIdentifier(props.params.filmId),
+        status: node.status,
         torrentId: numericIdentifier(props.params.torrentId)
     };
 };

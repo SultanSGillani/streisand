@@ -1,8 +1,9 @@
 
+import { transformUser } from './transforms';
 import globals from '../../utilities/globals';
-import { putRequest } from '../../utilities/Requestor';
-import IUser, { IUserUpdate } from '../../models/IUser';
+import { patch } from '../../utilities/Requestor';
 import { generateAuthFetch, generateSage } from '../sagas/generators';
+import IUser, { IUserUpdate, IUserResponse } from '../../models/IUser';
 
 interface IActionProps extends IUserUpdate { id: number; }
 
@@ -14,8 +15,11 @@ type UserUpdateAction = RequestUserUpdate | ReceivedUserUpdate | FailedUserUpdat
 export default UserUpdateAction;
 type Action = UserUpdateAction;
 
-function received(user: IUser): Action {
-    return { type: 'RECEIVED_USER_UPDATE', user };
+function received(user: IUserResponse): Action {
+    return {
+        type: 'RECEIVED_USER_UPDATE',
+        user: transformUser(user)
+    };
 }
 
 function failure(props: IActionProps): Action {
@@ -30,7 +34,7 @@ const errorPrefix = (props: IActionProps) => `Updating user information (${props
 const fetch = generateAuthFetch({ errorPrefix, request, received, failure });
 export const updateUserSaga = generateSage<RequestUserUpdate>('REQUEST_USER_UPDATE', fetch);
 
-function request(token: string, props: IActionProps): Promise<IUser> {
+function request(token: string, props: IActionProps): Promise<IUserResponse> {
     const { id, ...data } = props;
-    return putRequest({ token, data, url: `${globals.apiUrl}/users/${id}/` });
+    return patch({ token, data, url: `${globals.apiUrl}/users/${id}/` });
 }
