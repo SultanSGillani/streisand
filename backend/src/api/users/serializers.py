@@ -52,6 +52,8 @@ class AdminUserProfileSerializer(AllowFieldLimitingMixin,
         source='user_class', read_only=True)
     ip_addresses = UserIPSerializer(many=True, read_only=True)
     user_class = serializers.StringRelatedField()
+    username = serializers.StringRelatedField(read_only=True)
+    watch_queue = serializers.StringRelatedField(source='watchlist_entries', many=True, read_only=True, required=False)
 
     class Meta:
         model = User
@@ -93,13 +95,16 @@ class AdminUserProfileSerializer(AllowFieldLimitingMixin,
 
 class CurrentUserSerializer(AllowFieldLimitingMixin,
                             serializers.ModelSerializer):
-    user_class = serializers.StringRelatedField()
+    user_class = serializers.StringRelatedField(read_only=True)
+    username = serializers.StringRelatedField(read_only=True)
+    watch_queue = serializers.StringRelatedField(source='watchlist_entries', many=True, read_only=False, required=False)
 
     class Meta:
         model = User
         fields = (
             'id',
             'username',
+            'user_class',
             'date_joined',
             'is_donor',
             'invite_count',
@@ -110,7 +115,6 @@ class CurrentUserSerializer(AllowFieldLimitingMixin,
             'average_seeding_size',
             'announce_key',
             'announce_url',
-            'user_class',
             'avatar_url',
             'custom_title',
             'profile_description',
@@ -118,6 +122,23 @@ class CurrentUserSerializer(AllowFieldLimitingMixin,
             'invited_by',
             'watch_queue',
             'torrents',
+        )
+        read_only_fields = (
+            'id',
+            'date_joined',
+            'is_donor',
+            'invite_count',
+            'invite_tree',
+            'invited_by',
+            'bytes_uploaded',
+            'bytes_downloaded',
+            'last_seeded',
+            'average_seeding_size',
+            'announce_key',
+            'announce_url',
+            'custom_title',
+            'torrents',
+
         )
 
 
@@ -143,7 +164,7 @@ class OwnedUserProfileSerializer(AdminUserProfileSerializer):
             'last_seeded',
         )
 
-    extra_kwargs = {'username': {'read_only': True, 'required': True}}
+    extra_kwargs = {'username': {'read_only': True}}
 
 
 class PublicUserProfileSerializer(OwnedUserProfileSerializer):
