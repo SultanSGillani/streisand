@@ -18,13 +18,11 @@ THIRD_PARTY_APPS = [
     'decouple',
     'django_filters',
     'django_su',
-    'docs',
     'drf_yasg',
     'jet',
     'knox',
     'rest_framework',
     'rest_framework_filters',
-    'suit.apps.DjangoSuitConfig',
 ]
 
 DJANGO_APPS = [
