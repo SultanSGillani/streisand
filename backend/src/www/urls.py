@@ -1,11 +1,8 @@
 # -*- coding: utf-8 -*-
 
-import debug_toolbar
-from decouple import config
-
+from django.conf import settings
 from django.conf.urls import include, url
 from django.contrib import admin
-from django.contrib.admin.views.decorators import staff_member_required
 from django.views.generic import TemplateView
 
 from api.torrents.views import TorrentUploadViewSet
@@ -41,12 +38,8 @@ urlpatterns = [
 
 ]
 
-DEBUG = config('DEBUG', cast=bool)
-
-if DEBUG:
-    urlpatterns = [
-        url(r'^__debug__/', include(debug_toolbar.urls)),
-        url(r'^dev/',
-            staff_member_required(
-                TemplateView.as_view(template_name='dev.html')))
-    ] + urlpatterns
+if settings.DEBUG:
+    import debug_toolbar
+    urlpatterns.append(
+        url(r'^__debug__/', include(debug_toolbar.urls))
+    )
