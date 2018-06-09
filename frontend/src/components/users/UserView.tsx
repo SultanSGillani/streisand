@@ -41,7 +41,6 @@ function InfoRow(props: IRowProps) {
     );
 }
 
-// 'https://pbs.twimg.com/media/DfLMwSKVMAEdqKY.jpg'
 type CombinedProps = ConnectedState & ConnectedDispatch & Props;
 class UserViewComponent extends React.Component<CombinedProps, State> {
      private _editorHandle: IEditorHandle;
