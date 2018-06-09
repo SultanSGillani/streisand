@@ -81,7 +81,7 @@ class UserViewComponent extends React.Component<CombinedProps, State> {
                 <TabContent activeTab={this.state.activeTab}>
                     <TabPane tabId="profile" id="profile">
                         <Avatar user={user} />
-                        <Card body>
+                        <Card body className="mt-1">
                             <TextView content={description} />
                         </Card>
                     </TabPane>
