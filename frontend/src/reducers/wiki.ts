@@ -17,6 +17,7 @@ function byId(state: ItemMap = {}, action: Action): ItemMap {
             delete copy[action.props.id];
             return copy;
         case 'RECEIVED_WIKI':
+        case 'RECEIVED_WIKI_UPDATE':
             return addLoadedNode(state, action.wiki);
         case 'RECEIVED_WIKIS':
             return addLoadedNodes(state, action.props.items);

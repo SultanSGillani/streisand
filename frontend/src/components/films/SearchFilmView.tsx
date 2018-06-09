@@ -5,7 +5,7 @@ import { Card, Form, CardBody, CardFooter, Button, CardTitle } from 'reactstrap'
 import Store from '../../store';
 import FilmList from './FilmList';
 import { IDispatch } from '../../actions/ActionTypes';
-import { TextInput, NumericInput } from '../generic/inputs';
+import { StringInput, NumericInput } from '../generic/inputs';
 import { searchFilm, IFilmSearchProps } from '../../actions/films/FilmsSearchAction';
 
 export type Props = {};
@@ -42,9 +42,9 @@ class SearchFilmViewComponent extends React.Component<CombinedProps, State> {
                     <CardBody>
                         <CardTitle>Search films</CardTitle>
                         <Form onKeyPress={onSearchFilm} autoComplete="off">
-                            <TextInput id="title" label="Title" placeholder="Film title"
+                            <StringInput id="title" label="Title" placeholder="Film title"
                                 value={this.state.title} setValue={(value: string) => this.setState({ title: value })} />
-                            <TextInput id="description" label="Description" placeholder="Film description"
+                            <StringInput id="description" label="Description" placeholder="Film description"
                                 value={this.state.description} setValue={(value: string) => this.setState({ description: value })} />
                             <NumericInput id="year" label="Year of release"
                                 value={this.state.year} setValue={(value: number) => this.setState({ year: value })} />

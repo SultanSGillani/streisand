@@ -10,6 +10,7 @@ import Loading from '../components/generic/Loading';
 import UserView from '../components/users/UserView';
 import { numericIdentifier } from '../utilities/shim';
 import { getUser } from '../actions/users/UserAction';
+import ILoadingStatus from '../models/base/ILoadingStatus';
 
 export type Props = {
     params: {
@@ -20,7 +21,7 @@ export type Props = {
 type ConnectedState = {
     userId: number;
     user?: IUser;
-    loading: boolean;
+    status: ILoadingStatus;
 };
 
 type ConnectedDispatch = {
@@ -31,14 +32,17 @@ type CombinedProps = ConnectedState & ConnectedDispatch & Props;
 class UserPageComponent extends React.Component<CombinedProps, void> {
     public componentWillMount() {
         const hasContent = this.props.user && this.props.user.details;
-        if (!this.props.loading && !hasContent) {
+        if (!this.props.status.loading && !hasContent) {
             this.props.getUser(this.props.userId);
         }
     }
 
     public componentWillReceiveProps(props: CombinedProps) {
+        const status = props.status;
+        const changed = props.userId !== this.props.userId;
         const hasContent = props.user && props.user.details;
-        if (this.props.userId !== props.userId || (!props.loading && !hasContent)) {
+        const needUpdate = !status.failed && (!status.loaded || status.outdated);
+        if (!status.loading && (changed || needUpdate || !hasContent)) {
             props.getUser(props.userId);
         }
     }
@@ -46,7 +50,7 @@ class UserPageComponent extends React.Component<CombinedProps, void> {
     public render() {
         const user = this.props.user;
         if (!user || !user.details) {
-            return this.props.loading ? <Loading /> : <Empty />;
+            return this.props.status.loading ? <Loading /> : <Empty />;
         }
 
         return (
@@ -61,7 +65,7 @@ const mapStateToProps = (state: Store.All, props: Props): ConnectedState => {
     return {
         userId: userId,
         user: node.item,
-        loading: node.status.loading
+        status: node.status
     };
 };
 
