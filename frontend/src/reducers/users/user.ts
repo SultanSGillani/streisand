@@ -16,6 +16,7 @@ function byId(state: ItemMap = {}, action: Action): ItemMap {
     switch (action.type) {
         case 'RECEIVED_USER':
         case 'RECEIVED_CURRENT_USER':
+        case 'RECEIVED_USER_UPDATE':
             return addLoadedNode(state, action.user);
         case 'RECEIVED_BULK_USERS':
             return addLoadedNodes(state, action.users);

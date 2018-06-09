@@ -6,7 +6,7 @@ import Store from '../../store';
 import { IFilmUpdate } from '../../models/IFilm';
 import CommandBar, { ICommand } from '../CommandBar';
 import { IDispatch } from '../../actions/ActionTypes';
-import { TextInput, NumericInput } from '../generic/inputs';
+import { StringInput, NumericInput } from '../generic/inputs';
 import { createFilm } from '../../actions/films/CreateFilmAction';
 
 export type Props = {};
@@ -56,17 +56,17 @@ class CreateFilmViewComponent extends React.Component<CombinedProps, State> {
             <div>
                 <CommandBar commands={[create]} />
                 <Form onKeyPress={onCreateFilm} autoComplete="off">
-                    <TextInput id="imdb" label="IMDB identifier" placeholder="Corresponding imdb identifier"
+                    <StringInput id="imdb" label="IMDB identifier" placeholder="Corresponding imdb identifier"
                         value={this.state.imdbId} setValue={(value: string) => this.setState({ imdbId: value })} />
                     <NumericInput id="tmdb" label="TMDB identifier"
                         value={this.state.tmdbId} setValue={(value: number) => this.setState({ tmdbId: value })} />
-                    <TextInput id="title" label="Title" placeholder="Film title"
+                    <StringInput id="title" label="Title" placeholder="Film title"
                         value={this.state.title} setValue={(value: string) => this.setState({ title: value })} />
-                    <TextInput id="description" label="Description" placeholder="Film description"
+                    <StringInput id="description" label="Description" placeholder="Film description"
                         value={this.state.description} setValue={(value: string) => this.setState({ description: value })} />
-                    <TextInput id="poster" label="Poster url" placeholder="Film poster"
+                    <StringInput id="poster" label="Poster url" placeholder="Film poster"
                         value={this.state.posterUrl} setValue={(value: string) => this.setState({ posterUrl: value })} />
-                    <TextInput id="trailer" label="Trailer url" placeholder="Youtube url or identifier"
+                    <StringInput id="trailer" label="Trailer url" placeholder="Youtube url or identifier"
                         value={this.state.trailerUrl} setValue={(value: string) => this.setState({ trailerUrl: value })} />
                     <NumericInput id="duration" label="Duration (in minutes)"
                         value={this.state.duration} setValue={(value: number) => this.setState({ duration: value })} />
