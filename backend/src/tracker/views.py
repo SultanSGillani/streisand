@@ -1,7 +1,5 @@
 # -*- coding: utf-8 -*-
 
-import pprint
-
 from django.conf import settings
 from django.http import HttpResponse
 from django.utils.timezone import now
@@ -242,29 +240,7 @@ class AnnounceView(View):
             'peers': compact_peer_list_for_client,
         }
 
-        if settings.DEBUG:
-            return HttpResponse(
-                '<html>'
-                '<head><title>Announce</title></head>'
-                '<body>'
-                'Auth key: {announce_key}<br/>'
-                'IP: {ip}<br/>'
-                '<br/>Torrent: {torrent}<br/>'
-                '<br/>Peers: {peers}<br/>'
-                '<br/>Request params: <pre>{params}</pre><br/>'
-                '<br/>Response: <pre>{response_dict}</pre><br/>'
-                '</body>'
-                '</html>'.format(
-                    announce_key=announce_key,
-                    ip=ip_address,
-                    torrent=swarm,
-                    peers=swarm.peers.all(),
-                    params=pprint.pformat(params),
-                    response_dict=pprint.pformat(response_dict),
-                )
-            )
-        else:
-            return BencodedResponse(response_dict)
+        return BencodedResponse(response_dict)
 
     @staticmethod
     def failure(reason):

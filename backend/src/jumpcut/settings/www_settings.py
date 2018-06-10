@@ -4,12 +4,36 @@ from datetime import timedelta
 
 from .common_settings import *
 
+
 INTERNAL_IPS = config(
     'INTERNAL_IPS', cast=lambda v: [s.strip() for s in v.split(',')], default='10.0.0.2')
 
 DEBUG_TOOLBAR_CONFIG = {
     "SHOW_TOOLBAR_CALLBACK": lambda request: True,
 }
+
+
+THIRD_PARTY_APPS = [
+    'corsheaders',
+    'decouple',
+    'django_filters',
+    'django_su',
+    'drf_yasg',
+    'jet',
+    'knox',
+    'rest_framework',
+    'rest_framework_filters',
+]
+
+DJANGO_APPS = [
+    'django.contrib.admin',
+    'django.contrib.admindocs',
+    'django.contrib.auth',
+    'django.contrib.contenttypes',
+    'django.contrib.sessions',
+    'django.contrib.messages',
+    'django.contrib.staticfiles',
+]
 
 MIDDLEWARE = [
     'corsheaders.middleware.CorsMiddleware',
@@ -24,23 +48,10 @@ MIDDLEWARE = [
     'django.contrib.admindocs.middleware.XViewMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'www.middleware.CachedUserAuthenticationMiddleware',
-    'www.middleware.LoginRequiredMiddleware',
     'www.middleware.IPHistoryMiddleware',
 ]
 
 ROOT_URLCONF = 'www.urls'
-
-LOGIN_URL = '/'
-LOGIN_REDIRECT_URL = '/'
-LOGIN_EXEMPT_URL_PREFIXES = (
-    '/__debug__/',
-    '/register/',
-    '/logout/',
-    '/torrents/download/',
-    '/redoc/',
-    '/swagger/',
-    '/api/v1/',
-)
 
 PASSWORD_HASHERS = [
     'django.contrib.auth.hashers.Argon2PasswordHasher',
@@ -49,23 +60,19 @@ PASSWORD_HASHERS = [
 
 AUTH_PASSWORD_VALIDATORS = [
     {
-        'NAME':
-            'django.contrib.auth.password_validation.UserAttributeSimilarityValidator',
+        'NAME': 'django.contrib.auth.password_validation.UserAttributeSimilarityValidator',
     },
     {
-        'NAME':
-            'django.contrib.auth.password_validation.MinimumLengthValidator',
+        'NAME': 'django.contrib.auth.password_validation.MinimumLengthValidator',
         'OPTIONS': {
             'min_length': 10,
         }
     },
     {
-        'NAME':
-            'django.contrib.auth.password_validation.CommonPasswordValidator',
+        'NAME': 'django.contrib.auth.password_validation.CommonPasswordValidator',
     },
     {
-        'NAME':
-            'django.contrib.auth.password_validation.NumericPasswordValidator',
+        'NAME': 'django.contrib.auth.password_validation.NumericPasswordValidator',
     },
 ]
 
@@ -208,7 +215,7 @@ TEMPLATES = [
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/dev/howto/static-files/
 STATIC_URL = '/static/'
-STATICFILES_DIRS = (os.path.join(BASE_DIR, 'static'),)
+STATICFILES_DIRS = [os.path.join(BASE_DIR, 'static')]
 STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
 
 STATICFILES_FINDERS = (
@@ -218,8 +225,6 @@ STATICFILES_FINDERS = (
 
 MEDIA_URL = '/media/'
 MEDIA_ROOT = os.path.join(BASE_DIR, 'mediafiles')
-
-TORRENT_FILE_UPLOAD_MAX_SIZE = 1024 * 1024 * 5  # 5MB
 
 ITEMS_PER_PAGE = 50
 
@@ -274,7 +279,19 @@ LOGGING = {
     }
 }
 
-if 'test' in sys.argv:
+
+if DEBUG and not TESTING:
+    THIRD_PARTY_APPS += [
+        'bandit',
+        'debug_toolbar',
+        'django_extensions',
+    ]
+    EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
+    BANDIT_EMAIL = config('BANDIT_EMAIL', default='')
+
+
+if TESTING:
+
     TEST_RUNNER = 'tests.test_utils.CustomTestSuiteRunner'
 
     DDF_FILL_NULLABLE_FIELDS = False
@@ -283,7 +300,6 @@ if 'test' in sys.argv:
     PASSWORD_HASHERS = [
         'django.contrib.auth.hashers.MD5PasswordHasher',
     ]
-
     REST_KNOX['SECURE_HASH_ALGORITHM'] = 'cryptography.hazmat.primitives.hashes.MD5'
 
     CACHES = {
@@ -292,3 +308,18 @@ if 'test' in sys.argv:
             'TIMEOUT': None,
         }
     }
+
+    DATABASE_URL = config('TESTING_DATABASE_URL')
+    DATABASES = {
+        'default': dj_database_url.parse(DATABASE_URL)
+    }
+
+    # https://docs.djangoproject.com/en/dev/ref/settings/#email-backend
+    EMAIL_BACKEND = "django.core.mail.backends.locmem.EmailBackend"
+    # https://docs.djangoproject.com/en/dev/ref/settings/#email-host
+    EMAIL_HOST = "localhost"
+    # https://docs.djangoproject.com/en/dev/ref/settings/#email-port
+    EMAIL_PORT = 1025
+
+
+INSTALLED_APPS = THIRD_PARTY_APPS + DJANGO_APPS + LOCAL_APPS
