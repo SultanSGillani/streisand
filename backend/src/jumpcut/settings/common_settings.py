@@ -29,9 +29,7 @@ DEBUG = config('DEBUG', cast=bool)
 PRODUCTION = config('PRODUCTION', cast=bool)
 TESTING = 'test' in sys.argv
 
-ALLOWED_HOSTS = [
-    'localhost',
-]
+ALLOWED_HOSTS = config('ALLOWED_HOSTS', cast=lambda v: [s.strip() for s in v.split(',')])
 
 HOST_DOMAIN = config('HOST_DOMAIN', default='jumpcut.to')
 if HOST_DOMAIN:
