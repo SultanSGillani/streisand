@@ -12,7 +12,6 @@ import { numericIdentifier } from '../../utilities/shim';
 import { getFilm } from '../../actions/films/FilmAction';
 import ILoadingStatus from '../../models/base/ILoadingStatus';
 import { getTorrents } from '../../actions/torrents/FilmTorrentsAction';
-import ILoadingStatus from '../../models/base/ILoadingStatus';
 
 export type Props = {
     params: {

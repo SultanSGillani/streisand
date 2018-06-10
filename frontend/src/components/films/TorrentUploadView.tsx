@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { Button } from 'reactstrap';
+import { Button, Card, CardBody, Form, CardFooter } from 'reactstrap';
 import { connect } from 'react-redux';
 
 import Store from '../../store';
@@ -7,6 +7,9 @@ import IFilm from '../../models/IFilm';
 import { IDispatch } from '../../actions/ActionTypes';
 import ITorrentFileInfo from '../../models/ITorrentFileInfo';
 import { uploadTorrent } from '../../actions/torrents/UploadTorrentAction';
+import { ITorrentUpdate } from '../../models/ITorrent';
+import { createTorrent } from '../../actions/torrents/CreateTorrentAction';
+import { StringInput } from '../generic/inputs';
 
 export type Props = {
     film: IFilm;
@@ -14,6 +17,7 @@ export type Props = {
 
 type State = {
     file?: File;
+    description: string;
 };
 
 type ConnectedState = {
@@ -22,6 +26,7 @@ type ConnectedState = {
 
 type ConnectedDispatch = {
     uploadTorrent: (file: File) => void;
+    createTorrent: (props: ITorrentUpdate) => void;
 };
 
 type CombinedProps = Props & ConnectedDispatch & ConnectedState;
@@ -29,7 +34,9 @@ class TorrentUploadViewComponent extends React.Component<CombinedProps, State> {
     constructor(props: CombinedProps) {
         super(props);
 
-        this.state = {};
+        this.state = {
+            description: ''
+        };
     }
 
     public render() {
@@ -60,8 +67,66 @@ class TorrentUploadViewComponent extends React.Component<CombinedProps, State> {
                         <Button color="primary" disabled={!canUpload} onClick={uploadTorrent}>Upload</Button>
                     </div>
                 </div>
+                {this._getCreationCard()}
             </div>
         );
+    }
+
+    private _getCreationCard() {
+        if (!this.props.torrentFileInfo) {
+            return undefined;
+        }
+        const onCreateTorrent = this._createTorrent.bind(this);
+        return (
+            <Card className="mt-3">
+                <CardBody>
+                    <Form onKeyPress={onCreateTorrent} autoComplete="off">
+                        <StringInput id="description" label="Description" placeholder="torrent description"
+                            value={this.state.description} setValue={(value: string) => this.setState({ description: value })} />
+                    </Form>
+                </CardBody>
+                <CardFooter>
+                    <div className="row m-0 justify-content-end">
+                        <Button className="col-auto" color="primary" onClick={() => onCreateTorrent()}>Create</Button>
+                    </div>
+                </CardFooter>
+            </Card>
+        );
+    }
+
+    private _createTorrent(event?: React.KeyboardEvent<HTMLElement>) {
+        if (event && event.key !== 'Enter') {
+            return;
+        }
+
+        const { description } = this.state;
+        if (this.props.torrentFileInfo && description) {
+            const { infoHash, downloadUrl } = this.props.torrentFileInfo;
+            this.props.createTorrent({
+                description, infoHash, downloadUrl,
+                filmId: this.props.film.id,
+                cut: 'Theatrical',
+                codec: 'XviD',
+                container: 'AVI',
+                resolution: 'Standard Def',
+                sourceMedia: 'DVD',
+                isScene: false,
+                isSource: false,
+                is3d: false,
+                format: 'something',
+                nfo: 'something',
+                releaseGroup: 'something',
+                releaseName: 'something',
+                uploadedBy: 1,
+                mediainfo: {
+                    bitRate: 'something',
+                    displayAspectRatio: 'something',
+                    text: 'something'
+                },
+                comments: []
+            });
+        }
+        return false;
     }
 }
 
@@ -72,7 +137,8 @@ const mapStateToProps = (state: Store.All, props: Props): ConnectedState => {
 };
 
 const mapDispatchToProps = (dispatch: IDispatch): ConnectedDispatch => ({
-    uploadTorrent: (file: File) => dispatch(uploadTorrent(file))
+    uploadTorrent: (file: File) => dispatch(uploadTorrent(file)),
+    createTorrent: (props: ITorrentUpdate) => dispatch(createTorrent(props))
 });
 
 const TorrentUploadView: React.ComponentClass<Props> =
