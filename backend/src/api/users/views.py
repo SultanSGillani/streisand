@@ -67,7 +67,7 @@ class ChangePasswordView(UpdateAPIView):
         self.object = self.get_object()
         serializer = self.get_serializer(data=request.data)
 
-        if serializer.is_valid():
+        if serializer.is_valid(raise_exception=True):
             # Check old password
             if not self.object.check_password(serializer.data.get("old_password")):
                 return Response({"old_password": ["Wrong password."]}, status=status.HTTP_400_BAD_REQUEST)
@@ -80,9 +80,10 @@ class ChangePasswordView(UpdateAPIView):
 
 
 class CurrentUserView(RetrieveUpdateAPIView):
-    queryset = User.objects.all()
     serializer_class = CurrentUserSerializer
     permission_classes = [IsOwnerOrReadOnly]
+
+    queryset = User.objects.all()
 
     def get_object(self):
         queryset = self.filter_queryset(self.get_queryset())
@@ -90,6 +91,13 @@ class CurrentUserView(RetrieveUpdateAPIView):
         obj = queryset.get(pk=self.request.user.id)
         self.check_object_permissions(self.request, obj)
         return obj
+
+    def perform_partial_update(self, serializer, **kwargs):
+        kwargs['partial'] = True
+        serializer.save(user=self.request.user)
+
+    def perform_update(self, serializer):
+        serializer.save(user=self.request.user)
 
 
 class PublicUserProfileViewSet(ModelViewSet):
