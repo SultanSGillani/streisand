@@ -4,7 +4,7 @@ from rest_framework.response import Response
 from rest_framework.decorators import action
 
 from api.mixins import MultiSerializerViewSetMixin
-from private_messages.models import Conversation, Message
+from private_messages.models import Conversation
 from . import serializers
 
 
@@ -35,9 +35,7 @@ class ConversationViewSet(MultiSerializerViewSetMixin, viewsets.GenericViewSet,
         # we want to return the detail serializer back from the api not the request
         conversation = Conversation.objects.get(id=serializer.data['pk'])
         conv_serializer = serializers.ConversationDetailSerializer(
-            conversation,
-            context={'request': self.request}
-        )
+            conversation, context={'request': self.request})
         return Response(conv_serializer.data, status=status.HTTP_201_CREATED)
 
     @action(methods=['post'], detail=True)
@@ -46,16 +44,16 @@ class ConversationViewSet(MultiSerializerViewSetMixin, viewsets.GenericViewSet,
         Add a new message to the chain
         """
         conversation = self.get_object()
-        serializer = serializers.ReplySerializer(data=request.data, context={
-            'request': request,
-            'conversation': conversation
-        })
+        serializer = serializers.ReplySerializer(
+            data=request.data,
+            context={
+                'request': request,
+                'conversation': conversation
+            })
         serializer.is_valid(raise_exception=True)
         serializer.save()
         conv_serializer = serializers.ConversationDetailSerializer(
-            conversation,
-            context={'request': self.request}
-        )
+            conversation, context={'request': self.request})
         return Response(conv_serializer.data, status=status.HTTP_201_CREATED)
 
     @action(methods=['post'], detail=True)
@@ -66,7 +64,5 @@ class ConversationViewSet(MultiSerializerViewSetMixin, viewsets.GenericViewSet,
         conversation = self.get_object()
         conversation.clear_notification(request.user)
         conv_serializer = serializers.ConversationDetailSerializer(
-            conversation,
-            context={'request': self.request}
-        )
+            conversation, context={'request': self.request})
         return Response(conv_serializer.data, status=status.HTTP_201_CREATED)

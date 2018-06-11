@@ -17,7 +17,8 @@ class ReplySerializer(serializers.Serializer):
 
 class InitialMessageSerializer(serializers.Serializer):
 
-    title = serializers.CharField(max_length=200)  # Change this and remember to change the model
+    title = serializers.CharField(
+        max_length=200)  # Change this and remember to change the model
     body = serializers.CharField(allow_blank=False)
     to = serializers.PrimaryKeyRelatedField(queryset=User.objects.all())
 
@@ -26,10 +27,11 @@ class InitialMessageSerializer(serializers.Serializer):
 
     def create(self, validated_data):
         user = self.context['request'].user
-        conversation = Conversation.initiate(sender=user,
-                                                    receiver=validated_data['to'],
-                                                    title=validated_data['title'],
-                                                    body=validated_data['body'])
+        conversation = Conversation.initiate(
+            sender=user,
+            receiver=validated_data['to'],
+            title=validated_data['title'],
+            body=validated_data['body'])
         # hack for viewset
         validated_data['pk'] = conversation.pk
         return validated_data
@@ -55,7 +57,8 @@ class ConversationSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Conversation
-        fields = ('id', 'title', 'other_user_id', 'unread', 'last_message_sent_at')
+        fields = ('id', 'title', 'other_user_id', 'unread',
+                  'last_message_sent_at')
 
     def get_other_user_id(self, obj):
         if self._user() == obj.sender:
@@ -80,17 +83,21 @@ class ConversationDetailSerializer(ConversationSerializer):
 
     class Meta:
         model = Conversation
-        fields = ('id', 'title', 'other_user_id', 'unread', 'last_message_sent_at', 'messages')
+        fields = ('id', 'title', 'other_user_id', 'unread',
+                  'last_message_sent_at', 'messages')
 
     def paginated_messages(self, obj):
         messages = Message.objects.filter(conversation=obj)
         paginator = pagination.PageNumberPagination()
         page = paginator.paginate_queryset(messages, self.context['request'])
         user_is_sender = self._user() == obj.sender
-        serializer = MessageSerializer(page, many=True, context={
-            'request': self.context['request'],
-            'user_is_sender': user_is_sender
-        })
+        serializer = MessageSerializer(
+            page,
+            many=True,
+            context={
+                'request': self.context['request'],
+                'user_is_sender': user_is_sender
+            })
         # wow this is such an ugly hack
         # get_paginated_response wraps in useful stuff but returns a response so we just extract
         # the data

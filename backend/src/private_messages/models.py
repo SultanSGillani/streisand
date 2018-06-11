@@ -10,11 +10,16 @@ class Conversation(models.Model):
 
     objects = managers.ConversationQuerySet.as_manager()
 
-    sender = models.ForeignKey(users_models.User, related_name='initiated_conversations',
-                               on_delete=models.PROTECT)
-    receiver = models.ForeignKey(users_models.User, related_name='responded_conversations',
-                                 on_delete=models.PROTECT)
-    title = models.CharField(max_length=200)  # If you change this change the api serializer too
+    sender = models.ForeignKey(
+        users_models.User,
+        related_name='initiated_conversations',
+        on_delete=models.PROTECT)
+    receiver = models.ForeignKey(
+        users_models.User,
+        related_name='responded_conversations',
+        on_delete=models.PROTECT)
+    title = models.CharField(
+        max_length=200)  # If you change this change the api serializer too
 
     sender_notify = models.BooleanField(default=False)
     receiver_notify = models.BooleanField(default=True)
@@ -38,7 +43,8 @@ class Conversation(models.Model):
         """
 
         # I'm assuming atomic requests
-        conversation = Conversation(sender=sender, receiver=receiver, title=title)
+        conversation = Conversation(
+            sender=sender, receiver=receiver, title=title)
         conversation.full_clean()
         conversation.save()
 
@@ -91,8 +97,8 @@ class Conversation(models.Model):
 
 class Message(models.Model):
 
-    conversation = models.ForeignKey(Conversation, related_name='messages',
-                                     on_delete=models.CASCADE)
+    conversation = models.ForeignKey(
+        Conversation, related_name='messages', on_delete=models.CASCADE)
     body = models.TextField()
     sent_at = models.DateTimeField(auto_now_add=True)
     sent_by_initial_sender = models.BooleanField(default=False)

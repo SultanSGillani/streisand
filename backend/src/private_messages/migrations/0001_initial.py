@@ -17,13 +17,26 @@ class Migration(migrations.Migration):
         migrations.CreateModel(
             name='Conversation',
             fields=[
-                ('id', models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
+                ('id',
+                 models.AutoField(
+                     auto_created=True,
+                     primary_key=True,
+                     serialize=False,
+                     verbose_name='ID')),
                 ('title', models.CharField(max_length=200)),
                 ('sender_notify', models.BooleanField(default=False)),
                 ('receiver_notify', models.BooleanField(default=True)),
                 ('last_message_sent_at', models.DateTimeField(auto_now=True)),
-                ('receiver', models.ForeignKey(on_delete=django.db.models.deletion.PROTECT, related_name='responded_conversations', to=settings.AUTH_USER_MODEL)),
-                ('sender', models.ForeignKey(on_delete=django.db.models.deletion.PROTECT, related_name='initiated_conversations', to=settings.AUTH_USER_MODEL)),
+                ('receiver',
+                 models.ForeignKey(
+                     on_delete=django.db.models.deletion.PROTECT,
+                     related_name='responded_conversations',
+                     to=settings.AUTH_USER_MODEL)),
+                ('sender',
+                 models.ForeignKey(
+                     on_delete=django.db.models.deletion.PROTECT,
+                     related_name='initiated_conversations',
+                     to=settings.AUTH_USER_MODEL)),
             ],
             options={
                 'ordering': ['-last_message_sent_at'],
@@ -32,11 +45,20 @@ class Migration(migrations.Migration):
         migrations.CreateModel(
             name='Message',
             fields=[
-                ('id', models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
+                ('id',
+                 models.AutoField(
+                     auto_created=True,
+                     primary_key=True,
+                     serialize=False,
+                     verbose_name='ID')),
                 ('body', models.TextField()),
                 ('sent_at', models.DateTimeField(auto_now_add=True)),
                 ('sent_by_initial_sender', models.BooleanField(default=False)),
-                ('conversation', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, related_name='messages', to='private_messages.Conversation')),
+                ('conversation',
+                 models.ForeignKey(
+                     on_delete=django.db.models.deletion.CASCADE,
+                     related_name='messages',
+                     to='private_messages.Conversation')),
             ],
             options={
                 'ordering': ['sent_at'],
