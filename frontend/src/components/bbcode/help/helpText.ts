@@ -48,8 +48,8 @@ Most BBCode tags will require an end tag, but the [code=inline][lsb], [rsb], and
    [url]https://example.com[/url]
 [lsb]url=https://example.com[rsb]Link[lsb]/url[rsb]
    [url=https://example.com]Link[/url]
-[email]my.email@domain.com[/email]
-   [lsb]email[rsb]my.email@domain.com[lsb]/email[rsb]
+[lsb]email[rsb]my.email@domain.com[lsb]/email[rsb]
+   [email]my.email@domain.com[/email]
 [hr]
 [lsb]img width="150" height="100"[rsb]https://img00.deviantart.net/0687/i/2011/340/3/6/bear_dragon_by_zombiegnu-d4idhlo.png[lsb]/img[rsb][lsb]/url[rsb]
 

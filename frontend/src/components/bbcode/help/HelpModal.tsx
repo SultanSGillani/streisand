@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { Modal, ModalHeader, ModalBody, ModalFooter, Button } from 'reactstrap';
 
-import { helpText } from './example';
+import { helpText } from './helpText';
 import TextView from '../TextView';
 
 export interface IHelpModalProps {
