@@ -42,7 +42,7 @@ class Peer(models.Model):
     id = models.UUIDField(default=uuid4, primary_key=True, editable=False)
 
     swarm = models.ForeignKey(
-        to=Swarm,
+        to='tracker.Swarm',
         db_index=True,
         related_name='peers',
         null=False,

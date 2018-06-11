@@ -1,9 +1,9 @@
+# -*- coding: utf-8 -*-
+
 import invoke
 
+
 MANAGE_PATH = 'src/manage.py'
-WWW_SETTINGS = 'jumpcut.settings.www_settings'
-TRACKER_SETTINGS = 'jumpcut.settings.tracker_settings'
-TESTING_SETTINGS = 'jumpcut.settings.testing_settings'
 
 
 def _manage_run(ctx, command, settings=None):
@@ -33,7 +33,6 @@ def delete_migrations(ctx):
 
 @invoke.task
 def make_migrations(ctx):
-    _manage_run(ctx, 'makemigrations users')
     _manage_run(ctx, 'makemigrations')
 
 
@@ -76,8 +75,7 @@ def run_python_linter(ctx):
 def run_python_tests(ctx, coverage=False):
     if coverage:
         ctx.run(
-            'coverage run --source=''.'' {} test --settings=jumpcut.settings.testing_settings -v 3'.format(
-                MANAGE_PATH))
+            'coverage run --source=''.'' {} test -v 3'.format(MANAGE_PATH))
         ctx.run('coverage report -m')
     else:
         ctx.run('{} test src'.format(MANAGE_PATH))

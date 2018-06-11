@@ -18,7 +18,7 @@ variables:
   REDIS_URL: "redis://redis:6379"
   SECRET_KEY: "jumpcut"
   TESTING_DATABASE_URL: "postgres://postgres:postgres@postgres:5432/postgres"
-  TESTING_WSGI_APPLICATION: "jumpcut.testing_wsgi.application"
+  TESTING_WSGI_APPLICATION: "jumpcut.www_wsgi.application"
 cache:
   paths:
     - .cache/
@@ -62,7 +62,7 @@ release_develop:
     REDIS_URL: "redis://redis:6379"
     SECRET_KEY: "jumpcut"
     TESTING_DATABASE_URL: "postgres://postgres:postgres@postgres:5432/postgres"
-    TESTING_WSGI_APPLICATION: "jumpcut.testing_wsgi.application"
+    TESTING_WSGI_APPLICATION: "jumpcut.www_wsgi.application"
 
   stage: release
   cache: {}
