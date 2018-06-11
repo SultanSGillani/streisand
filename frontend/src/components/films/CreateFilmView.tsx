@@ -1,6 +1,6 @@
 import * as React from 'react';
-import { Form, Card, CardBody, CardFooter, Button } from 'reactstrap';
 import { connect } from 'react-redux';
+import { Form, Card, CardBody, CardFooter, Button } from 'reactstrap';
 
 import Store from '../../store';
 import { IFilmUpdate } from '../../models/IFilm';
@@ -76,7 +76,7 @@ class CreateFilmViewComponent extends React.Component<CombinedProps, State> {
                     </CardBody>
                     <CardFooter>
                         <div className="row m-0 justify-content-end">
-                            <Button className="col-auto" color="primary" disabled={canCreateFilm} onClick={() => onCreateFilm()}>{buttonText}</Button>
+                            <Button className="col-auto" color="primary" disabled={!canCreateFilm} onClick={() => onCreateFilm()}>{buttonText}</Button>
                         </div>
                     </CardFooter>
                 </Card>

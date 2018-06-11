@@ -3,9 +3,10 @@ import { connect } from 'react-redux';
 import { ButtonToolbar, ButtonGroup, ButtonDropdown, DropdownToggle, DropdownMenu } from 'reactstrap';
 
 import Store from '../../../store';
+import HelpModal from '../help/HelpModal';
+import { buildCommands } from './builders';
 import { ITextEditorHandle } from '../TextEditor';
 import { ScreenSize } from '../../../models/IDeviceInfo';
-import { buildCommands } from './builders';
 import { getCommandSet, getModeCommand } from './commands';
 
 type Props = {
@@ -17,6 +18,7 @@ type Props = {
 
 type State = {
     dropdownOpen: boolean;
+    helpModalOpen: boolean;
 };
 
 type ConnectedState = {
@@ -29,18 +31,21 @@ class EditorCommandBarComponent extends React.Component<CombinedProps, State> {
         super(props);
 
         this.state = {
-            dropdownOpen: false
+            dropdownOpen: false,
+            helpModalOpen: false
         };
     }
 
     public render() {
-        const primary = buildCommands([
-            getModeCommand(this.props)
-        ]);
+        const toggleHelp = () => this.setState({ helpModalOpen: !this.state.helpModalOpen });
+        const props = { toggleHelp, ...this.props };
+
+        const primary = buildCommands([getModeCommand(props)]);
 
         const collapse = this.props.screenSize <= ScreenSize.medium;
-        const secondaryCommands = buildCommands(getCommandSet(this.props), collapse);
+        const secondaryCommands = buildCommands(getCommandSet(props), collapse);
         const toggle = () => { this.setState({ dropdownOpen: !this.state.dropdownOpen }); };
+
         const secondary = !collapse ? secondaryCommands : (
             <ButtonDropdown color="secondary" size="md" isOpen={this.state.dropdownOpen} toggle={toggle}>
                 <DropdownToggle caret>BBCode Tools</DropdownToggle>
@@ -49,15 +54,19 @@ class EditorCommandBarComponent extends React.Component<CombinedProps, State> {
                 </DropdownMenu>
             </ButtonDropdown>
         );
+
         return (
-            <ButtonToolbar className="mb-2">
-                <ButtonGroup className="mr-2">
-                    {primary}
-                </ButtonGroup>
-                <ButtonGroup>
-                    {secondary}
-                </ButtonGroup>
-            </ButtonToolbar>
+            <>
+                <ButtonToolbar className="mb-2">
+                    <ButtonGroup className="mr-2">
+                        {primary}
+                    </ButtonGroup>
+                    <ButtonGroup>
+                        {secondary}
+                    </ButtonGroup>
+                </ButtonToolbar>
+                <HelpModal toggle={toggleHelp} isOpen={this.state.helpModalOpen} />
+            </>
         );
     }
 }

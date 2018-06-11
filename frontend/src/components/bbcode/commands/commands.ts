@@ -139,7 +139,7 @@ export function getCommandSet(props: CommandBarProps) {
             icon: 'info',
             title: 'BBCode help',
             onExecute: () => {
-                console.log('Go to help page');
+                props.toggleHelp();
             }
         }
     ];
