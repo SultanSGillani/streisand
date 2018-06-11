@@ -107,6 +107,9 @@ def handle_announce(announce_key, torrent_info_hash, new_bytes_uploaded, new_byt
         user=user,
         ip_address=ip_address,
         used_with='tracker',
+        defaults={
+            'last_used': time_stamp,
+        },
     )
 
     # Announce logging

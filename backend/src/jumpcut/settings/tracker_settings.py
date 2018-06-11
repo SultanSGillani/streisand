@@ -7,13 +7,34 @@ ROOT_URLCONF = 'tracker.urls'
 
 WSGI_APPLICATION = 'jumpcut.tracker_wsgi.application'
 
-DEBUG = config('DEBUG', cast=bool)
+
+DJANGO_APPS = [
+    'django.contrib.auth',
+    'django.contrib.contenttypes',
+]
+
+THIRD_PARTY_APPS = [
+    'knox',
+]
+
+MIDDLEWARE = []
+
 
 if DEBUG:
-    MIDDLEWARE = [
+    MIDDLEWARE += [
         'debug_toolbar.middleware.DebugToolbarMiddleware',
+    ]
+    DJANGO_APPS += [
+        'django.contrib.staticfiles',
+    ]
+    THIRD_PARTY_APPS += [
+        'debug_toolbar',
+        'django_extensions',
     ]
     INTERNAL_IPS = [
         '10.0.2.2',
     ]
     STATIC_URL = '/static/'
+
+
+INSTALLED_APPS = THIRD_PARTY_APPS + DJANGO_APPS + LOCAL_APPS

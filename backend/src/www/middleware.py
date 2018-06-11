@@ -1,32 +1,37 @@
 # -*- coding: utf-8 -*-
 
-from django.http import HttpResponseRedirect
-from django.conf import settings
 from django.contrib.auth import SESSION_KEY, get_user
 from django.contrib.auth.models import AnonymousUser
 from django.core.cache import cache
-from django.utils.deprecation import MiddlewareMixin
 from django.utils.functional import SimpleLazyObject
-from django.utils.http import urlquote
 
 from users.models import User, UserIPAddress
 
 
-class ExtraExceptionInfoMiddleware(MiddlewareMixin):
+class ExtraExceptionInfoMiddleware:
     """
     This middleware adds relevant information to the request when there is an exception
     """
 
+    def __init__(self, get_response):
+        self.get_response = get_response
+
+    def __call__(self, request):
+        return self.get_response(request)
+
     @staticmethod
     def process_exception(request, exception):
         if request.user.is_authenticated:
-            request.META[b'USER'] = request.user.username
+            request.META['USER'] = request.user.username
 
 
-class XForwardedForMiddleware(MiddlewareMixin):
+class XForwardedForMiddleware:
 
-    @staticmethod
-    def process_request(request):
+    def __init__(self, get_response):
+        self.get_response = get_response
+
+    def __call__(self, request):
+
         try:
             real_ip = request.META['HTTP_X_FORWARDED_FOR']
         except KeyError:
@@ -36,11 +41,16 @@ class XForwardedForMiddleware(MiddlewareMixin):
             # Take just the first one.
             request.META['REMOTE_ADDR'] = real_ip.split(',')[0]
 
+        return self.get_response(request)
 
-class IPHistoryMiddleware(MiddlewareMixin):
 
-    @staticmethod
-    def process_request(request):
+class IPHistoryMiddleware:
+
+    def __init__(self, get_response):
+        self.get_response = get_response
+
+    def __call__(self, request):
+
         if request.user.is_authenticated:
             # Update the user's IP history
             UserIPAddress.objects.update_or_create(
@@ -49,34 +59,10 @@ class IPHistoryMiddleware(MiddlewareMixin):
                 used_with='site',
             )
 
-
-class LoginRequiredMiddleware(MiddlewareMixin):
-    """
-    Middleware that requires a user to be authenticated to view any page other
-    than LOGIN_URL. Exemptions to this requirement can optionally be specified
-    in settings via a list of prefixes in settings.LOGIN_EXEMPT_URL_PREFIXES.
-
-    Inspired by:
-    http://onecreativeblog.com/post/59051248/django-login-required-middleware
-    """
-
-    LOGIN_EXEMPT_URL_PREFIXES = (
-        settings.LOGIN_URL,
-    )
-    if hasattr(settings, 'LOGIN_EXEMPT_URL_PREFIXES'):
-        LOGIN_EXEMPT_URL_PREFIXES += tuple(settings.LOGIN_EXEMPT_URL_PREFIXES)
-
-    def process_request(self, request):
-        if not request.user.is_authenticated:
-            if not request.path_info.startswith(self.LOGIN_EXEMPT_URL_PREFIXES):
-                redirect_path = '{login_url}?next={next_url}'.format(
-                    login_url=settings.LOGIN_URL,
-                    next_url=urlquote(request.get_full_path()),
-                )
-                return HttpResponseRedirect(redirect_path)
+        return self.get_response(request)
 
 
-class CachedUserAuthenticationMiddleware(MiddlewareMixin):
+class CachedUserAuthenticationMiddleware:
     """
     Middleware that caches request.user for a session so it doesn't have to be
     looked up in the database for every page load.
@@ -84,10 +70,14 @@ class CachedUserAuthenticationMiddleware(MiddlewareMixin):
     Inspired by: https://github.com/ui/django-cached_authentication_middleware
     """
 
-    def process_request(self, request):
+    def __init__(self, get_response):
+        self.get_response = get_response
+
+    def __call__(self, request):
         request.user = SimpleLazyObject(
             lambda: self.get_cached_user_from_request(request)
         )
+        return self.get_response(request)
 
     @staticmethod
     def get_cached_user_from_request(request):

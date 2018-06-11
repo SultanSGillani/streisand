@@ -24,8 +24,8 @@ services:
       NODE_ENV: development
     ports:
     - 8001:3000
-    volumes:                                                                                           
-    - ./frontend/src:/react/src               
+    volumes:
+    - ./frontend/src:/react/src
   postgres:
     image: postgres:latest
     container_name: db_dev
