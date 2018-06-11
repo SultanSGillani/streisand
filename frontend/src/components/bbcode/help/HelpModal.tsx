@@ -12,7 +12,7 @@ export interface IHelpModalProps {
 export default function HelpModal(props: IHelpModalProps) {
     const { isOpen, toggle } = props;
     return (
-        <Modal isOpen={isOpen} toggle={toggle}>
+        <Modal isOpen={isOpen} toggle={toggle} size="lg">
             <ModalHeader toggle={toggle}>BBCode Help</ModalHeader>
             <ModalBody>
                 <TextView content={helpText} />
