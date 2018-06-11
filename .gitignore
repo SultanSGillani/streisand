@@ -2,7 +2,7 @@ backend/frontend_out
 backend/src/staticfiles
 backend/.env
 backend/pipcache/
-.env
+*.env
 pipcache/
 
 # Byte-compiled / optimized / DLL files

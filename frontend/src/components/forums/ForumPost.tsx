@@ -86,7 +86,8 @@ class ForumPostComponent extends React.Component<CombinedProps, State> {
             );
         }
 
-        const avatar = this.props.screenSize >= ScreenSize.medium ? <Avatar user={author} /> : undefined;
+        const avatar = this.props.screenSize < ScreenSize.medium ? undefined :
+            <div className="col-auto"><Avatar user={author} /></div>;
         return (
             <Card className="mb-2">
                 <CardHeader>
@@ -108,9 +109,7 @@ class ForumPostComponent extends React.Component<CombinedProps, State> {
                 </CardHeader>
                 <CardBody>
                     <div className="row">
-                        <div className="col-auto">
-                            {avatar}
-                        </div>
+                        {avatar}
                         <div className="col">
                             <TextView content={post.body || ''} />
                         </div>

@@ -40,4 +40,10 @@ interface IUser {
     };
 }
 
+export interface IUserUpdate {
+    email?: string;
+    avatarUrl?: string;
+    profileDescription?: string;
+}
+
 export default IUser;

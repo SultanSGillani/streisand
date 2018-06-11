@@ -4,17 +4,19 @@ import { FormGroup, Label, Input } from 'reactstrap';
 export interface ITextInputProps {
     id: string;
     label: string;
+    type?: 'text' | 'email';
     value?: string;
     placeholder?: string;
     setValue: (value: string) => void;
 }
 
-export function TextInput(props: ITextInputProps) {
+export function StringInput(props: ITextInputProps) {
     const id = `${props.id}Input`;
+    const type = props.type || 'text';
     return (
         <FormGroup>
             <Label for={id}>{props.label}</Label>
-            <Input type="text" id={id} value={props.value} placeholder={props.placeholder}
+            <Input type={type} id={id} value={props.value} placeholder={props.placeholder}
                 onChange={(event) => props.setValue(event.target.value)} />
         </FormGroup>
     );
