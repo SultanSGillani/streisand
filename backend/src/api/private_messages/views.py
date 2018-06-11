@@ -4,7 +4,7 @@ from rest_framework.response import Response
 from rest_framework.decorators import action
 
 from api.mixins import MultiSerializerViewSetMixin
-from private_messages import models
+from private_messages.models import Conversation, Message
 from . import serializers
 
 
@@ -24,7 +24,7 @@ class ConversationViewSet(MultiSerializerViewSetMixin, viewsets.GenericViewSet,
     }
 
     def get_queryset(self, *args, **kwargs):
-        return models.Conversation.objects.for_user(self.request.user)
+        return Conversation.objects.for_user(self.request.user)
 
     # Custom create model - for different (hacky) behaviour
     def create(self, request, *args, **kwargs):
@@ -33,7 +33,7 @@ class ConversationViewSet(MultiSerializerViewSetMixin, viewsets.GenericViewSet,
         serializer.save()
         # hack alert - https://github.com/encode/django-rest-framework/issues/1563
         # we want to return the detail serializer back from the api not the request
-        conversation = models.Conversation.objects.get(id=serializer.data['pk'])
+        conversation = Conversation.objects.get(id=serializer.data['pk'])
         conv_serializer = serializers.ConversationDetailSerializer(
             conversation,
             context={'request': self.request}

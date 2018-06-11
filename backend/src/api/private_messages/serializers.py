@@ -1,5 +1,5 @@
 from rest_framework import serializers, pagination
-from private_messages import models
+from private_messages.models import Conversation, Message
 from users.models import User
 
 
@@ -26,7 +26,7 @@ class InitialMessageSerializer(serializers.Serializer):
 
     def create(self, validated_data):
         user = self.context['request'].user
-        conversation = models.Conversation.initiate(sender=user,
+        conversation = Conversation.initiate(sender=user,
                                                     receiver=validated_data['to'],
                                                     title=validated_data['title'],
                                                     body=validated_data['body'])
@@ -41,7 +41,7 @@ class MessageSerializer(serializers.ModelSerializer):
     sent_by_current_user = serializers.SerializerMethodField()
 
     class Meta:
-        model = models.Message
+        model = Message
         fields = ('body', 'sent_at', 'sent_by_current_user')
 
     def get_sent_by_current_user(self, obj):
@@ -54,7 +54,7 @@ class ConversationSerializer(serializers.ModelSerializer):
     unread = serializers.SerializerMethodField()
 
     class Meta:
-        model = models.Conversation
+        model = Conversation
         fields = ('id', 'title', 'other_user_id', 'unread', 'last_message_sent_at')
 
     def get_other_user_id(self, obj):
@@ -79,11 +79,11 @@ class ConversationDetailSerializer(ConversationSerializer):
     messages = serializers.SerializerMethodField('paginated_messages')
 
     class Meta:
-        model = models.Conversation
+        model = Conversation
         fields = ('id', 'title', 'other_user_id', 'unread', 'last_message_sent_at', 'messages')
 
     def paginated_messages(self, obj):
-        messages = models.Message.objects.filter(conversation=obj)
+        messages = Message.objects.filter(conversation=obj)
         paginator = pagination.PageNumberPagination()
         page = paginator.paginate_queryset(messages, self.context['request'])
         user_is_sender = self._user() == obj.sender
