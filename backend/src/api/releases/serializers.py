@@ -69,4 +69,5 @@ class ReleaseCommentSerializer(serializers.ModelSerializer):
             'text',
             'created_at',
             'modified_at'
+            'release_name',
         )
