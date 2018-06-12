@@ -1,9 +1,12 @@
 # -*- coding: utf-8 -*-
 
 from django_filters.rest_framework import DjangoFilterBackend
+from rest_framework.decorators import api_view, permission_classes
 from rest_framework.permissions import IsAdminUser, IsAuthenticated
+from rest_framework.response import Response
 from rest_framework.viewsets import ModelViewSet
 
+from media_formats.models import Codec, Container, Resolution, SourceMedia
 from releases.models import Release, ReleaseComment
 
 from .filters import ReleaseFilter
@@ -59,3 +62,15 @@ class ReleaseCommentViewSet(ModelViewSet):
 
     def get_serializer_context(self):
         return {'request': self.request}
+
+
+@api_view(['GET'])
+@permission_classes([IsAuthenticated])
+def valid_media_formats(request, *args, **kwargs):
+    data = {
+        'codecs': Codec.objects.values_list('name', flat=True),
+        'containers': Container.objects.values_list('name', flat=True),
+        'resolutions': Resolution.objects.values_list('name', flat=True),
+        'source_media': SourceMedia.objects.values_list('name', flat=True),
+    }
+    return Response(data)

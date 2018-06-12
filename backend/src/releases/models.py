@@ -11,7 +11,7 @@ class Release(models.Model):
         to='films.Film',
         null=False,
         db_index=True,
-        related_name='torrents',
+        related_name='releases',
         on_delete=models.CASCADE,
     )
     cut = models.CharField(max_length=128, null=True, default=None)
