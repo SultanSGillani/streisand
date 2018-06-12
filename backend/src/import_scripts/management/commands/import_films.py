@@ -41,4 +41,4 @@ class Command(MySQLCommand):
             trailer_url='https://www.youtube.com/watch?v={id}'.format(id=yt_id) if yt_id else '',
         )
 
-        f.tags.set(tags)
+        f.genre_tags.set(tags)

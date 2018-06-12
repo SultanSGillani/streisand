@@ -28,3 +28,7 @@ class Resolution(MediaFormat):
 
 class SourceMedia(MediaFormat):
     pass
+
+
+class Genre(MediaFormat):
+    pass
