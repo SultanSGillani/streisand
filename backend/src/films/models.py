@@ -32,7 +32,7 @@ class Film(models.Model):
     duration_in_minutes = models.IntegerField(null=True)
     description = models.TextField()
     moderation_notes = models.TextField(blank=True)
-    tags = models.ManyToManyField('films.Tag', related_name='films', blank=True)
+    genre_tags = models.ManyToManyField('media_formats.Genre', related_name='films', blank=True)
 
     def __str__(self):
         return '{title} ({year})'.format(title=self.title, year=self.year)
@@ -76,7 +76,6 @@ class Collection(models.Model):
     title = models.CharField(max_length=1024)
     description = models.TextField()
     film = models.ManyToManyField(Film, related_name='lists')
-    collection_tags = models.ManyToManyField('films.Tag', related_name='collections')
 
     def __str__(self):
         return self.title
@@ -89,6 +88,8 @@ class Collection(models.Model):
 
 
 class CollectionComment(Comment):
-    collection = models.ForeignKey(Collection, related_name='collections_comments',
-                                   on_delete=models.CASCADE,
-                                   )
+    collection = models.ForeignKey(
+        to='films.Collection',
+        related_name='comments',
+        on_delete=models.CASCADE,
+    )

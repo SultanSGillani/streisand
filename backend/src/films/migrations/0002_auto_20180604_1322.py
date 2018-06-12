@@ -50,7 +50,7 @@ class Migration(migrations.Migration):
         migrations.AddField(
             model_name='collectioncomment',
             name='collection',
-            field=models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, related_name='collections_comments', to='films.Collection'),
+            field=models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, related_name='comments', to='films.Collection'),
         ),
         migrations.AddField(
             model_name='collection',

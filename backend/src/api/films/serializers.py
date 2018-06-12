@@ -97,7 +97,7 @@ class AdminFilmSerializer(serializers.ModelSerializer):
             'duration_in_minutes',
             'description',
             'moderation_notes',
-            'tags',
+            'genre_tags',
         )
 
     def get_imdb_id(self, film):
@@ -105,7 +105,7 @@ class AdminFilmSerializer(serializers.ModelSerializer):
             return film.imdb.tt_id
 
     extra_kwargs = {
-        'tags': {'required': False},
+        'genre_tags': {'required': False},
         'fanart_url': {'required': False},
         'moderation_notes': {'required': False},
     }
@@ -162,7 +162,7 @@ class CollectionSerializer(serializers.ModelSerializer):
         view_name='film-detail'
     )
     url = serializers.HyperlinkedIdentityField(read_only=True, view_name='collection-detail')
-    collection_comments = CollectionCommentSerializer(source='collections_comments', many=True, read_only=True)
+    comments = CollectionCommentSerializer(many=True, read_only=True)
 
     class Meta(CollectionCommentSerializer.Meta):
 
@@ -178,12 +178,11 @@ class CollectionSerializer(serializers.ModelSerializer):
         fields = (
             'creator_id',
             'creator_username',
-            'collection_comments',
+            'comments',
             'list_id',
             'url',
             'list_title',
             'list_description',
-            'collection_tags',
             'film',
             'film_title',
             'film_link'

@@ -9,11 +9,11 @@ class FilmFilter(filters.FilterSet):
 
     title = filters.CharFilter(field_name='title', lookup_expr='icontains')
     description = filters.CharFilter(field_name='description', lookup_expr='icontains')
-    tags = filters.CharFilter(field_name='tags')
+    genre = filters.CharFilter(field_name='genre_tags')
 
     class Meta:
         model = Film
-        fields = ('title', 'description', 'tags', 'year', )
+        fields = ('title', 'description', 'genre_tags', 'year', )
 
 
 class CollectionFilter(filters.FilterSet):

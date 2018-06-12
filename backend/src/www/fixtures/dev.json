@@ -432,150 +432,148 @@
     }
   },
   {
-    "model": "films.tag",
+    "model": "media_formats.genre",
     "pk": "",
     "fields": {}
   },
   {
-    "model": "films.tag",
+    "model": "media_formats.genre",
     "pk": "Action",
     "fields": {}
   },
   {
-    "model": "films.tag",
+    "model": "media_formats.genre",
     "pk": "Adventure",
     "fields": {}
   },
   {
-    "model": "films.tag",
+    "model": "media_formats.genre",
     "pk": "Animation",
     "fields": {}
   },
   {
-    "model": "films.tag",
+    "model": "media_formats.genre",
     "pk": "Anime",
     "fields": {}
   },
   {
-    "model": "films.tag",
+    "model": "media_formats.genre",
     "pk": "Biography",
     "fields": {}
   },
   {
-    "model": "films.tag",
+    "model": "media_formats.genre",
     "pk": "Comedy",
     "fields": {}
   },
   {
-    "model": "films.tag",
+    "model": "media_formats.genre",
     "pk": "Crime",
     "fields": {}
   },
   {
-    "model": "films.tag",
+    "model": "media_formats.genre",
     "pk": "Documentary",
     "fields": {}
   },
   {
-    "model": "films.tag",
+    "model": "media_formats.genre",
     "pk": "Drama",
     "fields": {}
   },
   {
-    "model": "films.tag",
+    "model": "media_formats.genre",
     "pk": "Family",
     "fields": {}
   },
   {
-    "model": "films.tag",
+    "model": "media_formats.genre",
     "pk": "Fantasy",
     "fields": {}
   },
   {
-    "model": "films.tag",
+    "model": "media_formats.genre",
     "pk": "Film-Noir",
     "fields": {}
   },
   {
-    "model": "films.tag",
+    "model": "media_formats.genre",
     "pk": "Foreign",
     "fields": {}
   },
   {
-    "model": "films.tag",
+    "model": "media_formats.genre",
     "pk": "History",
     "fields": {}
   },
   {
-    "model": "films.tag",
+    "model": "media_formats.genre",
     "pk": "Horror",
     "fields": {}
   },
   {
-    "model": "films.tag",
+    "model": "media_formats.genre",
     "pk": "Indie",
     "fields": {}
   },
   {
-    "model": "films.tag",
+    "model": "media_formats.genre",
     "pk": "Music",
     "fields": {}
   },
   {
-    "model": "films.tag",
+    "model": "media_formats.genre",
     "pk": "Musical",
     "fields": {}
   },
   {
-    "model": "films.tag",
+    "model": "media_formats.genre",
     "pk": "Mystery",
     "fields": {}
   },
   {
-    "model": "films.tag",
+    "model": "media_formats.genre",
     "pk": "Political",
     "fields": {}
   },
   {
-    "model": "films.tag",
+    "model": "media_formats.genre",
     "pk": "Romance",
     "fields": {}
   },
   {
-    "model": "films.tag",
+    "model": "media_formats.genre",
     "pk": "Sci-Fi",
     "fields": {}
   },
   {
-    "model": "films.tag",
+    "model": "media_formats.genre",
     "pk": "Short",
     "fields": {}
   },
   {
-    "model": "films.tag",
+    "model": "media_formats.genre",
     "pk": "Sport",
     "fields": {}
   },
   {
-    "model": "films.tag",
+    "model": "media_formats.genre",
     "pk": "Stand-Up",
     "fields": {}
   },
   {
-    "model": "films.tag",
+    "model": "media_formats.genre",
     "pk": "Thriller",
     "fields": {}
   },
   {
-    "model": "films.tag",
+    "model": "media_formats.genre",
     "pk": "War",
     "fields": {}
   },
   {
-    "model": "films.tag",
+    "model": "media_formats.genre",
     "pk": "Western",
     "fields": {}
   }
 ]
-
-

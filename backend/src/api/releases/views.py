@@ -6,7 +6,7 @@ from rest_framework.permissions import IsAdminUser, IsAuthenticated
 from rest_framework.response import Response
 from rest_framework.viewsets import ModelViewSet
 
-from media_formats.models import Codec, Container, Resolution, SourceMedia
+from media_formats.models import Codec, Container, Resolution, SourceMedia, Genre
 from releases.models import Release, ReleaseComment
 
 from .filters import ReleaseFilter
@@ -72,5 +72,6 @@ def valid_media_formats(request, *args, **kwargs):
         'containers': Container.objects.values_list('name', flat=True),
         'resolutions': Resolution.objects.values_list('name', flat=True),
         'source_media': SourceMedia.objects.values_list('name', flat=True),
+        'genre_tags': Genre.objects.values_list('name', flat=True),
     }
     return Response(data)

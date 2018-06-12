@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 
-from django_filters import rest_framework as filters
+from django_filters.rest_framework import DjangoFilterBackend
 from rest_framework.permissions import IsAdminUser, IsAuthenticated
 from rest_framework.viewsets import ModelViewSet
 
@@ -52,23 +52,13 @@ class CollectionViewSet(ModelViewSet):
         'creator',
     ).prefetch_related(
         'film',
-        'collection_tags',
-        'collections_comments',
-        'collections_comments__author',
+        'comments',
+        'comments__author',
     ).order_by(
         '-id',
     ).distinct('id')
-    filter_backends = (filters.DjangoFilterBackend,)
+    filter_backends = [DjangoFilterBackend]
     filter_class = CollectionFilter
-
-    def get_queryset(self):
-        queryset = super().get_queryset()
-
-        # Tag filtering
-        if 'collection_tags' in self.request.query_params:
-            queryset = queryset.filter(collection_tags__name=self.request.query_params['collection_tags'])
-
-        return queryset
 
 
 class FilmViewSet(ModelViewSet):
@@ -77,24 +67,15 @@ class FilmViewSet(ModelViewSet):
     """
     permission_classes = [IsAdminUser]
     serializer_class = AdminFilmSerializer
+    filter_backends = [DjangoFilterBackend]
+    filter_class = FilmFilter
     queryset = Film.objects.all().select_related(
         'imdb',
     ).prefetch_related(
-        'tags',
+        'genre_tags',
         'lists',
         'comments',
         'comments__author',
     ).order_by(
         '-id',
     ).distinct('id')
-    filter_backends = (filters.DjangoFilterBackend,)
-    filter_class = FilmFilter
-
-    def get_queryset(self):
-        queryset = super().get_queryset()
-
-        # Tag filtering
-        if 'tag' in self.request.query_params:
-            queryset = queryset.filter(tags__name=self.request.query_params['tag'])
-
-        return queryset
