@@ -46,7 +46,7 @@ class Migration(migrations.Migration):
         migrations.AddField(
             model_name='release',
             name='film',
-            field=models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, related_name='torrents', to='films.Film'),
+            field=models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, related_name='releases', to='films.Film'),
         ),
         migrations.AddField(
             model_name='release',
