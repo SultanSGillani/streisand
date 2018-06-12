@@ -1,96 +1,17 @@
 # -*- coding: utf-8 -*-
 
 from django.db.utils import IntegrityError
-from django.template.defaultfilters import filesizeformat
 
 from rest_framework import serializers
 from rest_framework.validators import UniqueTogetherValidator
 
 from api.exceptions import AlreadyExistsException
-from mediainfo.serializers import AdminMediainfoSerializer
 from torrent_requests.models import TorrentRequest
 from torrent_stats.models import TorrentStats
-from torrents.models import TorrentComment, TorrentFile
+from torrents.models import TorrentFile
 
+from ..releases.serializers import ReleaseSerializer
 from ..users.serializers import DisplayUserProfileSerializer
-
-# from mediainfo.models import Mediainfo
-
-
-class AdminTorrentSerializer(serializers.ModelSerializer):
-    size = serializers.SerializerMethodField()
-    mediainfo = AdminMediainfoSerializer(source='release.mediainfo')
-    film_id = serializers.PrimaryKeyRelatedField(source='release.film_id', read_only=True)
-    cut = serializers.CharField(source='release.cut')
-    format = serializers.CharField(source='release.format')
-    codec = serializers.CharField(source='release.codec_id')
-    container = serializers.CharField(source='release.container_id')
-    resolution = serializers.CharField(source='release.resolution_id')
-    source_media = serializers.CharField(source='release.source_media_id')
-    is_source = serializers.BooleanField(source='release.is_source')
-    is_scene = serializers.BooleanField(source='release.is_scene')
-    is_3d = serializers.BooleanField(source='release.is_3d')
-    release_name = serializers.CharField(source='release.name')
-    release_group = serializers.CharField(source='release.group')
-    nfo = serializers.CharField(source='release.nfo')
-    description = serializers.CharField(source='release.description')
-    download_url = serializers.SerializerMethodField(read_only=True)
-
-    class Meta:
-        model = TorrentFile
-        fields = (
-            'id',
-            'info_hash',
-            'download_url',
-            'film_id',
-            'cut',
-            'codec',
-            'container',
-            'resolution',
-            'source_media',
-            'is_source',
-            'is_3d',
-            'size',
-            'format',
-            'uploaded_by',
-            'uploaded_at',
-            'last_seeded',
-            'snatch_count',
-            'reseed_request',
-            'is_accepting_reseed_requests',
-            'is_approved',
-            'moderated_by',
-            'release_name',
-            'release_group',
-            'is_scene',
-            'is_single_file',
-            'directory_name',
-            'file',
-            'files',
-            'nfo',
-            'mediainfo',
-            'description',
-            'comments',
-        )
-
-    def get_download_url(self, torrent):
-        request = self.context['request']
-        return torrent.download_url_for_user(request.user)
-
-    @staticmethod
-    def get_size(torrent):
-        return filesizeformat(torrent.total_size_in_bytes)
-
-    @staticmethod
-    def get_piece_size(torrent):
-        return filesizeformat(torrent.piece_size_in_bytes)
-
-    @staticmethod
-    def get_file_list(torrent):
-        if torrent.is_single_file:
-            return [torrent.file]
-        else:
-            return torrent.files
 
 
 class TorrentStatSerializer(serializers.ModelSerializer):
@@ -171,55 +92,61 @@ class TorrentRequestSerializer(serializers.ModelSerializer):
     """
 
 
-class PublicTorrentSerializer(AdminTorrentSerializer):
+class TorrentFileSerializer(serializers.ModelSerializer):
 
-    def __init__(self, *args, **kwargs):
-        super().__init__(*args, **kwargs)
-        remove_fields = (
-            'moderated_by',
-        )
-        for field_name in remove_fields:
-            self.fields.pop(field_name)
-
-
-class TorrentUploadSerializer(serializers.ModelSerializer):
-
-    EXT_BLACKLIST = ('.txt', '.exe', '.rar')
+    release = ReleaseSerializer(required=False)
     uploaded_by = DisplayUserProfileSerializer(default=serializers.CurrentUserDefault())
+    created_by = serializers.CharField(write_only=True)
     pieces = serializers.CharField(write_only=True)
     info_hash = serializers.CharField(read_only=True)
+    total_size_in_bytes = serializers.IntegerField(read_only=True)
     download_url = serializers.SerializerMethodField(read_only=True)
 
     class Meta:
         model = TorrentFile
         fields = (
-            'download_url',
-            'uploaded_by',
-            'created_by',
-            'is_single_file',
-            'file',
-            'directory_name',
-            'files',
-            'pieces',
-            'piece_size_in_bytes',
+            'id',
             'info_hash',
+            'download_url',
+            'release',
+            'total_size_in_bytes',
+            'piece_size_in_bytes',
+            'pieces',
+            'created_by',
+            'uploaded_by',
+            'uploaded_at',
+            'last_seeded',
+            'snatch_count',
+            'reseed_request',
+            'is_accepting_reseed_requests',
+            'is_approved',
+            'moderated_by',
+            'is_single_file',
+            'directory_name',
+            'file',
+            'files',
         )
 
-    def validate_file(self, file):
-        if file['name'].endswith(self.EXT_BLACKLIST):
+    def get_download_url(self, torrent):
+        request = self.context['request']
+        return torrent.download_url_for_user(request.user)
+
+    @staticmethod
+    def enforce_extension_blacklist(file_name):
+        blacklisted_extensions = ('.txt', '.exe', '.rar')
+        if file_name.endswith(blacklisted_extensions):
             raise serializers.ValidationError(
                 'Your torrent may not contain files with the following '
-                'extensions: {blacklist}'.format(blacklist=self.EXT_BLACKLIST)
+                'extensions: {blacklist}'.format(blacklist=blacklisted_extensions)
             )
+
+    def validate_file(self, file):
+        self.enforce_extension_blacklist(file['name'])
         return file
 
     def validate_files(self, files):
         for file in files:
-            if file['path_components'][-1].endswith(self.EXT_BLACKLIST):
-                raise serializers.ValidationError(
-                    'Your torrent may not contain files with the following '
-                    'extensions: {blacklist}'.format(blacklist=self.EXT_BLACKLIST)
-                )
+            self.enforce_extension_blacklist(file['path_components'][-1])
         return files
 
     def save(self, **kwargs):
@@ -227,47 +154,3 @@ class TorrentUploadSerializer(serializers.ModelSerializer):
             return super().save(**kwargs)
         except IntegrityError:
             raise AlreadyExistsException("A torrent with this info hash already exists.")
-
-    def get_download_url(self, torrent):
-        request = self.context['request']
-        return torrent.download_url_for_user(request.user)
-
-
-class TorrentCommentSerializer(serializers.ModelSerializer):
-    """
-    Serializer for Torrent Comments. Author is the users foreign key to Torrent comments.
-    We are returning the author into a foreign key representation, and string representation.
-    """
-    film_id = serializers.PrimaryKeyRelatedField(source='torrent.film', read_only=True)
-    torrent_name = serializers.StringRelatedField(
-        source='torrent.release.name',
-        read_only=True,
-        help_text="Read only field that shows the torrent release name."
-    )
-    author = serializers.PrimaryKeyRelatedField(
-        default=serializers.CurrentUserDefault(),
-        read_only=True,
-        help_text="The ID of the user that created this film comment; if none is provided, "
-                  "defaults to the currently logged in user."
-    )
-    author_username = serializers.StringRelatedField(
-        source='author', default=serializers.CurrentUserDefault(),
-        read_only=True,
-        help_text="The string representation of the user that created this film comment; if none is provided, "
-                  "defaults to the currently logged in user."
-    )
-    url = serializers.HyperlinkedRelatedField(source='torrent', view_name='torrent-detail', read_only=True)
-
-    class Meta:
-        model = TorrentComment
-        fields = (
-            'torrent',
-            'torrent_name',
-            'url',
-            'film_id',
-            'author',
-            'author_username',
-            'text',
-            'created_at',
-            'modified_at'
-        )
