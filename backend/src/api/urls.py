@@ -10,6 +10,7 @@ from rest_framework.documentation import include_docs_urls
 from .films import views as films_views
 from .forums import views as forums_views
 from .invites import views as invites_views
+from .releases import views as releases_views
 from .torrents import views as torrents_views
 from .tracker import views as tracker_views
 from .users import views as users_views
@@ -46,9 +47,12 @@ router.register(r'film-comments', viewset=films_views.FilmCommentViewSet, base_n
 router.register(r'collections', viewset=films_views.CollectionViewSet, base_name='collection')
 router.register(r'collection-comments', viewset=films_views.CollectionCommentViewSet, base_name='collection-comment')
 
+# Releases
+router.register(r'releases', viewset=releases_views.ReleaseViewSet, base_name='release')
+router.register(r'release-comments', viewset=releases_views.ReleaseCommentViewSet, base_name='release-comment')
+
 # Torrents
-router.register(r'torrents', viewset=torrents_views.TorrentViewSet, base_name='torrent')
-router.register(r'torrent-comments', viewset=torrents_views.TorrentCommentViewSet, base_name='torrent-comment')
+router.register(r'torrent-files', viewset=torrents_views.TorrentFileViewSet, base_name='torrent-file')
 router.register(r'torrent-stats', viewset=torrents_views.TorrentStatViewSet, base_name='torrent-stat')
 router.register(r'torrent-requests', viewset=torrents_views.TorrentRequestViewSet, base_name='torrent-request')
 

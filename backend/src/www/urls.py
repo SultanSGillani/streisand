@@ -5,7 +5,6 @@ from django.conf.urls import include, url
 from django.contrib import admin
 from django.views.generic import TemplateView
 
-from api.torrents.views import TorrentUploadViewSet
 from torrents.views import TorrentDownloadView
 
 
@@ -18,11 +17,6 @@ urlpatterns = [
         regex=r'^torrent-download/(?P<torrent_id>\d+)/(?P<user_id>\d+)/(?P<unique_download_key>[0-9a-f]{64})/$',
         view=TorrentDownloadView.as_view(),
         name='torrent_download',
-    ),
-    url(
-        regex=r'^torrent-upload/$',
-        view=TorrentUploadViewSet.as_view({'post': 'create'}),
-        name='torrent_upload',
     ),
 
     # Admin

@@ -9,6 +9,7 @@ from django.utils.timezone import timedelta
 from torrents.models import TorrentFile
 from torrent_stats.models import TorrentStats
 from users.models import User, UserIPAddress
+from www.models import Feature
 
 from .utils import email
 
@@ -113,7 +114,7 @@ def handle_announce(announce_key, torrent_info_hash, new_bytes_uploaded, new_byt
     )
 
     # Announce logging
-    if user.log_successful_announces:
+    if user.log_successful_announces or Feature.objects.is_enabled('log_all_announces'):
         user.logged_announces.create(
             time_stamp=time_stamp,
             torrent_id=torrent_info_hash,

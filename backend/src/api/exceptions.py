@@ -18,15 +18,12 @@ def custom_exception_handler(exc, context):
     if isinstance(exc, APIException):
         response.data['error_code'] = exc.get_codes()
 
-    # If the user was throttled while trying to upload a torrent file, they
-    # could be attempting a DOS attack.  Let's log them out! :]
+    # If the user was throttled, they could be attempting a DOS attack.  Let's log them out! :]
     if isinstance(exc, Throttled):
-        view = context['view']
-        if view.throttle_scope == 'torrent_file_upload':
-            request = view.request
-            request.auth.delete()
-            user_logged_out.send(sender=request.user.__class__, request=request, user=request.user)
-            response.data['detail'] = "File upload request was throttled.  You have been logged out."
+        request = context['view'].request
+        request.auth.delete()
+        user_logged_out.send(sender=request.user.__class__, request=request, user=request.user)
+        response.data['detail'] = "Your request was throttled.  You have been logged out."
 
     return response
 

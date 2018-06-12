@@ -9,7 +9,6 @@ from django.utils.timezone import now, timedelta
 
 from tracker.bencoding import bencode, sha1
 from users.models import User
-from comments.models import Comment
 
 from .utils import generate_unique_download_key
 
@@ -207,11 +206,3 @@ class ReseedRequest(models.Model):
     )
     created_at = models.DateTimeField(auto_now_add=True)
     fulfilled_at = models.DateTimeField(null=True)
-
-
-class TorrentComment(Comment):
-    torrent = models.ForeignKey(
-        to='torrents.TorrentFile',
-        related_name='comments',
-        on_delete=models.CASCADE,
-    )
