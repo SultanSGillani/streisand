@@ -33,17 +33,17 @@ export default function TorrentList(props: Props) {
 
 function TorrentRow(props: { torrent: ITorrent }) {
     const torrent = props.torrent;
-    const name = torrent.releaseName || '<Uknown>';
-    const url = `/film/${torrent.filmId}/${torrent.id}`;
+    const name = torrent.release.film.title || '<Uknown>';
+    const url = `/film/${torrent.release.film.id}/${torrent.id}`;
 
     return (
         <tr>
             <td className="align-middle">
                 <Link to={url} title={name}>{name}</Link>
             </td>
-            <td className="align-middle">{torrent.resolution}</td>
-            <td className="align-middle">{torrent.sourceMedia}</td>
-            <td className="align-middle">{torrent.size}</td>
+            <td className="align-middle">{torrent.release.resolution}</td>
+            <td className="align-middle">{torrent.release.sourceMedia}</td>
+            <td className="align-middle">{torrent.file.sizeInBytes}</td>
         </tr>
     );
 }
