@@ -65,6 +65,7 @@ class ReleaseCommentSerializer(serializers.ModelSerializer):
         fields = (
             'id',
             'film_id',
+            'release_name',
             'author',
             'text',
             'created_at',
