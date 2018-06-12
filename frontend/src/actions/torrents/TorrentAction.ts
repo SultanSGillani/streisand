@@ -31,5 +31,5 @@ const fetch = generateAuthFetch({ errorPrefix, request, received, failure });
 export const torrentSaga = generateSage<RequestTorrent>('REQUEST_TORRENT', fetch);
 
 function request(token: string, props: IActionProps): Promise<ITorrent> {
-    return get({ token, url: `${globals.apiUrl}/torrents/${props.id}/` });
+    return get({ token, url: `${globals.apiUrl}/torrent-files/${props.id}/` });
 }
