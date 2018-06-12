@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 
 from django_filters.rest_framework import DjangoFilterBackend
-from rest_framework.parsers import JSONParser
+from djangorestframework_camel_case.parser import CamelCaseJSONParser
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.viewsets import ModelViewSet
 
@@ -61,7 +61,7 @@ class TorrentFileViewSet(ModelViewSet):
     """
     permission_classes = [IsAuthenticated]
     serializer_class = TorrentFileSerializer
-    parser_classes = [JSONParser, TorrentFileUploadParser]
+    parser_classes = [CamelCaseJSONParser, TorrentFileUploadParser]
     throttle_classes = [DOSDefenseThrottle]
     filter_backends = [DjangoFilterBackend]
     filter_class = TorrentFilter
