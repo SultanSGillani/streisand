@@ -41,5 +41,5 @@ const fetch = generateAuthFetch({ errorPrefix, request, received, failure });
 export const torrentsSaga = generateSage<RequestTorrents>('REQUEST_TORRENTS', fetch);
 
 function request(token: string, props: IActionProps): Promise<IPagedResponse<ITorrent>> {
-    return get({ token, url: `${globals.apiUrl}/torrents/?page=${props.page}&size=${PAGE_SIZE}` });
+    return get({ token, url: `${globals.apiUrl}/torrent-files/?page=${props.page}&size=${PAGE_SIZE}` });
 }
