@@ -6,6 +6,7 @@ from rest_framework import serializers
 from rest_framework.validators import UniqueTogetherValidator
 
 from api.exceptions import AlreadyExistsException
+from releases.models import Release
 from torrent_requests.models import TorrentRequest
 from torrent_stats.models import TorrentStats
 from torrents.models import TorrentFile
@@ -94,7 +95,14 @@ class TorrentRequestSerializer(serializers.ModelSerializer):
 
 class TorrentFileSerializer(serializers.ModelSerializer):
 
-    release = ReleaseSerializer(required=False)
+    release_id = serializers.PrimaryKeyRelatedField(
+        source='release',
+        write_only=True,
+        allow_null=True,
+        required=False,
+        queryset=Release.objects.all(),
+    )
+    release = ReleaseSerializer(required=False, read_only=True)
     uploaded_by = DisplayUserProfileSerializer(default=serializers.CurrentUserDefault())
     created_by = serializers.CharField(write_only=True)
     pieces = serializers.CharField(write_only=True)
@@ -109,6 +117,7 @@ class TorrentFileSerializer(serializers.ModelSerializer):
             'info_hash',
             'download_url',
             'release',
+            'release_id',
             'total_size_in_bytes',
             'piece_size_in_bytes',
             'pieces',

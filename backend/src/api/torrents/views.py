@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 
 from django_filters.rest_framework import DjangoFilterBackend
+from rest_framework.parsers import JSONParser
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.viewsets import ModelViewSet
 
@@ -60,7 +61,7 @@ class TorrentFileViewSet(ModelViewSet):
     """
     permission_classes = [IsAuthenticated]
     serializer_class = TorrentFileSerializer
-    parser_classes = [TorrentFileUploadParser]
+    parser_classes = [JSONParser, TorrentFileUploadParser]
     throttle_classes = [DOSDefenseThrottle]
     filter_backends = [DjangoFilterBackend]
     filter_class = TorrentFilter
@@ -71,9 +72,6 @@ class TorrentFileViewSet(ModelViewSet):
         'release__source_media',
         'uploaded_by',
         'moderated_by',
-    ).prefetch_related(
-        'comments',
-        'comments__author',
     ).order_by(
         'release__film_id',
         'release__source_media_id',
