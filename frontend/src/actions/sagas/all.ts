@@ -7,6 +7,7 @@ import { allWikiSaga } from '../wikis';
 import { newsSaga } from '../NewsAction';
 import { allTorrentSaga } from '../torrents';
 import { allForumSaga } from '../forums';
+import { allReleaseSaga } from '../releases';
 
 export default function* rootSaga() {
     yield all([
@@ -16,6 +17,7 @@ export default function* rootSaga() {
         allWikiSaga(),
         allTorrentSaga(),
         allForumSaga(),
+        allReleaseSaga(),
         newsSaga()
     ]);
 }

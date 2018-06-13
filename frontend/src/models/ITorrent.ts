@@ -1,4 +1,6 @@
 
+import IFilm from './IFilm';
+
 interface IRelease {
     codec: string;
     container: string;
@@ -8,6 +10,7 @@ interface IRelease {
     is3d: boolean;
     isScene: boolean;
     isSource: boolean;
+    film: IFilm; // TODO: remove
     mediainfo?: {
         id: number;
         text: string;
@@ -62,7 +65,10 @@ export interface ITorrentResponse {
     };
 }
 
-interface ITorrent {
+export interface ITorrent extends ITorrentResponse {}
+
+// TODO: What we want to move to
+export interface ITorrentIdeal {
     directoryName: string;
     downloadUrl: string;
     id: number;
@@ -105,6 +111,34 @@ export interface ITorrentUpdate {
     };
     description: string;
     comments: number[];
+}
+
+export interface IReleaseUpdate {
+    filmId: number;
+    codec: string;
+    container: string;
+    cut: string;
+    description: string;
+    is3d: boolean;
+    isScene: boolean;
+    isSource: boolean;
+    mediainfo?: {
+        text: string;
+        runtime?: string; // duration example: '01:16:00'
+        resolutionWidth?: number;
+        resolutionHeight?: number;
+        displayAspectRatio: string;
+        bitRate: string;
+        frameRate?: string;
+        hasChapters?: boolean;
+        isDxvaCompliant?: boolean;
+        isQualityEncode?: boolean;
+    };
+    nfo: string;
+    releaseGroup: string;
+    releaseName: string;
+    resolution: string;
+    sourceMedia: string;
 }
 
 export default ITorrent;

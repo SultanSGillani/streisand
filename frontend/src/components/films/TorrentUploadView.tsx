@@ -7,8 +7,9 @@ import IFilm from '../../models/IFilm';
 import { IDispatch } from '../../actions/ActionTypes';
 import ITorrentFileInfo from '../../models/ITorrentFileInfo';
 import { uploadTorrent } from '../../actions/torrents/UploadTorrentAction';
-import { ITorrentUpdate } from '../../models/ITorrent';
+import { ITorrentUpdate, IReleaseUpdate } from '../../models/ITorrent';
 import { createTorrent } from '../../actions/torrents/CreateTorrentAction';
+import { createRelease } from '../../actions/releases/CreateReleaseAction';
 import { StringInput } from '../generic/inputs';
 
 export type Props = {
@@ -27,6 +28,7 @@ type ConnectedState = {
 type ConnectedDispatch = {
     uploadTorrent: (file: File) => void;
     createTorrent: (props: ITorrentUpdate) => void;
+    createRelease: (props: IReleaseUpdate) => void;
 };
 
 type CombinedProps = Props & ConnectedDispatch & ConnectedState;
@@ -101,9 +103,9 @@ class TorrentUploadViewComponent extends React.Component<CombinedProps, State> {
 
         const { description } = this.state;
         if (this.props.torrentFileInfo && description) {
-            const { infoHash, downloadUrl } = this.props.torrentFileInfo;
-            this.props.createTorrent({
-                description, infoHash, downloadUrl,
+            // const { infoHash, downloadUrl } = this.props.torrentFileInfo;
+            this.props.createRelease({
+                description,
                 filmId: this.props.film.id,
                 cut: 'Theatrical',
                 codec: 'XviD',
@@ -113,17 +115,14 @@ class TorrentUploadViewComponent extends React.Component<CombinedProps, State> {
                 isScene: false,
                 isSource: false,
                 is3d: false,
-                format: 'something',
                 nfo: 'something',
                 releaseGroup: 'something',
                 releaseName: 'something',
-                uploadedBy: 1,
                 mediainfo: {
                     bitRate: 'something',
                     displayAspectRatio: 'something',
                     text: 'something'
-                },
-                comments: []
+                }
             });
         }
         return false;
@@ -138,6 +137,7 @@ const mapStateToProps = (state: Store.All, props: Props): ConnectedState => {
 
 const mapDispatchToProps = (dispatch: IDispatch): ConnectedDispatch => ({
     uploadTorrent: (file: File) => dispatch(uploadTorrent(file)),
+    createRelease: (props: IReleaseUpdate) => dispatch(createRelease(props)),
     createTorrent: (props: ITorrentUpdate) => dispatch(createTorrent(props))
 });
 

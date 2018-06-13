@@ -31,5 +31,6 @@ const fetch = generateAuthFetch({ errorPrefix, request, received, failure });
 export const uploadTorrentSaga = generateSage<RequestTorrent>('REQUEST_TORRENT_UPLOAD', fetch);
 
 function request(token: string, props: IActionProps): Promise<ITorrentFileInfo> {
-    return post({ token, data: props.file, url: `${globals.baseUrl}/torrent-upload/` });
+    const headers = { 'Content-Type': 'application/x-bittorrent' };
+    return post({ token, data: props.file, headers, url: `${globals.apiUrl}/torrent-files/` });
 }

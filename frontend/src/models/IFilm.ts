@@ -7,7 +7,7 @@ export interface IFilmUpdate {
     imdbId: string;
     moderationNotes: string;
     posterUrl: string;
-    genreTags?: string[];
+    genreTags: string[];
     title: string;
     tmdbId: number;
     lists: number[];
