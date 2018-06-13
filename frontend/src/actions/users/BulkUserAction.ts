@@ -4,17 +4,18 @@ import globals from '../../utilities/globals';
 import { get } from '../../utilities/Requestor';
 import IUser, { IUserResponse } from '../../models/IUser';
 import IPagedResponse from '../../models/base/IPagedResponse';
-import { generateAuthFetch, generateSage } from '../sagas/generators';
+import { generateSage, generateFilteredFetch } from '../sagas/generators';
 
 interface IActionProps {
     ids: number[];
 }
 
+type TriggerBulkUsers = { type: 'TRIGGER_BULK_USERS', props: IActionProps };
 export type RequestBulkUsers = { type: 'REQUEST_BULK_USERS', props: IActionProps };
 export type ReceivedBulkUsers = { type: 'RECEIVED_BULK_USERS', users: IUser[] };
 export type FailedBulkUsers = { type: 'FAILED_BULK_USERS', props: IActionProps };
 
-type BulkUserAction = RequestBulkUsers | ReceivedBulkUsers | FailedBulkUsers;
+type BulkUserAction = TriggerBulkUsers | RequestBulkUsers | ReceivedBulkUsers | FailedBulkUsers;
 export default BulkUserAction;
 type Action = BulkUserAction;
 
@@ -30,26 +31,30 @@ function failure(props: IActionProps): Action {
 }
 
 export function getUsers(ids: number[]): Action {
-    return { type: 'REQUEST_BULK_USERS', props: { ids } };
+    return { type: 'TRIGGER_BULK_USERS', props: { ids } };
+}
+
+export function requesting(props: IActionProps): Action {
+    return { type: 'REQUEST_BULK_USERS', props };
 }
 
 function uniqueTruthy<T>(value: T, index: number, array: T[]): boolean {
     return value && array.indexOf(value) === index;
 }
 
-function filter(state: Store.All, props: IActionProps): IActionProps {
+function filter(state: Store.All, props: IActionProps): IActionProps | undefined {
     const ids = props.ids.filter(uniqueTruthy).filter((id: number) => {
         const node = state.sealed.user.byId[id];
         const loaded = node && node.item && node.item.details;
         const loading = node && node.status.loading;
         return !loading && !loaded;
     });
-    return { ids };
+    return ids.length ? { ids } : undefined;
 }
 
 const errorPrefix = 'Fetching current user information failed';
-const fetch = generateAuthFetch({ errorPrefix, request, received, failure, filter });
-export const bulkUserSaga = generateSage<RequestBulkUsers>('REQUEST_BULK_USERS', fetch);
+const fetch = generateFilteredFetch({ errorPrefix, request, received, failure, filter, requesting });
+export const bulkUserSaga = generateSage<TriggerBulkUsers>('TRIGGER_BULK_USERS', fetch);
 
 function request(token: string, props: IActionProps): Promise<IPagedResponse<IUserResponse>> {
     return get({ token, url: `${globals.apiUrl}/user-profiles/?id__in=${props.ids}` });

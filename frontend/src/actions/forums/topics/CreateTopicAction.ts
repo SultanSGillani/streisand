@@ -39,7 +39,7 @@ export function createForumTopic(props: INewForumTopicPayload): Action {
     return { type: 'REQUEST_NEW_FORUM_TOPIC', props };
 }
 
-function filter(state: Store.All, props: IActionProps): IActionProps {
+function transform(state: Store.All, props: IActionProps): IActionProps {
     const group = state.sealed.forums.groups.byId[props.group];
     const lastTopicId = group && group.topics && group.topics.length && group.topics[group.topics.length - 1];
     const lastTopic = state.sealed.forums.topics.byId[lastTopicId || -1];
@@ -53,7 +53,7 @@ function filter(state: Store.All, props: IActionProps): IActionProps {
 }
 
 const errorPrefix = 'Creating a new forum topic failed';
-const fetch = generateAuthFetch({ errorPrefix, request, received, failure, filter });
+const fetch = generateAuthFetch({ errorPrefix, request, received, failure, transform });
 export const creatForumTopicSaga = generateSage<RequestNewTopic>('REQUEST_NEW_FORUM_TOPIC', fetch);
 
 function request(token: string, props: IActionProps): Promise<ISingleForumTopicResponse> {

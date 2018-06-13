@@ -1,83 +1,84 @@
-interface ITorrent {
-    id: number;
-    filmId: number;
-    cut: string; // 'Theatrical';
-    codec: string; // 'XviD';
-    container: string; // 'AVI';
-    resolution: string; // 'Standard Def';
-    sourceMedia: string; // 'DVD';
-    isSource: boolean;
-    is3d: boolean;
-    size: string; // 1.4 GB TODO: can we get the size in bytes (number) so we can show render it how we want in the ui?
-    uploadedBy: number;
-    uploadedAt: string; // utc datetime string '2009-01-19T17:29:31Z'
-    lastSeeded: string;
-    snatchCount: number;
-    reseedRequest: boolean;
-    isAcceptingReseedRequests: boolean; // TODO: what is this?
-    isApproved: boolean;
-    moderatedBy: number; // user id
-    releaseName: string;
-    releaseGroup: string;
-    isScene: boolean;
-    infoHash: string;
-    downloadUrl: string;
-    release: {
-        id: number;
-        film: {
-            id: number;
-            title: string;
-            year: number;
-            imdbId: number;
-            tmdbId: number;
-            posterUrl: string;
-            fanartUrl: string;
-            lists: string;
-            filmComments: string[];
-            trailerUrl: string;
-            trailerType: string;
-            durationInMinutes: number;
-            description: string;
-            genreTags: string[];
-        };
-        cut: string;
-        codec: string;
-        container: string;
-        resolution: string;
-        sourceMedia: string;
-        isSource: boolean;
-        isScene: boolean;
-        is_3d: boolean;
-        releaseName: string;
-        releaseGroup: string;
-        nfo: string;
-        mediainfo?: {
-            id: number;
-            text: string;
-            runtime: string; // duration example: '01:16:00'
-            resolutionWidth: number;
-            resolutionHeight: number;
-            displayAspectRatio: string;
-            bitRate: string;
-            frameRate: string;
-            hasChapters: boolean;
-            isDxvaCompliant: boolean;
-            isQualityEncode: boolean;
-        };
 
-        description: string;
+interface IRelease {
+    codec: string;
+    container: string;
+    cut: string;
+    description: string;
+    id: number;
+    is3d: boolean;
+    isScene: boolean;
+    isSource: boolean;
+    mediainfo?: {
+        id: number;
+        text: string;
+        runtime: string; // duration example: '01:16:00'
+        resolutionWidth: number;
+        resolutionHeight: number;
+        displayAspectRatio: string;
+        bitRate: string;
+        frameRate: string;
+        hasChapters: boolean;
+        isDxvaCompliant: boolean;
+        isQualityEncode: boolean;
     };
-    totalSizeInBytes: number;
-    pieceSizeInBytes: number;
-    isSingleFile: boolean;
+    nfo: string;
+    releaseGroup: string;
+    releaseName: string;
+    resolution: string;
+    sourceMedia: string;
+}
+
+export interface ITorrentResponse {
     directoryName: string;
-    file: {
+    downloadUrl: string;
+    file?: { // present if isSingleFile
         name: string;
         sizeInBytes: number;
     };
-    files: any[]; // TODO: this is always empty
-    description: string;
-    comments: number[];
+    files?: { // present if !isSingleFile
+        pathComponents: string[];
+        sizeInBytes: number;
+    }[];
+    id: number;
+    infoHash: string;
+    isAcceptingReseedRequests: boolean;
+    isApproved: boolean;
+    isSingleFile: boolean;
+    lastSeeded: string;
+    moderatedBy: number;
+    pieceSizeInBytes: number;
+    release: IRelease;
+    reseedRequest: any; // TODO: What is this?
+    snatchCount: number;
+    totalSizeInBytes: number;
+    uploadedAt: string; // Date
+    uploadedBy: {
+        acctountStatus: string;
+        avatarUrl: string;
+        customTitle: string;
+        id: number;
+        isDonor: boolean;
+        username: string;
+    };
+}
+
+interface ITorrent {
+    directoryName: string;
+    downloadUrl: string;
+    id: number;
+    infoHash: string;
+    isAcceptingReseedRequests: boolean;
+    isApproved: boolean;
+    isSingleFile: boolean;
+    lastSeeded: string;
+    moderatedBy: number;
+    pieceSizeInBytes: number;
+    release: IRelease;
+    reseedRequest: any; // TODO: What is this?
+    snatchCount: number;
+    totalSizeInBytes: number;
+    uploadedAt: string; // Date
+    uploadedBy: number;
 }
 
 export interface ITorrentUpdate {
