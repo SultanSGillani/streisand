@@ -1,7 +1,19 @@
 interface ITorrent {
     id: number;
-    infoHash: string;
+    filmId: number;
+    infoHash?: string;
     downloadUrl: string;
+    totalSizeInBytes: number;
+    pieceSizeInBytes: number;
+    uploadedBy: {
+        id: number;
+        username: string;
+        userClass: string;
+        accountStatus: string;
+        isDonor: boolean;
+        customTitle: string;
+        avatarUrl: string;
+    };
     release: {
         id: number;
         film: {
@@ -20,17 +32,6 @@ interface ITorrent {
             description: string;
             genreTags: string[];
         };
-        cut: string;
-        codec: string;
-        container: string;
-        resolution: string;
-        sourceMedia: string;
-        isSource: boolean;
-        isScene: boolean;
-        is_3d: boolean;
-        releaseName: string;
-        releaseGroup: string;
-        nfo: string;
         mediainfo?: {
             id: number;
             text: string;
@@ -44,19 +45,18 @@ interface ITorrent {
             isDxvaCompliant: boolean;
             isQualityEncode: boolean;
         };
-
+        cut: 'Theatrical';
+        codec: 'XviD';
+        container: 'AVI';
+        resolution: 'Standard Def';
+        sourceMedia: 'DVD';
+        isSource: boolean;
+        isScene: boolean;
+        is_3d: boolean;
+        releaseName: string;
+        releaseGroup: string;
+        nfo?: string;
         description: string;
-    };
-    totalSizeInBytes: number;
-    pieceSizeInBytes: number;
-    uploadedBy: {
-        id: number;
-        username: string;
-        userClass: string;
-        accountStatus: string;
-        isDonor: boolean;
-        customTitle: string;
-        avatarUrl: string;
     };
     uploadedAt: string;
     lastSeeded: string;

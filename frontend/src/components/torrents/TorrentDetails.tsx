@@ -74,46 +74,56 @@ function InfoRow(props: IRowProps) {
 }
 
 function GeneralContent(props: { torrent: ITorrent }) {
-    const description = props.torrent.release.description || 'There is no description for this torrent.';
+    const torrentRelease = props.torrent.release;
+    if (!torrentRelease) {
+        return <div style={{ marginTop: '8px' }}>No information provided.</div>;
+    }
     return (
         <div style={{ marginTop: '8px' }}>
-            <TextView content={description} />
+            <TextView content={torrentRelease.description} />
         </div>
     );
 }
 
 function TorrentContent(props: { torrent: ITorrent }) {
     const torrent = props.torrent;
+    const torrentRelease = props.torrent.release;
+    if (!torrentRelease) {
+        return <label style={{ marginTop: '8px' }}>Release is not tied to a torrent.</label>;
+    }
     return (
         <ListGroup className="mt-2">
-            <InfoRow label="Release name" value={torrent.release.releaseName} />
-            <InfoRow label="Release group" value={torrent.release.releaseGroup} />
+            <InfoRow label="Release name" value={torrentRelease.releaseName} />
+            <InfoRow label="Release group" value={torrentRelease.releaseGroup} />
             <InfoRow label="Uploaded at" value={torrent.uploadedAt} />
-            <InfoRow label="Uploaded by" value={torrent.uploadedBy.id} />
+            <InfoRow label="Uploaded by" value={torrent.uploadedBy.username} />
         </ListGroup>
     );
 }
 
 function MediaContent(props: { torrent: ITorrent }) {
-    const torrent = props.torrent;
-    const info = torrent.release.mediainfo;
+    const torrentRelease = props.torrent.release;
+    const info = torrentRelease.mediainfo;
     if (!info) {
         return <div style={{ marginTop: '8px' }}>No information provided.</div>;
+    }
+    if (!torrentRelease) {
+        return <div style={{ marginTop: '8px' }}>Release is not tied to a torrent.</div>;
     }
 
     return (
         <ListGroup className="mt-2">
-            {/*<InfoRow label="Runtime" value={info.runtime} />*/}
-            <InfoRow label="Codec" value={torrent.release.codec} />
-            <InfoRow label="Container" value={torrent.release.container} />
-            <InfoRow label="Cut" value={torrent.release.cut} />
-            {/*<InfoRow label="Bite rate" value={info.bitRate} />*/}
-            {/*<InfoRow label="Frame rate" value={info.frameRate} />*/}
-            <InfoRow label="Source" value={torrent.release.sourceMedia} />
-            {/*<InfoRow label="Aspect ratio" value={info.displayAspectRatio} />*/}
-            <InfoRow label="Resolution" value={torrent.release.resolution} />
-            {/*<InfoRow label="Width" value={info.resolutionWidth} />*/}
-            {/*<InfoRow label="Height" value={info.resolutionHeight} />*/}
+            <InfoRow label="Runtime" value={info.runtime} />
+            <InfoRow label="Codec" value={torrentRelease.codec} />
+            <InfoRow label="Container" value={torrentRelease.container} />
+            <InfoRow label="Cut" value={torrentRelease.cut} />
+            <InfoRow label="Bite rate" value={info.bitRate} />
+            <InfoRow label="Frame rate" value={info.frameRate} />
+            <InfoRow label="Source" value={torrentRelease.sourceMedia} />
+            <InfoRow label="Aspect ratio" value={info.displayAspectRatio} />
+            <InfoRow label="Resolution" value={torrentRelease.resolution} />
+            <InfoRow label="Width" value={info.resolutionWidth} />
+            <InfoRow label="Height" value={info.resolutionHeight} />
         </ListGroup>
     );
 }

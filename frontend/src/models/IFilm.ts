@@ -2,15 +2,16 @@
 interface IFilm {
     description: string;
     durationInMinutes: number;
-    fanartUrl: string;
+    fanartUrl?: string;
     id: number;
-    imdbId: string;
-    moderationNotes: string;
+    imdbId?: string;
+    moderationNotes?: string;
     posterUrl: string;
     genreTags: string[];
     title: string;
-    tmdbId: number;
+    tmdbId?: number;
     lists: number[];
+    filmComments?: number[];
     trailerType: string;
     trailerUrl: string;
     year: number;
@@ -18,12 +19,12 @@ interface IFilm {
 
 export interface IFilmUpdate {
     description: string;
-    durationInMinutes: number;
+    durationInMinutes?: number;
     fanartUrl: string;
     imdbId: string;
-    moderationNotes: string;
+    moderationNotes?: string;
     posterUrl: string;
-    genreTags?: string[];
+    genreTags: string[];
     title: string;
     tmdbId: number;
     lists: number[];

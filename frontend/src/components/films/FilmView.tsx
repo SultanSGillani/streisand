@@ -1,6 +1,6 @@
+///<reference path="../../models/IFilm.ts"/>
 import * as React from 'react';
 import { connect } from 'react-redux';
-
 import Store from '../../store';
 import IFilm from '../../models/IFilm';
 import ITorrent from '../../models/ITorrent';
@@ -43,7 +43,7 @@ class FilmViewComponent extends React.Component<CombinedProps> {
                 <h1>{film.title} [{film.year}]</h1>
                 <div className="col-lg-8">
                     <div className="row" style={styles.videoContainer}>
-                        <iframe style={styles.video} src={youtubeUrl} frameBorder="0"></iframe>
+                        <iframe style={styles.video} src={youtubeUrl} frameBorder="0"/>
                     </div>
                     <div className="row">
                         <h2>Description</h2>

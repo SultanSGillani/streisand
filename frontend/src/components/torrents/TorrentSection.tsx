@@ -32,9 +32,15 @@ export default function TorrentSection(props: Props) {
 
 function TorrentRow(props: { torrent: ITorrent }) {
     const torrent = props.torrent;
+    if (!torrent.release) {
+        return <div style={{ marginTop: '8px' }}>Release is not tied to a torrent.</div>;
+    }
     const url = `/film/${torrent.release.film.id}/${torrent.id}`;
 
     let name = `${torrent.release.codec} / ${torrent.release.container} / ${torrent.release.sourceMedia} / ${torrent.release.resolution}`;
+    if (!name) {
+        return <tbody style={{ marginTop: '8px' }}>Release is not tied to a torrent.</tbody>;
+    }
     if (torrent.release.isScene) {
         name += ' / Scene';
     }
