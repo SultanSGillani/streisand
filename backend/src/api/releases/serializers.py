@@ -53,6 +53,7 @@ class ReleaseSerializer(serializers.ModelSerializer):
             'release_group',
             'nfo',
             'mediainfo',
+            'mediainfo_text',
             'description',
         )
 
