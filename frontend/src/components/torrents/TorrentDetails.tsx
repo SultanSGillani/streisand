@@ -103,17 +103,17 @@ function MediaContent(props: { torrent: ITorrent }) {
 
     return (
         <ListGroup className="mt-2">
-            <InfoRow label="Runtime" value={info.runtime} />
+            {/*<InfoRow label="Runtime" value={info.runtime} />*/}
             <InfoRow label="Codec" value={torrent.release.codec} />
             <InfoRow label="Container" value={torrent.release.container} />
             <InfoRow label="Cut" value={torrent.release.cut} />
-            <InfoRow label="Bite rate" value={info.bitRate} />
-            <InfoRow label="Frame rate" value={info.frameRate} />
+            {/*<InfoRow label="Bite rate" value={info.bitRate} />*/}
+            {/*<InfoRow label="Frame rate" value={info.frameRate} />*/}
             <InfoRow label="Source" value={torrent.release.sourceMedia} />
-            <InfoRow label="Aspect ratio" value={info.displayAspectRatio} />
+            {/*<InfoRow label="Aspect ratio" value={info.displayAspectRatio} />*/}
             <InfoRow label="Resolution" value={torrent.release.resolution} />
-            <InfoRow label="Width" value={info.resolutionWidth} />
-            <InfoRow label="Height" value={info.resolutionHeight} />
+            {/*<InfoRow label="Width" value={info.resolutionWidth} />*/}
+            {/*<InfoRow label="Height" value={info.resolutionHeight} />*/}
         </ListGroup>
     );
 }
