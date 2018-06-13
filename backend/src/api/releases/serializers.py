@@ -20,7 +20,8 @@ class ReleaseSerializer(serializers.ModelSerializer):
         queryset=Film.objects.all(),
     )
     film = PublicFilmSerializer(required=False, read_only=True)
-    mediainfo = MediainfoSerializer()
+    mediainfo_text = serializers.CharField(write_only=True, required=False)
+    mediainfo = MediainfoSerializer(required=False, read_only=True)
     nfo = serializers.CharField(required=False)
     description = serializers.CharField()
     release_name = serializers.CharField(source='name')
@@ -54,6 +55,16 @@ class ReleaseSerializer(serializers.ModelSerializer):
             'mediainfo',
             'description',
         )
+
+    # def create(self, validated_data):
+    #
+    #     # TODO: something like the following, probably wrapped in a transaction:
+    #     mediainfo_text = validated_data.pop('mediainfo_text', None)
+    #     instance = super().create(validated_data)
+    #     if mediainfo_text:
+    #         instance.mediainfo = Mediainfo(text=mediainfo_text)
+    #         instance.save(update_fields=['mediainfo'])
+    #     return instance
 
 
 class ReleaseCommentSerializer(serializers.ModelSerializer):
