@@ -32,10 +32,10 @@ export default function TorrentSection(props: Props) {
 
 function TorrentRow(props: { torrent: ITorrent }) {
     const torrent = props.torrent;
-    const url = `/film/${torrent.filmId}/${torrent.id}`;
+    const url = `/film/${torrent.release.film.id}/${torrent.id}`;
 
-    let name = `${torrent.codec} / ${torrent.container} / ${torrent.sourceMedia} / ${torrent.resolution}`;
-    if (torrent.isScene) {
+    let name = `${torrent.release.codec} / ${torrent.release.container} / ${torrent.release.sourceMedia} / ${torrent.release.resolution}`;
+    if (torrent.release.isScene) {
         name += ' / Scene';
     }
 
@@ -44,7 +44,7 @@ function TorrentRow(props: { torrent: ITorrent }) {
             <td className="align-middle">
                 <Link to={url} title={name}>{name}</Link>
             </td>
-            <td className="align-middle">{torrent.size}</td>
+            <td className="align-middle">{torrent.file.sizeInBytes}</td>
             <td className="align-middle">{torrent.snatchCount}</td>
         </tr>
     );

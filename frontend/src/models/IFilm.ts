@@ -7,7 +7,7 @@ interface IFilm {
     imdbId: string;
     moderationNotes: string;
     posterUrl: string;
-    tags: string[];
+    genreTags: string[];
     title: string;
     tmdbId: number;
     lists: number[];
@@ -23,7 +23,7 @@ export interface IFilmUpdate {
     imdbId: string;
     moderationNotes: string;
     posterUrl: string;
-    tags?: string[];
+    genreTags?: string[];
     title: string;
     tmdbId: number;
     lists: number[];

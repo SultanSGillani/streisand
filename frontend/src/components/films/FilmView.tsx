@@ -35,7 +35,7 @@ class FilmViewComponent extends React.Component<CombinedProps> {
         const film = this.props.film;
         const trailerId = getYouTubeId(film.trailerUrl);
         const youtubeUrl = `//www.youtube.com/embed/${trailerId}?rel=0&amp;wmode=transparent`;
-        const tags = film.tags.map((tag: string) => {
+        const tags = film.genreTags.map((tag: string) => {
             return (<span className="label label-default" key={tag}>{tag}</span>);
         });
         return (
