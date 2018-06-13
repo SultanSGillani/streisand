@@ -2,6 +2,7 @@
 
 from rest_framework import serializers
 
+from films.models import Film
 from mediainfo.serializers import MediainfoSerializer
 from releases.models import Release, ReleaseComment
 
@@ -11,7 +12,14 @@ from ..users.serializers import DisplayUserProfileSerializer
 
 class ReleaseSerializer(serializers.ModelSerializer):
 
-    film = PublicFilmSerializer()
+    film_id = serializers.PrimaryKeyRelatedField(
+        source='film',
+        write_only=True,
+        allow_null=True,
+        required=False,
+        queryset=Film.objects.all(),
+    )
+    film = PublicFilmSerializer(required=False, read_only=True)
     mediainfo = MediainfoSerializer()
     nfo = serializers.CharField(required=False)
     description = serializers.CharField()
@@ -31,6 +39,7 @@ class ReleaseSerializer(serializers.ModelSerializer):
         fields = (
             'id',
             'film',
+            'film_id',
             'cut',
             'codec',
             'container',
