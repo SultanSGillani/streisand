@@ -11,6 +11,10 @@ export type Props = {
 
 export default function TorrentSection(props: Props) {
     const torrents = props.torrents;
+    if (!torrents.length) {
+        return <p>There are no torrents uploaded for this film yet.</p>;
+    }
+
     const rows = torrents.map((torrent: ITorrent) => {
         return (<TorrentRow torrent={torrent} key={torrent.id} />);
     });
