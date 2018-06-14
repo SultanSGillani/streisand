@@ -4,9 +4,9 @@ import TorrentAction, { torrentSaga } from './TorrentAction';
 import TorrentsAction, { torrentsSaga } from './TorrentsAction';
 import FilmTorrentsAction, { fiomTorrentsSaga } from './FilmTorrentsAction';
 import UploadTorrentAction, { uploadTorrentSaga } from './UploadTorrentAction';
-import CreateTorrentAction, { createTorrentSaga } from './CreateTorrentAction';
+import UpdateTorrentAction, { updateTorrentSaga } from './UpdateTorrentAction';
 
-type Action = TorrentsAction | TorrentAction | FilmTorrentsAction | UploadTorrentAction | CreateTorrentAction;
+type Action = TorrentsAction | TorrentAction | FilmTorrentsAction | UploadTorrentAction | UpdateTorrentAction;
 export default Action;
 
 export function* allTorrentSaga() {
@@ -15,6 +15,6 @@ export function* allTorrentSaga() {
         torrentsSaga(),
         fiomTorrentsSaga(),
         uploadTorrentSaga(),
-        createTorrentSaga()
+        updateTorrentSaga()
     ]);
 }

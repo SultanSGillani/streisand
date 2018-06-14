@@ -4,7 +4,7 @@ declare const process: {
     }
 };
 
-const isProd = process.env.NODE_ENV === 'production';
+const isProd = process.env.NODE_ENV === 'production' || localStorage['app.api.isProd'];
 const baseUrl = isProd ? 'https://api.pinigseu.xyz' : 'http://localhost:8000';
 
 const defaultPageSize = 25;

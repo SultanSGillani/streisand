@@ -3,14 +3,14 @@ import { RouterState } from 'react-router-redux';
 import IUser from '../models/IUser';
 import IFilm from '../models/IFilm';
 import IWiki from '../models/IWiki';
+import IRelease from '../models/IRelease';
 import IMessage from '../models/IMessage';
 import IAuthInfo from '../models/IAuthInfo';
 import IDeviceInfo from '../models/IDeviceInfo';
-import IItemNode from '../models/base/IItemNode';
+import { IItemSet } from '../models/base/ItemSet';
 import ILocationInfo from '../models/ILocationInfo';
 import IForumData from '../models/forums/IForumData';
 import ITorrentItemSet from '../models/ITorrentItemSet';
-import ITorrentFileInfo from '../models/ITorrentFileInfo';
 import IPagedItemSet, { INestedPage } from '../models/base/IPagedItemSet';
 
 namespace Store {
@@ -23,7 +23,7 @@ namespace Store {
     };
     export type News = { latest: number | null; loading: boolean; };
     export type CurrentUser = { id: number | null; loading: boolean; };
-    export type TorrentUpload = IItemNode<ITorrentFileInfo>;
+    export type Releases = IItemSet<IRelease>;
 
     export type UserSealed = {
         currentUser: CurrentUser;
@@ -31,10 +31,10 @@ namespace Store {
         user: Users;
         film: Films;
         torrent: ITorrentItemSet;
+        release: Releases;
         wiki: Wikis;
         news: News;
         forums: IForumData;
-        torrentUpload: TorrentUpload;
     };
 
     export type All = {
