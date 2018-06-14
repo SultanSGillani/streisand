@@ -5,19 +5,21 @@ import { Link } from 'react-router';
 import ITorrent from '../../models/ITorrent';
 import { getSize } from '../../utilities/dataSize';
 import globals from '../../utilities/globals';
+import IFilm from '../../models/IFilm';
 
 export type Props = {
+    film: IFilm;
     torrents: ITorrent[];
 };
 
 export default function TorrentSection(props: Props) {
-    const torrents = props.torrents;
+    const { torrents, film } = this.props;
     if (!torrents.length) {
         return <p>There are no torrents uploaded for this film yet.</p>;
     }
 
     const rows = torrents.map((torrent: ITorrent) => {
-        return (<TorrentRow torrent={torrent} key={torrent.id} />);
+        return (<TorrentRow film={film} torrent={torrent} key={torrent.id} />);
     });
 
     return (
@@ -37,12 +39,12 @@ export default function TorrentSection(props: Props) {
     );
 }
 
-function TorrentRow(props: { torrent: ITorrent }) {
-    const torrent = props.torrent;
+function TorrentRow(props: { film: IFilm, torrent: ITorrent }) {
+    const { film, torrent } = props;
     if (!torrent.release) {
         return <div style={{ marginTop: '8px' }}>Release is not tied to a torrent.</div>;
     }
-    const url = `/film/${torrent.release.film.id}/${torrent.id}`;
+    const url = `/film/${film.id}/${torrent.id}`;
 
     let name = `${torrent.release.codec} / ${torrent.release.container} / ${torrent.release.sourceMedia} / ${torrent.release.resolution}`;
     if (!name) {

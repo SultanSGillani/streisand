@@ -68,7 +68,7 @@ class FilmViewComponent extends React.Component<CombinedProps> {
                 <p>{film.description}</p>
                 <div>{tags}</div>
                 <h2>Torrents</h2>
-                <TorrentSection torrents={this.props.torrents} />
+                <TorrentSection film={film} torrents={this.props.torrents} />
                 {this._getModal()}
             </div>
         );
