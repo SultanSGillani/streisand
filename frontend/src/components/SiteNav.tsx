@@ -22,7 +22,8 @@ type ConnectedDispatch = {};
 const excludeSearch = [
     '/themes',
     '/changepassword',
-    '/film/search'
+    '/film/search',
+    '/torrents/upload/'
 ];
 
 type CombinedProps = Props & ConnectedState & ConnectedDispatch;
@@ -37,7 +38,7 @@ class SiteNavComponent extends React.Component<CombinedProps, State> {
 
     public render() {
         const isAuthenticated = this.props.isAuthenticated;
-        const includeSearch = isAuthenticated && excludeSearch.indexOf(this.props.location) < 0;
+        const includeSearch = isAuthenticated && this._includeSearch();
         const toggle = () => { this.setState({ isOpen: !this.state.isOpen }); };
         return (
             <div className="mb-2">
@@ -67,6 +68,15 @@ class SiteNavComponent extends React.Component<CombinedProps, State> {
                 <NavItem><LinkContainer to="/forum"><NavLink>Forum</NavLink></LinkContainer></NavItem>
             </Nav>
         );
+    }
+
+    private _includeSearch() {
+        for (const pattern of excludeSearch) {
+            if (this.props.location.indexOf(pattern) >= 0) {
+                return false;
+            }
+        }
+        return true;
     }
 }
 

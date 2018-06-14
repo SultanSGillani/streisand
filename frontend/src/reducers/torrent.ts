@@ -15,6 +15,7 @@ function byId(state: ItemMap = {}, action: Action): ItemMap {
         case 'REQUEST_TORRENT':
             return markLoading(state, action.props.id);
         case 'RECEIVED_TORRENT':
+        case 'RECEIVED_TORRENT_UPLOAD':
             return addLoadedNode(state, action.torrent);
         case 'FAILED_TORRENT':
             return markFailed(state, action.props.id);

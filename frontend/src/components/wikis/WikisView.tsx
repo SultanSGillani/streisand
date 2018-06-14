@@ -32,7 +32,7 @@ class WikisViewComponent extends React.Component<CombinedProps> {
 }
 
 const mapDispatchToProps = (dispatch: IDispatch): ConnectedDispatch => ({
-    createWiki: () => dispatch(push('/wiki/create'))
+    createWiki: () => dispatch(push('/wikis/create'))
 });
 const WikisView: React.ComponentClass<Props> =
     connect(undefined, mapDispatchToProps)(WikisViewComponent);
