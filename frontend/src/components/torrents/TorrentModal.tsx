@@ -24,12 +24,12 @@ class TorrentModalComponent extends React.Component<CombinedProps> {
         const film = this.props.film;
         const torrent = this.props.torrent;
         const onClose = () => {
-            this.props.goTo(`/film/${torrent.release.film.id}`);
+            this.props.goTo(`/film/${film.id}`);
         };
 
         return (
             <Modal isOpen={true} toggle={onClose}>
-                <ModalHeader toggle={onClose}>{torrent.release.film.title}</ModalHeader>
+                <ModalHeader toggle={onClose}>{film.title}</ModalHeader>
                 <ModalBody>
                     <TorrentDetails film={film} torrent={torrent} />
                 </ModalBody>

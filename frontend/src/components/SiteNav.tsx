@@ -63,7 +63,6 @@ class SiteNavComponent extends React.Component<CombinedProps, State> {
         return (
             <Nav className="mr-auto" navbar>
                 <NavItem><LinkContainer to="/films"><NavLink>Films</NavLink></LinkContainer></NavItem>
-                <NavItem><LinkContainer to="/torrents"><NavLink>Torrents</NavLink></LinkContainer></NavItem>
                 <NavItem><LinkContainer to="/wikis"><NavLink>Wikis</NavLink></LinkContainer></NavItem>
                 <NavItem><LinkContainer to="/forum"><NavLink>Forum</NavLink></LinkContainer></NavItem>
             </Nav>

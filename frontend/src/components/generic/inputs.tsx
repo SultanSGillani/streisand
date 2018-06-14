@@ -39,3 +39,24 @@ export function NumericInput(props: INumericInputProps) {
         </FormGroup>
     );
 }
+
+export interface IBooleanInputProps {
+    id: string;
+    label: string;
+    value?: boolean;
+    setValue: (value: boolean) => void;
+}
+
+export function BooleanInput(props: IBooleanInputProps) {
+    const id = `${props.id}Input`;
+
+    return (
+        <FormGroup check inline>
+            <Label for={id} check>
+                <Input type="checkbox" id={id} checked={props.value}
+                    onChange={(event) => props.setValue(event.target.checked)} />
+                {props.label}
+            </Label>
+        </FormGroup>
+    );
+}
