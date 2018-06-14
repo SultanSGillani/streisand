@@ -42,14 +42,16 @@ function pages(state: Pages = {}, action: Action): Pages {
 }
 
 const filmPageReducer = getPageReducer('FILM_TORRENTS');
-type Torrents = { [id: number]: IPage };
+type Torrents = { [id: number]: { [page: number]: IPage } };
 function byFilmId(state: Torrents = {}, action: Action): Torrents {
     switch (action.type) {
         case 'REQUEST_FILM_TORRENTS':
         case 'RECEIVED_FILM_TORRENTS':
         case 'FAILED_FILM_TORRENTS':
-            const page: IPage = filmPageReducer(state[action.props.page], action);
-            return objectAssign({}, state, { [action.props.page]: page });
+            const pages = state[action.props.id] || {};
+            const page: IPage = filmPageReducer(pages[action.props.page], action);
+            const newPages = objectAssign({}, pages, { [action.props.page]: page });
+            return objectAssign({}, state, { [action.props.id]: newPages });
         default:
             return state;
     }
