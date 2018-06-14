@@ -1,4 +1,5 @@
 import { put } from 'redux-saga/effects';
+import { push } from 'react-router-redux';
 
 import { invalidate } from './FilmsAction';
 import globals from '../../utilities/globals';
@@ -7,7 +8,7 @@ import { generateAuthFetch, generateSage } from '../sagas/generators';
 
 export interface IActionProps {
     id: number;
-    currentPage: number;
+    currentPage?: number;
 }
 
 export type RequestFilmDeletion = { type: 'REQUEST_FILM_DELETION', props: IActionProps };
@@ -20,7 +21,11 @@ type Action = DeleteFilmAction;
 
 function* received(response: void, props: IActionProps) {
     yield put<Action>({ type: 'RECEIVED_FILM_DELETION', props });
-    yield put(invalidate({ page: props.currentPage }));
+    if (props.currentPage) {
+        yield put(invalidate({ page: props.currentPage }));
+    } else {
+        yield put(push('/films'));
+    }
 }
 
 function failure(props: IActionProps): Action {

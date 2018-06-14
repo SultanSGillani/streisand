@@ -1,12 +1,17 @@
 ///<reference path="../../models/IFilm.ts"/>
 import * as React from 'react';
 import { connect } from 'react-redux';
+import { push } from 'react-router-redux';
+
 import Store from '../../store';
 import IFilm from '../../models/IFilm';
 import ITorrent from '../../models/ITorrent';
-import { getNodeItems } from '../../utilities/mapping';
 import TorrentModal from '../torrents/TorrentModal';
+import CommandBar, { ICommand } from '../CommandBar';
+import { IDispatch } from '../../actions/ActionTypes';
+import { getNodeItems } from '../../utilities/mapping';
 import TorrentSection from '../torrents/TorrentSection';
+import { deleteFilm } from '../../actions/films/DeleteFilmAction';
 
 export type Props = {
     film: IFilm;
@@ -16,7 +21,11 @@ export type Props = {
 type ConnectedState = {
     torrents: ITorrent[];
 };
-type ConnectedDispatch = {};
+
+type ConnectedDispatch = {
+    deleteFilm: (id: number) => void;
+    uploadTorrent: (id: number) => void;
+};
 
 const styles: { [key: string]: any } = {
     videoContainer: { height: '350px', position: 'relative' },
@@ -38,10 +47,21 @@ class FilmViewComponent extends React.Component<CombinedProps> {
         const tags = film.genreTags.map((tag: string) => {
             return (<span className="label label-default" key={tag}>{tag}</span>);
         });
+        const commands: ICommand[] = [
+            {
+                label: 'Upload torrent',
+                onExecute: () => { this.props.uploadTorrent(film.id); }
+            }, {
+                label: 'Delete',
+                status: 'danger',
+                onExecute: () => { this.props.deleteFilm(film.id); }
+            }
+        ];
         return (
             <div>
+                <CommandBar commands={commands} />
                 <h1>{film.title} [{film.year}]</h1>
-                <div className="col-lg-8">
+                <div>
                     <div className="row" style={styles.videoContainer}>
                         <iframe style={styles.video} src={youtubeUrl} frameBorder="0"/>
                     </div>
@@ -54,9 +74,6 @@ class FilmViewComponent extends React.Component<CombinedProps> {
                         <h2>Torrents</h2>
                         <TorrentSection torrents={this.props.torrents} />
                     </div>
-                </div>
-                <div className="col-lg-3 col-lg-offset-1">
-                    <img src={film.posterUrl} width="250px" />
                 </div>
                 {this._getModal()}
             </div>
@@ -88,8 +105,13 @@ const mapStateToProps = (state: Store.All, props: Props): ConnectedState => {
      };
 };
 
+const mapDispatchToProps = (dispatch: IDispatch): ConnectedDispatch => ({
+    deleteFilm: (id: number) => dispatch(deleteFilm({ id })),
+    uploadTorrent: (id: number) => dispatch(push(`/torrents/upload/${id}`))
+});
+
 const FilmView: React.ComponentClass<Props> =
-    connect(mapStateToProps)(FilmViewComponent);
+    connect(mapStateToProps, mapDispatchToProps)(FilmViewComponent);
 export default FilmView;
 
 function getYouTubeId(url: string) {

@@ -21,17 +21,4 @@ export interface INestedPages {
     [id: number]: INestedPage;
 }
 
-export interface ISomething<T> {
-    list: {
-        count: number;
-        pageSize: number;
-        pages: { [page: number]: IPage };
-    };
-    search: {
-        count: number;
-        pageSize: number;
-        pages: { [page: number]: IPage };
-    };
-}
-
 export default IPagedItemSet;

@@ -1,3 +1,4 @@
+import * as assign from 'object-assign';
 
 function parseResponse<T>(request: XMLHttpRequest): T | undefined {
     let result: T | undefined;
@@ -92,16 +93,18 @@ export interface IPostRequestOptions {
     data?: any;
     url: string;
     token?: string;
+    headers?: { [name: string]: string };
 }
 
 export function post<T>(options: IPostRequestOptions): Promise<T> {
-    const headers = {
+    const headers = assign({
         'Accept': 'application/json',
         'Content-Type': 'application/json'
-    };
+    }, options.headers || {});
     if (options.token) {
         headers['Authorization'] = `Token ${options.token}`;
     }
-    const data = options.data && (typeof options.data === 'string' ? options.data : JSON.stringify(options.data));
+    const formatted = !options.data || typeof options.data === 'string' || options.data instanceof File;
+    const data = formatted ? options.data : JSON.stringify(options.data);
     return makeRequest<T>({ url: options.url, method: 'POST', headers, data });
 }

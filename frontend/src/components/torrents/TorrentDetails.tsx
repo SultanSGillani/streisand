@@ -97,6 +97,7 @@ function TorrentContent(props: { torrent: ITorrent }) {
             <InfoRow label="Release group" value={torrentRelease.releaseGroup} />
             <InfoRow label="Uploaded at" value={torrent.uploadedAt} />
             <InfoRow label="Uploaded by" value={torrent.uploadedBy.username} />
+
         </ListGroup>
     );
 }

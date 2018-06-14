@@ -3,6 +3,7 @@ import {Table} from 'reactstrap';
 import {Link} from 'react-router';
 
 import ITorrent from '../../models/ITorrent';
+import { getSize } from '../../utilities/dataSize';
 
 export type Props = {
     torrents: ITorrent[];
@@ -47,6 +48,7 @@ function TorrentRow(props: { torrent: ITorrent }) {
     const name = torrent.release.releaseName || '<Uknown>';
     const url = `/film/${torrent.release.film.id}/${torrent.id}`;
 
+    const size = getSize(torrent.totalSizeInBytes);
     return (
         <tr>
             <td className="align-middle">
@@ -54,7 +56,7 @@ function TorrentRow(props: { torrent: ITorrent }) {
             </td>
             <td className="align-middle">{torrent.release.resolution}</td>
             <td className="align-middle">{torrent.release.sourceMedia}</td>
-            <td className="align-middle">{torrent.file.sizeInBytes}</td>
+            <td className="align-middle">{size}</td>
         </tr>
     );
 }

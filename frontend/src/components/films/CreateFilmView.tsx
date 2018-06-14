@@ -102,8 +102,8 @@ class CreateFilmViewComponent extends React.Component<CombinedProps, State> {
                 fanartUrl: '',
                 moderationNotes: '',
                 lists: [],
-                genreTags: [],
-                trailerType: 'YouTube'
+                trailerType: 'YouTube',
+                genreTags: []
             });
         }
         return false;

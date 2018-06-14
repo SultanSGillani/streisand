@@ -3,6 +3,7 @@ import { Table } from 'reactstrap';
 import { Link } from 'react-router';
 
 import ITorrent from '../../models/ITorrent';
+import { getSize } from '../../utilities/dataSize';
 
 export type Props = {
     torrents: ITorrent[];
@@ -45,12 +46,13 @@ function TorrentRow(props: { torrent: ITorrent }) {
         name += ' / Scene';
     }
 
+    const size = getSize(torrent.totalSizeInBytes);
     return (
         <tr>
             <td className="align-middle">
                 <Link to={url} title={name}>{name}</Link>
             </td>
-            <td className="align-middle">{torrent.file.sizeInBytes}</td>
+            <td className="align-middle">{size}</td>
             <td className="align-middle">{torrent.snatchCount}</td>
         </tr>
     );
