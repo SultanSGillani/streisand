@@ -34,10 +34,8 @@ export interface ITorrentResponse {
     };
 }
 
-export interface ITorrent extends ITorrentResponse {}
-
 // TODO: What we want to move to
-export interface ITorrentIdeal {
+export interface ITorrent {
     directoryName: string;
     downloadUrl: string;
     id: number;
@@ -54,32 +52,6 @@ export interface ITorrentIdeal {
     totalSizeInBytes: number;
     uploadedAt: string; // Date
     uploadedBy: number;
-}
-
-export interface ITorrentUpdate {
-    infoHash: string;
-    downloadUrl: string;
-    filmId: number;
-    cut: string; // 'Theatrical';
-    codec: string; // 'XviD';
-    container: string; // 'AVI';
-    resolution: string; // 'Standard Def';
-    sourceMedia: string; // 'DVD';
-    isSource: boolean;
-    is3d: boolean;
-    format: string;
-    uploadedBy: number;
-    releaseName: string;
-    releaseGroup: string;
-    isScene: boolean;
-    nfo: string;
-    mediainfo?: {
-        text: string;
-        displayAspectRatio: string;
-        bitRate: string;
-    };
-    description: string;
-    comments: number[];
 }
 
 export default ITorrent;

@@ -96,35 +96,26 @@ function TorrentContent(props: { torrent: ITorrent }) {
             <InfoRow label="Release name" value={torrentRelease.releaseName} />
             <InfoRow label="Release group" value={torrentRelease.releaseGroup} />
             <InfoRow label="Uploaded at" value={torrent.uploadedAt} />
-            <InfoRow label="Uploaded by" value={torrent.uploadedBy.username} />
-
         </ListGroup>
     );
 }
 
 function MediaContent(props: { torrent: ITorrent }) {
-    const torrentRelease = props.torrent.release;
-    const info = torrentRelease.mediainfo;
-    if (!info) {
-        return <div style={{ marginTop: '8px' }}>No information provided.</div>;
-    }
-    if (!torrentRelease) {
-        return <div style={{ marginTop: '8px' }}>Release is not tied to a torrent.</div>;
-    }
-
+    const torrent = props.torrent;
+    const info = torrent.release.mediainfo;
     return (
         <ListGroup className="mt-2">
-            <InfoRow label="Runtime" value={info.runtime} />
-            <InfoRow label="Codec" value={torrentRelease.codec} />
-            <InfoRow label="Container" value={torrentRelease.container} />
-            <InfoRow label="Cut" value={torrentRelease.cut} />
-            <InfoRow label="Bite rate" value={info.bitRate} />
-            <InfoRow label="Frame rate" value={info.frameRate} />
-            <InfoRow label="Source" value={torrentRelease.sourceMedia} />
-            <InfoRow label="Aspect ratio" value={info.displayAspectRatio} />
-            <InfoRow label="Resolution" value={torrentRelease.resolution} />
-            <InfoRow label="Width" value={info.resolutionWidth} />
-            <InfoRow label="Height" value={info.resolutionHeight} />
+            {info && <InfoRow label="Runtime" value={info.runtime} />}
+            <InfoRow label="Codec" value={torrent.release.codec} />
+            <InfoRow label="Container" value={torrent.release.container} />
+            <InfoRow label="Cut" value={torrent.release.cut} />
+            {info && <InfoRow label="Bite rate" value={info.bitRate} />}
+            {info && <InfoRow label="Frame rate" value={info.frameRate} />}
+            <InfoRow label="Source" value={torrent.release.sourceMedia} />
+            {info && <InfoRow label="Aspect ratio" value={info.displayAspectRatio} />}
+            <InfoRow label="Resolution" value={torrent.release.resolution} />
+            {info && <InfoRow label="Width" value={info.resolutionWidth} />}
+            {info && <InfoRow label="Height" value={info.resolutionHeight} />}
         </ListGroup>
     );
 }
