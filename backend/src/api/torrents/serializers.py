@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 
 from django.db.utils import IntegrityError
-
+from django.utils import timezone
 from rest_framework import serializers
 from rest_framework.validators import UniqueTogetherValidator
 
@@ -9,7 +9,7 @@ from api.exceptions import AlreadyExistsException
 from releases.models import Release
 from torrent_requests.models import TorrentRequest
 from torrent_stats.models import TorrentStats
-from torrents.models import TorrentFile
+from torrents.models import TorrentFile, ReseedRequest
 
 from ..releases.serializers import ReleaseSerializer
 from ..users.serializers import DisplayUserProfileSerializer
@@ -93,8 +93,16 @@ class TorrentRequestSerializer(serializers.ModelSerializer):
     """
 
 
-class TorrentFileSerializer(serializers.ModelSerializer):
+class ReseedRequestSerializer(serializers.ModelSerializer):
+    created_by = DisplayUserProfileSerializer(read_only=True, default=serializers.CurrentUserDefault())
+    fulfilled_at = serializers.DateTimeField(default_timezone=timezone.get_current_timezone(), required=False)
 
+    class Meta:
+        model = ReseedRequest
+        fields = ('id', 'torrent', 'created_by', 'created_at', 'fulfilled_at')
+
+
+class TorrentFileSerializer(serializers.ModelSerializer):
     release_id = serializers.PrimaryKeyRelatedField(
         source='release',
         write_only=True,
@@ -109,6 +117,7 @@ class TorrentFileSerializer(serializers.ModelSerializer):
     info_hash = serializers.CharField(read_only=True)
     total_size_in_bytes = serializers.IntegerField(read_only=True)
     download_url = serializers.SerializerMethodField(read_only=True)
+    reseed_request = ReseedRequestSerializer(read_only=True, required=False)
 
     class Meta:
         model = TorrentFile
