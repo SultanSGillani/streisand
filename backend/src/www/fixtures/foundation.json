@@ -1230,7 +1230,7 @@
       "rank": 14
     }
   },
-    {
+  {
     "model": "users.usertorrentdownloadkey",
     "pk": "1ef0be11-cb9e-4138-a75f-ece3bd79c939",
     "fields": {
@@ -1311,6 +1311,26 @@
     }
   },
   {
+    "model": "users.usertorrentdownloadkey",
+    "pk": "b01cd5d1-e26e-49cd-b4e2-5a7a272c0916",
+    "fields": {
+      "user": 9,
+      "issued_at": "2018-06-15T12:53:58.524Z",
+      "revoked_at": null,
+      "revocation_notes": ""
+    }
+  },
+  {
+    "model": "users.usertorrentdownloadkey",
+    "pk": "99eb26a7-80ef-48cd-bf45-e5968f4958aa",
+    "fields": {
+      "user": 10,
+      "issued_at": "2018-06-15T13:00:19.810Z",
+      "revoked_at": null,
+      "revocation_notes": ""
+    }
+  },
+  {
     "model": "users.userannouncekey",
     "pk": "1ef0be11-cb9e-4138-a75f-ece3bd79c939",
     "fields": {
@@ -1386,6 +1406,26 @@
     "fields": {
       "user": 3,
       "issued_at": "2018-05-13T23:44:53.963Z",
+      "revoked_at": null,
+      "revocation_notes": ""
+    }
+  },
+  {
+    "model": "users.userannouncekey",
+    "pk": "91e5e2fa-0fb1-4237-a75c-97703bd6a6eb",
+    "fields": {
+      "user": 9,
+      "issued_at": "2018-06-15T12:53:58.487Z",
+      "revoked_at": null,
+      "revocation_notes": ""
+    }
+  },
+  {
+    "model": "users.userannouncekey",
+    "pk": "47491b6d-8fb4-4931-8ba8-3b7d7f30d86d",
+    "fields": {
+      "user": 10,
+      "issued_at": "2018-06-15T13:00:19.795Z",
       "revoked_at": null,
       "revocation_notes": ""
     }
@@ -1709,6 +1749,88 @@
       "groups": [],
       "user_permissions": [
         108
+      ]
+    }
+  },
+  {
+    "model": "users.user",
+    "pk": 9,
+    "fields": {
+      "password": "argon2$argon2i$v=19$m=512,t=2,p=2$bEZBSlhCZXNiN1pk$EdG2gMzDYydr39ijfStJFw",
+      "last_login": null,
+      "is_superuser": true,
+      "username": "criminalmind",
+      "first_name": "",
+      "last_name": "",
+      "email": "",
+      "is_staff": true,
+      "is_active": true,
+      "date_joined": "2018-06-15T12:53:58.249Z",
+      "is_banned": false,
+      "old_id": null,
+      "user_class": 18,
+      "is_donor": false,
+      "account_status": "enabled",
+      "failed_login_attempts": 0,
+      "announce_key": "91e5e2fa-0fb1-4237-a75c-97703bd6a6eb",
+      "torrent_download_key": "b01cd5d1-e26e-49cd-b4e2-5a7a272c0916",
+      "avatar_url": null,
+      "custom_title": null,
+      "profile_description": null,
+      "staff_notes": null,
+      "irc_key": null,
+      "invited_by": null,
+      "invite_count": 0,
+      "bytes_uploaded": 0,
+      "bytes_downloaded": 0,
+      "log_successful_announces": false,
+      "last_seeded": null,
+      "average_seeding_size": 0,
+      "watch_queue": null,
+      "groups": [],
+      "user_permissions": [
+        114
+      ]
+    }
+  },
+  {
+    "model": "users.user",
+    "pk": 10,
+    "fields": {
+      "password": "argon2$argon2i$v=19$m=512,t=2,p=2$RkxoNktaQXZUSnl0$ZaTii5yJig27xARkx4Verw",
+      "last_login": null,
+      "is_superuser": true,
+      "username": "jacobk",
+      "first_name": "",
+      "last_name": "",
+      "email": "",
+      "is_staff": true,
+      "is_active": true,
+      "date_joined": "2018-06-15T13:00:19.729Z",
+      "is_banned": false,
+      "old_id": null,
+      "user_class": 18,
+      "is_donor": false,
+      "account_status": "enabled",
+      "failed_login_attempts": 0,
+      "announce_key": "47491b6d-8fb4-4931-8ba8-3b7d7f30d86d",
+      "torrent_download_key": "99eb26a7-80ef-48cd-bf45-e5968f4958aa",
+      "avatar_url": null,
+      "custom_title": null,
+      "profile_description": null,
+      "staff_notes": null,
+      "irc_key": null,
+      "invited_by": null,
+      "invite_count": 0,
+      "bytes_uploaded": 0,
+      "bytes_downloaded": 0,
+      "log_successful_announces": false,
+      "last_seeded": null,
+      "average_seeding_size": 0,
+      "watch_queue": null,
+      "groups": [],
+      "user_permissions": [
+        114
       ]
     }
   }
