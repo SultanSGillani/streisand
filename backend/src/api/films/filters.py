@@ -6,23 +6,27 @@ from films.models import Film, Collection
 
 
 class FilmFilter(filters.FilterSet):
-
     title = filters.CharFilter(field_name='title', lookup_expr='icontains')
-    description = filters.CharFilter(field_name='description', lookup_expr='icontains')
+    description = filters.CharFilter(
+        field_name='description', lookup_expr='icontains')
     genre = filters.CharFilter(field_name='genre_tags')
 
     class Meta:
         model = Film
-        fields = ('title', 'description', 'genre_tags', 'year', )
+        fields = (
+            'title',
+            'description',
+            'genre_tags',
+            'year',
+        )
 
 
 class CollectionFilter(filters.FilterSet):
-
-    title = filters.CharFilter(field_name='title', lookup_expr='icontains')
-    description = filters.CharFilter(field_name='description', lookup_expr='icontains')
-    film__title = filters.CharFilter(field_name='film__title', lookup_expr='icontains')
-    creator__username = filters.CharFilter(field_name='creator__username', lookup_expr='icontains')
-
     class Meta:
         model = Collection
-        fields = ['title', 'description', 'film__title', 'creator__username', ]
+        fields = {
+            'films__id': ['in'],
+            'films__title': ['exact', 'in', 'startswith', 'contains'],
+            'creator__username': ['exact', 'in', 'startswith'],
+            'title': ['exact', 'in', 'startswith'],
+        }

@@ -1,28 +1,33 @@
 # -*- coding: utf-8 -*-
 
+from django.core.paginator import Paginator
 from rest_framework import serializers
 
+from api.mixins import AllowFieldLimitingMixin
+from api.users.serializers import DisplayUserProfileSerializer
 from films.models import Film, Collection, CollectionComment, FilmComment
 
 
 # TODO: Add permissions for film and collection creation, and deletion.
 
+
 class FilmCommentSerializer(serializers.ModelSerializer):
     """
-    Serializer for Film Comments. author is the users foreign key to FIlm comments.
-    We are returning the author into a foreign key representation, and string representation.
-    """
+      Serializer for Film Comments. author is the users foreign key to FIlm comments.
+      We are returning the author into a foreign key representation, and string representation.
+      """
     author = serializers.PrimaryKeyRelatedField(
         default=serializers.CurrentUserDefault(),
         read_only=True,
         help_text="The ID of the user that created this film comment; if none is provided, "
-        "defaults to the currently logged in user."
+                  "defaults to the currently logged in user."
     )
     author_username = serializers.StringRelatedField(
-        source='author', default=serializers.CurrentUserDefault(),
+        source='author',
+        default=serializers.CurrentUserDefault(),
         read_only=True,
         help_text="The string representation of the user that created this film comment; if none is provided, "
-        "defaults to the currently logged in user."
+                  "defaults to the currently logged in user."
     )
 
     class Meta:
@@ -37,10 +42,11 @@ class FilmCommentSerializer(serializers.ModelSerializer):
         )
 
 
-class CollectionCommentSerializer(serializers.ModelSerializer):
+class CollectionCommentSerializer(AllowFieldLimitingMixin,
+                                  serializers.ModelSerializer):
     """
-    Same as the Film Comment Serializer
-    """
+      Same as the Film Comment Serializer
+      """
     author = serializers.PrimaryKeyRelatedField(
         default=serializers.CurrentUserDefault(),
         read_only=True,
@@ -52,7 +58,7 @@ class CollectionCommentSerializer(serializers.ModelSerializer):
         default=serializers.CurrentUserDefault(),
         read_only=True,
         help_text="The string representation of the user that created this collection comment; if none is provided, "
-        "defaults to the currently logged in user."
+                  "defaults to the currently logged in user."
     )
 
     class Meta:
@@ -69,8 +75,8 @@ class CollectionCommentSerializer(serializers.ModelSerializer):
 
 class AdminFilmSerializer(serializers.ModelSerializer):
     """
-    Serializer for For Films. This is the serializer that Administrators/staff will have access to.
-    """
+      Serializer for For Films. This is the serializer that Administrators/staff will have access to.
+      """
     film_comments = FilmCommentSerializer(
         read_only=True,
         many=True,
@@ -105,85 +111,90 @@ class AdminFilmSerializer(serializers.ModelSerializer):
             return film.imdb.tt_id
 
     extra_kwargs = {
-        'genre_tags': {'required': False},
-        'fanart_url': {'required': False},
-        'moderation_notes': {'required': False},
+        'genre_tags': {
+            'required': False
+        },
+        'fanart_url': {
+            'required': False
+        },
+        'moderation_notes': {
+            'required': False
+        },
     }
 
 
 class PublicFilmSerializer(AdminFilmSerializer):
     """
-    Remove Moderation Notes, and you have a serializer for everyone else.
-    """
-    # TODO: make this serializer more robust
+      Remove Moderation Notes, and you have a serializer for everyone else.
+      """
+
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
-        remove_fields = (
-            'moderation_notes',
-        )
+        remove_fields = ('moderation_notes',)
         for field_name in remove_fields:
             self.fields.pop(field_name)
 
 
-class CollectionSerializer(serializers.ModelSerializer):
+class CollectionSerializer(AllowFieldLimitingMixin,
+                           serializers.ModelSerializer):
     """
-    Serializer for collections. We are adding some custom naming conventions here.
-    However, source='creator' would be the field that it references in the model.
-    """
-    creator_id = serializers.PrimaryKeyRelatedField(
-        default=serializers.CurrentUserDefault(),
-        read_only=True,
-        source='creator',
-        help_text="The ID of the user that created this collection object; if none is provided,"
-                  "defaults to the currently logged in user."
-    )
-    creator_username = serializers.StringRelatedField(
-        default=serializers.CurrentUserDefault(),
-        read_only=True,
-        source='creator',
-        help_text="The string representation of the user that created this collection object; if none is provided, "
-        "defaults to the currently logged in user."
-    )
-    list_id = serializers.IntegerField(source='id', read_only=True)
-    list_title = serializers.CharField(source='title')
-    list_description = serializers.CharField(source='description')
-    film = serializers.PrimaryKeyRelatedField(
-        many=True,
+      Serializer for collections of films. Notice the Allow Field Limiting mixin. You can
+      use that for example api/v1/?fields=field1,field2,field3.
+      Or you can hide specific fields for example: api/v1/?omit=field1,field2
+
+      """
+    creator = DisplayUserProfileSerializer(
+        default=serializers.CurrentUserDefault(), read_only=True)
+    comments = CollectionCommentSerializer(read_only=True, many=True)
+    film_id = serializers.PrimaryKeyRelatedField(
+        source='films',
+        write_only=True,
+        allow_null=True,
+        required=False,
         queryset=Film.objects.all(),
-        help_text="Since we are not making this read_only, "
-                  "we have to give a queryset for the primary key related field"
-                  "We don't want this to be read only, since users need to add or remove a film from a collection."
+        many=True
     )
-    film_title = serializers.StringRelatedField(many=True, read_only=True, source='film')
-    film_link = serializers.HyperlinkedRelatedField(
-        many=True,
-        read_only=True,
-        source='film',
-        view_name='film-detail'
-    )
-    url = serializers.HyperlinkedIdentityField(read_only=True, view_name='collection-detail')
-    comments = CollectionCommentSerializer(many=True, read_only=True)
+    films = serializers.SerializerMethodField('paginated_films')
+    films_count = serializers.SerializerMethodField()
 
-    class Meta(CollectionCommentSerializer.Meta):
-
+    class Meta(FilmCommentSerializer.Meta):
         """
-        Add in the fields from the collections comment serializer as a nested meta field.
-        eg: 'collection',
-            'author',
-            'author_username',
-            ...
-        """
+            Add in the fields from the collections comment serializer as a nested meta field.
+            eg: 'collection',
+                'author',
+                'author_username',
+                ...
+            """
 
         model = Collection
+
         fields = (
-            'creator_id',
-            'creator_username',
+            'creator',
             'comments',
-            'list_id',
+            'id',
             'url',
-            'list_title',
-            'list_description',
-            'film',
-            'film_title',
-            'film_link'
+            'title',
+            'description',
+            'film_id',
+            'films',
+            'films_count',
         )
+
+    def get_films_count(self, obj):
+        return obj.films.count()
+
+    """
+    paginate a related field to be able to use a query param on nested data
+    For example: /api/v1/film-collections/{pk}/size=1 would show only 1 nested film.
+            ...
+    """
+
+    def paginated_films(self, obj):
+        page_size = self.context['request'].query_params.get('size') or 25
+        paginator = Paginator(obj.films.all(), page_size)
+        page = self.context['request'].query_params.get('page') or 1
+
+        films = paginator.page(page)
+        serializer = PublicFilmSerializer(films, many=True)
+
+        return serializer.data

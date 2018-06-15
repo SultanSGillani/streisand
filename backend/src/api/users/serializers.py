@@ -3,6 +3,7 @@
 from django.contrib.auth import authenticate
 from django.contrib.auth.models import Group
 from django.contrib.auth.password_validation import validate_password
+
 from rest_framework import serializers, validators
 
 from api.mixins import AllowFieldLimitingMixin
@@ -167,7 +168,7 @@ class OwnedUserProfileSerializer(AdminUserProfileSerializer):
     extra_kwargs = {'username': {'read_only': True}}
 
 
-class PublicUserProfileSerializer(OwnedUserProfileSerializer):
+class PublicUserProfileSerializer(OwnedUserProfileSerializer, AllowFieldLimitingMixin):
     username = serializers.StringRelatedField(read_only=True)
 
     class Meta(OwnedUserProfileSerializer.Meta):
@@ -188,7 +189,7 @@ class PublicUserProfileSerializer(OwnedUserProfileSerializer):
         )
 
 
-class DisplayUserProfileSerializer(PublicUserProfileSerializer):
+class DisplayUserProfileSerializer(PublicUserProfileSerializer, AllowFieldLimitingMixin):
     class Meta(PublicUserProfileSerializer.Meta):
         fields = (
             'id',
