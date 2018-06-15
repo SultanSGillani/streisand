@@ -61,20 +61,14 @@ class FilmViewComponent extends React.Component<CombinedProps> {
             <div>
                 <CommandBar commands={commands} />
                 <h1>{film.title} [{film.year}]</h1>
-                <div>
-                    <div className="row" style={styles.videoContainer}>
-                        <iframe style={styles.video} src={youtubeUrl} frameBorder="0"/>
-                    </div>
-                    <div className="row">
-                        <h2>Description</h2>
-                        <p>{film.description}</p>
-                        <div>{tags}</div>
-                    </div>
-                    <div className="row">
-                        <h2>Torrents</h2>
-                        <TorrentSection torrents={this.props.torrents} />
-                    </div>
+                <div style={styles.videoContainer}>
+                    <iframe style={styles.video} src={youtubeUrl} frameBorder="0"></iframe>
                 </div>
+                <h2>Description</h2>
+                <p>{film.description}</p>
+                <div>{tags}</div>
+                <h2>Torrents</h2>
+                <TorrentSection film={film} torrents={this.props.torrents} />
                 {this._getModal()}
             </div>
         );
@@ -96,13 +90,14 @@ class FilmViewComponent extends React.Component<CombinedProps> {
 }
 
 const mapStateToProps = (state: Store.All, props: Props): ConnectedState => {
+    const pages = state.sealed.torrent.byFilmId[props.film.id];
     return {
         torrents: getNodeItems({
-            page: props.film.id,
+            page: 1,
             byId: state.sealed.torrent.byId,
-            pages: state.sealed.torrent.byFilmId
+            pages: pages
         })
-     };
+    };
 };
 
 const mapDispatchToProps = (dispatch: IDispatch): ConnectedDispatch => ({

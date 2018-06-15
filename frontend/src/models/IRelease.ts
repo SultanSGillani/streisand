@@ -1,6 +1,4 @@
 
-import IFilm from './IFilm';
-
 export interface IRelaseMediaInfo {
     id: number;
     text: string;
@@ -24,7 +22,6 @@ interface IRelease {
     is3d: boolean;
     isScene: boolean;
     isSource: boolean;
-    film: IFilm; // TODO: remove
     mediainfo?: IRelaseMediaInfo;
     nfo: string;
     releaseGroup: string;
