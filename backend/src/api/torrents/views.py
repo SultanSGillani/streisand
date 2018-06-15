@@ -8,11 +8,11 @@ from rest_framework.viewsets import ModelViewSet
 from api.throttling import DOSDefenseThrottle
 from torrent_requests.models import TorrentRequest
 from torrent_stats.models import TorrentStats
-from torrents.models import TorrentFile
+from torrents.models import TorrentFile, ReseedRequest
 from torrents.utils import TorrentFileUploadParser
 
 from .filters import TorrentFilter
-from .serializers import TorrentFileSerializer, TorrentStatSerializer, TorrentRequestSerializer
+from .serializers import TorrentFileSerializer, TorrentStatSerializer, TorrentRequestSerializer, ReseedRequestSerializer
 
 
 class TorrentStatViewSet(ModelViewSet):
@@ -24,6 +24,37 @@ class TorrentStatViewSet(ModelViewSet):
     ).order_by(
         'last_snatched'
     )
+
+    def get_serializer_context(self):
+        return {'request': self.request}
+
+
+class ReseedRequestViewSet(ModelViewSet):
+    permission_classes = [IsAuthenticated]
+    serializer_class = ReseedRequestSerializer
+    queryset = ReseedRequest.objects.all().select_related(
+        'torrent',
+        'created_by',
+        'active_on_torrent',
+    ).order_by(
+        '-created_at'
+    )
+
+    def perform_create(self, serializer):
+        serializer.validated_data['created_by'] = self.request.user
+        return super(ReseedRequestViewSet, self).perform_create(serializer)
+
+    def get_queryset(self):
+        queryset = super().get_queryset()
+
+        torrent_id = self.request.query_params.get('torrent_id', None)
+        if torrent_id is not None:
+            queryset = queryset.filter(reseed_request__torrent__id=torrent_id)
+
+        return queryset
+
+    def get_serializer_context(self):
+        return {'request': self.request}
 
 
 class TorrentRequestViewSet(ModelViewSet):

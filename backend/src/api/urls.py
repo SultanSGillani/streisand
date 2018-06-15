@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 
 from django.conf.urls import url, include
+
 from drf_yasg import openapi
 from drf_yasg.views import get_schema_view
 from knox import views as knox_views
@@ -55,6 +56,8 @@ router.register(r'release-comments', viewset=releases_views.ReleaseCommentViewSe
 router.register(r'torrent-files', viewset=torrents_views.TorrentFileViewSet, base_name='torrent-file')
 router.register(r'torrent-stats', viewset=torrents_views.TorrentStatViewSet, base_name='torrent-stat')
 router.register(r'torrent-requests', viewset=torrents_views.TorrentRequestViewSet, base_name='torrent-request')
+router.register(r'torrent-reseed-requests', viewset=torrents_views.ReseedRequestViewSet,
+                base_name='torrent-reseed-request')
 
 # Tracker
 router.register(r'torrent-clients', viewset=tracker_views.TorrentClientViewSet, base_name='torrent-client')

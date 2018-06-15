@@ -143,8 +143,8 @@ class CurrentUserSerializer(AllowFieldLimitingMixin,
 
 
 class OwnedUserProfileSerializer(AdminUserProfileSerializer):
-    class Meta:
-        model = User(AdminUserProfileSerializer.Meta)
+    class Meta(AdminUserProfileSerializer.Meta):
+        model = User
         fields = (
             'id',
             'username',
