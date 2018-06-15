@@ -5,8 +5,6 @@ class AllowFieldLimitingMixin(object):
     """
     A serializer mixin that takes an additional `fields` argument that controls
     which fields should be displayed.
-
-    Source: https: // gist.github.com / philipn / 8659192
     """
 
     @property

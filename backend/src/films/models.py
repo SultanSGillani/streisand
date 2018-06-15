@@ -9,7 +9,6 @@ from users.models import User
 
 
 class Film(models.Model):
-
     old_id = models.PositiveIntegerField(null=True, db_index=True)
 
     title = models.CharField(max_length=1024)
@@ -63,7 +62,6 @@ class FilmComment(Comment):
 
 
 class Tag(models.Model):
-
     name = models.CharField(max_length=32, primary_key=True)
 
     def __str__(self):
@@ -75,7 +73,7 @@ class Collection(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
     title = models.CharField(max_length=1024)
     description = models.TextField()
-    film = models.ManyToManyField(Film, related_name='lists')
+    films = models.ManyToManyField(Film, related_name='lists')
 
     def __str__(self):
         return self.title
@@ -84,7 +82,7 @@ class Collection(models.Model):
         return self.film.count()
 
     def get_absolute_url(self):
-        return reverse('collections_details', args=[self.id])
+        return reverse('collection-detail', args=[self.id])
 
 
 class CollectionComment(Comment):

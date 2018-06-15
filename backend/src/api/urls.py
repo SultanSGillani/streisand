@@ -45,8 +45,10 @@ router.register(r'invites', viewset=invites_views.InviteViewSet, base_name='invi
 # Films
 router.register(r'films', viewset=films_views.FilmViewSet, base_name='film')
 router.register(r'film-comments', viewset=films_views.FilmCommentViewSet, base_name='film-comment')
-router.register(r'collections', viewset=films_views.CollectionViewSet, base_name='collection')
+
+# Film Collections
 router.register(r'collection-comments', viewset=films_views.CollectionCommentViewSet, base_name='collection-comment')
+router.register(r'film-collections', viewset=films_views.CollectionViewSet, base_name='collection')
 
 # Releases
 router.register(r'releases', viewset=releases_views.ReleaseViewSet, base_name='release')
@@ -110,6 +112,6 @@ urlpatterns = [
     url(r'^logoutall/', knox_views.LogoutAllView.as_view(), name='knox_logoutall'),
 
     # Media formats
-    url(r'^valid-media-formats/', releases_views.valid_media_formats, name='valid-media-formats')
+    url(r'^valid-media-formats/', releases_views.valid_media_formats, name='valid-media-formats'),
 
 ]

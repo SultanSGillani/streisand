@@ -3,9 +3,9 @@
 from django_filters.rest_framework import DjangoFilterBackend
 from rest_framework.permissions import IsAdminUser, IsAuthenticated
 from rest_framework.viewsets import ModelViewSet
-
+from rest_framework import response, status
+from api.pagination import DetailPagination
 from films.models import Film, Collection, CollectionComment, FilmComment
-
 from .filters import FilmFilter, CollectionFilter
 from .serializers import AdminFilmSerializer, CollectionSerializer, FilmCommentSerializer, CollectionCommentSerializer
 
@@ -23,7 +23,19 @@ class CollectionCommentViewSet(ModelViewSet):
         'author',
     ).order_by(
         '-id'
-    ).distinct('id')
+    ).distinct(
+        'id'
+    )
+
+    def get_serializer_context(self):
+        return {'request': self.request}
+
+    def create(self, request, *args, **kwargs):
+        serializer = self.get_serializer(data=request.data)
+        if serializer.is_valid():
+            serializer.save(author=self.request.user)
+            return response.Response(data=serializer.data)
+        return response.Response(status=status.HTTP_400_BAD_REQUEST)
 
 
 class FilmCommentViewSet(ModelViewSet):
@@ -39,26 +51,54 @@ class FilmCommentViewSet(ModelViewSet):
         'author',
     ).order_by(
         '-id'
-    ).distinct('id')
+    ).distinct(
+        'id'
+    )
+
+    def get_serializer_context(self):
+        return {'request': self.request}
+
+    def create(self, request, *args, **kwargs):
+        serializer = self.get_serializer(data=request.data)
+        if serializer.is_valid():
+            serializer.save(author=self.request.user)
+            return response.Response(data=serializer.data)
+        return response.Response(status=status.HTTP_400_BAD_REQUEST)
 
 
 class CollectionViewSet(ModelViewSet):
     """
     API endpoint that allows film-collections to be viewed or edited.
     """
-    permission_classes = [IsAdminUser]
+    permission_classes = [IsAuthenticated]
     serializer_class = CollectionSerializer
+    pagination_class = DetailPagination
     queryset = Collection.objects.all().select_related(
         'creator',
     ).prefetch_related(
-        'film',
+        'films',
+        'films__genre_tags',
+        'films__lists',
+        'films__comments',
         'comments',
         'comments__author',
     ).order_by(
         '-id',
-    ).distinct('id')
+    ).distinct(
+        'id'
+    )
     filter_backends = [DjangoFilterBackend]
     filter_class = CollectionFilter
+
+    def get_serializer_context(self):
+        return {'request': self.request}
+
+    def create(self, request, *args, **kwargs):
+        serializer = self.get_serializer(data=request.data)
+        if serializer.is_valid():
+            serializer.save(creator=self.request.user)
+            return response.Response(data=serializer.data)
+        return response.Response(status=status.HTTP_400_BAD_REQUEST)
 
 
 class FilmViewSet(ModelViewSet):
@@ -69,13 +109,9 @@ class FilmViewSet(ModelViewSet):
     serializer_class = AdminFilmSerializer
     filter_backends = [DjangoFilterBackend]
     filter_class = FilmFilter
-    queryset = Film.objects.all().select_related(
-        'imdb',
-    ).prefetch_related(
+    queryset = Film.objects.all().select_related('imdb', ).prefetch_related(
         'genre_tags',
         'lists',
         'comments',
         'comments__author',
-    ).order_by(
-        '-id',
-    ).distinct('id')
+    ).order_by('-id', ).distinct('id')
