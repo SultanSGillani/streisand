@@ -4,11 +4,9 @@ import { Button, Card, CardBody, Form, CardFooter } from 'reactstrap';
 
 import Store from '../../store';
 import IFilm from '../../models/IFilm';
-import IRelease from '../../models/IRelease';
-import { ITorrent } from '../../models/ITorrent';
-import { getNode } from '../../utilities/mapping';
+import IMediaTypes from '../../models/IMediaTypes';
 import { IDispatch } from '../../actions/ActionTypes';
-import { StringInput, BooleanInput } from '../generic/inputs';
+import { StringInput, BooleanInput, ListInput } from '../generic/inputs';
 import { uploadTorrent } from '../../actions/torrents/UploadTorrentAction';
 import { createRelease, IActionProps as IReleaseProps } from '../../actions/releases/CreateReleaseAction';
 import { attachToRelease, IActionProps as ITorrentProps } from '../../actions/torrents/UpdateTorrentAction';
@@ -40,8 +38,7 @@ type State = {
 };
 
 type ConnectedState = {
-    getTorrent: (id: number) => ITorrent | undefined;
-    getRelease: (id: number) => IRelease | undefined;
+    mediaTypes: IMediaTypes;
 };
 
 type ConnectedDispatch = {
@@ -59,10 +56,10 @@ class TorrentUploadViewComponent extends React.Component<CombinedProps, State> {
             data: {
                 description: '',
                 cut: 'Theatrical',
-                codec: 'XviD',
-                container: 'AVI',
-                resolution: 'Standard Def',
-                sourceMedia: 'DVD',
+                codec: '',
+                container: '',
+                resolution: '',
+                sourceMedia: '',
                 isScene: false,
                 isSource: false,
                 is3d: false,
@@ -75,9 +72,6 @@ class TorrentUploadViewComponent extends React.Component<CombinedProps, State> {
 
     public render() {
         const film = this.props.film;
-        // const torrent = this.state.torrentId && this.props.getTorrent(this.state.torrentId);
-        // const release = this.state.releaseId && this.props.getRelease(this.state.releaseId);
-
         return (
             <div>
                 <h1>Torrent upload</h1>
@@ -149,17 +143,17 @@ class TorrentUploadViewComponent extends React.Component<CombinedProps, State> {
                             setValue={(value: string) => this._setDataState({ description: value })} />
                         <StringInput id="cut" label="Cut" placeholder="Film release cut" value={data.cut}
                             setValue={(value: string) => this._setDataState({ cut: value })} />
-                        <StringInput id="codec" label="Codec"
-                            placeholder="Film release codec" value={data.codec}
+                        <ListInput id="codec" label="Codec" value={data.codec}
+                            values={this.props.mediaTypes.codecs}
                             setValue={(value: string) => this._setDataState({ codec: value })} />
-                        <StringInput id="container" label="Container"
-                            placeholder="Film release container" value={data.container}
+                        <ListInput id="container" label="Container" value={data.container}
+                            values={this.props.mediaTypes.containers}
                             setValue={(value: string) => this._setDataState({ container: value })} />
-                        <StringInput id="resolution" label="Resolution"
-                            placeholder="Film release resolution" value={data.resolution}
+                        <ListInput id="resolution" label="Resolution" value={data.resolution}
+                            values={this.props.mediaTypes.resolutions}
                             setValue={(value: string) => this._setDataState({ resolution: value })} />
-                        <StringInput id="sourceMedia" label="Source media"
-                            placeholder="Film release source media" value={data.sourceMedia}
+                        <ListInput id="sourceMedia" label="Source media" value={data.sourceMedia}
+                            values={this.props.mediaTypes.sourceMedia}
                             setValue={(value: string) => this._setDataState({ sourceMedia: value })} />
                         <StringInput id="nfo" label="NFO" placeholder="Film release nfo" value={data.nfo}
                             setValue={(value: string) => this._setDataState({ nfo: value })} />
@@ -224,15 +218,8 @@ class TorrentUploadViewComponent extends React.Component<CombinedProps, State> {
 }
 
 const mapStateToProps = (state: Store.All, props: Props): ConnectedState => {
-    const releases = state.sealed.release.byId;
-    const torrents = state.sealed.torrent.byId;
     return {
-        getTorrent: (id: number) => {
-            return getNode({ byId: torrents, id }).item;
-        },
-        getRelease: (id: number) => {
-            return getNode({ byId: releases, id }).item;
-        }
+        mediaTypes: state.mediaTypes
     };
 };
 

@@ -7,11 +7,13 @@ import sealed from './sealed';
 import messages from './messages';
 import location from './location';
 import deviceInfo from './deviceInfo';
+import mediaTypes from './mediaTypes';
 
 export default combineReducers<Store.All>({
     routing,
     location,
     messages,
     sealed,
-    deviceInfo
+    deviceInfo,
+    mediaTypes
 });

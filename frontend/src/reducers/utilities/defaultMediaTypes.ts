@@ -1,0 +1,72 @@
+export const defaultMediaTypes = {
+    'codecs': [
+        'x264',
+        'XviD',
+        'H.264',
+        'DivX',
+        'AVC',
+        'VC-1',
+        'MPEG-2',
+        'DVDR'
+    ],
+    'containers': [
+        'TS',
+        'AVI',
+        'MKV',
+        'DVDR NTSC',
+        'DVDR PAL',
+        'Blu-ray',
+        'HD-DVD'
+    ],
+    'resolutions': [
+        'Standard Def',
+        '480p',
+        '576p',
+        '720p',
+        '1080p',
+        '1080i',
+        '2160p'
+    ],
+    'sourceMedia': [
+        'Blu-ray',
+        'HD-DVD',
+        'HDTV',
+        'WEB-DL',
+        'DVD',
+        'R5',
+        'Screener',
+        'CAM (TS)',
+        'Other'
+    ],
+    'genreTags': [
+        '',
+        'Action',
+        'Adventure',
+        'Animation',
+        'Anime',
+        'Biography',
+        'Comedy',
+        'Crime',
+        'Documentary',
+        'Drama',
+        'Family',
+        'Fantasy',
+        'Film-Noir',
+        'Foreign',
+        'History',
+        'Horror',
+        'Indie',
+        'Music',
+        'Musical',
+        'Mystery',
+        'Political',
+        'Romance',
+        'Sci-Fi',
+        'Short',
+        'Sport',
+        'Stand-Up',
+        'Thriller',
+        'War',
+        'Western'
+    ]
+};

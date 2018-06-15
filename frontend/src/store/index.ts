@@ -7,6 +7,7 @@ import IRelease from '../models/IRelease';
 import IMessage from '../models/IMessage';
 import IAuthInfo from '../models/IAuthInfo';
 import IDeviceInfo from '../models/IDeviceInfo';
+import IMediaTypes from '../models/IMediaTypes';
 import { IItemSet } from '../models/base/ItemSet';
 import ILocationInfo from '../models/ILocationInfo';
 import IForumData from '../models/forums/IForumData';
@@ -42,6 +43,7 @@ namespace Store {
         routing: RouterState;
         location: ILocationInfo;
         deviceInfo: IDeviceInfo;
+        mediaTypes: IMediaTypes;
         sealed: UserSealed;
     };
 }
