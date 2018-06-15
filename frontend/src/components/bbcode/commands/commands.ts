@@ -48,21 +48,36 @@ export function getCommandSet(props: CommandBarProps) {
 
     const commands: ICommandProps[] = [
         {
-            icon: 'bold',
-            title: 'Bold',
-            onExecute: injectTag('b')
-        }, {
-            icon: 'italic',
-            title: 'Italic',
-            onExecute: injectTag('i')
-        }, {
-            icon: 'underline',
-            title: 'Underline',
-            onExecute: injectTag('u')
-        }, {
-            icon: 'strikethrough',
-            title: 'Strikethrough',
-            onExecute: injectTag('s')
+            icon: 'font',
+            title: 'Font styles',
+            expand: true,
+            children: [
+                {
+                    icon: 'bold',
+                    title: 'Bold',
+                    onExecute: injectTag('b')
+                }, {
+                    icon: 'italic',
+                    title: 'Italic',
+                    onExecute: injectTag('i')
+                }, {
+                    icon: 'underline',
+                    title: 'Underline',
+                    onExecute: injectTag('u')
+                }, {
+                    icon: 'strikethrough',
+                    title: 'Strikethrough',
+                    onExecute: injectTag('s')
+                }, {
+                    icon: 'text-height',
+                    title: 'Text size in pixels',
+                    onExecute: injectTag('size', '12')
+                }, {
+                    icon: 'paint-brush',
+                    title: 'Text color',
+                    onExecute: injectTag('color', '#000000')
+                }
+            ]
         }, {
             icon: 'link',
             title: 'Link',
@@ -79,14 +94,6 @@ export function getCommandSet(props: CommandBarProps) {
             icon: 'quote-left',
             title: 'Quote',
             onExecute: injectTag('quote', 'unitPower')
-        }, {
-            icon: 'text-height',
-            title: 'Text size in pixels',
-            onExecute: injectTag('size', '12')
-        }, {
-            icon: 'paint-brush',
-            title: 'Text color',
-            onExecute: injectTag('color', '#000000')
         }, {
             icon: 'align-center',
             title: 'Align center',
