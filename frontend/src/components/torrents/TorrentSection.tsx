@@ -13,7 +13,7 @@ export type Props = {
 };
 
 export default function TorrentSection(props: Props) {
-    const { torrents, film } = this.props;
+    const { torrents, film } = props;
     if (!torrents.length) {
         return <p>There are no torrents uploaded for this film yet.</p>;
     }
