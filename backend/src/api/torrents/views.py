@@ -118,7 +118,7 @@ class TorrentFileViewSet(ModelViewSet):
 class TorrentFileWithNoReleaseViewSet(mixins.ListModelMixin, mixins.RetrieveModelMixin, mixins.UpdateModelMixin,
                                       mixins.DestroyModelMixin, GenericViewSet):
     """
-    API That shows Torrents  uploaded with null releases. This api is for staff to handle these torrents
+    API That shows Torrents uploaded with null releases. This api is for staff to handle these torrents
     uploaded incorrectly.
     """
     permission_classes = [IsAdminUser]
