@@ -2,7 +2,7 @@
 
 from django_filters.rest_framework import DjangoFilterBackend
 from djangorestframework_camel_case.parser import CamelCaseJSONParser
-from rest_framework.permissions import IsAuthenticated
+from rest_framework.permissions import IsAuthenticated, IsAdminUser
 from rest_framework.viewsets import ModelViewSet
 
 from api.throttling import DOSDefenseThrottle
@@ -10,7 +10,6 @@ from torrent_requests.models import TorrentRequest
 from torrent_stats.models import TorrentStats
 from torrents.models import TorrentFile, ReseedRequest
 from torrents.utils import TorrentFileUploadParser
-
 from .filters import TorrentFilter
 from .serializers import TorrentFileSerializer, TorrentStatSerializer, TorrentRequestSerializer, ReseedRequestSerializer
 
@@ -110,6 +109,21 @@ class TorrentFileViewSet(ModelViewSet):
         'release__film_id',
         'release__source_media_id',
     )
+
+    def get_serializer_context(self):
+        return {'request': self.request}
+
+
+class TorrentFileWithNoReleaseViewSet(ModelViewSet):
+    """
+    API That currently only allows Torrents to be viewed, and searched.
+    Pagination is set at Page Number Pagination, for 35 Torrents at a time for now.
+    """
+    permission_classes = [IsAdminUser]
+    serializer_class = TorrentFileSerializer
+    throttle_classes = [DOSDefenseThrottle]
+
+    queryset = TorrentFile.objects.all().filter(release__isnull=True)
 
     def get_serializer_context(self):
         return {'request': self.request}
