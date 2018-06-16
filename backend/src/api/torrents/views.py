@@ -2,8 +2,9 @@
 
 from django_filters.rest_framework import DjangoFilterBackend
 from djangorestframework_camel_case.parser import CamelCaseJSONParser
+from rest_framework import mixins
 from rest_framework.permissions import IsAuthenticated, IsAdminUser
-from rest_framework.viewsets import ModelViewSet
+from rest_framework.viewsets import ModelViewSet, GenericViewSet
 
 from api.throttling import DOSDefenseThrottle
 from torrent_requests.models import TorrentRequest
@@ -114,16 +115,31 @@ class TorrentFileViewSet(ModelViewSet):
         return {'request': self.request}
 
 
-class TorrentFileWithNoReleaseViewSet(ModelViewSet):
+class TorrentFileWithNoReleaseViewSet(mixins.ListModelMixin, mixins.RetrieveModelMixin, mixins.UpdateModelMixin,
+                                      mixins.DestroyModelMixin, GenericViewSet):
     """
-    API That currently only allows Torrents to be viewed, and searched.
-    Pagination is set at Page Number Pagination, for 35 Torrents at a time for now.
+    API That shows Torrents  uploaded with null releases. This api is for staff to handle these torrents
+    uploaded incorrectly.
     """
     permission_classes = [IsAdminUser]
     serializer_class = TorrentFileSerializer
     throttle_classes = [DOSDefenseThrottle]
 
-    queryset = TorrentFile.objects.all().filter(release__isnull=True)
+    queryset = TorrentFile.objects.all().select_related(
+        'release__film',
+        'release__mediainfo',
+        'release__source_media',
+        'uploaded_by',
+        'moderated_by',
+    ).order_by(
+        'uploaded_at',
+        'release__film_id',
+        'release__source_media_id',
+    ).distinct(
+        'uploaded_at',
+        'release__film_id',
+        'release__source_media_id',
+    ).filter(release__isnull=True)
 
     def get_serializer_context(self):
         return {'request': self.request}
