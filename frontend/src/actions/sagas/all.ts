@@ -5,9 +5,10 @@ import { allFilmSaga } from '../films';
 import { allUserSaga } from '../users';
 import { allWikiSaga } from '../wikis';
 import { newsSaga } from '../NewsAction';
-import { allTorrentSaga } from '../torrents';
 import { allForumSaga } from '../forums';
+import { allTorrentSaga } from '../torrents';
 import { allReleaseSaga } from '../releases';
+import { mediaTypeSaga } from '../MediaTypeAction';
 
 export default function* rootSaga() {
     yield all([
@@ -18,6 +19,7 @@ export default function* rootSaga() {
         allTorrentSaga(),
         allForumSaga(),
         allReleaseSaga(),
-        newsSaga()
+        newsSaga(),
+        mediaTypeSaga()
     ]);
 }

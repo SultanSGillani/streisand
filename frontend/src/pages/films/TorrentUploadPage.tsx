@@ -10,6 +10,7 @@ import Loading from '../../components/generic/Loading';
 import { numericIdentifier } from '../../utilities/shim';
 import { getFilm } from '../../actions/films/FilmAction';
 import ILoadingStatus from '../../models/base/ILoadingStatus';
+import { getMediaTypes } from '../../actions/MediaTypeAction';
 import TorrentUploadView from '../../components/films/TorrentUploadView';
 
 export type Props = {
@@ -26,11 +27,13 @@ type ConnectedState = {
 
 type ConnectedDispatch = {
     getFilm: (id: number) => void;
+    getMediaTypes: () => void;
 };
 
 type CombinedProps = ConnectedState & ConnectedDispatch & Props;
 class TorrentUploadPageComponent extends React.Component<CombinedProps, void> {
     public componentWillMount() {
+        this.props.getMediaTypes();
         if (!this.props.status.loading) {
             this.props.getFilm(this.props.filmId);
         }
@@ -68,6 +71,7 @@ const mapStateToProps = (state: Store.All, props: Props): ConnectedState => {
 };
 
 const mapDispatchToProps = (dispatch: IDispatch): ConnectedDispatch => ({
+    getMediaTypes: () => dispatch(getMediaTypes()),
     getFilm: (id: number) => dispatch(getFilm(id))
 });
 

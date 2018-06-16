@@ -6,8 +6,10 @@ import ForumAction from './forums';
 import TorrentAction from './torrents';
 import DeviceAction from './DeviceAction';
 import MessageAction from './MessageAction';
+import MediaTypeAction from './MediaTypeAction';
 
 type Action = MessageAction
+    | MediaTypeAction
     | AuthAction
     | UserAction
     | FilmAction

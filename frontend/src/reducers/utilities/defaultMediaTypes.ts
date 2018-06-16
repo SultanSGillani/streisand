@@ -39,7 +39,6 @@ export const defaultMediaTypes = {
         'Other'
     ],
     'genreTags': [
-        '',
         'Action',
         'Adventure',
         'Animation',
