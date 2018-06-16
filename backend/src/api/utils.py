@@ -1,5 +1,4 @@
 # -*- coding: utf-8 -*-
-import json
 from rest_framework import pagination
 from rest_framework.fields import Field
 from rest_framework.pagination import _positive_int
@@ -43,7 +42,7 @@ class PaginatedRelationField(Field):
 
         result = self.paginator.get_paginated_response(paginated_data)
 
-        return json.dumps(result)
+        return result
 
 
 class RelationPaginator(pagination.PageNumberPagination):
