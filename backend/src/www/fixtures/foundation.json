@@ -406,6 +406,15 @@
   },
   {
     "model": "tracker.torrentclient",
+    "pk": "-qB41",
+    "fields": {
+      "name": "qBittorrent 4.1.*",
+      "is_whitelisted": true,
+      "notes": null
+    }
+  },
+  {
+    "model": "tracker.torrentclient",
     "pk": "-TR1540-",
     "fields": {
       "name": "Transmission  1.5.4",
