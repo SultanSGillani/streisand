@@ -14,7 +14,7 @@ cd ..
 sudo cp ./config/uwsgi_params /etc/nginx/
 sudo cp ./config/nginx.conf /etc/nginx/
 sudo cp ./config/ssl/ssl_params /etc/nginx/ssl/
-sudo cp ./config/ssl/uwsgi_params /etc/nginx/uwsgi_params
+sudo cp ./config/uwsgi_params /etc/nginx/uwsgi_params
 sudo cp ./backend/config/jumpcut.conf /etc/nginx/conf.d/
 sudo cp ./backend/config/tracker.conf /etc/nginx/conf.d/
 sudo cp ./frontend/config/frontend.conf /etc/nginx/conf.d/
