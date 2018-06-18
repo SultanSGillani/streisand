@@ -15,6 +15,7 @@ export type ReceivedWikis = {
 };
 export type FailedWikis = { type: 'FAILED_WIKIS', props: IActionProps };
 export type InvalidateWikis = { type: 'INVALIDATE_WIKIS', props: IActionProps };
+
 type WikisAction = RequestWikis | ReceivedWikis | FailedWikis | InvalidateWikis;
 export default WikisAction;
 type Action = WikisAction;

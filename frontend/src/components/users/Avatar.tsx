@@ -9,7 +9,7 @@ export type Props = {
 // TODO get offical default avatar
 const defaultAvatar = 'https://www.shareicon.net/data/256x256/2016/11/21/854776_darth_512x512.png';
 export default function Avatar(props: Props) {
-    const url = (props.user && props.user.details && props.user.details.avatarUrl) || defaultAvatar;
+    const url = (props.user && props.user.details && props.user.avatarUrl) || defaultAvatar;
     return (
         <div>
             <img src={url} width="150" onError={(event: React.SyntheticEvent<HTMLImageElement>) => {

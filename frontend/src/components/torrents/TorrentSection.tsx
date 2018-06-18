@@ -64,12 +64,12 @@ function TorrentRow(props: { film: IFilm, torrent: ITorrent }) {
             <td className="align-middle">{size}</td>
             <td className="align-middle">{torrent.snatchCount}</td>
             <td>
-            <div className="row m-0 justify-content-end">
-                <Button className="col-auto" size="sm" title="Download torrent file" onClick={onDownload}>
-                    <i className="fas fa-arrow-down fa-lg" />
-                </Button>
-            </div>
-        </td>
+                <div className="row m-0 justify-content-end">
+                    <Button className="col-auto" size="sm" title="Download torrent file" onClick={onDownload}>
+                        <i className="fas fa-arrow-down fa-lg" />
+                    </Button>
+                </div>
+            </td>
         </tr>
     );
 }

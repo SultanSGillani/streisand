@@ -21,14 +21,14 @@ export interface IUserResponse {
 interface IUser {
     id: number;
     username: string;
+    userClass: string;
+    accountStatus: string;
+    isDonor: boolean;
+    customTitle: string;
+    avatarUrl: string;
 
     details?: {
         email: string;
-        userClass: string;
-        accountStatus: string;
-        isDonor: boolean;
-        customTitle: string;
-        avatarUrl: string;
         profileDescription: string;
         averageSeedingSize: string;
         ircKey: string;

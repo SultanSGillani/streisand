@@ -65,7 +65,7 @@ class UserViewComponent extends React.Component<CombinedProps, State> {
 
         const onHandle = (handle: IEditorHandle) => { this._editorHandle = handle; };
         const lastSeeded = getDateDiff({ past: details.lastSeeded });
-        const avatarUrl = this.state.avatarUrl || details.avatarUrl || '';
+        const avatarUrl = this.state.avatarUrl || user.avatarUrl || '';
         const email = this.state.email || details.email || '';
         const description = details.profileDescription || '';
         const onUpdateUser = this._updateUser.bind(this);
@@ -86,11 +86,11 @@ class UserViewComponent extends React.Component<CombinedProps, State> {
                     </TabPane>
                     <TabPane tabId="info" id="info">
                         <ListGroup>
-                            <InfoRow label="Acount status" value={details.accountStatus} />
-                            <InfoRow label="Class" value={details.userClass} />
+                            <InfoRow label="Acount status" value={user.accountStatus} />
+                            <InfoRow label="Class" value={user.userClass} />
                             <InfoRow label="Email" value={details.email} />
-                            <InfoRow label="Donor" value={details.isDonor} />
-                            <InfoRow label="Custome title" value={details.customTitle || ''} />
+                            <InfoRow label="Donor" value={user.isDonor} />
+                            <InfoRow label="Custome title" value={user.customTitle || ''} />
                             <InfoRow label="Average seeding size" value={details.averageSeedingSize} />
                             <InfoRow label="Invites" value={details.inviteCount} />
                             <InfoRow label="Bytes uploaded" value={details.bytesUploaded} />

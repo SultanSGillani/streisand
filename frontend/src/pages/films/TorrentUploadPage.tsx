@@ -31,12 +31,12 @@ type ConnectedDispatch = {
 };
 
 type CombinedProps = ConnectedState & ConnectedDispatch & Props;
-class TorrentUploadPageComponent extends React.Component<CombinedProps, void> {
+class TorrentUploadPageComponent extends React.Component<CombinedProps> {
     public componentWillMount() {
-        this.props.getMediaTypes();
         if (!this.props.status.loading) {
             this.props.getFilm(this.props.filmId);
         }
+        this.props.getMediaTypes();
     }
 
     public componentWillReceiveProps(props: CombinedProps) {

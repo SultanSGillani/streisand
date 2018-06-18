@@ -19,7 +19,7 @@ function byId(state: ItemMap = {}, action: Action): ItemMap {
             return addLoadedNode(state, action.torrent);
         case 'FAILED_TORRENT':
             return markFailed(state, action.props.id);
-        case 'RECEIVED_TORRENTS':
+        case 'RECEIVED_DETACHED_TORRENTS':
         case 'RECEIVED_FILM_TORRENTS':
             return addLoadedNodes(state, action.props.items);
         default:
@@ -27,13 +27,14 @@ function byId(state: ItemMap = {}, action: Action): ItemMap {
     }
 }
 
-const pageReducer = getPageReducer('TORRENTS');
+const pageReducer = getPageReducer('DETACHED_TORRENTS');
 type Pages = { [page: number]: IPage };
 function pages(state: Pages = {}, action: Action): Pages {
     switch (action.type) {
-        case 'REQUEST_TORRENTS':
-        case 'RECEIVED_TORRENTS':
-        case 'FAILED_TORRENTS':
+        case 'REQUEST_DETACHED_TORRENTS':
+        case 'RECEIVED_DETACHED_TORRENTS':
+        case 'FAILED_DETACHED_TORRENTS':
+        case 'INVALIDATE_DETACHED_TORRENTS':
             const page: IPage = pageReducer(state[action.props.page], action);
             return objectAssign({}, state, { [action.props.page]: page });
         default:
@@ -60,7 +61,7 @@ function byFilmId(state: Torrents = {}, action: Action): Torrents {
 function pageSize(state: number = 0, action: Action): number {
     switch (action.type) {
         // TODO: Split this up
-        case 'RECEIVED_TORRENTS':
+        case 'RECEIVED_DETACHED_TORRENTS':
         case 'RECEIVED_FILM_TORRENTS':
             return action.props.pageSize;
         default:
@@ -70,12 +71,12 @@ function pageSize(state: number = 0, action: Action): number {
 
 function count(state: number = 0, action: Action): number {
     switch (action.type) {
-        case 'RECEIVED_TORRENTS':
+        case 'RECEIVED_DETACHED_TORRENTS':
             return action.props.count;
         default:
             return state;
     }
 }
 
-const list = combineReducers<INestedPage>({ count, pageSize, pages });
-export default combineReducers<ITorrentItemSet>({ byId, byFilmId, list });
+const detached = combineReducers<INestedPage>({ count, pageSize, pages });
+export default combineReducers<ITorrentItemSet>({ byId, byFilmId, detached });

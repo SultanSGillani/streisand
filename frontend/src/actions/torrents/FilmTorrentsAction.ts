@@ -39,7 +39,7 @@ export function getTorrents(id: number, page: number = 1): Action {
 
 const errorPrefix = (props: IActionProps) => `Fetching page ${props.page} of the torrents (${props.id}) failed`;
 const fetch = generateAuthFetch({ errorPrefix, request, received, failure });
-export const fiomTorrentsSaga = generateSage<RequestFilmTorrents>('REQUEST_FILM_TORRENTS', fetch);
+export const filmTorrentsSaga = generateSage<RequestFilmTorrents>('REQUEST_FILM_TORRENTS', fetch);
 
 function request(token: string, props: IActionProps): Promise<IPagedResponse<ITorrent>> {
     return get({ token, url: `${globals.apiUrl}/torrent-files/?film_id=${props.id}&page=${props.page}&size=${PAGE_SIZE}` });
