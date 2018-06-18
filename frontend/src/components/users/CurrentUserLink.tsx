@@ -47,6 +47,8 @@ class CurrentUserLinkComponent extends React.Component<CombinedProps> {
                 <DropdownMenu right>
                     {user && <LinkContainer to={`/user/${user.id}`}><DropdownItem>Profile</DropdownItem></LinkContainer>}
                     <LinkContainer to={`/themes`}><DropdownItem>Themes</DropdownItem></LinkContainer>
+                    {isAuthenticated && <DropdownItem divider />}
+                    {isAuthenticated && <LinkContainer to={`/tools`}><DropdownItem>Tools</DropdownItem></LinkContainer>}
                     {user && <DropdownItem divider />}
                     {isAuthenticated && <LinkContainer to={`/changepassword`}><DropdownItem>Change password</DropdownItem></LinkContainer>}
                     {isAuthenticated && <DropdownItem onClick={() => { this.props.logout(); }}>Logout</DropdownItem>}

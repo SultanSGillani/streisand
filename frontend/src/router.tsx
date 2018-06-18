@@ -11,6 +11,7 @@ import ChangePasswordPage from './pages/ChangePasswordPage';
 
 import HomePage from './pages/HomePage';
 import UserPage from './pages/UserPage';
+import StaffTools from './components/StaffTools';
 
 import WikiPage from './pages/wikis/WikiPage';
 import WikisPage from './pages/wikis/WikisPage';
@@ -48,6 +49,7 @@ export function createRoutes(store: ReduxStore<Store.All>) {
                 <Route path="/themes" component={Themes} />
                 <Route onEnter={requireAuth}>
                     <Route path="/home" component={HomePage} />
+                    <Route path="/tools" component={StaffTools} />
                     <Route path="/changepassword" component={ChangePasswordPage} />
 
                     <Route path="/user/:userId" component={UserPage} />
