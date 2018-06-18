@@ -25,24 +25,29 @@ export interface ITorrentResponse {
     totalSizeInBytes: number;
     uploadedAt: string; // Date
     uploadedBy: {
-        acctountStatus: string;
+        accountStatus: string;
         avatarUrl: string;
         customTitle: string;
         id: number;
         isDonor: boolean;
         username: string;
+        userClass: string;
     };
 }
 
-// TODO: What we want to move to
+export interface ITorrentFile {
+    path: string;
+    size: number;
+}
+
 export interface ITorrent {
+    files: ITorrentFile[];
     directoryName: string;
     downloadUrl: string;
     id: number;
     infoHash: string;
     isAcceptingReseedRequests: boolean;
     isApproved: boolean;
-    isSingleFile: boolean;
     lastSeeded: string;
     moderatedBy: number;
     pieceSizeInBytes: number;

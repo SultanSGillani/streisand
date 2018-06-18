@@ -1,15 +1,11 @@
 
 import Store from '../../store';
+import Action from '../../actions';
 import IUser from '../../models/IUser';
 import { combineReducers } from '../helpers';
-import UserAction from '../../actions/users';
-import ForumAction from '../../actions/forums';
-import NewsAction from '../../actions/NewsAction';
 import { INodeMap } from '../../models/base/ItemSet';
 import { IPage, INestedPage } from '../../models/base/IPagedItemSet';
 import { addLoadedNodes, addLoadedNode } from '../utilities/mutations';
-
-type Action = UserAction | ForumAction | NewsAction;
 
 type ItemMap = INodeMap<IUser>;
 function byId(state: ItemMap = {}, action: Action): ItemMap {
@@ -19,6 +15,7 @@ function byId(state: ItemMap = {}, action: Action): ItemMap {
         case 'RECEIVED_USER_UPDATE':
             return addLoadedNode(state, action.user);
         case 'RECEIVED_BULK_USERS':
+        case 'RECEIVED_DETACHED_TORRENTS':
             return addLoadedNodes(state, action.users);
         default:
             return state;

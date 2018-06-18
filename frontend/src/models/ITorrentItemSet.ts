@@ -1,7 +1,9 @@
 import ITorrent from './ITorrent';
-import { IPagedItemSet, IPage } from './base/IPagedItemSet';
+import { IItemSet } from './base/ItemSet';
+import { IPage, INestedPage } from './base/IPagedItemSet';
 
-interface ITorrentItemSet extends IPagedItemSet<ITorrent> {
+interface ITorrentItemSet extends IItemSet<ITorrent> {
+    detached: INestedPage;
     byFilmId: { [id: number]: { [page: number]: IPage } };
 }
 
