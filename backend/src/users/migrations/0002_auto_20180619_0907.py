@@ -13,7 +13,7 @@ class Migration(migrations.Migration):
     ]
 
     operations = [
-        CITextExtension,
+        CITextExtension(),
         migrations.AlterField(
             model_name='user',
             name='username',
