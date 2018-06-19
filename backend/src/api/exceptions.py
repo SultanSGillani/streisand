@@ -21,9 +21,10 @@ def custom_exception_handler(exc, context):
     # If the user was throttled, they could be attempting a DOS attack.  Let's log them out! :]
     if isinstance(exc, Throttled):
         request = context['view'].request
-        request.auth.delete()
-        user_logged_out.send(sender=request.user.__class__, request=request, user=request.user)
-        response.data['detail'] = "Your request was throttled.  You have been logged out."
+        if request.user.is_authenticated and request.auth:
+            request.auth.delete()
+            user_logged_out.send(sender=request.user.__class__, request=request, user=request.user)
+        response.data['detail'] = "Request was throttled."
 
     return response
 

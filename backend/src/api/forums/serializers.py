@@ -6,21 +6,6 @@ from rest_framework.serializers import ModelSerializer
 from api import mixins as api_mixins
 from api.utils import PaginatedRelationField, RelationPaginator
 from forums.models import ForumGroup, ForumPost, ForumThread, ForumTopic, ForumThreadSubscription, ForumReport
-from users.models import User
-
-
-class UserForForumSerializer(ModelSerializer):
-    class Meta:
-        model = User
-        fields = (
-            'id',
-            'username',
-            'user_class',
-            'account_status',
-            'is_donor',
-            'custom_title',
-            'avatar_url',
-        )
 
 
 class ForumThreadForIndexSerializer(ModelSerializer, serializers.PrimaryKeyRelatedField):
@@ -216,7 +201,8 @@ class ForumPostForThreadSerializer(ModelSerializer):
 
 
 class ForumPostItemSerializer(ModelSerializer):
-    author = serializers.PrimaryKeyRelatedField(default=serializers.CurrentUserDefault(), read_only=True, )
+    author = serializers.PrimaryKeyRelatedField(read_only=True)
+    modified_by = serializers.PrimaryKeyRelatedField(read_only=True)
     total = serializers.SerializerMethodField()
 
     class Meta:
@@ -234,15 +220,29 @@ class ForumPostItemSerializer(ModelSerializer):
 
         )
 
-        read_only_fields = ('position', 'created_at', 'modified_at', 'modified_by', 'total')
+        read_only_fields = (
+            'position',
+            'created_at',
+            'modified_at',
+            'author',
+            'modified_by',
+            'total',
+        )
 
     def get_total(self, obj):
         return obj.thread.number_of_posts
 
+    def create(self, validated_data):
+        validated_data['author'] = self.context['request'].user
+        return super().create(validated_data)
+
+    def update(self, instance, validated_data):
+        validated_data['modified_by'] = self.context['request'].user
+        return super().update(instance, validated_data)
+
 
 class ForumThreadItemSerializer(ModelSerializer):
-    created_by = serializers.PrimaryKeyRelatedField(default=serializers.CurrentUserDefault(), read_only=True,
-                                                    )
+    created_by = serializers.PrimaryKeyRelatedField(read_only=True)
 
     class Meta:
         model = ForumThread
@@ -259,6 +259,14 @@ class ForumThreadItemSerializer(ModelSerializer):
         )
 
         read_only_fields = ('modified_at', 'modified_by')
+
+    def create(self, validated_data):
+        validated_data['created_by'] = self.context['request'].user
+        return super().create(validated_data)
+
+    def update(self, instance, validated_data):
+        validated_data['modified_by'] = self.context['request'].user
+        return super().update(instance, validated_data)
 
 
 class ForumThreadIndexSerializer(api_mixins.AllowFieldLimitingMixin, ModelSerializer):

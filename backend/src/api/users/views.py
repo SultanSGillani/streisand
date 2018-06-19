@@ -1,54 +1,56 @@
 # -*- coding: utf-8 -*-
 
 from django.contrib.auth.models import Group
+
 from django_filters import rest_framework as filters
-from knox.auth import TokenAuthentication
-from knox.models import AuthToken
+from knox.views import LoginView as KnoxLoginView
 from rest_framework import status
 from rest_framework.generics import UpdateAPIView, CreateAPIView, RetrieveUpdateAPIView
 from rest_framework.permissions import IsAdminUser, IsAuthenticated, AllowAny
 from rest_framework.response import Response
+from rest_framework.throttling import ScopedRateThrottle
 from rest_framework.viewsets import ModelViewSet
+
+from api.auth import UsernamePasswordAuthentication
 from api.permissions import IsOwnerOrReadOnly
 from users.models import User
+
 from .filters import UserFilter, PublicUserFilter
 from .serializers import (
-    GroupSerializer, AdminUserProfileSerializer, OwnedUserProfileSerializer,
-    PublicUserProfileSerializer, ChangePasswordSerializer, NewUserSerializer, LoginUserSerializer, CurrentUserSerializer
+    GroupSerializer, AdminUserSerializer, CurrentUserSerializer, UsernameAvailabilitySerializer,
+    PublicUserSerializer, ChangePasswordSerializer, NewUserRegistrationSerializer
 )
 
 
-class UserRegisterView(CreateAPIView):
+class UsernameAvailabilityView(CreateAPIView):
+    """
+    Check if a username is valid and available.
+    """
+    serializer_class = UsernameAvailabilitySerializer
+    permission_classes = [AllowAny]
+    throttle_classes = [ScopedRateThrottle]
+    throttle_scope = 'vulnerable_to_brute_force'
+    http_method_names = ['post', 'options']
+
+
+class UserRegistrationView(CreateAPIView):
     """
     Register a new user.
     """
-    serializer_class = NewUserSerializer
-    permission_classes = (AllowAny,)
-    authentication_classes = (TokenAuthentication,)
-
-    def post(self, request, *args, **kwargs):
-        serializer = self.get_serializer(data=request.data)
-        serializer.is_valid(raise_exception=True)
-        user = serializer.save()
-        return Response({
-            "user": OwnedUserProfileSerializer(user, context=self.get_serializer_context()).data,
-            "token": AuthToken.objects.create(user)
-        })
+    serializer_class = NewUserRegistrationSerializer
+    permission_classes = [AllowAny]
+    throttle_classes = [ScopedRateThrottle]
+    throttle_scope = 'vulnerable_to_brute_force'
+    http_method_names = ['post', 'options']
 
 
-class UserLoginView(CreateAPIView):
-    serializer_class = LoginUserSerializer
-    permission_classes = (AllowAny,)
-    authentication_classes = (TokenAuthentication,)
-
-    def post(self, request, *args, **kwargs):
-        serializer = self.get_serializer(data=request.data)
-        serializer.is_valid(raise_exception=True)
-        user = serializer.validated_data
-        return Response({
-            "user": OwnedUserProfileSerializer(user, context=self.get_serializer_context()).data,
-            "token": AuthToken.objects.create(user)
-        })
+class UserLoginView(KnoxLoginView):
+    """
+    Log in with username and password; obtain a token.
+    """
+    authentication_classes = [UsernamePasswordAuthentication]
+    throttle_classes = [ScopedRateThrottle]
+    throttle_scope = 'vulnerable_to_brute_force'
 
 
 class ChangePasswordView(UpdateAPIView):
@@ -56,8 +58,9 @@ class ChangePasswordView(UpdateAPIView):
     An endpoint for changing password.
     """
     serializer_class = ChangePasswordSerializer
-    model = User
     permission_classes = [IsOwnerOrReadOnly]
+    throttle_classes = [ScopedRateThrottle]
+    throttle_scope = 'vulnerable_to_brute_force'
 
     def get_object(self, queryset=None):
         obj = self.request.user
@@ -80,32 +83,21 @@ class ChangePasswordView(UpdateAPIView):
 
 
 class CurrentUserView(RetrieveUpdateAPIView):
+
     serializer_class = CurrentUserSerializer
     permission_classes = [IsOwnerOrReadOnly]
-
     queryset = User.objects.all()
 
     def get_object(self):
-        queryset = self.filter_queryset(self.get_queryset())
-        # make sure to catch 404's below
-        obj = queryset.get(pk=self.request.user.id)
-        self.check_object_permissions(self.request, obj)
-        return obj
-
-    def perform_partial_update(self, serializer, **kwargs):
-        kwargs['partial'] = True
-        serializer.save(user=self.request.user)
-
-    def perform_update(self, serializer):
-        serializer.save(user=self.request.user)
+        return self.request.user
 
 
-class PublicUserProfileViewSet(ModelViewSet):
+class PublicUserViewSet(ModelViewSet):
     """
     API endpoint that allows users to be viewed and searched only.
     """
     permission_classes = [IsAuthenticated]
-    serializer_class = PublicUserProfileSerializer
+    serializer_class = PublicUserSerializer
     http_method_names = ['get', 'head', 'options']
     filter_backends = (filters.DjangoFilterBackend,)
     filter_class = PublicUserFilter
@@ -123,7 +115,7 @@ class AdminUserViewSet(ModelViewSet):
     API endpoint that allows users to be viewed or edited, by administrators.
     """
     permission_classes = [IsAdminUser]
-    serializer_class = AdminUserProfileSerializer
+    serializer_class = AdminUserSerializer
     filter_backends = (filters.DjangoFilterBackend,)
     filter_class = UserFilter
     queryset = User.objects.all().select_related(

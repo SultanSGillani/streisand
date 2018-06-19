@@ -3,6 +3,7 @@
 from django.conf import settings
 from django.db import migrations, models
 import django.db.models.deletion
+import users.validators
 import uuid
 
 
@@ -18,7 +19,7 @@ class Migration(migrations.Migration):
         migrations.CreateModel(
             name='Invite',
             fields=[
-                ('email', models.EmailField(max_length=254, unique=True)),
+                ('email', models.EmailField(max_length=254, unique=True, validators=[users.validators.EmailValidator()])),
                 ('key', models.UUIDField(default=uuid.uuid4, editable=False, primary_key=True, serialize=False)),
                 ('created_at', models.DateTimeField(auto_now_add=True)),
                 ('offered_by', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, related_name='invites', to=settings.AUTH_USER_MODEL)),

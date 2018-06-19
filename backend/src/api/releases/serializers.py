@@ -7,7 +7,7 @@ from mediainfo.serializers import MediainfoSerializer
 from releases.models import Release, ReleaseComment
 
 from ..films.serializers import PublicFilmSerializer
-from ..users.serializers import DisplayUserProfileSerializer
+from ..users.serializers import DisplayUserSerializer
 
 
 class ReleaseSerializer(serializers.ModelSerializer):
@@ -20,7 +20,7 @@ class ReleaseSerializer(serializers.ModelSerializer):
         queryset=Film.objects.all(),
     )
     film = PublicFilmSerializer(required=False, read_only=True)
-    mediainfo_text = serializers.CharField(write_only=True, required=False)
+    mediainfo_text = serializers.CharField(required=False, write_only=True)
     mediainfo = MediainfoSerializer(required=False, read_only=True)
     nfo = serializers.CharField(required=False)
     description = serializers.CharField()
@@ -79,7 +79,7 @@ class ReleaseCommentSerializer(serializers.ModelSerializer):
         read_only=True,
         help_text="Read only field that shows the release name."
     )
-    author = DisplayUserProfileSerializer(default=serializers.CurrentUserDefault())
+    author = DisplayUserSerializer(read_only=True)
 
     class Meta:
         model = ReleaseComment
@@ -92,3 +92,7 @@ class ReleaseCommentSerializer(serializers.ModelSerializer):
             'created_at',
             'modified_at',
         )
+
+    def create(self, validated_data):
+        validated_data['author'] = self.context['request'].user
+        return super().create(validated_data)

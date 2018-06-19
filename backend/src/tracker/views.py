@@ -78,9 +78,7 @@ class AnnounceView(View):
         try:
             swarm = Swarm.objects.get(torrent_id=info_hash)
         except Swarm.DoesNotExist:
-            if info_hash == unquote_to_hex('ffffffffffffffffffff'):
-                return self.failure('Unregistered torrent')
-            swarm = Swarm.objects.create(torrent_id=info_hash)
+            return self.failure('Unregistered torrent')
 
         #
         # Get announce data
@@ -91,7 +89,7 @@ class AnnounceView(View):
 
         # The client's IP address
         ip_address = request.META['REMOTE_ADDR']
-        # In debug mode, allow it to be specified as a GET param
+        # In debug mode, allow it to be specified as a query param
         if settings.DEBUG:
             ip_address = request.GET.get('ip', ip_address)
 

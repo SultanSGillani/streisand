@@ -4,7 +4,7 @@ from django.core.paginator import Paginator
 from rest_framework import serializers
 
 from api.mixins import AllowFieldLimitingMixin
-from api.users.serializers import DisplayUserProfileSerializer
+from api.users.serializers import DisplayUserSerializer
 from films.models import Film, Collection, CollectionComment, FilmComment
 
 
@@ -16,61 +16,42 @@ class FilmCommentSerializer(serializers.ModelSerializer):
       Serializer for Film Comments. author is the users foreign key to FIlm comments.
       We are returning the author into a foreign key representation, and string representation.
       """
-    author = serializers.PrimaryKeyRelatedField(
-        default=serializers.CurrentUserDefault(),
-        read_only=True,
-        help_text="The ID of the user that created this film comment; if none is provided, "
-                  "defaults to the currently logged in user."
-    )
-    author_username = serializers.StringRelatedField(
-        source='author',
-        default=serializers.CurrentUserDefault(),
-        read_only=True,
-        help_text="The string representation of the user that created this film comment; if none is provided, "
-                  "defaults to the currently logged in user."
-    )
+    author = DisplayUserSerializer(read_only=True)
 
     class Meta:
         model = FilmComment
         fields = (
             'film',
             'author',
-            'author_username',
             'text',
             'created_at',
             'modified_at'
         )
 
+    def create(self, validated_data):
+        validated_data['author'] = self.context['request'].user
+        return super().create(validated_data)
 
-class CollectionCommentSerializer(AllowFieldLimitingMixin,
-                                  serializers.ModelSerializer):
+
+class CollectionCommentSerializer(AllowFieldLimitingMixin, serializers.ModelSerializer):
     """
-      Same as the Film Comment Serializer
-      """
-    author = serializers.PrimaryKeyRelatedField(
-        default=serializers.CurrentUserDefault(),
-        read_only=True,
-        help_text="The ID of the user that created this collection comment; if none is provided, "
-                  "defaults to the currently logged in user."
-    )
-    author_username = serializers.StringRelatedField(
-        source='author',
-        default=serializers.CurrentUserDefault(),
-        read_only=True,
-        help_text="The string representation of the user that created this collection comment; if none is provided, "
-                  "defaults to the currently logged in user."
-    )
+    Same as the Film Comment Serializer
+    """
+    author = DisplayUserSerializer(read_only=True)
 
     class Meta:
         model = CollectionComment
         fields = (
             'collection',
             'author',
-            'author_username',
             'text',
             'created_at',
             'modified_at'
         )
+
+    def create(self, validated_data):
+        validated_data['author'] = self.context['request'].user
+        return super().create(validated_data)
 
 
 class AdminFilmSerializer(serializers.ModelSerializer):
@@ -135,16 +116,14 @@ class PublicFilmSerializer(AdminFilmSerializer):
             self.fields.pop(field_name)
 
 
-class CollectionSerializer(AllowFieldLimitingMixin,
-                           serializers.ModelSerializer):
+class CollectionSerializer(AllowFieldLimitingMixin, serializers.ModelSerializer):
     """
       Serializer for collections of films. Notice the Allow Field Limiting mixin. You can
       use that for example api/v1/?fields=field1,field2,field3.
       Or you can hide specific fields for example: api/v1/?omit=field1,field2
 
       """
-    creator = DisplayUserProfileSerializer(
-        default=serializers.CurrentUserDefault(), read_only=True)
+    creator = DisplayUserSerializer(read_only=True)
     comments = CollectionCommentSerializer(read_only=True, many=True)
     film_id = serializers.PrimaryKeyRelatedField(
         source='films',
@@ -179,6 +158,10 @@ class CollectionSerializer(AllowFieldLimitingMixin,
             'films',
             'films_count',
         )
+
+    def create(self, validated_data):
+        validated_data['creator'] = self.context['request'].user
+        return super().create(validated_data)
 
     def get_films_count(self, obj):
         return obj.films.count()

@@ -4,8 +4,9 @@ from django.conf import settings
 import django.contrib.auth.models
 import django.contrib.auth.validators
 from django.db import migrations, models
-import django.db.models.deletion
 import django.utils.timezone
+import users.managers
+import users.validators
 import uuid
 
 
@@ -31,7 +32,7 @@ class Migration(migrations.Migration):
                 ('username', models.CharField(error_messages={'unique': 'A user with that username already exists.'}, help_text='Required. 150 characters or fewer. Letters, digits and @/./+/-/_ only.', max_length=150, unique=True, validators=[django.contrib.auth.validators.UnicodeUsernameValidator()], verbose_name='username')),
                 ('first_name', models.CharField(blank=True, max_length=30, verbose_name='first name')),
                 ('last_name', models.CharField(blank=True, max_length=150, verbose_name='last name')),
-                ('email', models.EmailField(blank=True, max_length=254, verbose_name='email address')),
+                ('email', models.EmailField(blank=True, max_length=254, verbose_name='email address', validators=[users.validators.EmailValidator()])),
                 ('is_staff', models.BooleanField(default=False, help_text='Designates whether the user can log into this admin site.', verbose_name='staff status')),
                 ('is_active', models.BooleanField(default=True, help_text='Designates whether this user should be treated as active. Unselect this instead of deleting accounts.', verbose_name='active')),
                 ('date_joined', models.DateTimeField(default=django.utils.timezone.now, verbose_name='date joined')),
@@ -56,7 +57,7 @@ class Migration(migrations.Migration):
                 'permissions': (('can_invite', 'Can invite new users'), ('unlimited_invites', 'Can invite unlimited new users'), ('custom_title', 'Can edit own custom title')),
             },
             managers=[
-                ('objects', django.contrib.auth.models.UserManager()),
+                ('objects', users.managers.UserManager()),
             ],
         ),
         migrations.CreateModel(
@@ -149,7 +150,7 @@ class Migration(migrations.Migration):
         migrations.AddField(
             model_name='user',
             name='announce_key',
-            field=models.OneToOneField(default=None, editable=False, null=True, on_delete=django.db.models.deletion.PROTECT, related_name='current_user', to='users.UserAnnounceKey'),
+            field=models.OneToOneField(default=None, editable=False, null=True, on_delete=django.db.models.deletion.SET_NULL, related_name='current_user', to='users.UserAnnounceKey'),
         ),
         migrations.AddField(
             model_name='user',
@@ -164,7 +165,7 @@ class Migration(migrations.Migration):
         migrations.AddField(
             model_name='user',
             name='torrent_download_key',
-            field=models.OneToOneField(default=None, editable=False, null=True, on_delete=django.db.models.deletion.PROTECT, related_name='current_user', to='users.UserTorrentDownloadKey'),
+            field=models.OneToOneField(default=None, editable=False, null=True, on_delete=django.db.models.deletion.SET_NULL, related_name='current_user', to='users.UserTorrentDownloadKey'),
         ),
         migrations.AddField(
             model_name='user',

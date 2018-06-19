@@ -1,28 +1,45 @@
-# -*- coding:utf-8 -*-
+# -*- coding: utf-8 -*-
+
+from django.core.exceptions import ValidationError
 from django.test import TestCase
-from model_mommy import mommy
 
-from users.models import User, UserClass
+from users.validators import EmailValidator
 
 
-class UserTestMommy(TestCase):
-    """
-    Class to test the model
-    User
-    """
+class EmailValidatorTests(TestCase):
 
     def setUp(self):
-        """
-        Set up all the tests
-        """
-        self.user = mommy.make(User)
-        self.user_class = mommy.make(UserClass)
+        self.validator = EmailValidator()
+        self.valid_email_addresses = (
+            'testing@test.com',
+            'testing123@test.com',
+            'testing.123@test.com',
+            'testing_123@test.com',
+            'testing-123@test.com',
+            '_starts_with_underscore@test.com',
 
-    def test_user_creation_mommy(self):
-        new_user = mommy.make('users.User')
-        new_user_class = mommy.make('users.UserClass')
-        self.assertTrue(isinstance(new_user, User))
-        self.assertTrue(isinstance(new_user_class, UserClass))
+        )
+        self.invalid_email_addresses = (
+            '',
+            'no.at.sign',
+            'testing@notadomain',
+            'testing@localhost',
+            'single.letter.domain@test.d',
+            'unicöde.characters@test.com',
+            'testing+123@test.com',
+            'consecutive..dots@test.com',
+            '.starts.with.dot@test.com',
+            '-starts.with.dash@test.com',
+        )
 
-        self.assertEqual(new_user.__str__(), new_user.username)
-        self.assertEqual(new_user_class.__str__(), new_user_class.name)
+    def test_invalid_email_addresses(self):
+        for email_address in self.invalid_email_addresses:
+            with self.assertRaises(ValidationError, msg=email_address):
+                self.validator(email_address)
+
+    def test_valid_email_addresses(self):
+        for email_address in self.valid_email_addresses:
+            try:
+                self.validator(email_address)
+            except ValidationError:
+                self.fail(email_address)

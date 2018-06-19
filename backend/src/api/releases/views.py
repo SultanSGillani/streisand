@@ -35,9 +35,6 @@ class ReleaseViewSet(ModelViewSet):
         'source_media_id',
     )
 
-    def get_serializer_context(self):
-        return {'request': self.request}
-
 
 class ReleaseCommentViewSet(ModelViewSet):
     """
@@ -59,9 +56,6 @@ class ReleaseCommentViewSet(ModelViewSet):
             queryset = queryset.filter(release__film_id=film_id)
 
         return queryset
-
-    def get_serializer_context(self):
-        return {'request': self.request}
 
 
 @api_view(['GET'])

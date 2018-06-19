@@ -4,6 +4,7 @@ from uuid import uuid4
 
 from django.conf import settings
 from django.contrib.auth.models import AbstractUser
+from django.contrib.postgres.fields.citext import CICharField
 from django.db import models, transaction
 from django.db.models import Sum
 from django.urls import reverse
@@ -11,6 +12,9 @@ from django.utils.timezone import now
 
 from tracker.models import Peer
 from www.utils import ratio
+
+from .managers import UserManager
+from .validators import UsernameValidator, EmailValidator
 
 
 class User(AbstractUser):
@@ -24,6 +28,23 @@ class User(AbstractUser):
     )
     is_banned = models.BooleanField(default=False)
     old_id = models.PositiveIntegerField(null=True, db_index=True)
+
+    username_validator = UsernameValidator()
+    username = CICharField(
+        max_length=50,
+        unique=True,
+        help_text="Required. 50 characters or fewer. ASCII letters, digits, and ./-/_ characters only.",
+        validators=[username_validator],
+        error_messages={
+            'unique': "A user with that username already exists.",
+        },
+    )
+    email_validator = EmailValidator()
+    email = models.EmailField(
+        verbose_name='email address',
+        blank=True,
+        validators=[email_validator],
+    )
 
     user_class = models.ForeignKey(
         to='users.UserClass',
@@ -46,7 +67,7 @@ class User(AbstractUser):
         default=None,
         editable=False,
         db_index=True,
-        on_delete=models.PROTECT,
+        on_delete=models.SET_NULL,
     )
     torrent_download_key = models.OneToOneField(
         to='users.UserTorrentDownloadKey',
@@ -55,7 +76,7 @@ class User(AbstractUser):
         default=None,
         editable=False,
         db_index=True,
-        on_delete=models.PROTECT,
+        on_delete=models.SET_NULL,
     )
     avatar_url = models.URLField(max_length=512, null=True, blank=True)
     custom_title = models.CharField(max_length=256, null=True, blank=True)
@@ -89,6 +110,8 @@ class User(AbstractUser):
         editable=False,
         on_delete=models.SET_NULL,
     )
+
+    objects = UserManager()
 
     class Meta:
         permissions = (
@@ -155,11 +178,12 @@ class User(AbstractUser):
 
     @staticmethod
     def autocomplete_search_fields():
-        return ['username__iexact']
+        return ['username']
 
     @classmethod
     def normalize_username(cls, username):
-        return super().normalize_username(username).lower()
+        assert isinstance(username, str)
+        return username.encode('utf-8').decode('ascii')
 
     def get_absolute_url(self):
         return reverse('user_profile', args=[self.username])

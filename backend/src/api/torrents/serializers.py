@@ -12,7 +12,7 @@ from torrent_stats.models import TorrentStats
 from torrents.models import TorrentFile, ReseedRequest
 
 from ..releases.serializers import ReleaseSerializer
-from ..users.serializers import DisplayUserProfileSerializer
+from ..users.serializers import DisplayUserSerializer
 
 
 class TorrentStatSerializer(serializers.ModelSerializer):
@@ -94,12 +94,16 @@ class TorrentRequestSerializer(serializers.ModelSerializer):
 
 
 class ReseedRequestSerializer(serializers.ModelSerializer):
-    created_by = DisplayUserProfileSerializer(read_only=True, default=serializers.CurrentUserDefault())
+    created_by = DisplayUserSerializer(read_only=True)
     fulfilled_at = serializers.DateTimeField(default_timezone=timezone.get_current_timezone(), required=False)
 
     class Meta:
         model = ReseedRequest
         fields = ('id', 'torrent', 'created_by', 'created_at', 'fulfilled_at')
+
+    def create(self, validated_data):
+        validated_data['created_by'] = self.context['request'].user
+        return super().create(validated_data)
 
 
 class TorrentFileSerializer(serializers.ModelSerializer):
@@ -111,8 +115,8 @@ class TorrentFileSerializer(serializers.ModelSerializer):
         queryset=Release.objects.all(),
     )
     release = ReleaseSerializer(required=False, read_only=True)
-    uploaded_by = DisplayUserProfileSerializer(default=serializers.CurrentUserDefault())
-    created_by = serializers.CharField(write_only=True)
+    uploaded_by = DisplayUserSerializer(read_only=True)
+    created_by = serializers.CharField(write_only=True, required=False)
     pieces = serializers.CharField(write_only=True)
     info_hash = serializers.CharField(read_only=True)
     total_size_in_bytes = serializers.IntegerField(read_only=True)
@@ -167,8 +171,11 @@ class TorrentFileSerializer(serializers.ModelSerializer):
             self.enforce_extension_blacklist(file['path_components'][-1])
         return files
 
-    def save(self, **kwargs):
+    def create(self, validated_data):
+
+        validated_data['uploaded_by'] = self.context['request'].user
+
         try:
-            return super().save(**kwargs)
+            return super().create(validated_data)
         except IntegrityError:
             raise AlreadyExistsException("A torrent with this info hash already exists.")

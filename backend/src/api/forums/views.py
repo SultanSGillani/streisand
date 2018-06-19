@@ -50,7 +50,7 @@ class ForumIndexViewSet(ModelViewSet):
             queryset_list = queryset_list.filter(
                 Q(name__icontains=query) |
                 Q(topics__name__icontains=query) |
-                Q(topics__latest_post__author__username__icontains=query) |
+                Q(topics__latest_post__author__username__contains=query) |
                 Q(topics__latest_post__thread__title__icontains=query)
             ).distinct()
         return queryset_list
@@ -94,10 +94,10 @@ class ForumTopicIndexViewSet(ModelViewSet):
             queryset_list = queryset_list.filter(
                 Q(name__icontains=query) |
                 Q(group__name__icontains=query) |
-                Q(threads__created_by__username__icontains=query) |
+                Q(threads__created_by__username__contains=query) |
                 Q(threads__title__icontains=query) |
                 Q(latest_post__body__icontains=query) |
-                Q(latest_post__author__username__icontains=query)
+                Q(latest_post__author__username__contains=query)
             ).distinct()
         return queryset_list
 
@@ -147,9 +147,9 @@ class ForumThreadIndexViewSet(ModelViewSet):
         if query:
             queryset_list = queryset_list.filter(
                 Q(title__icontains=query) |
-                Q(created_by__username__icontains=query) |
+                Q(created_by__username__contains=query) |
                 Q(posts__body__icontains=query) |
-                Q(posts__author__username__icontains=query)
+                Q(posts__author__username__contains=query)
             ).distinct()
         return queryset_list
 
@@ -176,17 +176,6 @@ class ForumThreadItemViewSet(mixins.UpdateModelMixin, mixins.CreateModelMixin, m
 
         return queryset
 
-    def perform_create(self, serializer):
-        serializer.save(created_by=self.request.user
-                        )
-
-    def perform_partial_update(self, serializer, **kwargs):
-        kwargs['partial'] = True
-        serializer.save(modified_by=self.request.user)
-
-    def perform_update(self, serializer):
-        serializer.save(modified_by=self.request.user)
-
 
 class ForumPostItemViewSet(mixins.UpdateModelMixin, mixins.RetrieveModelMixin, mixins.CreateModelMixin,
                            mixins.DestroyModelMixin,
@@ -212,17 +201,6 @@ class ForumPostItemViewSet(mixins.UpdateModelMixin, mixins.RetrieveModelMixin, m
             queryset = queryset.filter(thread_id=thread_id)
 
         return queryset
-
-    def perform_create(self, serializer):
-        serializer.save(author=self.request.user
-                        )
-
-    def perform_partial_update(self, serializer, **kwargs):
-        kwargs['partial'] = True
-        serializer.save(modified_by=self.request.user)
-
-    def perform_update(self, serializer):
-        serializer.save(modified_by=self.request.user)
 
 
 class NewsPostViewSet(ModelViewSet):

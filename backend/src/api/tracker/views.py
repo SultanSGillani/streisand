@@ -10,7 +10,7 @@ from .serializers import TorrentClientSerializer, SwarmSerializer, PeerSerialize
 
 class TorrentClientViewSet(ModelViewSet):
     """
-    TorrentClient View 1
+    Torrent Clients
     """
 
     serializer_class = TorrentClientSerializer
@@ -20,7 +20,7 @@ class TorrentClientViewSet(ModelViewSet):
 
 class SwarmViewSet(ModelViewSet):
     """
-    Swarm View 1
+    Torrent Swarms
     """
 
     serializer_class = SwarmSerializer
@@ -30,7 +30,7 @@ class SwarmViewSet(ModelViewSet):
 
 class PeerViewSet(ModelViewSet):
     """
-    Peer View 1
+    Torrent Swarm Peers
     """
 
     serializer_class = PeerSerializer

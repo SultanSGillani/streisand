@@ -1,17 +1,12 @@
 # -*- coding: utf-8 -*-
 
 import logging
-from urllib.parse import urljoin
 
 from django.conf import settings
 from django.core.mail import EmailMultiAlternatives
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 from django.template.loader import render_to_string
 from django.utils.html import strip_tags
-
-
-def get_full_url(relative_url):
-    return urljoin(settings.SITE_URL, relative_url)
 
 
 def paginate(request, queryset, items_per_page=None):

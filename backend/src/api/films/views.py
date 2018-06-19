@@ -27,9 +27,6 @@ class CollectionCommentViewSet(ModelViewSet):
         'id'
     )
 
-    def get_serializer_context(self):
-        return {'request': self.request}
-
     def create(self, request, *args, **kwargs):
         serializer = self.get_serializer(data=request.data)
         if serializer.is_valid():
@@ -54,9 +51,6 @@ class FilmCommentViewSet(ModelViewSet):
     ).distinct(
         'id'
     )
-
-    def get_serializer_context(self):
-        return {'request': self.request}
 
     def create(self, request, *args, **kwargs):
         serializer = self.get_serializer(data=request.data)
@@ -89,9 +83,6 @@ class CollectionViewSet(ModelViewSet):
     )
     filter_backends = [DjangoFilterBackend]
     filter_class = CollectionFilter
-
-    def get_serializer_context(self):
-        return {'request': self.request}
 
     def create(self, request, *args, **kwargs):
         serializer = self.get_serializer(data=request.data)
