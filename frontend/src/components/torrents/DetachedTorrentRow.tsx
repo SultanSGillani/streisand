@@ -1,18 +1,16 @@
 import * as React from 'react';
 import { connect } from 'react-redux';
-import { Collapse, Button, Table, CardBody, Card, ButtonGroup } from 'reactstrap';
+import { Collapse, Button, Table, CardBody, Card } from 'reactstrap';
 
 import Store from '../../store';
 import IUser from '../../models/IUser';
 import UserLink from '../links/UserLink';
 import DataSize from '../generic/DataSize';
-import globals from '../../utilities/globals';
 import TimeElapsed from '../generic/TimeElapsed';
 import { getItem } from '../../utilities/mapping';
-import { IDispatch } from '../../actions/ActionTypes';
+import TorrentActionCell from './TorrentActionCell';
 import { ScreenSize } from '../../models/IDeviceInfo';
 import { ITorrent, ITorrentFile } from '../../models/ITorrent';
-import { deleteTorrent, IActionProps } from '../../actions/torrents/DeleteTorrentAction';
 
 export type Props = {
     torrent: ITorrent;
@@ -28,9 +26,7 @@ type ConnectedState = {
     uploader?: IUser;
 };
 
-type ConnectedDispatch = {
-    deleteItem: (props: IActionProps) => void;
-};
+type ConnectedDispatch = { };
 
 type CombinedProps = Props & ConnectedDispatch & ConnectedState;
 class TorrentRowComponent extends React.Component<CombinedProps, State> {
@@ -43,13 +39,7 @@ class TorrentRowComponent extends React.Component<CombinedProps, State> {
     }
 
     public render() {
-        const torrent = this.props.torrent;
-        const onDelete = () => {
-            this.props.deleteItem({
-                id: torrent.id,
-                currentPage: this.props.page
-            });
-        };
+        const { torrent, page } = this.props;
         const files = torrent.files.map((file: ITorrentFile) => {
             return (
                 <tr key={file.path}>
@@ -62,7 +52,6 @@ class TorrentRowComponent extends React.Component<CombinedProps, State> {
         const toggleText = `${files.length} file${files.length === 1 ? '' : 's'} (${
             files.length === 1 ? torrent.files[0].path : torrent.directoryName
         })`;
-        const onDownload = () => location.href = `${globals.baseUrl}${torrent.downloadUrl}`;
         return (
             <>
                 <tr>
@@ -70,18 +59,7 @@ class TorrentRowComponent extends React.Component<CombinedProps, State> {
                     <td className="align-middle"><UserLink user={this.props.uploader} /></td>
                     <td className="align-middle"><TimeElapsed date={torrent.uploadedAt} /></td>
                     <td className="align-middle"><DataSize size={torrent.totalSizeInBytes} /></td>
-                    <td>
-                        <div className="row justify-content-end no-gutters">
-                            <ButtonGroup className="col-auto ml-auto" color="default" size="sm">
-                                <Button title="Download torrent file" onClick={onDownload}>
-                                    <i className="fas fa-arrow-down fa-lg" />
-                                </Button>
-                                <Button color="danger" onClick={onDelete} title="Delete">
-                                    <i className="fas fa-trash-alt fa-lg" />
-                                </Button>
-                            </ButtonGroup>
-                        </div>
-                    </td>
+                    <TorrentActionCell torrent={torrent} page={page} />
                 </tr>
                 <tr>
                     <td colSpan={5} style={{ padding: 0 }}>
@@ -119,10 +97,6 @@ const mapStateToProps = (state: Store.All, props: Props): ConnectedState => {
     };
 };
 
-const mapDispatchToProps = (dispatch: IDispatch): ConnectedDispatch => ({
-    deleteItem: (props: IActionProps) => dispatch(deleteTorrent(props))
-});
-
 const TorrentRow: React.ComponentClass<Props> =
-    connect(mapStateToProps, mapDispatchToProps)(TorrentRowComponent);
+    connect(mapStateToProps)(TorrentRowComponent);
 export default TorrentRow;
