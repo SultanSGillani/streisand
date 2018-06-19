@@ -42,7 +42,7 @@ class DetachedTorrentsViewComponent extends React.Component<CombinedProps> {
         return (
             <div>
                 {pager}
-                <Table className="table">
+                <Table>
                     <thead>
                         <tr>
                             <th>Name</th>

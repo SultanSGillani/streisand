@@ -5,7 +5,6 @@ import { push } from 'react-router-redux';
 import Store from '../../store';
 import IFilm from '../../models/IFilm';
 import ITorrent from '../../models/ITorrent';
-import TorrentModal from '../torrents/TorrentModal';
 import CommandBar, { ICommand } from '../CommandBar';
 import { IDispatch } from '../../actions/ActionTypes';
 import { getNodeItems } from '../../utilities/mapping';
@@ -68,23 +67,8 @@ class FilmViewComponent extends React.Component<CombinedProps> {
                 <div>{tags}</div>
                 <h2>Torrents</h2>
                 <TorrentSection film={film} torrents={this.props.torrents} />
-                {this._getModal()}
             </div>
         );
-    }
-
-    private _getModal() {
-        const torrent = this._getTorrent(this.props.torrentId);
-        return !torrent ? undefined :
-            <TorrentModal film={this.props.film} torrent={torrent} />;
-    }
-
-    private _getTorrent(torrentId: number) {
-        for (const torrent of this.props.torrents) {
-            if (torrent.id === torrentId) {
-                return torrent;
-            }
-        }
     }
 }
 
