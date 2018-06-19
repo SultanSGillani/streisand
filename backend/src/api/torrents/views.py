@@ -25,9 +25,6 @@ class TorrentStatViewSet(ModelViewSet):
         'last_snatched'
     )
 
-    def get_serializer_context(self):
-        return {'request': self.request}
-
 
 class ReseedRequestViewSet(ModelViewSet):
     permission_classes = [IsAuthenticated]
@@ -52,9 +49,6 @@ class ReseedRequestViewSet(ModelViewSet):
             queryset = queryset.filter(reseed_request__torrent__id=torrent_id)
 
         return queryset
-
-    def get_serializer_context(self):
-        return {'request': self.request}
 
 
 class TorrentRequestViewSet(ModelViewSet):
@@ -111,9 +105,6 @@ class TorrentFileViewSet(ModelViewSet):
         'release__source_media_id',
     )
 
-    def get_serializer_context(self):
-        return {'request': self.request}
-
 
 class TorrentFileWithNoReleaseViewSet(mixins.ListModelMixin, mixins.RetrieveModelMixin, mixins.UpdateModelMixin,
                                       mixins.DestroyModelMixin, GenericViewSet):
@@ -140,6 +131,3 @@ class TorrentFileWithNoReleaseViewSet(mixins.ListModelMixin, mixins.RetrieveMode
         'release__film_id',
         'release__source_media_id',
     ).filter(release__isnull=True)
-
-    def get_serializer_context(self):
-        return {'request': self.request}

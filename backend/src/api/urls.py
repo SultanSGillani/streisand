@@ -36,7 +36,7 @@ router = routers.DefaultRouter()
 
 # Users
 router.register(r'users', viewset=users_views.AdminUserViewSet, base_name='user')
-router.register(r'user-profiles', viewset=users_views.PublicUserProfileViewSet, base_name='user-profile')
+router.register(r'user-profiles', viewset=users_views.PublicUserViewSet, base_name='user-profile')
 router.register(r'groups', viewset=users_views.GroupViewSet, base_name='group')
 
 # Invites
@@ -59,8 +59,7 @@ router.register(r'torrent-files', viewset=torrents_views.TorrentFileViewSet, bas
 router.register(r'torrents-no-releases', viewset=torrents_views.TorrentFileWithNoReleaseViewSet, base_name='torrent-no-release')
 router.register(r'torrent-stats', viewset=torrents_views.TorrentStatViewSet, base_name='torrent-stat')
 router.register(r'torrent-requests', viewset=torrents_views.TorrentRequestViewSet, base_name='torrent-request')
-router.register(r'torrent-reseed-requests', viewset=torrents_views.ReseedRequestViewSet,
-                base_name='torrent-reseed-request')
+router.register(r'torrent-reseed-requests', viewset=torrents_views.ReseedRequestViewSet, base_name='torrent-reseed-request')
 
 # Tracker
 router.register(r'torrent-clients', viewset=tracker_views.TorrentClientViewSet, base_name='torrent-client')
@@ -75,11 +74,10 @@ router.register(r'forum-topic-items', viewset=forums_views.ForumTopicItemViewSet
 router.register(r'forum-thread-index', viewset=forums_views.ForumThreadIndexViewSet, base_name='forum-thread-index')
 router.register(r'forum-thread-items', viewset=forums_views.ForumThreadItemViewSet, base_name='forum-thread-items')
 router.register(r'forum-post-items', viewset=forums_views.ForumPostItemViewSet, base_name='forum-post-items')
-router.register(r'forum-thread-subscriptions', viewset=forums_views.ForumThreadSubscriptionViewSet,
-                base_name='forum-thread-subscription'
-                )
+router.register(r'forum-thread-subscriptions', viewset=forums_views.ForumThreadSubscriptionViewSet, base_name='forum-thread-subscription')
 router.register(r'forum-reports', viewset=forums_views.ForumReportViewSet, base_name='forum-report')
-# Forum News Post
+
+# News Posts
 router.register(r'news-posts', viewset=forums_views.NewsPostViewSet, base_name='news-post')
 
 # Wiki
@@ -101,14 +99,17 @@ urlpatterns = [
     url(r'^schema/', include_docs_urls(title='streisand API v1', public=False)),
 
     # Login and user items
-    url(r'^current-user/', users_views.CurrentUserView.as_view()),
-    url(r'^login/', users_views.UserLoginView.as_view()),
-    url(r'^change-password/', users_views.ChangePasswordView.as_view()),
-    url(r'^register/$', users_views.UserRegisterView.as_view(), name='user-registration'),
+    url(r'^current-user/$', users_views.CurrentUserView.as_view()),
+    url(r'^login/$', users_views.UserLoginView.as_view()),
+    url(r'^change-password/$', users_views.ChangePasswordView.as_view()),
+
+    # Registration
+    url(r'^check-invite-key/(?P<pk>[0-9a-f\-]{36})/$', invites_views.InviteCheckViewSet.as_view(), name='invite-key-check'),
+    url(r'^check-username/$', users_views.UsernameAvailabilityView.as_view(), name='username-check'),
+    url(r'^register-user/$', users_views.UserRegistrationView.as_view(), name='user-registration'),
 
     # DRF-Knox Authentication
     url(r'^knox/', include('knox.urls')),
-    url(r'^login/', users_views.UserLoginView.as_view()),
     url(r'^logout/', knox_views.LogoutView.as_view(), name='knox_logout'),
     url(r'^logoutall/', knox_views.LogoutAllView.as_view(), name='knox_logoutall'),
 

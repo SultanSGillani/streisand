@@ -1,12 +1,15 @@
 # -*- coding: utf-8 -*-
 
-from django.contrib.auth import authenticate
 from django.contrib.auth.models import Group
 from django.contrib.auth.password_validation import validate_password
+from django.db import transaction
 
+from knox.models import AuthToken
 from rest_framework import serializers, validators
 
 from api.mixins import AllowFieldLimitingMixin
+from api.validators import invite_key_validator
+from invites.models import Invite
 from users.models import User, UserIPAddress, UserTorrentDownloadKey
 
 
@@ -21,11 +24,7 @@ class ChangePasswordSerializer(serializers.Serializer):
     Serializer for password change endpoint.
     """
     old_password = serializers.CharField(required=True)
-    new_password = serializers.CharField(required=True)
-
-    def validate_new_password(self, value):
-        validate_password(value)
-        return value
+    new_password = serializers.CharField(required=True, validators=[validate_password])
 
 
 class GroupSerializer(serializers.ModelSerializer):
@@ -47,10 +46,9 @@ class UserIPSerializer(AllowFieldLimitingMixin, serializers.ModelSerializer):
         return obj.ip_address
 
 
-class AdminUserProfileSerializer(AllowFieldLimitingMixin,
-                                 serializers.ModelSerializer):
-    user_class_rank = serializers.PrimaryKeyRelatedField(
-        source='user_class', read_only=True)
+class AdminUserSerializer(AllowFieldLimitingMixin, serializers.ModelSerializer):
+
+    user_class_rank = serializers.PrimaryKeyRelatedField(source='user_class', read_only=True)
     ip_addresses = UserIPSerializer(many=True, read_only=True)
     user_class = serializers.StringRelatedField()
     username = serializers.StringRelatedField(read_only=True)
@@ -94,19 +92,19 @@ class AdminUserProfileSerializer(AllowFieldLimitingMixin,
         )
 
 
-class CurrentUserSerializer(AllowFieldLimitingMixin,
-                            serializers.ModelSerializer):
-    user_class = serializers.StringRelatedField(read_only=True)
-    username = serializers.StringRelatedField(read_only=True)
-    watch_queue = serializers.StringRelatedField(source='watchlist_entries', many=True, read_only=False, required=False)
+class CurrentUserSerializer(AdminUserSerializer):
 
-    class Meta:
-        model = User
+    user_class = serializers.StringRelatedField(read_only=True)
+
+    class Meta(AdminUserSerializer.Meta):
+
         fields = (
             'id',
             'username',
+            'email',
             'user_class',
             'date_joined',
+            'account_status',
             'is_donor',
             'invite_count',
             'invite_tree',
@@ -124,9 +122,13 @@ class CurrentUserSerializer(AllowFieldLimitingMixin,
             'watch_queue',
             'torrents',
         )
+
         read_only_fields = (
             'id',
+            'username',
+            'user_class',
             'date_joined',
+            'account_status',
             'is_donor',
             'invite_count',
             'invite_tree',
@@ -139,39 +141,13 @@ class CurrentUserSerializer(AllowFieldLimitingMixin,
             'announce_url',
             'custom_title',
             'torrents',
-
         )
 
 
-class OwnedUserProfileSerializer(AdminUserProfileSerializer):
-    class Meta(AdminUserProfileSerializer.Meta):
-        model = User
-        fields = (
-            'id',
-            'username',
-            'email',
-            'user_class',
-            'account_status',
-            'is_donor',
-            'custom_title',
-            'avatar_url',
-            'profile_description',
-            'average_seeding_size',
-            'irc_key',
-            'announce_key',
-            'invite_count',
-            'bytes_uploaded',
-            'bytes_downloaded',
-            'last_seeded',
-        )
-
-    extra_kwargs = {'username': {'read_only': True}}
-
-
-class PublicUserProfileSerializer(OwnedUserProfileSerializer, AllowFieldLimitingMixin):
+class PublicUserSerializer(CurrentUserSerializer, AllowFieldLimitingMixin):
     username = serializers.StringRelatedField(read_only=True)
 
-    class Meta(OwnedUserProfileSerializer.Meta):
+    class Meta(CurrentUserSerializer.Meta):
         fields = (
             'id',
             'username',
@@ -189,8 +165,8 @@ class PublicUserProfileSerializer(OwnedUserProfileSerializer, AllowFieldLimiting
         )
 
 
-class DisplayUserProfileSerializer(PublicUserProfileSerializer, AllowFieldLimitingMixin):
-    class Meta(PublicUserProfileSerializer.Meta):
+class DisplayUserSerializer(PublicUserSerializer, AllowFieldLimitingMixin):
+    class Meta(PublicUserSerializer.Meta):
         fields = (
             'id',
             'username',
@@ -202,43 +178,87 @@ class DisplayUserProfileSerializer(PublicUserProfileSerializer, AllowFieldLimiti
         )
 
 
-class UserForForumSerializer(PublicUserProfileSerializer):
-    class Meta(PublicUserProfileSerializer.Meta):
-        fields = (
-            'id',
-            'username',
-        )
+class UsernameAvailabilitySerializer(serializers.Serializer):
 
-
-class NewUserSerializer(serializers.ModelSerializer):
-    # TODO: add invite key
-    email = serializers.EmailField(
-        required=True,
-        validators=[validators.UniqueValidator(queryset=User.objects.all())])
     username = serializers.CharField(
-        max_length=32,
-        validators=[validators.UniqueValidator(queryset=User.objects.all())])
-    password = serializers.CharField(min_length=8, write_only=True)
-
-    def create(self, validated_data):
-        user = User.objects.create_user(validated_data['username'],
-                                        validated_data['email'],
-                                        validated_data['password'])
-        return user
+        required=True,
+        validators=[User.username_validator],
+    )
+    invite_key = serializers.CharField(
+        required=True,
+        write_only=True,
+        allow_null=True,
+        validators=[invite_key_validator],
+    )
+    is_available = serializers.BooleanField(read_only=True)
 
     class Meta:
-        model = User
-        fields = ('id', 'username', 'email', 'password')
+        fields = (
+            'username',
+            'invite_key',
+            'is_available',
+        )
+
+    def create(self, validated_data):
+        username = validated_data['username']
+        validated_data['is_available'] = not User.objects.filter(username=username).exists()
+        return validated_data
 
 
-class LoginUserSerializer(serializers.Serializer):
-    username = serializers.CharField()
-    password = serializers.CharField()
+class NewUserRegistrationSerializer(CurrentUserSerializer):
 
-    def validate(self, data):
-        user = authenticate(**data)
-        if user and user.is_active:
-            return user
+    email = serializers.EmailField(
+        required=True,
+        validators=[User.email_validator],
+    )
+    username = serializers.CharField(
+        required=True,
+        max_length=32,
+        read_only=False,
+        validators=[
+            User.username_validator,
+            validators.UniqueValidator(
+                queryset=User.objects.all(),
+                message="This username is taken.",
+            ),
+        ],
+    )
+    password = serializers.CharField(
+        required=True,
+        write_only=True,
+        validators=[validate_password],
+    )
+    invite_key = serializers.UUIDField(
+        required=True,
+        write_only=True,
+        validators=[invite_key_validator],
+    )
+    token = serializers.SerializerMethodField()
 
-        raise serializers.ValidationError(
-            "Unable to log in with provided credentials.")
+    class Meta(CurrentUserSerializer.Meta):
+        fields = CurrentUserSerializer.Meta.fields + (
+            'invite_key',
+            'password',
+            'token',
+        )
+
+    @staticmethod
+    def get_token(user):
+        return AuthToken.objects.create(user=user)
+
+    def create(self, validated_data):
+
+        with transaction.atomic():
+
+            invite = Invite.objects.get(key=validated_data['invite_key'])
+            invited_by = invite.offered_by
+            invite.delete()
+
+            user = User.objects.create_user(
+                username=validated_data['username'],
+                email=validated_data['email'],
+                password=validated_data['password'],
+                invited_by=invited_by,
+            )
+
+        return user

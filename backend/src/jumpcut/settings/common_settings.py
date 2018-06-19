@@ -89,9 +89,13 @@ CACHES = {
 SITE_NAME = config('SITE_NAME', default='jumpcut')
 SITE_URL = config('SITE_URL', default='http://localhost:8000/')
 TRACKER_URL = config('TRACKER_URL', default='http://localhost:7070/')
-TRACKER_ANNOUNCE_INTERVAL = timedelta(minutes=40)
+
+INVITE_URL_TEMPLATE = urljoin(SITE_URL, 'register/?invite_key={invite_key}')
+INVITE_TTL = timedelta(days=3)
+
 TRACKER_ANNOUNCE_URL_TEMPLATE = urljoin(TRACKER_URL, '{announce_key}/announce/')
 TORRENT_FILE_UPLOAD_MAX_SIZE = 1024 * 1024 * 5  # 5MB
+TRACKER_ANNOUNCE_INTERVAL = timedelta(minutes=40)
 
 
 LOCAL_APPS = [

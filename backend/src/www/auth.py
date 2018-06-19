@@ -34,15 +34,14 @@ class CustomAuthBackend(ModelBackend):
         """
 
         try:
-            user = User.objects.get(username__iexact=username)
-            if user.check_password(password):
-                return user
-            else:
-                return None
+            user = User.objects.get(username=username)
         except User.DoesNotExist:
             # Run the default password hasher once to reduce the timing
             # difference between an existing and a non-existing user.
             User().set_password(password)
+        else:
+            if user.check_password(password) and self.user_can_authenticate(user):
+                return user
 
     def has_perm(self, user_obj, perm, obj=None):
         if not user_obj.is_active:
@@ -54,7 +53,7 @@ class CustomAuthBackend(ModelBackend):
         Returns a set of permission strings the user has from their groups,
         user class, and custom permissions.
         """
-        if not user.is_active or user.is_anonymous or obj is not None:
+        if user.is_anonymous or not user.is_active or obj is not None:
             return set()
 
         if not hasattr(user, '_perm_cache'):

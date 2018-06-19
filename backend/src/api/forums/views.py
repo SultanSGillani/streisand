@@ -176,17 +176,6 @@ class ForumThreadItemViewSet(mixins.UpdateModelMixin, mixins.CreateModelMixin, m
 
         return queryset
 
-    def perform_create(self, serializer):
-        serializer.save(created_by=self.request.user
-                        )
-
-    def perform_partial_update(self, serializer, **kwargs):
-        kwargs['partial'] = True
-        serializer.save(modified_by=self.request.user)
-
-    def perform_update(self, serializer):
-        serializer.save(modified_by=self.request.user)
-
 
 class ForumPostItemViewSet(mixins.UpdateModelMixin, mixins.RetrieveModelMixin, mixins.CreateModelMixin,
                            mixins.DestroyModelMixin,
@@ -212,17 +201,6 @@ class ForumPostItemViewSet(mixins.UpdateModelMixin, mixins.RetrieveModelMixin, m
             queryset = queryset.filter(thread_id=thread_id)
 
         return queryset
-
-    def perform_create(self, serializer):
-        serializer.save(author=self.request.user
-                        )
-
-    def perform_partial_update(self, serializer, **kwargs):
-        kwargs['partial'] = True
-        serializer.save(modified_by=self.request.user)
-
-    def perform_update(self, serializer):
-        serializer.save(modified_by=self.request.user)
 
 
 class NewsPostViewSet(ModelViewSet):

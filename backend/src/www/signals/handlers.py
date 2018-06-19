@@ -1,7 +1,5 @@
 # -*- coding: utf-8 -*-
 
-from knox.models import AuthToken
-
 from django.contrib.auth.models import Permission
 from django.core.cache import cache
 from django.db import models
@@ -14,19 +12,13 @@ from www.models import Feature, LoginAttempt
 from .signals import successful_login, failed_login
 
 
-@receiver([post_save, post_delete], sender='users.User')
-def invalidate_user_cache(**kwargs):
-    instance = kwargs['instance']
-    key = User.CACHE_KEY.format(user_id=instance.id)
-    cache.delete(key)
-
-
 # Signal handler for new users
 @receiver(post_save, sender='users.User')
 def handle_new_user(**kwargs):
+
     if kwargs['created']:
+
         user = kwargs['instance']
-        AuthToken.objects.create(user=user)
 
         can_leech = Permission.objects.get(codename='can_leech')
         user.user_permissions.add(can_leech)
@@ -39,6 +31,13 @@ def handle_new_user(**kwargs):
 
         user.reset_announce_key()
         user.reset_torrent_download_key()
+
+
+@receiver([post_save, post_delete], sender='users.User')
+def invalidate_user_cache(**kwargs):
+    instance = kwargs['instance']
+    key = User.CACHE_KEY.format(user_id=instance.id)
+    cache.delete(key)
 
 
 @receiver(models.signals.post_save, sender='www.Feature')
@@ -59,7 +58,7 @@ def track_failed_login_attempts(**kwargs):
     ip_address = kwargs['ip_address']
 
     try:
-        user = User.objects.get(username__iexact=username)
+        user = User.objects.get(username=username)
     except User.DoesNotExist:
         user = None
 
