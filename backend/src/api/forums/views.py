@@ -50,7 +50,7 @@ class ForumIndexViewSet(ModelViewSet):
             queryset_list = queryset_list.filter(
                 Q(name__icontains=query) |
                 Q(topics__name__icontains=query) |
-                Q(topics__latest_post__author__username__icontains=query) |
+                Q(topics__latest_post__author__username__contains=query) |
                 Q(topics__latest_post__thread__title__icontains=query)
             ).distinct()
         return queryset_list
@@ -94,10 +94,10 @@ class ForumTopicIndexViewSet(ModelViewSet):
             queryset_list = queryset_list.filter(
                 Q(name__icontains=query) |
                 Q(group__name__icontains=query) |
-                Q(threads__created_by__username__icontains=query) |
+                Q(threads__created_by__username__contains=query) |
                 Q(threads__title__icontains=query) |
                 Q(latest_post__body__icontains=query) |
-                Q(latest_post__author__username__icontains=query)
+                Q(latest_post__author__username__contains=query)
             ).distinct()
         return queryset_list
 
@@ -147,9 +147,9 @@ class ForumThreadIndexViewSet(ModelViewSet):
         if query:
             queryset_list = queryset_list.filter(
                 Q(title__icontains=query) |
-                Q(created_by__username__icontains=query) |
+                Q(created_by__username__contains=query) |
                 Q(posts__body__icontains=query) |
-                Q(posts__author__username__icontains=query)
+                Q(posts__author__username__contains=query)
             ).distinct()
         return queryset_list
 

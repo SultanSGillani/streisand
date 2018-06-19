@@ -184,7 +184,7 @@ class UsernameAvailabilitySerializer(serializers.Serializer):
         required=True,
         validators=[User.username_validator],
     )
-    invite_key = serializers.CharField(
+    invite_key = serializers.UUIDField(
         required=True,
         write_only=True,
         allow_null=True,
@@ -248,17 +248,19 @@ class NewUserRegistrationSerializer(CurrentUserSerializer):
 
     def create(self, validated_data):
 
+        invite_key = validated_data['invite_key']
+        invite = Invite.objects.get(key=invite_key) if invite_key else None
+
         with transaction.atomic():
 
-            invite = Invite.objects.get(key=validated_data['invite_key'])
-            invited_by = invite.offered_by
-            invite.delete()
+            if invite:
+                invite.delete()
 
             user = User.objects.create_user(
                 username=validated_data['username'],
                 email=validated_data['email'],
                 password=validated_data['password'],
-                invited_by=invited_by,
+                invited_by=invite.offered_by if invite else None,
             )
 
         return user

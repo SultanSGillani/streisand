@@ -41,7 +41,7 @@ class WikiArticleCreateUpdateDestroyViewSet(mixins.CreateModelMixin,
         if query:
             queryset_list = queryset_list.filter(
                 Q(title__icontains=query) |
-                Q(created_by__username__icontains=query) |
+                Q(created_by__username__contains=query) |
                 Q(read_access_minimum_user_class__username__userclass__icontains=query)
             ).distinct()
         return queryset_list
@@ -71,7 +71,7 @@ class WikiArticleBodyViewSet(mixins.RetrieveModelMixin, mixins.UpdateModelMixin,
         query = self.request.GET.get("q")
         if query:
             queryset_list = queryset_list.filter(
-                Q(body__icontains=query) | Q(id__icontains=query)).distinct()
+                Q(body__icontains=query) | Q(id=query)).distinct()
         return queryset_list
 
 
@@ -91,6 +91,6 @@ class WikiArticleViewListOnlyViewSet(mixins.ListModelMixin, GenericViewSet):
         if query:
             queryset_list = queryset_list.filter(
                 Q(title__icontains=query) |
-                Q(created_by__username__icontains=query)
+                Q(created_by__username__contains=query)
             ).distinct()
         return queryset_list

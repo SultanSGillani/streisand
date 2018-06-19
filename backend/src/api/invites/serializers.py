@@ -12,7 +12,7 @@ from ..users.serializers import DisplayUserSerializer
 class InviteSerializer(serializers.ModelSerializer):
 
     offered_by = DisplayUserSerializer(read_only=True)
-    key = serializers.CharField(read_only=True)
+    key = serializers.UUIDField(read_only=True)
     expires_at = serializers.DateTimeField(read_only=True)
     email = serializers.EmailField(
         required=True,

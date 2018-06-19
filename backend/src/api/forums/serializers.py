@@ -234,11 +234,11 @@ class ForumPostItemSerializer(ModelSerializer):
 
     def create(self, validated_data):
         validated_data['author'] = self.context['request'].user
-        super().create(validated_data)
+        return super().create(validated_data)
 
     def update(self, instance, validated_data):
         validated_data['modified_by'] = self.context['request'].user
-        super().update(instance, validated_data)
+        return super().update(instance, validated_data)
 
 
 class ForumThreadItemSerializer(ModelSerializer):
@@ -262,11 +262,11 @@ class ForumThreadItemSerializer(ModelSerializer):
 
     def create(self, validated_data):
         validated_data['created_by'] = self.context['request'].user
-        super().create(validated_data)
+        return super().create(validated_data)
 
     def update(self, instance, validated_data):
         validated_data['modified_by'] = self.context['request'].user
-        super().update(instance, validated_data)
+        return super().update(instance, validated_data)
 
 
 class ForumThreadIndexSerializer(api_mixins.AllowFieldLimitingMixin, ModelSerializer):
