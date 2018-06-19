@@ -2,11 +2,13 @@ import { put } from 'redux-saga/effects';
 
 import globals from '../../utilities/globals';
 import { remove } from '../../utilities/Requestor';
-import { invalidate } from './DetachedTorrentsAction';
+import { invalidate as invalidateFilm } from './FilmTorrentsAction';
 import { generateSage, generateAuthFetch } from '../sagas/generators';
+import { invalidate as invalidateDetached } from './DetachedTorrentsAction';
 
 export interface IActionProps {
     id: number;
+    film?: number;
     currentPage?: number;
 }
 
@@ -20,8 +22,10 @@ type Action = DeleteTorrentAction;
 
 function* received(response: void, props: IActionProps) {
     yield put<Action>({ type: 'RECEIVED_TORRENT_DELETION', props });
-    if (props.currentPage) {
-        yield put(invalidate({ page: props.currentPage }));
+    if (props.film) {
+        yield put(invalidateFilm({ page: props.currentPage || 1, id: props.film }));
+    } else if (props.currentPage) {
+        yield put(invalidateDetached({ page: props.currentPage }));
     }
 }
 

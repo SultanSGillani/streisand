@@ -1,4 +1,3 @@
-/// <reference path="../../node_modules/@types/react/index.d.ts" />
 
 declare module 'bbcode-to-react' {
     class Tag {

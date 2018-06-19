@@ -49,6 +49,7 @@ function byFilmId(state: Torrents = {}, action: Action): Torrents {
         case 'REQUEST_FILM_TORRENTS':
         case 'RECEIVED_FILM_TORRENTS':
         case 'FAILED_FILM_TORRENTS':
+        case 'INVALIDATE_FILM_TORRENTS':
             const pages = state[action.props.id] || {};
             const page: IPage = filmPageReducer(pages[action.props.page], action);
             const newPages = objectAssign({}, pages, { [action.props.page]: page });

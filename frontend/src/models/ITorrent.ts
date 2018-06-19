@@ -19,7 +19,7 @@ export interface ITorrentResponse {
     lastSeeded: string;
     moderatedBy: number;
     pieceSizeInBytes: number;
-    release: IRelease;
+    release?: IRelease;
     reseedRequest: any; // TODO: What is this?
     snatchCount: number;
     totalSizeInBytes: number;
@@ -51,7 +51,7 @@ export interface ITorrent {
     lastSeeded: string;
     moderatedBy: number;
     pieceSizeInBytes: number;
-    release: IRelease;
+    release?: number;
     reseedRequest: any; // TODO: What is this?
     snatchCount: number;
     totalSizeInBytes: number;

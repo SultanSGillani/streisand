@@ -1,4 +1,3 @@
-///<reference path="../../models/IFilm.ts"/>
 import * as React from 'react';
 import { connect } from 'react-redux';
 import { push } from 'react-router-redux';

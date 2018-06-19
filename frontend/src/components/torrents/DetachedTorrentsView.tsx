@@ -1,16 +1,16 @@
 import * as React from 'react';
+import { Table } from 'reactstrap';
 import { connect } from 'react-redux';
 
-import Store from '../../store';
-import { ITorrent } from '../../models/ITorrent';
-import { ScreenSize } from '../../models/IDeviceInfo';
-import { getNodeItems } from '../../utilities/mapping';
-import ILoadingStatus, { defaultStatus } from '../../models/base/ILoadingStatus';
-import { Table } from 'reactstrap';
 import Pager from '../Pager';
+import Store from '../../store';
 import Empty from '../generic/Empty';
 import Loading from '../generic/Loading';
-import TorrentRow from './TorrentRow';
+import { ITorrent } from '../../models/ITorrent';
+import { ScreenSize } from '../../models/IDeviceInfo';
+import DetachedTorrentRow from './DetachedTorrentRow';
+import { getNodeItems } from '../../utilities/mapping';
+import ILoadingStatus, { defaultStatus } from '../../models/base/ILoadingStatus';
 
 export type Props = {
     page: number;
@@ -35,7 +35,7 @@ class DetachedTorrentsViewComponent extends React.Component<CombinedProps> {
 
         const pager = <Pager uri="/torrents/detached" total={total} page={page} pageSize={pageSize} />;
         const rows = torrents.map((torrent: ITorrent) => {
-            return (<TorrentRow torrent={torrent} key={torrent.id} page={page} />);
+            return (<DetachedTorrentRow torrent={torrent} key={torrent.id} page={page} />);
         });
 
         // const full = this.props.screenSize > ScreenSize.small || undefined;

@@ -1,5 +1,6 @@
 
 import IUser from '../../models/IUser';
+import IRelease from '../../models/IRelease';
 import globals from '../../utilities/globals';
 import { get } from '../../utilities/Requestor';
 import { transformTorrents } from './transforms';
@@ -14,6 +15,7 @@ export type RequestDetachedTorrents = { type: 'REQUEST_DETACHED_TORRENTS', props
 export type ReceivedDetachedTorrents = {
     type: 'RECEIVED_DETACHED_TORRENTS',
     props: { page: number, pageSize: number, count: number, items: ITorrent[] },
+    releases: IRelease[],
     users: IUser[]
 };
 export type FailedDetachedTorrents = { type: 'FAILED_DETACHED_TORRENTS', props: IActionProps };
@@ -33,6 +35,7 @@ function received(response: IPagedResponse<ITorrentResponse>, props: IActionProp
             count: response.count,
             items: info.torrents
         },
+        releases: info.releases,
         users: info.users
     };
 }

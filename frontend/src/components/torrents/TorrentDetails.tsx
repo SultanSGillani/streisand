@@ -2,7 +2,7 @@ import * as React from 'react';
 import { Nav, NavItem, NavLink, TabContent, TabPane, ListGroup, ListGroupItem } from 'reactstrap';
 
 import IFilm from '../../models/IFilm';
-import TextView from '../bbcode/TextView';
+// import TextView from '../bbcode/TextView';
 import ITorrent from '../../models/ITorrent';
 
 export type Props = {
@@ -80,7 +80,7 @@ function GeneralContent(props: { torrent: ITorrent }) {
     }
     return (
         <div style={{ marginTop: '8px' }}>
-            <TextView content={torrentRelease.description} />
+            {/* <TextView content={torrentRelease.description} /> */}
         </div>
     );
 }
@@ -93,19 +93,19 @@ function TorrentContent(props: { torrent: ITorrent }) {
     }
     return (
         <ListGroup className="mt-2">
-            <InfoRow label="Release name" value={torrentRelease.releaseName} />
-            <InfoRow label="Release group" value={torrentRelease.releaseGroup} />
+            {/* <InfoRow label="Release name" value={torrentRelease.releaseName} />
+            <InfoRow label="Release group" value={torrentRelease.releaseGroup} /> */}
             <InfoRow label="Uploaded at" value={torrent.uploadedAt} />
         </ListGroup>
     );
 }
 
 function MediaContent(props: { torrent: ITorrent }) {
-    const torrent = props.torrent;
-    const info = torrent.release.mediainfo;
+    // const torrent = props.torrent;
+    // const info = torrent.release.mediainfo;
     return (
         <ListGroup className="mt-2">
-            {info && <InfoRow label="Runtime" value={info.runtime} />}
+            {/* {info && <InfoRow label="Runtime" value={info.runtime} />}
             <InfoRow label="Codec" value={torrent.release.codec} />
             <InfoRow label="Container" value={torrent.release.container} />
             <InfoRow label="Cut" value={torrent.release.cut} />
@@ -115,7 +115,7 @@ function MediaContent(props: { torrent: ITorrent }) {
             {info && <InfoRow label="Aspect ratio" value={info.displayAspectRatio} />}
             <InfoRow label="Resolution" value={torrent.release.resolution} />
             {info && <InfoRow label="Width" value={info.resolutionWidth} />}
-            {info && <InfoRow label="Height" value={info.resolutionHeight} />}
+            {info && <InfoRow label="Height" value={info.resolutionHeight} />} */}
         </ListGroup>
     );
 }
