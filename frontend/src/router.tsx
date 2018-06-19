@@ -67,9 +67,9 @@ export function createRoutes(store: ReduxStore<Store.All>) {
                     <Redirect from="/torrents/detached" to="/torrents/detached/1" />
                     <Route path="/torrents/upload/:filmId" component={TorrentUploadPage} />
 
+                    <Route path="/wikis/create" component={CreateWikiView} />
                     <Route path="/wikis/:page" component={WikisPage} />
                     <Redirect from="/wikis" to="/wikis/1" />
-                    <Route path="/wikis/create" component={CreateWikiView} />
                     <Route path="/wiki/:wikiId" component={WikiPage} />
                     <Redirect from="/wiki" to="/wikis/1" />
 

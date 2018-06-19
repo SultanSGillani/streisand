@@ -5,3 +5,8 @@ export function numericIdentifier(id: string): number {
     const result = parseInt(id, 10);
     return isNaN(result) ? -404 : result;
 }
+
+export function parsePageNumber(pageNumber: string): number {
+    const page = Number(pageNumber);
+    return isNaN(page) ? 1 : (page || 1);
+}

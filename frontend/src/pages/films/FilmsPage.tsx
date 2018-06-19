@@ -3,6 +3,7 @@ import { connect } from 'react-redux';
 
 import Store from '../../store';
 import { IDispatch } from '../../actions/ActionTypes';
+import { parsePageNumber } from '../../utilities/shim';
 import FilmsView from '../../components/films/FilmsView';
 import { getFilms } from '../../actions/films/FilmsAction';
 import ILoadingStatus, { defaultStatus } from '../../models/base/ILoadingStatus';
@@ -47,7 +48,7 @@ class FilmsPage extends React.Component<CombinedProps> {
 }
 
 const mapStateToProps = (state: Store.All, props: Props): ConnectedState => {
-    const pageNumber = Number((props.params && props.params.page) || 1);
+    const pageNumber = parsePageNumber(props.params && props.params.page);
     const page = state.sealed.film.list.pages[pageNumber];
     return {
         page: pageNumber,

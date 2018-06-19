@@ -3,6 +3,7 @@ import { connect } from 'react-redux';
 
 import Store from '../../store';
 import { IDispatch } from '../../actions/ActionTypes';
+import { parsePageNumber } from '../../utilities/shim';
 import Loading from '../../components/generic/Loading';
 import WikisView from '../../components/wikis/WikisView';
 import { getWikis } from '../../actions/wikis/WikisAction';
@@ -52,7 +53,7 @@ class WikisPage extends React.Component<CombinedProps> {
 }
 
 const mapStateToProps = (state: Store.All, props: Props): ConnectedState => {
-    const pageNumber = Number((props.params && props.params.page) || 1);
+    const pageNumber = parsePageNumber(props.params && props.params.page);
     const page = state.sealed.wiki.list.pages[pageNumber];
     return {
         page: pageNumber,

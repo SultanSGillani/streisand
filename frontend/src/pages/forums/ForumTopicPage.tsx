@@ -5,9 +5,9 @@ import Store from '../../store';
 import Empty from '../../components/generic/Empty';
 import { IDispatch } from '../../actions/ActionTypes';
 import Loading from '../../components/generic/Loading';
-import { numericIdentifier } from '../../utilities/shim';
 import IForumTopic from '../../models/forums/IForumTopic';
 import ForumTopicView from '../../components/forums/ForumTopicView';
+import { numericIdentifier, parsePageNumber } from '../../utilities/shim';
 import { getThreads } from '../../actions/forums/topics/ForumTopicAction';
 import ILoadingStatus, { defaultStatus } from '../../models/base/ILoadingStatus';
 
@@ -59,7 +59,7 @@ class ForumTopicPageComponent extends React.Component<CombinedProps, void> {
 }
 
 const mapStateToProps = (state: Store.All, props: Props): ConnectedState => {
-    const pageNumber = Number((props.params && props.params.page) || 1);
+    const pageNumber = parsePageNumber(props.params && props.params.page);
     const topicId = numericIdentifier(props.params.topicId);
     const topicPages = state.sealed.forums.threads.byTopic[topicId];
     const page = topicPages && topicPages.pages[pageNumber];

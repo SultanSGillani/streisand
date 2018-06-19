@@ -3,6 +3,7 @@ import { connect } from 'react-redux';
 
 import Store from '../store';
 import { IDispatch } from '../actions/ActionTypes';
+import { parsePageNumber } from '../utilities/shim';
 import ILoadingStatus, { defaultStatus } from '../models/base/ILoadingStatus';
 import DetachedTorrentsView from '../components/torrents/DetachedTorrentsView';
 import { getDetachedTorrents } from '../actions/torrents/DetachedTorrentsAction';
@@ -47,7 +48,7 @@ class DetachedTorrentsPage extends React.Component<CombinedProps> {
 }
 
 const mapStateToProps = (state: Store.All, props: Props): ConnectedState => {
-    const pageNumber = Number((props.params && props.params.page) || 1);
+    const pageNumber = parsePageNumber(props.params && props.params.page);
     const page = state.sealed.torrent.detached.pages[pageNumber];
     return {
         page: pageNumber,
