@@ -13,6 +13,9 @@ import HomePage from './pages/HomePage';
 import UserPage from './pages/UserPage';
 import StaffTools from './components/StaffTools';
 
+import InvitesPage from './pages/InvitesPage';
+import InviteView from './components/invites/InviteView';
+
 import WikiPage from './pages/wikis/WikiPage';
 import WikisPage from './pages/wikis/WikisPage';
 
@@ -54,6 +57,10 @@ export function createRoutes(store: ReduxStore<Store.All>) {
 
                     <Route path="/user/:userId" component={UserPage} />
                     <Redirect from="/user" to="/home" />
+
+                    <Route path="/invites/create" component={InviteView} />
+                    <Route path="/invites/:page" component={InvitesPage} />
+                    <Redirect from="/invites" to="/invites/1" />
 
                     <Route path="/films/create" component={CreateFilmView} />
                     <Route path="/films/search" component={SearchFilmView} />

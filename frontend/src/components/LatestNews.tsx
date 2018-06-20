@@ -30,7 +30,7 @@ type ConnectedDispatch = {
 };
 
 type CombinedProps = ConnectedState & ConnectedDispatch & Props;
-class LatestNewsComponent extends React.Component<CombinedProps, void> {
+class LatestNewsComponent extends React.Component<CombinedProps> {
     public componentWillMount() {
         if (!this.props.loading && !this.props.loaded) {
             this.props.getLatestNews();
@@ -68,7 +68,7 @@ class LatestNewsComponent extends React.Component<CombinedProps, void> {
                     <div className="row">
                         <div className="col-auto">Latest news</div>
                         <div className="col-auto ml-auto">
-                            <small>posted bydss <UserLink user={this.props.author} /> {posted}</small>
+                            <small>posted by <UserLink user={this.props.author} /> {posted}</small>
                         </div>
                     </div>
                 </CardHeader>

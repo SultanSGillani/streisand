@@ -9,6 +9,7 @@ import { allForumSaga } from '../forums';
 import { allTorrentSaga } from '../torrents';
 import { allReleaseSaga } from '../releases';
 import { mediaTypeSaga } from '../MediaTypeAction';
+import { allInviteSaga } from '../invites';
 
 export default function* rootSaga() {
     yield all([
@@ -20,6 +21,7 @@ export default function* rootSaga() {
         allForumSaga(),
         allReleaseSaga(),
         newsSaga(),
-        mediaTypeSaga()
+        mediaTypeSaga(),
+        allInviteSaga()
     ]);
 }

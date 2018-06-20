@@ -16,7 +16,7 @@ export function markFailed<T>(current: INodeMap<T>, id: number): INodeMap<T> {
     return objectAssign({}, current, { [id]: newNode });
 }
 
-export interface IItem { id: number; }
+export interface IItem { id: number | string; }
 export function addLoadedNode<T extends IItem>(current: INodeMap<T>, item: T): INodeMap<T> {
     const node: IItemNode<T> = {
         status: {

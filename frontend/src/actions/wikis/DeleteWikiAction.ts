@@ -24,7 +24,7 @@ function* received(response: void, props: IActionProps) {
     if (props.currentPage) {
         yield put(invalidate({ page: props.currentPage }));
     } else {
-        yield put(push('/wikis'));
+        yield put(push('/wikis/1'));
     }
 }
 

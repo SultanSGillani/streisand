@@ -46,6 +46,7 @@ class CurrentUserLinkComponent extends React.Component<CombinedProps> {
                 <DropdownToggle nav caret>{user ? user.username : 'Settings'}</DropdownToggle>
                 <DropdownMenu right>
                     {user && <LinkContainer to={`/user/${user.id}`}><DropdownItem>Profile</DropdownItem></LinkContainer>}
+                    {isAuthenticated && <LinkContainer to="/invites/1"><DropdownItem>Invites</DropdownItem></LinkContainer>}
                     <LinkContainer to={`/themes`}><DropdownItem>Themes</DropdownItem></LinkContainer>
                     {isAuthenticated && <DropdownItem divider />}
                     {isAuthenticated && <LinkContainer to={`/tools`}><DropdownItem>Tools</DropdownItem></LinkContainer>}
