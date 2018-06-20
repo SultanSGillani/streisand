@@ -2,13 +2,16 @@ import * as objectAssign from 'object-assign';
 
 import Store from '../../store';
 import IFilm from '../../models/IFilm';
-import Action from '../../actions/films';
+import FilmAction from '../../actions/films';
 import { combineReducers } from '../helpers';
 import { INodeMap } from '../../models/base/ItemSet';
+import ReleasesAction from '../../actions/releases/ReleasesAction';
 import { addLoadedNode, addLoadedNodes, markLoading, markFailed } from '../utilities/mutations';
 
 import list from './list';
 import search from './search';
+
+type Action = FilmAction | ReleasesAction;
 
 type ItemMap = INodeMap<IFilm>;
 function byId(state: ItemMap = {}, action: Action): ItemMap {
@@ -23,6 +26,8 @@ function byId(state: ItemMap = {}, action: Action): ItemMap {
             return addLoadedNode(state, action.film);
         case 'FAILED_FILM':
             return markFailed(state, action.props.id);
+        case 'RECEIVED_RELEASES':
+            return addLoadedNodes(state, action.films);
         case 'RECEIVED_FILMS':
         case 'RECEIVED_FILM_SEARCH':
             return addLoadedNodes(state, action.props.items);

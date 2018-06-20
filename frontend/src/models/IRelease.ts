@@ -1,3 +1,4 @@
+import IFilm from './IFilm';
 
 export interface IRelaseMediaInfo {
     id: number;
@@ -13,7 +14,26 @@ export interface IRelaseMediaInfo {
     isQualityEncode: boolean;
 }
 
+export interface IReleaseResponse {
+    film: IFilm;
+    codec: string;
+    container: string;
+    cut: string;
+    description: string;
+    id: number;
+    is3d: boolean;
+    isScene: boolean;
+    isSource: boolean;
+    mediainfo?: IRelaseMediaInfo;
+    nfo: string;
+    releaseGroup: string;
+    releaseName: string;
+    resolution: string;
+    sourceMedia: string;
+}
+
 interface IRelease {
+    film: number;
     codec: string;
     container: string;
     cut: string;

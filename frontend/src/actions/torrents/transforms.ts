@@ -2,6 +2,7 @@
 import IUser from '../../models/IUser';
 import IRelease from '../../models/IRelease';
 import { ITorrentResponse, ITorrent, ITorrentFile } from '../../models/ITorrent';
+import { transformRelease } from '../releases/transforms';
 
 export interface ITorrentInfo {
     torrents: ITorrent[];
@@ -38,7 +39,7 @@ export function transformTorrents(response: ITorrentResponse[]): ITorrentInfo {
         }
 
         if (release) {
-            releases.push(release);
+            releases.push(transformRelease(release).release);
         }
 
         torrents.push({

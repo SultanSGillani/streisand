@@ -1,4 +1,4 @@
-import IRelease from './IRelease';
+import { IReleaseResponse } from './IRelease';
 
 export interface ITorrentResponse {
     directoryName: string;
@@ -19,7 +19,7 @@ export interface ITorrentResponse {
     lastSeeded: string;
     moderatedBy: number;
     pieceSizeInBytes: number;
-    release?: IRelease;
+    release?: IReleaseResponse;
     reseedRequest: any; // TODO: What is this?
     snatchCount: number;
     totalSizeInBytes: number;

@@ -9,7 +9,6 @@ import IMessage from '../models/IMessage';
 import IAuthInfo from '../models/IAuthInfo';
 import IDeviceInfo from '../models/IDeviceInfo';
 import IMediaTypes from '../models/IMediaTypes';
-import { IItemSet } from '../models/base/ItemSet';
 import ILocationInfo from '../models/ILocationInfo';
 import IForumData from '../models/forums/IForumData';
 import ITorrentItemSet from '../models/ITorrentItemSet';
@@ -26,7 +25,7 @@ namespace Store {
     export type Invites = IPagedItemSet<IInvite>;
     export type News = { latest: number | null; loading: boolean; };
     export type CurrentUser = { id: number | null; loading: boolean; };
-    export type Releases = IItemSet<IRelease>;
+    export type Releases = IPagedItemSet<IRelease>;
 
     export type UserSealed = {
         currentUser: CurrentUser;

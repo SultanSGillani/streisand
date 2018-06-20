@@ -18,6 +18,7 @@ export default {
         filmTorrents: defaultPageSize,
         threads: defaultPageSize,
         invites: defaultPageSize,
+        releases: defaultPageSize,
         posts: 10
     }
 };
