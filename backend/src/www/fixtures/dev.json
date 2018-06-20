@@ -116,6 +116,15 @@
     }
   },
   {
+    "pk": 1,
+    "model": "www.feature",
+    "fields": {
+      "name": "log_all_announces",
+      "description": "Log the details of all successful announce requests for analysis (use with caution!)",
+      "is_enabled": true
+    }
+  },
+  {
     "model": "forums.forumgroup",
     "pk": 1,
     "fields": {

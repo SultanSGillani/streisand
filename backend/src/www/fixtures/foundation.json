@@ -1340,6 +1340,16 @@
     }
   },
   {
+    "model": "users.usertorrentdownloadkey",
+    "pk": "c0e359a0-c240-4e7e-9184-832388cb59b7",
+    "fields": {
+      "user": 11,
+      "issued_at": "2018-06-15T13:00:19.810Z",
+      "revoked_at": null,
+      "revocation_notes": ""
+    }
+  },
+  {
     "model": "users.userannouncekey",
     "pk": "1ef0be11-cb9e-4138-a75f-ece3bd79c939",
     "fields": {
@@ -1440,6 +1450,16 @@
     }
   },
   {
+    "model": "users.userannouncekey",
+    "pk": "ca083d7d-312f-4d65-9e70-a99755866b9d",
+    "fields": {
+      "user": 11,
+      "issued_at": "2018-06-15T13:00:19.795Z",
+      "revoked_at": null,
+      "revocation_notes": ""
+    }
+  },
+  {
     "model": "users.user",
     "pk": 1,
     "fields": {
@@ -1467,6 +1487,45 @@
       "staff_notes": null,
       "irc_key": null,
       "invited_by": null,
+      "invite_count": 0,
+      "bytes_uploaded": 0,
+      "bytes_downloaded": 0,
+      "log_successful_announces": false,
+      "last_seeded": null,
+      "average_seeding_size": 0,
+      "watch_queue": null,
+      "groups": [],
+      "user_permissions": []
+    }
+  },
+  {
+    "model": "users.user",
+    "pk": 11,
+    "fields": {
+      "password": "argon2$argon2i$v=19$m=512,t=2,p=2$Ukw4d0tmVlI5d0N6$9qMfdjA9Q1ans/O2i0aUhA",
+      "last_login": null,
+      "is_superuser": true,
+      "username": "hwkns",
+      "first_name": "",
+      "last_name": "",
+      "email": "hwkns@jumpcut.to",
+      "is_staff": true,
+      "is_active": true,
+      "date_joined": "2018-06-20T06:24:53.350Z",
+      "is_banned": false,
+      "old_id": null,
+      "user_class": 14,
+      "is_donor": false,
+      "account_status": "enabled",
+      "failed_login_attempts": 0,
+      "announce_key": "ca083d7d-312f-4d65-9e70-a99755866b9d",
+      "torrent_download_key": "c0e359a0-c240-4e7e-9184-832388cb59b7",
+      "avatar_url": "https://git.pinigseu.xyz/uploads/-/system/user/avatar/2/avatar.png",
+      "custom_title": null,
+      "profile_description": null,
+      "staff_notes": null,
+      "irc_key": null,
+      "invited_by": 1,
       "invite_count": 0,
       "bytes_uploaded": 0,
       "bytes_downloaded": 0,
