@@ -5,7 +5,6 @@ from django.db import migrations, models
 
 
 class Migration(migrations.Migration):
-
     initial = True
 
     dependencies = [
@@ -21,18 +20,6 @@ class Migration(migrations.Migration):
             ],
         ),
         migrations.CreateModel(
-            name='TorrentComment',
-            fields=[
-                ('id', models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('created_at', models.DateTimeField(auto_now_add=True)),
-                ('modified_at', models.DateTimeField(auto_now=True)),
-                ('text', models.TextField()),
-            ],
-            options={
-                'abstract': False,
-            },
-        ),
-        migrations.CreateModel(
             name='TorrentFile',
             fields=[
                 ('id', models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
@@ -46,12 +33,14 @@ class Migration(migrations.Migration):
                 ('piece_size_in_bytes', models.BigIntegerField()),
                 ('pieces', models.TextField(help_text='base64 encoded binary pieces data')),
                 ('uploaded_at', models.DateTimeField(auto_now_add=True)),
-                ('is_approved', models.NullBooleanField(choices=[(None, 'Not Yet Moderated'), (True, 'Approved'), (False, 'Work In Progress')])),
+                ('is_approved', models.NullBooleanField(
+                    choices=[(None, 'Not Yet Moderated'), (True, 'Approved'), (False, 'Work In Progress')])),
                 ('last_seeded', models.DateTimeField(null=True)),
                 ('snatch_count', models.IntegerField(default=0)),
             ],
             options={
-                'permissions': (('can_upload', 'Can upload new torrents'), ('can_moderate', 'Can moderate torrents'), ('can_request_reseed', 'Can request a reseed')),
+                'permissions': (('can_upload', 'Can upload new torrents'), ('can_moderate', 'Can moderate torrents'),
+                                ('can_request_reseed', 'Can request a reseed')),
             },
         ),
     ]
