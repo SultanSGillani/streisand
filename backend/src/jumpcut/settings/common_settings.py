@@ -25,6 +25,10 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.dirname(__file__)))
 
 SECRET_KEY = config('SECRET_KEY')
 
+RAVEN_CONFIG = {
+    'dsn': config('SENTRY_DSN', default=None),
+}
+
 DEBUG = config('DEBUG', cast=bool)
 PRODUCTION = config('PRODUCTION', cast=bool)
 TESTING = 'test' in sys.argv

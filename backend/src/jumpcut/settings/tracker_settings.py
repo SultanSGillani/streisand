@@ -15,9 +15,12 @@ DJANGO_APPS = [
 
 THIRD_PARTY_APPS = [
     'knox',
+    'raven.contrib.django.raven_compat',
 ]
 
-MIDDLEWARE = []
+MIDDLEWARE = [
+    'www.middleware.XForwardedForMiddleware',
+]
 
 
 if DEBUG:

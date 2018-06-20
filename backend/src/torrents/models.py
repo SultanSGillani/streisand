@@ -109,7 +109,7 @@ class TorrentFile(models.Model):
 
     @property
     def file_name_for_download(self):
-        if hasattr(self, 'release'):
+        if self.release:
             return self.release.name
         else:
             return self.info_hash

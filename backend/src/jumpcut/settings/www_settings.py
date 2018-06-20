@@ -21,6 +21,7 @@ THIRD_PARTY_APPS = [
     'drf_yasg',
     'jet',
     'knox',
+    'raven.contrib.django.raven_compat',
     'rest_framework',
     'rest_framework_filters',
 ]
@@ -38,6 +39,7 @@ DJANGO_APPS = [
 MIDDLEWARE = [
     'corsheaders.middleware.CorsMiddleware',
     'django.middleware.gzip.GZipMiddleware',
+    'www.middleware.XForwardedForMiddleware',
     'debug_toolbar.middleware.DebugToolbarMiddleware',
     'django.middleware.security.SecurityMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
