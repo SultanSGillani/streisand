@@ -163,13 +163,15 @@ class TorrentFileSerializer(serializers.ModelSerializer):
             )
 
     def validate_file(self, file):
-        self.enforce_extension_blacklist(file['name'])
-        return file
+        if file:
+            self.enforce_extension_blacklist(file['name'])
+            return file
 
     def validate_files(self, files):
-        for file in files:
-            self.enforce_extension_blacklist(file['path_components'][-1])
-        return files
+        if files:
+            for file in files:
+                self.enforce_extension_blacklist(file['path_components'][-1])
+            return files
 
     def create(self, validated_data):
 
