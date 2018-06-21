@@ -42,9 +42,8 @@ services:
     build:
       context: ./frontend
       dockerfile: ./production/Dockerfile
+    env_file: ./frontend/.env
     container_name: react
-    environment:
-      NODE_ENV: production
     volumes:
     - ./frontend/src:/react/src/
     - ./frontend/dist:/react/dist/

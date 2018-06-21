@@ -5,6 +5,7 @@ WORKDIR /react
 
 COPY package.json ./
 COPY gulpfile.js ./
+COPY .env.template ./
 
 RUN npm install
 
