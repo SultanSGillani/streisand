@@ -37,16 +37,6 @@ class Migration(migrations.Migration):
             field=models.ForeignKey(on_delete=django.db.models.deletion.PROTECT, related_name='uploaded_torrents', to=settings.AUTH_USER_MODEL),
         ),
         migrations.AddField(
-            model_name='torrentcomment',
-            name='author',
-            field=models.ForeignKey(null=True, on_delete=django.db.models.deletion.PROTECT, related_name='torrentcomments', to=settings.AUTH_USER_MODEL),
-        ),
-        migrations.AddField(
-            model_name='torrentcomment',
-            name='torrent',
-            field=models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, related_name='comments', to='torrents.TorrentFile'),
-        ),
-        migrations.AddField(
             model_name='reseedrequest',
             name='created_by',
             field=models.ForeignKey(null=True, on_delete=django.db.models.deletion.CASCADE, related_name='reseed_requests', to=settings.AUTH_USER_MODEL),
