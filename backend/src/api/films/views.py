@@ -118,4 +118,3 @@ class FilmViewSet(ModelViewSet):
         if self.request.user.is_staff:
             return AdminFilmSerializer
         return PublicFilmSerializer
-
