@@ -73,6 +73,7 @@ release_develop:
   script:
     - echo "$CONTAINER_COMMIT_IMAGE"
     - cd $FRONTEND_DIR
+    - cp .env.template .env
     - docker build --pull -t $CONTAINER_COMMIT_IMAGE -f $PROD_DOCKER_FILE .
     - cd $BACKEND_DIR
     - cp .env.template .env
