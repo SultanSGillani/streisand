@@ -1,14 +1,15 @@
 # -*- coding: utf-8 -*-
 
-from django_filters.rest_framework import DjangoFilterBackend
-from rest_framework.permissions import IsAdminUser, IsAuthenticated
-from rest_framework.viewsets import ModelViewSet
-from rest_framework import response, status
 from api.pagination import DetailPagination
+from django_filters.rest_framework import DjangoFilterBackend
 from films.models import Film, Collection, CollectionComment, FilmComment
+from rest_framework import response, status
+from rest_framework.permissions import IsAuthenticated
+from rest_framework.viewsets import ModelViewSet
+
 from .filters import FilmFilter, CollectionFilter
-from .serializers import AdminFilmSerializer, CollectionSerializer, FilmCommentSerializer, CollectionCommentSerializer, \
-    PublicFilmSerializer
+from .serializers import AdminFilmSerializer, CollectionSerializer, FilmCommentSerializer, \
+    CollectionCommentSerializer, PublicFilmSerializer
 
 
 class CollectionCommentViewSet(ModelViewSet):
