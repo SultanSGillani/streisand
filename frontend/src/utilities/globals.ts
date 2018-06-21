@@ -1,11 +1,11 @@
 declare const process: {
     env: {
         NODE_ENV: 'development' | 'production';
+        APIURL: string;
     }
 };
 
-const isProd = process.env.NODE_ENV === 'production' || localStorage['app.api.isProd'];
-const baseUrl = isProd ? 'https://api.pinigseu.xyz' : 'http://localhost:8000';
+const baseUrl = localStorage['app.api.url'] || process.env.APIURL;
 
 const defaultPageSize = 25;
 export default {

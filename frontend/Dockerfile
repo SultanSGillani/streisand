@@ -6,11 +6,10 @@ WORKDIR /react
 
 COPY package.json ./
 COPY gulpfile.js ./
+COPY .env ./
 
 RUN npm install
 ENV PATH="/react/node_modules/.bin:$PATH"
-
-ENV NODE_ENV=development
 
 EXPOSE 3000
 
