@@ -2,6 +2,7 @@ const path = require('path');
 const webpack = require('webpack');
 const CleanWebpackPlugin = require('clean-webpack-plugin');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
+const DynamicCdnWebpackPlugin = require('dynamic-cdn-webpack-plugin');
 
 require('dotenv').config()
 
@@ -25,12 +26,8 @@ module.exports = {
         }),
         new HtmlWebpackPlugin({
             template: 'index.html'
-        })
-    ],
-    externals: {
-        'react': 'React',
-        'react-dom': 'ReactDOM',
-        'redux': 'Redux',
-        'reactstrap': 'Reactstrap'
-    }
+        }),
+        new DynamicCdnWebpackPlugin()
+    ]
+
 };

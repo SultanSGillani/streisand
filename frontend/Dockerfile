@@ -5,7 +5,6 @@ FROM node:latest
 WORKDIR /react
 
 COPY package.json ./
-COPY gulpfile.js ./
 COPY .env ./
 
 RUN npm install

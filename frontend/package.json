@@ -1,7 +1,7 @@
 {
-  "name": "jumpcut-web",
+  "name": "jumpcut",
   "version": "0.0.1",
-  "description": "The website",
+  "description": "The Front End",
   "private": true,
   "main": "index.js",
   "sideEffects": false,
@@ -11,13 +11,13 @@
     "dev": "webpack-dev-server --config webpack.dev.js",
     "build": "webpack --config webpack.prod.js"
   },
-  "homepage": "https://git.ronzertnert.me/JumpCut-Front/jumpcut-web",
+  "homepage": "https://git.pinigseu.xyz/jumpcut/jumpcut",
   "bugs": {
-    "url": "https://git.ronzertnert.me/JumpCut-Front/jumpcut-web/issues"
+    "url": "https://git.pinigseu.xyz/jumpcut/jumpcut/issues"
   },
   "repository": {
     "type": "git",
-    "url": "https://git.ronzertnert.me/JumpCut-Front/jumpcut-web.git"
+    "url": "https://git.pinigseu.xyz/jumpcut/jumpcut.git"
   },
   "dependencies": {
     "bbcode-to-react": "^0.2.9",
@@ -47,13 +47,11 @@
     "babel-loader": "^8.0.0-beta.3",
     "clean-webpack-plugin": "^0.1.19",
     "dotenv": "^6.0.0",
+    "dynamic-cdn-webpack-plugin": "^4.0.0-rc.1",
     "express": "^4.15.3",
-    "gulp": "^4.0.0",
-    "gulp-connect": "^5.5.0",
-    "gulp-replace": "^1.0.0",
-    "gutil": "^1.6.4",
     "html-webpack-plugin": "^3.2.0",
     "install": "^0.11.0",
+    "module-to-cdn": "^3.1.2",
     "npm": "^6.0.1",
     "react-hot-loader": "^4.2.0",
     "redux-devtools": "^3.3.2",
