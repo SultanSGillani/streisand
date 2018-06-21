@@ -1,13 +1,17 @@
 # -*- coding: utf-8 -*-
 
 from django_filters.rest_framework import DjangoFilterBackend
-from rest_framework.permissions import IsAdminUser, IsAuthenticated
-from rest_framework.viewsets import ModelViewSet
+
 from rest_framework import response, status
+from rest_framework.permissions import IsAuthenticated
+from rest_framework.viewsets import ModelViewSet
+
 from api.pagination import DetailPagination
 from films.models import Film, Collection, CollectionComment, FilmComment
+
 from .filters import FilmFilter, CollectionFilter
-from .serializers import AdminFilmSerializer, CollectionSerializer, FilmCommentSerializer, CollectionCommentSerializer
+from .serializers import AdminFilmSerializer, CollectionSerializer, FilmCommentSerializer, \
+    CollectionCommentSerializer, PublicFilmSerializer
 
 
 class CollectionCommentViewSet(ModelViewSet):
@@ -96,8 +100,8 @@ class FilmViewSet(ModelViewSet):
     """
     API endpoint that allows films to be viewed or edited.
     """
-    permission_classes = [IsAdminUser]
     serializer_class = AdminFilmSerializer
+    permission_classes = [IsAuthenticated]
     filter_backends = [DjangoFilterBackend]
     filter_class = FilmFilter
     queryset = Film.objects.all().select_related('imdb', ).prefetch_related(
@@ -106,3 +110,11 @@ class FilmViewSet(ModelViewSet):
         'comments',
         'comments__author',
     ).order_by('-id', ).distinct('id')
+
+    # Without the below and updating permissions classes from IsAdminUser to IsAuthenticated,
+    # New users cant see this film.
+
+    def get_serializer_class(self):
+        if self.request.user.is_staff:
+            return AdminFilmSerializer
+        return PublicFilmSerializer
