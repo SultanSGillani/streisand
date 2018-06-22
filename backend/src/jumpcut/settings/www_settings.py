@@ -278,6 +278,7 @@ LOGGING = {
     }
 }
 
+EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
 
 if DEBUG and not TESTING:
     THIRD_PARTY_APPS += [
@@ -285,7 +286,6 @@ if DEBUG and not TESTING:
         'debug_toolbar',
         'django_extensions',
     ]
-    EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
     BANDIT_EMAIL = config('BANDIT_EMAIL', default='')
 
 
