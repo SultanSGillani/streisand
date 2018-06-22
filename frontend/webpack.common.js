@@ -34,8 +34,11 @@ module.exports = {
     externals: {
         'react': 'React',
         'react-dom': 'ReactDOM',
+        'react-redux': 'ReactRedux',
         'redux': 'Redux',
-        'reactstrap': 'Reactstrap'
+        'reactstrap': 'Reactstrap',
+        'react-router': 'ReactRouter',
+
     },
 };
 

@@ -24,7 +24,10 @@ module.exports = merge(common, {
                     {name: 'react', var: 'React', path: `umd/react.${process.env.NODE_ENV}.min.js`},
                     {name: 'react-dom', var: 'ReactDOM', path: `umd/react-dom.${process.env.NODE_ENV}.min.js`},
                     {name: 'redux', var: 'Redux', path: `dist/redux.min.js`},
-                    {name: 'reactstrap', var: 'Reactstrap', path: `dist/reactstrap.full.min.js`}
+                    {name: 'reactstrap', var: 'Reactstrap', path: `dist/reactstrap.full.min.js`},
+                    {name: 'react-redux', var: 'ReactRedux', path: `dist/react-redux.min.js`},
+                    {name: 'react-router', var: 'ReactRouter', path: `umd/react-router.min.js`}
+
                 ],
             }
         })
