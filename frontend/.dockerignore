@@ -1,7 +1,0 @@
-.cache
-.config
-.DS_Store
-.eslintcache
-.eslintrc
-.pm2
-npm-debug.log

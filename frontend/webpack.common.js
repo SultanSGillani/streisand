@@ -24,13 +24,18 @@ module.exports = {
             'process.env.APIURL': JSON.stringify(process.env.APIURL)
         }),
         new HtmlWebpackPlugin({
-            template: 'index.html'
-        })
+            title: 'Pheonix',
+            mobile: true,
+            template: 'index.html',
+            filename: 'index.html',
+            cdnModule: 'react',
+        }),
     ],
     externals: {
         'react': 'React',
         'react-dom': 'ReactDOM',
         'redux': 'Redux',
         'reactstrap': 'Reactstrap'
-    }
+    },
 };
+
