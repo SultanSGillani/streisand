@@ -37,7 +37,7 @@ module.exports = merge(common, {
                     {name: 'redux', var: 'Redux', path: `dist/redux.js`},
                     {name: 'reactstrap', var: 'Reactstrap', path: `dist/reactstrap.full.js`},
                     {name: 'react-redux', var: 'ReactRedux', path: `dist/react-redux.js`},
-                    {name: 'react-router', var: 'ReactRouter', path: `umd/react-router.js`}
+                    {name: 'react-router', var: 'ReactRouter', path: `umd/ReactRouter.js`}
                 ],
             },
             prod: process.env.NODE_ENV === 'production',
