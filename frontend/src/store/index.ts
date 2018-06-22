@@ -12,20 +12,20 @@ import IMediaTypes from '../models/IMediaTypes';
 import ILocationInfo from '../models/ILocationInfo';
 import IForumData from '../models/forums/IForumData';
 import ITorrentItemSet from '../models/ITorrentItemSet';
-import IPagedItemSet, { INestedPage } from '../models/base/IPagedItemSet';
+import { IItemList, IItemPages } from '../models/base/IPagedItemSet';
 
 namespace Store {
-    export type Users = IPagedItemSet<IUser>;
-    export type Films = IPagedItemSet<IFilm> & {
-        search: INestedPage;
+    export type Users = IItemList<IUser>;
+    export type Films = IItemList<IFilm> & {
+        search: IItemPages;
     };
-    export type Wikis = IPagedItemSet<IWiki> & {
+    export type Wikis = IItemList<IWiki> & {
         creating: boolean;
     };
-    export type Invites = IPagedItemSet<IInvite>;
+    export type Invites = IItemList<IInvite>;
     export type News = { latest: number | null; loading: boolean; };
     export type CurrentUser = { id: number | null; loading: boolean; };
-    export type Releases = IPagedItemSet<IRelease>;
+    export type Releases = IItemList<IRelease>;
 
     export type UserSealed = {
         currentUser: CurrentUser;

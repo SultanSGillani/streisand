@@ -6,7 +6,7 @@ import NewsAction from '../../actions/NewsAction';
 import { getPageReducer } from '../utilities/page';
 import { IForumPost } from '../../models/forums/IForumPost';
 import { ForumPostData } from '../../models/forums/IForumData';
-import { INestedPages, INestedPage, IPage } from '../../models/base/IPagedItemSet';
+import { INestedPages, IItemPages, IItemPage } from '../../models/base/IPagedItemSet';
 import ForumThreadAction, { ReceivedThread } from '../../actions/forums/threads/ForumThreadAction';
 
 type Action = ForumAction | NewsAction;
@@ -55,7 +55,7 @@ const pageReducer = getPageReducer('FORUM_THREAD', (action: ReceivedThread) => {
     return action.props.data.posts || [];
 });
 
-type Pages = { [page: number]: IPage };
+type Pages = { [page: number]: IItemPage };
 function processPosts(params: IPostProcessingParams) {
     const { action, count, pageSize } = params;
     const current = params.state[action.props.id] || { count, pageSize, pages: {} };
@@ -63,7 +63,7 @@ function processPosts(params: IPostProcessingParams) {
     const itemSet: Pages = objectAssign({}, current.pages, {
         [action.props.page]: pageReducer(currentPage, params.action)
     });
-    const nestedPage: INestedPage = {
+    const nestedPage: IItemPages = {
         pages: itemSet,
         count: count !== undefined ? count : current.count,
         pageSize: pageSize !== undefined ? pageSize : current.pageSize

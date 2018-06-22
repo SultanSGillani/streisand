@@ -2,23 +2,21 @@
 import { IItemSet } from './ItemSet';
 import ILoadingStatus from './ILoadingStatus';
 
-export interface IPage {
+export interface IItemPage {
     status: ILoadingStatus;
     items: number[];
 }
 
-export interface INestedPage {
+export interface IItemPages {
     count: number;
     pageSize: number;
-    pages: { [page: number]: IPage };
+    pages: { [page: number]: IItemPage };
 }
 
-export interface IPagedItemSet<T> extends IItemSet<T> {
-    list: INestedPage;
+export interface IItemList<T> extends IItemSet<T> {
+    list: IItemPages;
 }
 
 export interface INestedPages {
-    [id: number]: INestedPage;
+    [id: number]: IItemPages;
 }
-
-export default IPagedItemSet;

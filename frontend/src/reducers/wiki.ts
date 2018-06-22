@@ -4,9 +4,8 @@ import Store from '../store';
 import IWiki from '../models/IWiki';
 import Action from '../actions/wikis';
 import { combineReducers } from './helpers';
-import { getPageReducer } from './utilities/page';
 import { INodeMap } from '../models/base/ItemSet';
-import { IPage, INestedPage } from '../models/base/IPagedItemSet';
+import { getPagesReducer } from './utilities/pages';
 import { addLoadedNode, addLoadedNodes } from './utilities/mutations';
 
 type ItemMap = INodeMap<IWiki>;
@@ -27,39 +26,6 @@ function byId(state: ItemMap = {}, action: Action): ItemMap {
     }
 }
 
-const pageReducer = getPageReducer('WIKIS');
-type Pages = { [page: number]: IPage };
-function pages(state: Pages = {}, action: Action): Pages {
-    switch (action.type) {
-        case 'REQUEST_WIKIS':
-        case 'RECEIVED_WIKIS':
-        case 'FAILED_WIKIS':
-        case 'INVALIDATE_WIKIS':
-            const page: IPage = pageReducer(state[action.props.page], action);
-            return objectAssign({}, state, { [action.props.page]: page });
-        default:
-            return state;
-    }
-}
-
-function pageSize(state: number = 0, action: Action): number {
-    switch (action.type) {
-        case 'RECEIVED_WIKIS':
-            return action.props.pageSize;
-        default:
-            return state;
-    }
-}
-
-function count(state: number = 0, action: Action): number {
-    switch (action.type) {
-        case 'RECEIVED_WIKIS':
-            return action.props.count;
-        default:
-            return state;
-    }
-}
-
 function creating(state: boolean = false, action: Action): boolean {
     switch (action.type) {
         case 'REQUEST_NEW_WIKI':
@@ -71,5 +37,6 @@ function creating(state: boolean = false, action: Action): boolean {
             return state;
     }
 }
-const list = combineReducers<INestedPage>({ count, pageSize, pages });
+
+const list = getPagesReducer('WIKIS');
 export default combineReducers<Store.Wikis>({ byId, list, creating });

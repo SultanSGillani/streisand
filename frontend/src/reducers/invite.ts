@@ -4,9 +4,8 @@ import Store from '../store';
 import Action from '../actions/invites';
 import IInvite from '../models/IInvite';
 import { combineReducers } from './helpers';
-import { getPageReducer } from './utilities/page';
 import { INodeMap } from '../models/base/ItemSet';
-import { IPage, INestedPage } from '../models/base/IPagedItemSet';
+import { getPagesReducer } from './utilities/pages';
 import { addLoadedNode, addLoadedNodes } from './utilities/mutations';
 
 type ItemMap = INodeMap<IInvite>;
@@ -25,38 +24,5 @@ function byId(state: ItemMap = {}, action: Action): ItemMap {
     }
 }
 
-const pageReducer = getPageReducer('INVITES');
-type Pages = { [page: number]: IPage };
-function pages(state: Pages = {}, action: Action): Pages {
-    switch (action.type) {
-        case 'REQUEST_INVITES':
-        case 'RECEIVED_INVITES':
-        case 'FAILED_INVITES':
-        case 'INVALIDATE_INVITES':
-            const page: IPage = pageReducer(state[action.props.page], action);
-            return objectAssign({}, state, { [action.props.page]: page });
-        default:
-            return state;
-    }
-}
-
-function pageSize(state: number = 0, action: Action): number {
-    switch (action.type) {
-        case 'RECEIVED_INVITES':
-            return action.props.pageSize;
-        default:
-            return state;
-    }
-}
-
-function count(state: number = 0, action: Action): number {
-    switch (action.type) {
-        case 'RECEIVED_INVITES':
-            return action.props.count;
-        default:
-            return state;
-    }
-}
-
-const list = combineReducers<INestedPage>({ count, pageSize, pages });
+const list = getPagesReducer('INVITES');
 export default combineReducers<Store.Invites>({ byId, list });

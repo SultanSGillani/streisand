@@ -1,11 +1,11 @@
 import IItemNode from '../models/base/IItemNode';
 import { INodeMap } from '../models/base/ItemSet';
-import { IPage } from '../models/base/IPagedItemSet';
+import { IItemPage } from '../models/base/IPagedItemSet';
 import { defaultStatus } from '../models/base/ILoadingStatus';
 
 export interface IGetItemsProps<T> {
     page: number;
-    pages: { [page: number]: IPage };
+    pages: { [page: number]: IItemPage };
     byId: { [id: number]: T};
 }
 
@@ -27,7 +27,7 @@ export function getItems<T>(props: IGetItemsProps<T>): T[] {
 
 export interface IGetNodeItemsProps<T> {
     page: number;
-    pages: { [page: number]: IPage };
+    pages: { [page: number]: IItemPage };
     byId: INodeMap<T>;
 }
 

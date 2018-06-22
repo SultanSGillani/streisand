@@ -3,10 +3,10 @@ import * as objectAssign from 'object-assign';
 import Action from '../actions/torrents';
 import ITorrent from '../models/ITorrent';
 import { combineReducers } from './helpers';
-import { getPageReducer } from './utilities/page';
 import { INodeMap } from '../models/base/ItemSet';
+import { getPagesReducer } from './utilities/pages';
 import ITorrentItemSet from '../models/ITorrentItemSet';
-import { IPage, INestedPage } from '../models/base/IPagedItemSet';
+import { IItemPages } from '../models/base/IPagedItemSet';
 import { addLoadedNode, addLoadedNodes, markLoading, markFailed } from './utilities/mutations';
 
 type ItemMap = INodeMap<ITorrent>;
@@ -27,57 +27,21 @@ function byId(state: ItemMap = {}, action: Action): ItemMap {
     }
 }
 
-const pageReducer = getPageReducer('DETACHED_TORRENTS');
-type Pages = { [page: number]: IPage };
-function pages(state: Pages = {}, action: Action): Pages {
-    switch (action.type) {
-        case 'REQUEST_DETACHED_TORRENTS':
-        case 'RECEIVED_DETACHED_TORRENTS':
-        case 'FAILED_DETACHED_TORRENTS':
-        case 'INVALIDATE_DETACHED_TORRENTS':
-            const page: IPage = pageReducer(state[action.props.page], action);
-            return objectAssign({}, state, { [action.props.page]: page });
-        default:
-            return state;
-    }
-}
-
-const filmPageReducer = getPageReducer('FILM_TORRENTS');
-type Torrents = { [id: number]: { [page: number]: IPage } };
+const filmPagesReducer = getPagesReducer('FILM_TORRENTS');
+type Torrents = { [id: number]: IItemPages };
 function byFilmId(state: Torrents = {}, action: Action): Torrents {
     switch (action.type) {
         case 'REQUEST_FILM_TORRENTS':
         case 'RECEIVED_FILM_TORRENTS':
         case 'FAILED_FILM_TORRENTS':
         case 'INVALIDATE_FILM_TORRENTS':
-            const pages = state[action.props.id] || {};
-            const page: IPage = filmPageReducer(pages[action.props.page], action);
-            const newPages = objectAssign({}, pages, { [action.props.page]: page });
-            return objectAssign({}, state, { [action.props.id]: newPages });
+            const currentItemSet = state[action.props.id];
+            const newItemSet = filmPagesReducer(currentItemSet, action);
+            return objectAssign({}, state, { [action.props.id]: newItemSet });
         default:
             return state;
     }
 }
 
-function pageSize(state: number = 0, action: Action): number {
-    switch (action.type) {
-        // TODO: Split this up
-        case 'RECEIVED_DETACHED_TORRENTS':
-        case 'RECEIVED_FILM_TORRENTS':
-            return action.props.pageSize;
-        default:
-            return state;
-    }
-}
-
-function count(state: number = 0, action: Action): number {
-    switch (action.type) {
-        case 'RECEIVED_DETACHED_TORRENTS':
-            return action.props.count;
-        default:
-            return state;
-    }
-}
-
-const detached = combineReducers<INestedPage>({ count, pageSize, pages });
+const detached = getPagesReducer('DETACHED_TORRENTS');
 export default combineReducers<ITorrentItemSet>({ byId, byFilmId, detached });

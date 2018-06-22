@@ -7,7 +7,7 @@ import auth from './auth';
 import wiki from './wiki';
 import invite from './invite';
 import forums from './forums';
-import film from './films/film';
+import film from './film';
 import torrent from './torrent';
 import user from './users/user';
 import release from './release';

@@ -1,15 +1,13 @@
 import * as objectAssign from 'object-assign';
 
-import Store from '../../store';
-import IFilm from '../../models/IFilm';
-import FilmAction from '../../actions/films';
-import { combineReducers } from '../helpers';
-import { INodeMap } from '../../models/base/ItemSet';
-import ReleasesAction from '../../actions/releases/ReleasesAction';
-import { addLoadedNode, addLoadedNodes, markLoading, markFailed } from '../utilities/mutations';
-
-import list from './list';
-import search from './search';
+import Store from '../store';
+import IFilm from '../models/IFilm';
+import FilmAction from '../actions/films';
+import { combineReducers } from './helpers';
+import { INodeMap } from '../models/base/ItemSet';
+import { getPagesReducer } from './utilities/pages';
+import ReleasesAction from '../actions/releases/ReleasesAction';
+import { addLoadedNode, addLoadedNodes, markLoading, markFailed } from './utilities/mutations';
 
 type Action = FilmAction | ReleasesAction;
 
@@ -36,4 +34,6 @@ function byId(state: ItemMap = {}, action: Action): ItemMap {
     }
 }
 
+const list = getPagesReducer('FILMS');
+const search = getPagesReducer('FILM_SEARCH');
 export default combineReducers<Store.Films>({ byId, list, search });
