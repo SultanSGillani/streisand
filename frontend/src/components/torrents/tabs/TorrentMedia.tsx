@@ -29,12 +29,6 @@ export default function TorrentMedia(props: ITorrentMediaProps) {
             <Col sm="6">
                 <Card body>
                     <Table size="sm" className="table-borderless mb-0" striped>
-                        <thead>
-                            <tr>
-                                <th></th>
-                                <th></th>
-                            </tr>
-                        </thead>
                         <tbody>
                             {info && <InfoRow label="Runtime" value={info.runtime} />}
                             <InfoRow label="Codec" value={release.codec} />

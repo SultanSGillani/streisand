@@ -9,7 +9,7 @@ export interface ITabHeaderProps {
 }
 
 export default function TabHeader(props: ITabHeaderProps) {
-    const classes = props.activeTab === props.id ? 'active' : '';
+    const classes = 'px-2 ' + (props.activeTab === props.id ? 'active' : '');
     const onClick = () => { props.setActiveTab(props.id); };
     return (
         <NavItem key={props.id}>
