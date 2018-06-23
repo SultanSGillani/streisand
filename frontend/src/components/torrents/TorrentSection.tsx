@@ -21,7 +21,7 @@ export default function TorrentSection(props: Props) {
     });
 
     return (
-        <Table className="table">
+        <Table>
             <thead>
                 <tr>
                     <th>Torrent</th>

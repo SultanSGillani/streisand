@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { Card, CardTitle, CardText } from 'reactstrap';
+import { Card, CardTitle, CardText, Row, Col } from 'reactstrap';
 
 import IRelease from '../../../models/IRelease';
 
@@ -10,9 +10,13 @@ export interface ITorrentInfoProps {
 export default function TorrentInfo(props: ITorrentInfoProps) {
     const { release } = props;
     return (
-        <Card body style={{ maxHeight: '250px', overflowY: 'scroll' }}>
-            <CardTitle>Release Information (nfo)</CardTitle>
-            <CardText>{release.nfo}</CardText>
-        </Card>
+        <Row>
+            <Col>
+                <Card body style={{ maxHeight: '250px', overflowY: 'scroll' }}>
+                    <CardTitle>Release Information (nfo)</CardTitle>
+                    <CardText>{release.nfo}</CardText>
+                </Card>
+            </Col>
+        </Row>
     );
 }

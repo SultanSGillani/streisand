@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { Collapse, CardBody, Card, Nav, TabContent, TabPane } from 'reactstrap';
+import { Collapse, Nav, TabContent, TabPane } from 'reactstrap';
 
 import IUser from '../../models/IUser';
 import { ScreenSize } from '../../models/IDeviceInfo';
@@ -39,31 +39,29 @@ export default class TorrentInfoRow extends React.Component<Props, State> {
         return (
             <tr>
                 <td colSpan={4} className="p-0">
-                    <Collapse isOpen={isOpen}>
-                        <Card>
-                            <CardBody className="pt-0">
-                                <Nav tabs>
-                                    <TabHeader id="general" title="General" activeTab={activeTab} setActiveTab={setActiveTab} />
-                                    <TabHeader id="files" title="Files" activeTab={activeTab} setActiveTab={setActiveTab} />
-                                    <TabHeader id="nfo" title="NFO" activeTab={activeTab} setActiveTab={setActiveTab} />
-                                    <TabHeader id="media" title="Media" activeTab={activeTab} setActiveTab={setActiveTab} />
-                                </Nav>
-                                <TabContent activeTab={activeTab}>
-                                    <TabPane tabId="general" id="general">
-                                        <GeneralContent release={release} uploader={uploader} torrent={torrent} />
-                                    </TabPane>
-                                    <TabPane tabId="files" id="files">
-                                        <TorrentFiles torrent={torrent} />
-                                    </TabPane>
-                                    <TabPane tabId="nfo" id="nfo">
-                                        <TorrentInfo release={release} />
-                                    </TabPane>
-                                    <TabPane tabId="media" id="media">
-                                        <TorrentMedia release={release} />
-                                    </TabPane>
-                                </TabContent>
-                            </CardBody>
-                        </Card>
+                    <Collapse isOpen={isOpen} className="row no-gutters mb-2">
+                        <div className="col-sm-12">
+                            <Nav tabs>
+                                <TabHeader id="general" title="General" activeTab={activeTab} setActiveTab={setActiveTab} />
+                                <TabHeader id="files" title="Files" activeTab={activeTab} setActiveTab={setActiveTab} />
+                                <TabHeader id="nfo" title="NFO" activeTab={activeTab} setActiveTab={setActiveTab} />
+                                <TabHeader id="media" title="Media" activeTab={activeTab} setActiveTab={setActiveTab} />
+                            </Nav>
+                            <TabContent activeTab={activeTab}>
+                                <TabPane tabId="general" id="general">
+                                    <GeneralContent release={release} uploader={uploader} torrent={torrent} />
+                                </TabPane>
+                                <TabPane tabId="files" id="files">
+                                    <TorrentFiles torrent={torrent} />
+                                </TabPane>
+                                <TabPane tabId="nfo" id="nfo">
+                                    <TorrentInfo release={release} />
+                                </TabPane>
+                                <TabPane tabId="media" id="media">
+                                    <TorrentMedia release={release} />
+                                </TabPane>
+                            </TabContent>
+                        </div>
                     </Collapse>
                 </td>
             </tr>

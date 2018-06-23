@@ -1,5 +1,4 @@
 import * as React from 'react';
-import { Button } from 'reactstrap';
 import { connect } from 'react-redux';
 
 import Store from '../../store';
@@ -55,7 +54,7 @@ class TorrentRowComponent extends React.Component<CombinedProps, State> {
         return (
             <>
                 <tr>
-                    <td className="align-middle"><Button color="link" onClick={toggle} title={name}>{name}</Button></td>
+                    <td className="align-middle"><a href="javascript:void 0" color="link" onClick={toggle} title={name}>{name}</a></td>
                     <td className="align-middle">{torrent.snatchCount}</td>
                     <td className="align-middle"><DataSize size={torrent.totalSizeInBytes} /></td>
                     <TorrentActionCell film={film} torrent={torrent} />

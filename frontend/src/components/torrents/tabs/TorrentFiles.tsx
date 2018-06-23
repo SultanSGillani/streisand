@@ -19,12 +19,13 @@ export default function TorrentFiles(props: ITorrentFilesProps) {
         );
     });
     return (
-        <Card body>
+        <Card body className="p-1 p-sm-3">
+            {torrent.directoryName && <span><small>(/{torrent.directoryName}/)</small></span>}
             <Table size="sm" className="table-borderless mb-0" striped>
                 <thead>
                     <tr>
-                        <th>Path {torrent.directoryName && <span><small>(/{torrent.directoryName}/)</small></span>}</th>
-                        <th>Size</th>
+                        <th>Path</th>
+                        <th style={{ minWidth: '45px' }}>Size</th>
                     </tr>
                 </thead>
                 <tbody>
