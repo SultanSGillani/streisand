@@ -4,8 +4,8 @@ add_header X-Content-Type-Options nosniff;
 add_header X-Frame-Options SAMEORIGIN;
 add_header X-XSS-Protection "1; mode=block";
 add_header X-Robots-Tag none;
-ssl_certificate /etc/letsencrypt/live/pinigseu.xyz/fullchain.pem; # managed by Certbot
-ssl_certificate_key /etc/letsencrypt/live/pinigseu.xyz/privkey.pem; # managed by Certbot
+ssl_certificate /etc/nginx/ssl/fullchain.pem; # managed by Certbot
+ssl_certificate_key /etc/nginx/ssl/privkey.pem; # managed by Certbot
 ssl_ciphers ECDHE-RSA-AES256-GCM-SHA512:DHE-RSA-AES256-GCM-SHA512:ECDHE-RSA-AES256-GCM-SHA384:DHE-RSA-AES256-GCM-SHA384:ECDHE-RSA-AES256-SHA384;
 ssl_dhparam /etc/nginx/ssl/dhparam.pem;
 ssl_ecdh_curve secp384r1;

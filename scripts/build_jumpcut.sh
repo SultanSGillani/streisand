@@ -8,15 +8,12 @@ cd "${0%/*}"
 cd ..
 
 # Reformat config files for nginx
-./config/nginxfmt.py ./config/nginx.conf ./backend/config/jumpcut.conf ./backend/config/tracker.conf ./frontend/config/frontend.conf ./config/uwsgi_params ./config/ssl/ssl_params
+./nginx/nginxfmt.py ./nginx/nginx.conf ./nginx/conf.d/jumpcut.conf ./nginx/conf.d/tracker.conf ./nginx/conf.d/frontend.conf ./nginx/uwsgi_params ./nginx/ssl/ssl_params
 
-# Copy all files in config for nginx bare metal
-sudo cp ./config/uwsgi_params /etc/nginx/
-sudo cp ./config/nginx.conf /etc/nginx/
-sudo cp ./config/ssl/ssl_params /etc/nginx/ssl/
-sudo cp ./backend/config/jumpcut.conf /etc/nginx/conf.d/
-sudo cp ./backend/config/tracker.conf /etc/nginx/conf.d/
-sudo cp ./frontend/config/frontend.conf /etc/nginx/conf.d/
+# Copy ssl certs
+sudo cp /etc/letsencrypt/live/pinigseu.xyz/fullchain.pem /code/jumpcut/nginx/ssl/fullchain.pem
+sudo cp /etc/letsencrypt/live/pinigseu.xyz/privkey.pem /code/jumpcut/nginx/ssl/privkey.pem
+sudo cp /etc/nginx/ssl/dhparam.pem /code/jumpcut/nginx/ssl/dhparam.pem
 
 # Build production
 sudo docker-compose -f docker-compose.production.yml -f docker-compose.production.yml build
