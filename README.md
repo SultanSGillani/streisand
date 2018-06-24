@@ -1,6 +1,6 @@
-[![pipeline status](https://git.pinigseu.xyz/jumpcut/jumpcut/badges/master/pipeline.svg)](https://git.pinigseu.xyz/jumpcut/jumpcut/commits/master)
-[![coverage Report](https://git.pinigseu.xyz/jumpcut/jumpcut/badges/master/coverage.svg)](https://git.pinigseu.xyz/jumpcut/jumpcut/commits/master)
-[![JumpCut](https://img.shields.io/badge/JumpCut-ComingSoon-blue.svg)](https://git.pinigseu.xyz/jumpcut/jumpcut/commits/master)
+[![pipeline status](https://gitlab.pinigseu.xyz/jumpcut/jumpcut/badges/master/pipeline.svg)](https://gitlab.pinigseu.xyz/jumpcut/jumpcut/commits/master)
+[![coverage Report](https://gitlab.pinigseu.xyz/jumpcut/jumpcut/badges/master/coverage.svg)](https://gitlab.pinigseu.xyz/jumpcut/jumpcut/commits/master)
+[![JumpCut](https://img.shields.io/badge/JumpCut-ComingSoon-blue.svg)](https://gitlab.pinigseu.xyz/jumpcut/jumpcut/commits/master)
 
 ![JumpCut](https://i.imgur.com/8UqIWFI.png)
 
