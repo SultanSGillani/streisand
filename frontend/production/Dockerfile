@@ -1,5 +1,5 @@
 # Dockerfile for production
-FROM node:latest
+FROM node:alpine
 MAINTAINER jumpcut
 WORKDIR /react
 

@@ -1,9 +1,8 @@
-FROM python:3.6
+FROM python:3.6-alpine3.7
+
+MAINTAINER JumpCut
 ENV PYTHONUNBUFFERED 1
-RUN apt-get update \
-    && apt-get install -y --no-install-recommends \
-        postgresql-client netcat screen vim screen libpq-dev \
-    && rm -rf /var/lib/apt/lists/*
+ENV PYTHONPATH /code/src
 
 RUN mkdir /code
 
@@ -11,19 +10,32 @@ WORKDIR /code
 
 COPY ./requirements.txt ./
 COPY ./testing_requirements.txt ./
+COPY ./uwsgi ./
 
-RUN pip install -r requirements.txt > /dev/null
-RUN pip install -r testing_requirements.txt > /dev/null
-
-COPY ./uwsgi /code/uwsgi
+RUN apk add --no-cache jpeg-dev zlib-dev bash libffi-dev postgresql-dev libmemcached-dev zlib-dev pcre-dev \
+&& addgroup -S nginx \
+&& adduser -D -S -h /var/cache/nginx -s /sbin/nologin -G nginx nginx \
+&& apk add --no-cache --virtual .build-deps \
+       build-base \
+       python3-dev \
+       libffi-dev \
+       linux-headers \
+       gcc \
+       libc-dev \
+       libffi-dev \
+       bash git \
+       mariadb-dev \
+       musl-dev \
+&& pip install pip --upgrade \
+&& pip install -r requirements.txt \
+&& pip install -r testing_requirements.txt \
+&& apk del .build-deps
 
 COPY . .
-
-RUN python /code/src/manage.py collectstatic --noinput
+ENV PYTHONPATH /code/src
 
 EXPOSE 8000 7070
-ENV PYTHONPATH /code/src
 ENV DJANGO_SETTINGS_MODULE jumpcut.settings.www_settings
 
-CMD ["/usr/local/bin/uwsgi", "--emperor", "/code/uwsgi", "--die-on-term"]
+CMD ["uwsgi", "--emperor", "/code/uwsgi", "--die-on-term"]
 

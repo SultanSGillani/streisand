@@ -26,7 +26,7 @@ services:
     volumes:
     - ./frontend/src:/react/src
   postgres:
-    image: postgres:latest
+    image: postgres:alpine
     container_name: db_dev
     volumes:
     - pgdata:/var/lib/postgresql/data/
@@ -35,10 +35,11 @@ services:
     env_file: ./.env
     restart: always
   redis:
-    image: redis:latest
+    image: redis:alpine
     container_name: redis_dev
   tracker:
-    build: backend
+    build:
+      context: ./backend
     container_name: tracker_dev
     command: python src/manage.py runserver_plus 0.0.0.0:7070
     depends_on:
