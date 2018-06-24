@@ -4,7 +4,7 @@ version: '3'
 
 services:
   api:
-    image: registry.pinigseu.xyz/jumpcut/jumpcut:latest
+    image: gitlab.pinigseu.xyz:4567/jumpcut/jumpcut:latest
     build:
       context: ./backend
       dockerfile: ./production/Dockerfile
@@ -38,7 +38,7 @@ services:
     - ./backend/src/static:/usr/share/nginx/src/static/
     - ./frontend/dist:/usr/share/nginx/html/
   celery:
-      image: registry.pinigseu.xyz/jumpcut/jumpcut:latest
+      image: gitlab.pinigseu.xyz:4567/jumpcut/jumpcut:latest
       build:
         context: ./backend
         dockerfile: ./production/Dockerfile
