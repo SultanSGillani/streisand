@@ -23,9 +23,3 @@ sudo docker-compose -f docker-compose.production.yml -f docker-compose.productio
 
 # Migrations
 ./prod.sh m migrate
-
-# Test nginx config files
-sudo nginx -t
-
-# Reload nginx
-sudo nginx -s reload
