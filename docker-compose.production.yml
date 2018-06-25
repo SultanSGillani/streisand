@@ -18,25 +18,21 @@ services:
     - 8000:8000
     restart: always
     volumes:
-    - ./backend:/code/
-    - ./backend/src/static:/code/src/static/
-    - ./frontend/dist:/code/src/static/frontend/dist/
-  nginx:
+    - ./backend/src:/code/src/
+  nginx_react:
     build:
-      context: ./nginx
-      dockerfile: ./Dockerfile
-    container_name: nginx
+      context: ./frontend
+      dockerfile: ./production/Dockerfile
+    container_name: nginx_react
     depends_on:
     - api
-    - react
+    env_file: ./frontend/.env
     ports:
     - 80:80
     - 443:443
     restart: always
     volumes:
-    - ./backend:/usr/share/nginx/
-    - ./backend/src/static:/usr/share/nginx/src/static/
-    - ./frontend/dist:/usr/share/nginx/html/
+    - ./backend/src:/usr/share/nginx/src/
   celery:
       image: gitlab.pinigseu.xyz:4567/jumpcut/jumpcut:latest
       build:
@@ -54,15 +50,6 @@ services:
       depends_on:
       - postgres
       - redis
-  react:
-    build:
-      context: ./frontend
-      dockerfile: ./production/Dockerfile
-    env_file: ./frontend/.env
-    container_name: react
-    volumes:
-    - ./frontend/src:/react/src/
-    - ./frontend/dist:/react/dist/
   postgres:
     image: postgres:alpine
     container_name: db
@@ -78,3 +65,4 @@ services:
     restart: always
 volumes:
   pgdata:
+  
