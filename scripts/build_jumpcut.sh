@@ -7,9 +7,6 @@ set -x
 cd "${0%/*}"
 cd ..
 
-# Clean Docker Images
-./scripts/docker-clean.sh
-
 # Reformat config files for nginx
 ./frontend/nginx/nginxfmt.py ./frontend/nginx/nginx.conf ./frontend/nginx/conf.d/jumpcut.conf ./frontend/nginx/conf.d/tracker.conf ./frontend/nginx/conf.d/frontend.conf ./frontend/nginx/uwsgi_params ./frontend/nginx/ssl/ssl_params
 
