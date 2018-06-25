@@ -4,6 +4,7 @@ from uuid import uuid4
 
 from django.conf import settings
 from django.db import models
+from django.utils.timezone import now
 
 from users.models import User
 
@@ -34,6 +35,10 @@ class Invite(models.Model):
         return settings.INVITE_URL_TEMPLATE.format(
             invite_key=self.key,
         )
+
+    @property
+    def is_valid(self):
+        return self.expires_at > now()
 
     @property
     def expires_at(self):

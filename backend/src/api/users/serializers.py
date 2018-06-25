@@ -10,13 +10,7 @@ from rest_framework import serializers, validators
 from api.mixins import AllowFieldLimitingMixin
 from api.validators import invite_key_validator
 from invites.models import Invite
-from users.models import User, UserIPAddress, UserTorrentDownloadKey
-
-
-class UserTorrentDownloadKeySerializer(serializers.ModelSerializer):
-    class Meta:
-        model = UserTorrentDownloadKey
-        fields = ('id', 'user', 'issued_at', 'revoked_at', 'revocation_notes')
+from users.models import User, UserIPAddress
 
 
 class ChangePasswordSerializer(serializers.Serializer):
@@ -38,7 +32,14 @@ class UserIPSerializer(AllowFieldLimitingMixin, serializers.ModelSerializer):
 
     class Meta:
         model = UserIPAddress
-        fields = ('id', 'user', 'first_used', 'last_used', 'ip_address')
+        fields = (
+            'id',
+            'user',
+            'first_used',
+            'last_used',
+            'used_with',
+            'ip_address',
+        )
 
     def get_ip_address(self, obj):
         if obj.user.user_class.is_staff:
