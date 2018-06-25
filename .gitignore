@@ -1,5 +1,6 @@
+# Django/Project Files
 backend/frontend_out
-backend/src/staticfiles
+backend/src/static
 backend/.env
 backend/pipcache/
 *.env
