@@ -35,7 +35,6 @@ COPY . .
 ENV PYTHONPATH /code/src
 
 EXPOSE 8000 7070
-ENV DJANGO_SETTINGS_MODULE jumpcut.settings.www_settings
 
 RUN python /code/src/manage.py collectstatic --noinput
 
