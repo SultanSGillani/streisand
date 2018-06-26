@@ -1,4 +1,5 @@
 import * as React from 'react';
+import { Link } from 'react-router';
 import { connect } from 'react-redux';
 
 import Store from '../../store';
@@ -15,6 +16,7 @@ import { ScreenSize } from '../../models/IDeviceInfo';
 export type Props = {
     film: IFilm;
     torrent: ITorrent;
+    startOpen: boolean;
 };
 
 type State = {
@@ -36,7 +38,7 @@ class TorrentRowComponent extends React.Component<CombinedProps, State> {
         super(props);
 
         this.state = {
-            isOpen: false,
+            isOpen: props.startOpen,
             activeTab: 'general'
         };
     }
@@ -51,10 +53,13 @@ class TorrentRowComponent extends React.Component<CombinedProps, State> {
         const name = getTorrentName(release);
         const toggle = () => this.setState({ isOpen: !this.state.isOpen });
         const secondRowProps = { torrent, release, uploader, isOpen, screenSize };
+        const link = `/film/${film.id}/${torrent.id}`;
         return (
             <>
                 <tr>
-                    <td className="align-middle"><a href="javascript:void 0" color="link" onClick={toggle} title={name}>{name}</a></td>
+                    <td className="align-middle">
+                        <Link to={link} title={name} onClick={toggle}>{name}</Link>
+                    </td>
                     <td className="align-middle">{torrent.snatchCount}</td>
                     <td className="align-middle"><DataSize size={torrent.totalSizeInBytes} /></td>
                     <TorrentActionCell film={film} torrent={torrent} />

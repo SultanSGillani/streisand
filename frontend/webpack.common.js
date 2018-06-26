@@ -25,10 +25,9 @@ module.exports = {
         }),
         new HtmlWebpackPlugin({
             title: 'Pheonix',
-            mobile: true,
             template: 'index.html',
             filename: 'index.html',
-            cdnModule: 'react',
+            cdnModule: 'react'
         }),
     ],
     externals: {
@@ -37,8 +36,7 @@ module.exports = {
         'react-redux': 'ReactRedux',
         'redux': 'Redux',
         'reactstrap': 'Reactstrap',
-        'react-router': 'ReactRouter',
-
+        'react-router': 'ReactRouter'
     },
 };
 

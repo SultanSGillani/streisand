@@ -27,7 +27,6 @@ module.exports = merge(common, {
                     {name: 'reactstrap', var: 'Reactstrap', path: `dist/reactstrap.full.min.js`},
                     {name: 'react-redux', var: 'ReactRedux', path: `dist/react-redux.min.js`},
                     {name: 'react-router', var: 'ReactRouter', path: `umd/ReactRouter.min.js`}
-
                 ],
             }
         })

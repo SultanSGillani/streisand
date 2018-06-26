@@ -7,6 +7,7 @@ import ITorrent from '../../models/ITorrent';
 
 export type Props = {
     film: IFilm;
+    selected: number;
     torrents: ITorrent[];
 };
 
@@ -17,7 +18,8 @@ export default function TorrentSection(props: Props) {
     }
 
     const rows = torrents.map((torrent: ITorrent) => {
-        return (<TorrentRow film={film} torrent={torrent} key={torrent.id} />);
+        const startOpen = torrent.id === props.selected;
+        return (<TorrentRow film={film} torrent={torrent} key={torrent.id} startOpen={startOpen} />);
     });
 
     return (

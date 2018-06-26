@@ -13,7 +13,7 @@ export default function TabHeader(props: ITabHeaderProps) {
     const onClick = () => { props.setActiveTab(props.id); };
     return (
         <NavItem key={props.id}>
-            <NavLink className={classes} onClick={onClick} href={`#${props.id}`}>
+            <NavLink className={classes} onClick={onClick} href="javascript:void 0">
                 {props.title}
             </NavLink>
         </NavItem>
