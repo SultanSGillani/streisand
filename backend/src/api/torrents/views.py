@@ -94,15 +94,11 @@ class TorrentFileViewSet(ModelViewSet):
     queryset = TorrentFile.objects.select_related(
         'release__film',
         'release__mediainfo',
-        'release__source_media',
         'uploaded_by',
         'moderated_by',
     ).order_by(
         'release__film_id',
-        'release__source_media_id',
-    ).distinct(
-        'release__film_id',
-        'release__source_media_id',
+        'release_id',
     )
 
 

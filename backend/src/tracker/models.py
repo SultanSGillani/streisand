@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
 
+from binascii import b2a_base64
 from uuid import uuid4
 
 from django.db import models
@@ -53,10 +54,10 @@ class Peer(models.Model):
     port = models.IntegerField(null=False)
     peer_id = models.CharField(max_length=40, null=False)
     user_agent = models.TextField()
-    compact_bytes_repr = models.BinaryField(
+    compact_representation = models.CharField(
         null=False,
-        help_text="The compact representation of this peer, sent as "
-                  "bytes to announcing torrent clients"
+        max_length=12,
+        help_text="base64 encoded compact representation, sent as bytes to announcing torrent clients"
     )
 
     # These are checked by the tracker when the client announces again, to decide
@@ -92,7 +93,7 @@ class Peer(models.Model):
             # Compute the compact byte representation once, upon creation
             compact_ip = bytes([int(s) for s in self.ip_address.split('.')])
             compact_port = self.port.to_bytes(2, byteorder='big')
-            self.compact_bytes_repr = compact_ip + compact_port
+            self.compact_representation = b2a_base64(compact_ip + compact_port).decode('ascii')
 
         return super().save(*args, **kwargs)
 
