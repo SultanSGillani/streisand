@@ -1,10 +1,11 @@
 # Django/Project Files
-backend/frontend_out
-backend/src/static
-backend/.env
-backend/pipcache/
-*.env
+frontend_out/
+static/*
+!static/.gitkeep
+media/*
+!media/.gitkeep
 pipcache/
+*.env
 *.save
 *.pem
 
