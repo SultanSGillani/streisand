@@ -224,6 +224,9 @@ STATICFILES_FINDERS = (
 MEDIA_URL = '/media/'
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 
+INVITE_URL_TEMPLATE = urljoin(SITE_URL, 'register/{invite_key}')
+INVITE_TTL = timedelta(days=3)
+
 ITEMS_PER_PAGE = 50
 
 LOGGING = {
