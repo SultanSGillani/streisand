@@ -3,7 +3,6 @@
 from django.db.utils import IntegrityError
 from django.utils import timezone
 from rest_framework import serializers
-from rest_framework.validators import UniqueTogetherValidator
 
 from api.exceptions import AlreadyExistsException
 from releases.models import Release
@@ -16,6 +15,9 @@ from ..users.serializers import DisplayUserSerializer
 
 
 class TorrentStatSerializer(serializers.ModelSerializer):
+
+    user = DisplayUserSerializer(read_only=True)
+
     class Meta:
         model = TorrentStats
         fields = (
@@ -28,16 +30,12 @@ class TorrentStatSerializer(serializers.ModelSerializer):
             'snatch_count',
             'last_seeded',
             'seed_time',
+            'seed_time_remaining',
             'ratio',
             'hnr_countdown_started_at',
             'is_hit_and_run',
         )
-        validators = [
-            UniqueTogetherValidator(
-                queryset=TorrentStats.objects.all(),
-                fields=('user', 'torrent')
-            )
-        ]
+        read_only_fields = fields
 
 
 class TorrentRequestSerializer(serializers.ModelSerializer):
