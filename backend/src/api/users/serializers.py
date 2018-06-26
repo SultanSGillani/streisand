@@ -89,7 +89,6 @@ class AdminUserSerializer(AllowFieldLimitingMixin, serializers.ModelSerializer):
             'invited_by',
             'watch_queue',
             'user_permissions',
-            'torrents',
         )
 
 
@@ -121,7 +120,6 @@ class CurrentUserSerializer(AdminUserSerializer):
             'irc_key',
             'invited_by',
             'watch_queue',
-            'torrents',
         )
 
         read_only_fields = (
@@ -141,7 +139,6 @@ class CurrentUserSerializer(AdminUserSerializer):
             'announce_key',
             'announce_url',
             'custom_title',
-            'torrents',
         )
 
 
