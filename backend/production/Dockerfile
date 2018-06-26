@@ -12,7 +12,14 @@ COPY ./requirements.txt ./
 COPY ./testing_requirements.txt ./
 COPY ./uwsgi ./
 
-RUN apk add --no-cache jpeg-dev zlib-dev bash libffi-dev postgresql-dev libmemcached-dev zlib-dev pcre-dev \
+RUN apk add --update --no-cache jpeg-dev \
+zlib-dev bash \
+libffi-dev \
+postgresql-dev \
+libmemcached-dev \
+zlib-dev \
+pcre-dev \
+mariadb-client-libs \
 && addgroup -S nginx \
 && adduser -D -S -h /var/cache/nginx -s /sbin/nologin -G nginx nginx \
 && apk add --no-cache --virtual .build-deps \
