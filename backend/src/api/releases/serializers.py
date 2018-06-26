@@ -26,7 +26,7 @@ class ReleaseSerializer(serializers.ModelSerializer):
     description = serializers.CharField()
     release_name = serializers.CharField(source='name')
     release_group = serializers.CharField(source='group')
-    cut = serializers.CharField()
+    cut = serializers.CharField(required=False, allow_null=True)
     codec = serializers.CharField(source='codec_id')
     container = serializers.CharField(source='container_id')
     resolution = serializers.CharField(source='resolution_id')
