@@ -45,6 +45,7 @@ services:
     depends_on:
     - postgres
     - redis
+    - api
     env_file: ./.env
     environment:
       DJANGO_SETTINGS_MODULE: jumpcut.settings.tracker_settings
