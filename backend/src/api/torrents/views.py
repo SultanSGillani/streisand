@@ -4,7 +4,7 @@ from django_filters.rest_framework import DjangoFilterBackend
 from djangorestframework_camel_case.parser import CamelCaseJSONParser
 from rest_framework import mixins
 from rest_framework.permissions import IsAuthenticated, IsAdminUser
-from rest_framework.viewsets import ModelViewSet, GenericViewSet
+from rest_framework.viewsets import ModelViewSet, ReadOnlyModelViewSet, GenericViewSet
 
 from api.throttling import DOSDefenseThrottle
 from torrent_requests.models import TorrentRequest
@@ -15,7 +15,7 @@ from .filters import TorrentFilter
 from .serializers import TorrentFileSerializer, TorrentStatSerializer, TorrentRequestSerializer, ReseedRequestSerializer
 
 
-class TorrentStatViewSet(ModelViewSet):
+class TorrentStatsViewSet(ReadOnlyModelViewSet):
     permission_classes = [IsAuthenticated]
     serializer_class = TorrentStatSerializer
     queryset = TorrentStats.objects.all().select_related(
