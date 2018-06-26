@@ -1,11 +1,12 @@
 # -*- coding: utf-8 -*-
 
 from binascii import a2b_base64, b2a_hex
+from datetime import timedelta
 
 from django.contrib.postgres.fields import JSONField
 from django.db import models
 from django.urls import reverse
-from django.utils.timezone import now, timedelta
+from django.utils.timezone import now
 
 from tracker.bencoding import bencode, sha1
 from users.models import User

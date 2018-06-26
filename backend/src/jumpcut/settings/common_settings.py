@@ -11,12 +11,11 @@ https://docs.djangoproject.com/en/dev/ref/settings/
 
 import os
 import sys
+from datetime import timedelta
 from urllib.parse import urljoin
 
 import dj_database_url
 from decouple import config
-
-from django.utils.timezone import timedelta
 
 
 AUTH_USER_MODEL = 'users.User'

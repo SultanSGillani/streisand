@@ -1,11 +1,11 @@
 # -*- coding: utf-8 -*-
 
+from datetime import timedelta
 from decimal import Decimal
 from io import StringIO
 
 from django.contrib.postgres.fields import JSONField
 from django.db import models
-from django.utils.timezone import timedelta
 
 
 class Mediainfo(models.Model):

@@ -1,9 +1,10 @@
 # -*- coding: utf-8 -*-
 
+from datetime import timedelta
 from uuid import uuid4
 
+from django.conf import settings
 from django.db import models
-from django.utils.timezone import timedelta
 
 from www.utils import ratio
 
@@ -58,8 +59,7 @@ class TorrentStats(models.Model):
 
     @property
     def seed_time_remaining(self):
-        quota = timedelta(hours=96)
-        if self.seed_time < quota:
-            return quota - self.seed_time
+        if self.seed_time < settings.SEED_TIME_QUOTA:
+            return (settings.SEED_TIME_QUOTA - self.seed_time)
         else:
             return None

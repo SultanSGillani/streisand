@@ -227,6 +227,9 @@ MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 INVITE_URL_TEMPLATE = urljoin(SITE_URL, 'register/{invite_key}')
 INVITE_TTL = timedelta(days=3)
 
+SEED_TIME_QUOTA = timedelta(hours=96)
+HNR_GRACE_PERIOD = timedelta(days=14)
+
 ITEMS_PER_PAGE = 50
 
 LOGGING = {
