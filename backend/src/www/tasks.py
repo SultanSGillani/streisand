@@ -4,7 +4,6 @@ from celery import shared_task
 
 from django.conf import settings
 from django.db.models import F
-from django.utils.timezone import timedelta
 
 from torrents.models import TorrentFile
 from torrent_stats.models import TorrentStats
@@ -33,25 +32,7 @@ def handle_announce(announce_key, torrent_info_hash, new_bytes_uploaded, new_byt
     this handler logs all the announce info.
     """
 
-    try:
-        # Get everything in one query, if it exists
-        torrent_stats = TorrentStats.objects.filter(
-            user__announce_key_id=announce_key,
-            torrent_id=torrent_info_hash,
-        ).select_related(
-            'user',
-            'torrent',
-        ).get()
-    except TorrentStats.DoesNotExist:
-        user = User.objects.get(announce_key_id=announce_key)
-        torrent = TorrentFile.objects.get(info_hash=torrent_info_hash)
-        torrent_stats = TorrentStats.objects.create(
-            user=user,
-            torrent=torrent,
-        )
-    else:
-        user = torrent_stats.user
-        torrent = torrent_stats.torrent
+    (torrent_stats, torrent, user) = get_or_create_torrent_stats(torrent_info_hash, announce_key)
 
     if bytes_remaining == 0 and event != 'stopped':
 
@@ -75,13 +56,20 @@ def handle_announce(announce_key, torrent_info_hash, new_bytes_uploaded, new_byt
     else:
         percent_completed = 100 * (torrent.total_size_in_bytes - bytes_remaining) / torrent.total_size_in_bytes
 
-    # Track HNRs
-    if (torrent_stats.is_hit_and_run is not False) and (percent_completed >= 90):
-        two_weeks_ago = time_stamp - timedelta(days=14)
+    # If this is a HNR, check if it should be cleared
+    if torrent_stats.is_hit_and_run is True:
+        torrent_stats.is_hit_and_run = torrent_stats.seed_time < settings.SEED_TIME_QUOTA
+
+    # Track time and check for HNRs
+    elif torrent_stats.is_hit_and_run is None and (percent_completed >= 90):
+
+        # Start the clock, if it hasn't been started yet
         if torrent_stats.hnr_countdown_started_at is None:
             torrent_stats.hnr_countdown_started_at = time_stamp
-        elif torrent_stats.hnr_countdown_started_at < two_weeks_ago:
-            torrent_stats.is_hit_and_run = torrent_stats.seed_time < timedelta(hours=96)
+
+        # If time is up, check for HNR
+        elif torrent_stats.hnr_countdown_started_at + settings.HNR_GRACE_PERIOD > time_stamp:
+            torrent_stats.is_hit_and_run = torrent_stats.seed_time < settings.SEED_TIME_QUOTA
 
     # Track snatches
     if event == 'completed':
@@ -128,3 +116,27 @@ def handle_announce(announce_key, torrent_info_hash, new_bytes_uploaded, new_byt
             bytes_remaining=bytes_remaining,
             event=event,
         )
+
+
+def get_or_create_torrent_stats(torrent_info_hash, announce_key):
+
+    try:
+        torrent_stats = TorrentStats.objects.filter(
+            user__announce_key_id=announce_key,
+            torrent_id=torrent_info_hash,
+        ).select_related(
+            'user',
+            'torrent',
+        ).get()
+    except TorrentStats.DoesNotExist:
+        user = User.objects.get(announce_key_id=announce_key)
+        torrent = TorrentFile.objects.get(info_hash=torrent_info_hash)
+        torrent_stats = TorrentStats.objects.create(
+            user=user,
+            torrent=torrent,
+        )
+    else:
+        user = torrent_stats.user
+        torrent = torrent_stats.torrent
+
+    return (torrent_stats, torrent, user)
