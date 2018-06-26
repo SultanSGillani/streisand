@@ -29,10 +29,6 @@ class ReleaseViewSet(ModelViewSet):
         'comments__author',
     ).order_by(
         'film_id',
-        'source_media_id',
-    ).distinct(
-        'film_id',
-        'source_media_id',
     )
 
 
