@@ -56,7 +56,7 @@ class Peer(models.Model):
     user_agent = models.TextField()
     compact_representation = models.CharField(
         null=False,
-        max_length=12,
+        max_length=10,
         help_text="base64 encoded compact representation, sent as bytes to announcing torrent clients"
     )
 
