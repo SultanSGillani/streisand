@@ -1,6 +1,5 @@
 # -*- coding: utf-8 -*-
 
-from binascii import b2a_base64
 from uuid import uuid4
 
 from django.db import models
@@ -86,16 +85,6 @@ class Peer(models.Model):
 
     def __repr__(self):
         return 'Peer <{peer}>'.format(peer=self.__str__())
-
-    def save(self, *args, **kwargs):
-
-        if not self.pk:
-            # Compute the compact byte representation once, upon creation
-            compact_ip = bytes([int(s) for s in self.ip_address.split('.')])
-            compact_port = self.port.to_bytes(2, byteorder='big')
-            self.compact_representation = b2a_base64(compact_ip + compact_port).decode('ascii')
-
-        return super().save(*args, **kwargs)
 
 
 class TorrentClient(models.Model):

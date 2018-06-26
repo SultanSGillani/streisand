@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 
-from binascii import a2b_hex
+from binascii import a2b_hex, a2b_base64
 from unittest.mock import patch, ANY
 from urllib.parse import urlencode
 
@@ -11,19 +11,22 @@ from django.test import TestCase, RequestFactory
 from users.models import User
 from torrents.models import TorrentFile
 
-from tracker.models import Swarm, TorrentClient
+from tracker.bencoding import bdecode
+from tracker.models import Swarm, Peer, TorrentClient
 from tracker.views import AnnounceView
 from tracker.utils import unquote_to_hex
 
 
 @patch('tracker.views.handle_announce.delay')
-class AnnounceHandlerTests(TestCase):
+class AnnounceTests(TestCase):
 
     def setUp(self):
         self.factory = RequestFactory()
         self.announce_view = AnnounceView.as_view()
         self.torrent = G(TorrentFile, pieces='', directory_name='', files=[])
         self.swarm = G(Swarm, torrent=self.torrent)
+        for __ in range(10):
+            G(Peer, swarm=self.swarm, port=5000, ip_address='127.0.0.1', peer_id='-DE1360-xxxxxxxxxxxx')
         self.user = G(User)
         self.client = G(TorrentClient, peer_id_prefix='-DE1360-', is_whitelisted=True)
         self.announce_data = {
@@ -126,3 +129,10 @@ class AnnounceHandlerTests(TestCase):
         request = self.announce_request()
         self.announce_view(request, announce_key=self.user.announce_key_id)
         self.assertFalse(handler_mock.called)
+
+    def test_compact_peer_representation(self, handler_mock):
+        request = self.announce_request()
+        response = self.announce_view(request, announce_key=self.user.announce_key_id)
+        response = bdecode(response.content)
+        peers = response['peers']
+        self.assertEqual(peers, a2b_base64('fwAAAROI\n' * 10))
