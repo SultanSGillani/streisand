@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 
-from binascii import b2a_hex
+from binascii import b2a_hex, a2b_base64
 
 from django.core.cache import cache
 from django.db import models
@@ -36,9 +36,7 @@ class PeerQuerySet(models.QuerySet):
         return self.filter(complete=False)
 
     def compact(self, limit):
-        return b''.join(
-            [peer.compact_bytes_repr for peer in self.all()[:limit]]
-        )
+        return a2b_base64(''.join(self.values_list('compact_representation', flat=True)[:limit]))
 
 
 class TorrentClientManager(models.Manager):
