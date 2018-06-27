@@ -33,14 +33,14 @@ class TorrentActionCellComponent extends React.Component<CombinedProps> {
             });
         };
 
-        const onDownload = () => location.href = `${globals.baseUrl}${torrent.downloadUrl}`;
+        const downloadUrl = `${globals.baseUrl}${torrent.downloadUrl}`;
         return (
             <td>
                 <div className="row justify-content-end no-gutters">
                     <ButtonGroup className="col-auto ml-auto" color="default" size="sm">
-                        <Button title="Download torrent file" onClick={onDownload}>
+                        <a className="btn btn-secondary" href={downloadUrl} title="Download torrent file" role="button">
                             <i className="fas fa-arrow-down fa-lg" />
-                        </Button>
+                        </a>
                         <Button color="danger" onClick={onDelete} title="Delete">
                             <i className="fas fa-trash-alt fa-lg" />
                         </Button>
