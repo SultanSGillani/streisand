@@ -1,7 +1,5 @@
 # -*- coding: utf-8 -*-
 
-from datetime import timedelta
-
 from .common_settings import *
 
 
@@ -14,6 +12,7 @@ DEBUG_TOOLBAR_CONFIG = {
 
 
 THIRD_PARTY_APPS = [
+    'anymail',
     'corsheaders',
     'decouple',
     'django_filters',
@@ -283,7 +282,14 @@ LOGGING = {
     }
 }
 
-EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+EMAIL_BACKEND = "anymail.backends.mailgun.EmailBackend"
+
+ANYMAIL = {
+    'MAILGUN_API_KEY': config('MAILGUN_API_KEY', default=''),
+    'WEBHOOK_SECRET': config('WEBHOOK_SECRET', default=''),
+    'MAILGUN_SENDER_DOMAIN': config('MAILGUN_SENDER_DOMAIN', default='localhost'),
+    'IGNORE_RECIPIENT_STATUS': config('IGNORE_RECIPIENT_STATUS', cast=bool, default=True),
+}
 
 if DEBUG and not TESTING:
     THIRD_PARTY_APPS += [

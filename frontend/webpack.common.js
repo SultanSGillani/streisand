@@ -24,7 +24,7 @@ module.exports = {
             'process.env.APIURL': JSON.stringify(process.env.APIURL)
         }),
         new HtmlWebpackPlugin({
-            title: 'Pheonix',
+            title: 'Phoenix',
             template: 'index.html',
             filename: 'index.html',
             cdnModule: 'react'
