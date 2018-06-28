@@ -1,5 +1,6 @@
 import { RouterAction, LocationActionPayload, LOCATION_CHANGE } from 'react-router-redux';
 
+import LocationAction from '../actions/LocationAction';
 import AuthAction from '../actions/auth/AuthenticateAction';
 import ILocationInfo, { ILocation } from '../models/ILocationInfo';
 
@@ -12,7 +13,7 @@ export interface IRouterAction extends RouterAction {
     payload?: IPayload;
 }
 
-type Action = AuthAction | IRouterAction;
+type Action = AuthAction | LocationAction | IRouterAction;
 
 const defaultValue: ILocationInfo = {
     referred: false,
@@ -42,7 +43,23 @@ function _location(state: ILocationInfo = defaultValue, action: IRouterAction): 
     return state;
 }
 
+function isLocationAction(action: Action): action is LocationAction {
+    return action.type === 'STORE_LOCATION';
+}
+
 function location(state: ILocationInfo = defaultValue, action: Action): ILocationInfo {
+    if (isLocationAction(action) && action.type === 'STORE_LOCATION') {
+        return {
+            referred: false,
+            referrer: {
+                hash: '',
+                pathname: action.location.pathname,
+                query: action.location.query,
+                search: action.location.search
+            }
+        };
+    }
+
     if (state.referred) {
         return state;
     }

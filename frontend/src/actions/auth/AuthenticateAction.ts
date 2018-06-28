@@ -24,8 +24,8 @@ type AuthResponse = { token: string; };
 
 function* received(response: AuthResponse) {
     storeAuthToken(response.token);
-    yield put<Action>({ type: 'RECEIVED_AUTHENTICATION', token: response.token });
     const state: Store.All = yield select();
+    yield put<Action>({ type: 'RECEIVED_AUTHENTICATION', token: response.token });
     if (state.location.referrer) {
         yield put(replace(state.location.referrer));
     } else {

@@ -5,6 +5,7 @@ import guid from '../utilities/guid';
 import IMessage from '../models/IMessage';
 import { loggedOut } from './auth/LoggedOutAction';
 import { IUnkownError } from '../models/base/IError';
+import { storeCurrentLocation } from './LocationAction';
 
 type MessageAction =
     { type: 'ADD_MESSAGE', message: IMessage } |
@@ -28,6 +29,7 @@ export function showError(message: string): MessageAction {
 
 export function* handleError(error: IUnkownError, prefix?: string) {
     if (error.status === 401) {
+        yield storeCurrentLocation();
         yield loggedOut();
         yield put(showError('Authentication expired'));
         yield put(replace('/login'));
