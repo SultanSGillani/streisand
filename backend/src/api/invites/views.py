@@ -20,7 +20,10 @@ class InviteViewSet(ModelViewSet):
     http_method_names = ['get', 'post', 'delete', 'head', 'options']
 
     def get_queryset(self):
-        return Invite.objects.filter(offered_by=self.request.user)
+        if self.request.user.is_staff:
+            return Invite.objects.all()
+        else:
+            return Invite.objects.filter(offered_by=self.request.user)
 
     def perform_destroy(self, instance):
         instance.delete_and_refund()

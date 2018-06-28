@@ -3,7 +3,7 @@
 from django.contrib import admin
 from django.contrib.auth.admin import UserAdmin as DjangoUserAdmin
 
-from users.models import User, UserAnnounceKey, UserIPAddress, UserAnnounce, WatchedUser
+from users.models import User, UserAnnounceKey, UserIPAddress, WatchedUser
 
 
 class UserAdmin(DjangoUserAdmin):
@@ -42,7 +42,6 @@ class UserAdmin(DjangoUserAdmin):
         if user.invited_by is not None:
             return user.invited_by.admin_link
 
-    invited_by_link.allow_tags = True
     invited_by_link.short_description = "Invited by"
 
 
@@ -73,8 +72,6 @@ class UserAnnounceKeyAdmin(admin.ModelAdmin):
 
     def user_link(self, announce_key):
         return announce_key.user.admin_link
-
-    user_link.allow_tags = True
 
 
 class UserIPAddressAdmin(admin.ModelAdmin):
