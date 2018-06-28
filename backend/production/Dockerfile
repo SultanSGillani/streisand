@@ -30,7 +30,8 @@ mariadb-client-libs \
        gcc \
        libc-dev \
        libffi-dev \
-       bash git \
+       bash \
+       git \
        mariadb-dev \
        musl-dev \
 && pip install pip --upgrade \
