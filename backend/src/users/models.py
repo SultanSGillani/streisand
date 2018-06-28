@@ -8,6 +8,7 @@ from django.contrib.postgres.fields.citext import CICharField
 from django.db import models, transaction
 from django.db.models import Sum
 from django.urls import reverse
+from django.utils.safestring import mark_safe
 from django.utils.timezone import now
 
 from tracker.models import Peer
@@ -171,10 +172,11 @@ class User(AbstractUser):
 
     @property
     def admin_link(self):
-        return '<a href="{admin_url}">{username}</a>'.format(
+        link = '<a href="{admin_url}">{username}</a>'.format(
             admin_url=reverse('admin:users_user_change', args=[self.id]),
             username=self.username,
         )
+        return mark_safe(link)
 
     @staticmethod
     def autocomplete_search_fields():
@@ -225,7 +227,7 @@ class UserClass(models.Model):
 
     old_id = models.PositiveIntegerField(null=True, db_index=True)
 
-    name = models.CharField(db_index=True, max_length=128)
+    name = models.CharField(unique=True, max_length=128)
     rank = models.PositiveSmallIntegerField(db_index=True)
     is_staff = models.BooleanField(default=False, db_index=True)
     permissions = models.ManyToManyField(
@@ -352,6 +354,10 @@ class UserAnnounce(models.Model):
     new_bytes_downloaded = models.BigIntegerField(default=0, null=False)
     bytes_remaining = models.BigIntegerField(null=False)
     event = models.CharField(max_length=16, null=False)
+
+    class Meta:
+        get_latest_by = 'time_stamp'
+        ordering = ['-time_stamp']
 
 
 class WatchedUser(models.Model):

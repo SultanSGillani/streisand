@@ -65,6 +65,7 @@ router.register(r'torrent-reseed-requests', viewset=torrents_views.ReseedRequest
 router.register(r'torrent-clients', viewset=tracker_views.TorrentClientViewSet, base_name='torrent-client')
 router.register(r'tracker-swarm', viewset=tracker_views.SwarmViewSet, base_name='tracker-swarm')
 router.register(r'tracker-peers', viewset=tracker_views.PeerViewSet, base_name='tracker-peer')
+router.register(r'announce-requests', viewset=users_views.UserAnnounceViewSet, base_name='user-announce')
 
 # Forum
 router.register(r'forum-index', viewset=forums_views.ForumIndexViewSet, base_name='forums')

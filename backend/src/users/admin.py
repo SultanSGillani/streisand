@@ -105,23 +105,6 @@ class UserIPAddressAdmin(admin.ModelAdmin):
     user_link.allow_tags = True
 
 
-class UserAnnounceAdmin(admin.ModelAdmin):
-    list_display = (
-        'time_stamp',
-        'announce_key',
-        'torrent',
-        'ip_address',
-        'port',
-        'peer_id',
-        'new_bytes_uploaded',
-        'new_bytes_downloaded',
-        'bytes_remaining',
-        'event',
-    )
-
-    ordering = ['-time_stamp']
-
-
 class WatchedUserAdmin(admin.ModelAdmin):
     fields = (
         'user',
@@ -146,5 +129,4 @@ class WatchedUserAdmin(admin.ModelAdmin):
 admin.site.register(User)
 admin.site.register(UserIPAddress, UserIPAddressAdmin)
 admin.site.register(WatchedUser, WatchedUserAdmin)
-admin.site.register(UserAnnounce, UserAnnounceAdmin)
 admin.site.register(UserAnnounceKey, UserAnnounceKeyAdmin)

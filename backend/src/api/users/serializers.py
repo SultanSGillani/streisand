@@ -10,7 +10,7 @@ from rest_framework import serializers, validators
 from api.mixins import AllowFieldLimitingMixin
 from api.validators import invite_key_validator
 from invites.models import Invite
-from users.models import User, UserIPAddress
+from users.models import User, UserIPAddress, UserAnnounce
 
 
 class ChangePasswordSerializer(serializers.Serializer):
@@ -262,3 +262,13 @@ class NewUserRegistrationSerializer(CurrentUserSerializer):
             )
 
         return user
+
+
+class UserAnnounceSerializer(serializers.ModelSerializer):
+
+    user = serializers.StringRelatedField(source='user.username')
+    torrent = serializers.StringRelatedField(source='torrent_id')
+
+    class Meta:
+        model = UserAnnounce
+        fields = '__all__'

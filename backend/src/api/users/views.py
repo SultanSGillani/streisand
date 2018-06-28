@@ -9,16 +9,16 @@ from rest_framework.generics import UpdateAPIView, CreateAPIView, RetrieveUpdate
 from rest_framework.permissions import IsAdminUser, IsAuthenticated, AllowAny
 from rest_framework.response import Response
 from rest_framework.throttling import ScopedRateThrottle
-from rest_framework.viewsets import ModelViewSet
+from rest_framework.viewsets import ModelViewSet, ReadOnlyModelViewSet
 
 from api.auth import UsernamePasswordAuthentication
 from api.permissions import IsOwnerOrReadOnly
-from users.models import User
+from users.models import User, UserAnnounce
 
 from .filters import UserFilter, PublicUserFilter
 from .serializers import (
     GroupSerializer, AdminUserSerializer, CurrentUserSerializer, UsernameAvailabilitySerializer,
-    PublicUserSerializer, ChangePasswordSerializer, NewUserRegistrationSerializer
+    PublicUserSerializer, ChangePasswordSerializer, NewUserRegistrationSerializer, UserAnnounceSerializer
 )
 
 
@@ -92,14 +92,13 @@ class CurrentUserView(RetrieveUpdateAPIView):
         return self.request.user
 
 
-class PublicUserViewSet(ModelViewSet):
+class PublicUserViewSet(ReadOnlyModelViewSet):
     """
     API endpoint that allows users to be viewed and searched only.
     """
     permission_classes = [IsAuthenticated]
     serializer_class = PublicUserSerializer
-    http_method_names = ['get', 'head', 'options']
-    filter_backends = (filters.DjangoFilterBackend,)
+    filter_backends = [filters.DjangoFilterBackend]
     filter_class = PublicUserFilter
     queryset = User.objects.all().select_related(
         'user_class',
@@ -116,7 +115,7 @@ class AdminUserViewSet(ModelViewSet):
     """
     permission_classes = [IsAdminUser]
     serializer_class = AdminUserSerializer
-    filter_backends = (filters.DjangoFilterBackend,)
+    filter_backends = [filters.DjangoFilterBackend]
     filter_class = UserFilter
     queryset = User.objects.all().select_related(
         'user_class',
@@ -141,3 +140,9 @@ class GroupViewSet(ModelViewSet):
     permission_classes = [IsAdminUser]
     queryset = Group.objects.all()
     serializer_class = GroupSerializer
+
+
+class UserAnnounceViewSet(ReadOnlyModelViewSet):
+    permission_classes = [IsAdminUser]
+    queryset = UserAnnounce.objects.all().select_related('user')
+    serializer_class = UserAnnounceSerializer
