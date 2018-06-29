@@ -4,7 +4,7 @@ import { FormGroup, Label, Input } from 'reactstrap';
 export interface ITextInputProps {
     id: string;
     label: string;
-    type?: 'text' | 'email';
+    type?: 'text' | 'email' | 'textarea';
     value?: string;
     placeholder?: string;
     setValue: (value: string) => void;

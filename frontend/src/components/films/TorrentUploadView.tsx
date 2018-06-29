@@ -155,7 +155,8 @@ class TorrentUploadViewComponent extends React.Component<CombinedProps, State> {
                         <ListInput id="sourceMedia" label="Source media" value={data.sourceMedia}
                             values={this.props.mediaTypes.sourceMedia}
                             setValue={(value: string) => this._setDataState({ sourceMedia: value })} />
-                        <StringInput id="nfo" label="NFO" placeholder="Film release nfo" value={data.nfo}
+                        <StringInput type="textarea" id="nfo" label="NFO"
+                            placeholder="Film release nfo" value={data.nfo}
                             setValue={(value: string) => this._setDataState({ nfo: value })} />
                         <BooleanInput id="isScene" label="Scene" value={data.isScene}
                             setValue={(value: boolean) => this._setDataState({ isScene: value })} />
