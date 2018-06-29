@@ -48,7 +48,7 @@ function isLocationAction(action: Action): action is LocationAction {
 }
 
 function location(state: ILocationInfo = defaultValue, action: Action): ILocationInfo {
-    if (isLocationAction(action) && action.type === 'STORE_LOCATION') {
+    if (isLocationAction(action) && action.type === 'STORE_LOCATION' && action.location.pathname !== '/login') {
         return {
             referred: false,
             referrer: {
