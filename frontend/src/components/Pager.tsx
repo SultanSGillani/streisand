@@ -43,7 +43,7 @@ class PagerComponent extends React.Component<CombinedProps> {
             pages.push(<Page key={i} active={i === page} url={`${uri}/${i}`} title={`${start} - ${end}`} value={i} />);
         }
         return (
-            <Pagination className="justify-content-center">
+            <Pagination className="center">
                 <Page disabled={page === 1} url={`${uri}/1`} value="«" title="first page" />
                 {pages}
                 <Page disabled={page === pageCount} url={`${uri}/${pageCount}`} value="»" title="last page" />
