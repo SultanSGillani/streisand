@@ -21,6 +21,7 @@ function byId(state: ItemMap = {}, action: Action): ItemMap {
         case 'REQUEST_FILM':
             return markLoading(state, action.props.id);
         case 'RECEIVED_FILM':
+        case 'RECEIVED_FILM_UPDATE':
             return addLoadedNode(state, action.film);
         case 'FAILED_FILM':
             return markFailed(state, action.props.id);

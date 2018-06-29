@@ -12,6 +12,7 @@ import { numericIdentifier } from '../../utilities/shim';
 import { getFilm } from '../../actions/films/FilmAction';
 import ILoadingStatus from '../../models/base/ILoadingStatus';
 import { getTorrents } from '../../actions/torrents/FilmTorrentsAction';
+import UpdateFilmView from '../../components/films/UpdateFilmView';
 
 export type Props = {
     params: {
@@ -21,9 +22,10 @@ export type Props = {
 };
 
 type ConnectedState = {
+    film?: IFilm;
     filmId: number;
     torrentId: number;
-    film?: IFilm;
+    isEditMode: boolean;
     status: ILoadingStatus;
 };
 
@@ -57,6 +59,12 @@ class FilmPageComponent extends React.Component<CombinedProps, void> {
             return this.props.status.loading ? <Loading /> : <Empty />;
         }
 
+        if (this.props.isEditMode) {
+            return (
+                <UpdateFilmView film={film} />
+            );
+        }
+
         return (
             <FilmView film={film} torrentId={this.props.torrentId} />
         );
@@ -70,6 +78,7 @@ const mapStateToProps = (state: Store.All, props: Props): ConnectedState => {
         filmId: filmId,
         film: node.item,
         status: node.status,
+        isEditMode: props.params.torrentId === 'edit',
         torrentId: numericIdentifier(props.params.torrentId)
     };
 };

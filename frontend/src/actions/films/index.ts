@@ -2,11 +2,12 @@ import { all } from 'redux-saga/effects';
 
 import FilmAction, { filmSaga } from './FilmAction';
 import FilmsAction, { filmsSaga } from './FilmsAction';
-import CreateFilmAction, { creatFilmSaga } from './CreateFilmAction';
+import CreateFilmAction, { createFilmSaga } from './CreateFilmAction';
 import DeleteFilmAction, { deleteFilmSaga } from './DeleteFilmAction';
+import UpdateFilmAction, { updateFilmSaga } from './UpdateFilmAction';
 import FilmSearchAction, { filmSearchSaga } from './FilmsSearchAction';
 
-type Action = FilmAction | FilmsAction | CreateFilmAction | DeleteFilmAction | FilmSearchAction;
+type Action = FilmAction | FilmsAction | CreateFilmAction | DeleteFilmAction | FilmSearchAction | UpdateFilmAction;
 export default Action;
 
 export function* allFilmSaga() {
@@ -14,7 +15,8 @@ export function* allFilmSaga() {
         filmSaga(),
         filmsSaga(),
         deleteFilmSaga(),
-        creatFilmSaga(),
-        filmSearchSaga()
+        createFilmSaga(),
+        filmSearchSaga(),
+        updateFilmSaga()
     ]);
 }

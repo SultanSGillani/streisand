@@ -2,14 +2,14 @@
 // Editable fields
 export interface IFilmUpdate {
     description: string;
-    durationInMinutes: number;
+    durationInMinutes?: number;
     fanartUrl: string;
     imdbId: string;
     moderationNotes: string;
     posterUrl: string;
     genreTags: string[];
     title: string;
-    tmdbId: number;
+    tmdbId?: number;
     lists: number[];
     trailerType: string;
     trailerUrl: string;

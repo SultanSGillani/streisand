@@ -21,6 +21,7 @@ type ConnectedState = {
 };
 
 type ConnectedDispatch = {
+    editFilm: (id: number) => void;
     deleteFilm: (id: number) => void;
     uploadTorrent: (id: number) => void;
 };
@@ -49,6 +50,9 @@ class FilmViewComponent extends React.Component<CombinedProps> {
             {
                 label: 'Upload torrent',
                 onExecute: () => { this.props.uploadTorrent(film.id); }
+            }, {
+                label: 'Edit',
+                onExecute: () => { this.props.editFilm(film.id); }
             }, {
                 label: 'Delete',
                 status: 'danger',
@@ -85,6 +89,7 @@ const mapStateToProps = (state: Store.All, props: Props): ConnectedState => {
 
 const mapDispatchToProps = (dispatch: IDispatch): ConnectedDispatch => ({
     deleteFilm: (id: number) => dispatch(deleteFilm({ id })),
+    editFilm: (id: number) => dispatch(push(`/film/${id}/edit`)),
     uploadTorrent: (id: number) => dispatch(push(`/torrents/upload/${id}`))
 });
 

@@ -34,7 +34,7 @@ export function createFilm(props: IFilmUpdate): Action {
 
 const errorPrefix = 'Creating a new film failed';
 const fetch = generateAuthFetch({ errorPrefix, request, received, failure });
-export const creatFilmSaga = generateSage<RequestNewFilm>('REQUEST_NEW_FILM', fetch);
+export const createFilmSaga = generateSage<RequestNewFilm>('REQUEST_NEW_FILM', fetch);
 
 function request(token: string, data: IFilmUpdate): Promise<IFilm> {
     return post({ token, data, url: `${globals.apiUrl}/films/` });
