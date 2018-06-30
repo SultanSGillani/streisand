@@ -18,7 +18,6 @@ THIRD_PARTY_APPS = [
     'django_filters',
     'django_su',
     'drf_yasg',
-    'jet',
     'knox',
     'raven.contrib.django.raven_compat',
     'rest_framework',
@@ -26,8 +25,6 @@ THIRD_PARTY_APPS = [
 ]
 
 DJANGO_APPS = [
-    'django.contrib.admin',
-    'django.contrib.admindocs',
     'django.contrib.auth',
     'django.contrib.contenttypes',
     'django.contrib.sessions',
@@ -46,7 +43,6 @@ MIDDLEWARE = [
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
     'corsheaders.middleware.CorsPostCsrfMiddleware',
-    'django.contrib.admindocs.middleware.XViewMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'www.middleware.CachedUserAuthenticationMiddleware',
     'www.middleware.IPHistoryMiddleware',
@@ -126,38 +122,7 @@ SWAGGER_SETTINGS.update({'VALIDATOR_URL': 'http://localhost:8189'})
 REDOC_SETTINGS = {
     'LAZY_RENDERING': True,
 }
-JET_SIDE_MENU_COMPACT = True
 
-JET_SIDE_MENU_ITEMS = [
-    {'app_label': 'auth', 'items': [
-        {'name': 'group'},
-    ]},
-    {'app_label': 'films', 'items': [
-        {'name': 'film'},
-    ]},
-    {'app_label': 'invites', 'items': [
-        {'name': 'invite'},
-    ]},
-    {'app_label': 'knox', 'items': [
-        {'name': 'authtoken'},
-    ]},
-    {'app_label': 'releases', 'items': [
-        {'name': 'release'},
-    ]},
-    {'app_label': 'torrents', 'items': [
-        {'name': 'torrentfile'},
-    ]},
-    {'app_label': 'tracker', 'items': [
-        {'name': 'torrentclient'},
-    ]},
-    {'app_label': 'users', 'items': [
-        {'name': 'userannouncekey'},
-        {'name': 'userannounce'},
-        {'name': 'useripaddress'},
-        {'name': 'user'},
-        {'name': 'watcheduser'},
-    ]},
-]
 SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
 SESSION_COOKIE_SECURE = config('SESSION_COOKIE_SECURE', cast=bool, default=False)
 CSRF_COOKIE_SECURE = config('CSRF_COOKIE_SECURE', cast=bool, default=False)

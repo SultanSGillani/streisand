@@ -208,7 +208,6 @@ class NewsPostViewSet(ModelViewSet):
             id__in=news_threads.values('earliest_post_id'),
         ).prefetch_related(
             'thread',
-            'author',
             'author__user_class',
         ).order_by(
             '-created_at',

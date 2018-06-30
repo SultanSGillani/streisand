@@ -8,7 +8,6 @@ from django.contrib.postgres.fields.citext import CICharField
 from django.db import models, transaction
 from django.db.models import Sum
 from django.urls import reverse
-from django.utils.safestring import mark_safe
 from django.utils.timezone import now
 
 from tracker.models import Peer
@@ -169,14 +168,6 @@ class User(AbstractUser):
             return seeding_size
         else:
             return 0
-
-    @property
-    def admin_link(self):
-        link = '<a href="{admin_url}">{username}</a>'.format(
-            admin_url=reverse('admin:users_user_change', args=[self.id]),
-            username=self.username,
-        )
-        return mark_safe(link)
 
     @staticmethod
     def autocomplete_search_fields():
