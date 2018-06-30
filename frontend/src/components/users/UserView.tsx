@@ -3,13 +3,13 @@ import { connect } from 'react-redux';
 import { ListGroup, ListGroupItem, Nav, NavItem, NavLink, TabContent, TabPane, Card, Button, Form, CardBody, CardFooter, Label } from 'reactstrap';
 
 import Avatar from './Avatar';
+import TextView from '../bbcode/TextView';
 import { getDateDiff } from '../../utilities/dates';
 import { IDispatch } from '../../actions/ActionTypes';
 import IUser, { IUserUpdate } from '../../models/IUser';
-import { updateUser } from '../../actions/users/UpdateUserAction';
-import { StringInput } from '../generic/inputs';
-import TextView from '../bbcode/TextView';
 import Editor, { IEditorHandle } from '../bbcode/Editor';
+import { StringInput } from '../generic/inputs/StringInput';
+import { updateUser } from '../../actions/users/UpdateUserAction';
 
 export type Props = {
     user: IUser;

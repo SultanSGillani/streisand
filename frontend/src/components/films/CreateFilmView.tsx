@@ -4,7 +4,7 @@ import { connect } from 'react-redux';
 import Store from '../../store';
 import { IFilmUpdate } from '../../models/IFilm';
 import { IDispatch } from '../../actions/ActionTypes';
-import FilmForm, { IFilmFormResult } from './FilmForm';
+import FilmForm, { IFilmFormData } from './FilmForm';
 import { createFilm } from '../../actions/films/CreateFilmAction';
 
 export type Props = {};
@@ -20,8 +20,8 @@ type ConnectedDispatch = {
 type CombinedProps = Props & ConnectedDispatch & ConnectedState;
 class CreateFilmViewComponent extends React.Component<CombinedProps> {
     public render() {
-        const onCreateFilm = (result: IFilmFormResult) => {
-            const { duration, ...update } = result;
+        const onCreateFilm = (data: IFilmFormData) => {
+            const { duration, ...update } = data;
             this.props.createFilm({
                 ...update,
                 durationInMinutes: duration,

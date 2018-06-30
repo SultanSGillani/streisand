@@ -4,7 +4,7 @@ import { Card, Form, FormGroup, Input, Label, CardBody, CardFooter, Button, Card
 
 import { IDispatch } from '../actions/ActionTypes';
 import { showError } from '../actions/MessageAction';
-import { StringInput } from '../components/generic/inputs';
+import { StringInput } from '../components/generic/inputs/StringInput';
 import { register, IActionProps } from '../actions/auth/RegisterAction';
 
 export type Props = {

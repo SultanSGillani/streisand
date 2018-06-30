@@ -1,9 +1,10 @@
 import * as React from 'react';
 import { Form, Card, CardBody, CardFooter, Button } from 'reactstrap';
 
-import { StringInput, NumericInput } from '../generic/inputs';
+import { StringInput } from '../generic/inputs/StringInput';
+import { NumericInput } from '../generic/inputs/NumericInput';
 
-export interface IFilmFormResult {
+export interface IFilmFormData {
     title: string;
     description: string;
     duration?: number;
@@ -15,12 +16,12 @@ export interface IFilmFormResult {
 }
 
 export type Props = {
-    onSubmit: (update: IFilmFormResult) => void;
+    onSubmit: (update: IFilmFormData) => void;
     processing: boolean;
-    intialValues?: IFilmFormResult;
+    intialValues?: IFilmFormData;
 };
 
-type State = IFilmFormResult;
+type State = IFilmFormData;
 
 function getDefaultValues() {
     return {
@@ -43,8 +44,8 @@ export default class FilmForm extends React.Component<Props, State> {
     }
 
     public render() {
-        const canSubmitFilm = this._canSubmitFilm();
-        const onSubmitFilm = this._submitFilm.bind(this);
+        const canSubmit = this._canSubmit();
+        const onSubmit = this._submit.bind(this);
         const isCreating = !this.props.intialValues;
         const buttonText = this.props.processing
             ? (isCreating ? 'creating film...' : 'updating film...')
@@ -52,7 +53,7 @@ export default class FilmForm extends React.Component<Props, State> {
         return (
             <Card>
                 <CardBody>
-                    <Form onKeyPress={onSubmitFilm} autoComplete="off">
+                    <Form onKeyPress={onSubmit} autoComplete="off">
                         <StringInput id="imdb" label="IMDB identifier" placeholder="Corresponding imdb identifier"
                             value={this.state.imdbId} setValue={(value: string) => this.setState({ imdbId: value })} />
                         <NumericInput id="tmdb" label="TMDB identifier"
@@ -73,24 +74,24 @@ export default class FilmForm extends React.Component<Props, State> {
                 </CardBody>
                 <CardFooter>
                     <div className="row m-0 justify-content-end">
-                        <Button className="col-auto" color="primary" disabled={!canSubmitFilm} onClick={() => onSubmitFilm()}>{buttonText}</Button>
+                        <Button className="col-auto" color="primary" disabled={!canSubmit} onClick={() => onSubmit()}>{buttonText}</Button>
                     </div>
                 </CardFooter>
             </Card>
         );
     }
 
-    private _canSubmitFilm(): boolean {
+    private _canSubmit(): boolean {
         const { title, description, posterUrl, trailerUrl, year } = this.state;
         return !!(title && description && posterUrl && trailerUrl && year > 1800);
     }
 
-    private _submitFilm(event?: React.KeyboardEvent<HTMLElement>) {
+    private _submit(event?: React.KeyboardEvent<HTMLElement>) {
         if (event && event.key !== 'Enter') {
             return;
         }
 
-        if (this._canSubmitFilm()) {
+        if (this._canSubmit()) {
             this.props.onSubmit(this.state);
         }
 

@@ -1,5 +1,6 @@
 import * as React from 'react';
 import { connect } from 'react-redux';
+import { push } from 'react-router-redux';
 import { Button, ButtonGroup } from 'reactstrap';
 
 import IFilm from '../../models/IFilm';
@@ -16,6 +17,7 @@ export type Props = {
 
 type ConnectedState = {};
 type ConnectedDispatch = {
+    editRelease: (id: number) => void;
     deleteItem: (props: IActionProps) => void;
 };
 
@@ -24,6 +26,7 @@ class TorrentActionCellComponent extends React.Component<CombinedProps> {
     public render() {
         const { film, torrent, page } = this.props;
 
+        const onEdit = () => this.props.editRelease(torrent.release || -404);
         const onDelete = () => {
             const filmId = film ? film.id : undefined;
             this.props.deleteItem({
@@ -41,7 +44,10 @@ class TorrentActionCellComponent extends React.Component<CombinedProps> {
                         <a className="btn btn-secondary" href={downloadUrl} title="Download torrent file" role="button">
                             <i className="fas fa-arrow-down fa-lg" />
                         </a>
-                        <Button color="danger" onClick={onDelete} title="Delete">
+                        <Button onClick={onEdit} title="Edit release">
+                            <i className="fas fa-pencil-alt fa-lg" />
+                        </Button>
+                        <Button color="danger" onClick={onDelete} title="Delete torrent">
                             <i className="fas fa-trash-alt fa-lg" />
                         </Button>
                     </ButtonGroup>
@@ -51,6 +57,7 @@ class TorrentActionCellComponent extends React.Component<CombinedProps> {
     }
 }
 const mapDispatchToProps = (dispatch: IDispatch): ConnectedDispatch => ({
+    editRelease: (id: number) => dispatch(push(`/release/${id}/edit`)),
     deleteItem: (props: IActionProps) => dispatch(deleteTorrent(props))
 });
 

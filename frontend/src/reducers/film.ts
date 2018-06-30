@@ -4,12 +4,12 @@ import Store from '../store';
 import IFilm from '../models/IFilm';
 import FilmAction from '../actions/films';
 import { combineReducers } from './helpers';
+import ReleaseAction from '../actions/releases';
 import { INodeMap } from '../models/base/ItemSet';
 import { getPagesReducer } from './utilities/pages';
-import ReleasesAction from '../actions/releases/ReleasesAction';
 import { addLoadedNode, addLoadedNodes, markLoading, markFailed } from './utilities/mutations';
 
-type Action = FilmAction | ReleasesAction;
+type Action = FilmAction | ReleaseAction;
 
 type ItemMap = INodeMap<IFilm>;
 function byId(state: ItemMap = {}, action: Action): ItemMap {
@@ -22,6 +22,7 @@ function byId(state: ItemMap = {}, action: Action): ItemMap {
             return markLoading(state, action.props.id);
         case 'RECEIVED_FILM':
         case 'RECEIVED_FILM_UPDATE':
+        case 'RECEIVED_RELEASE':
             return addLoadedNode(state, action.film);
         case 'FAILED_FILM':
             return markFailed(state, action.props.id);

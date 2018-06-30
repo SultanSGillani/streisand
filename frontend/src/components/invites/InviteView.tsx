@@ -3,8 +3,8 @@ import { connect } from 'react-redux';
 import { Card, CardBody, Form, CardFooter, Button } from 'reactstrap';
 
 import Store from '../../store';
-import { StringInput } from '../generic/inputs';
 import { IDispatch } from '../../actions/ActionTypes';
+import { StringInput } from '../generic/inputs/StringInput';
 import { sendInvite } from '../../actions/invites/CreateInviteAction';
 
 export type Props = {};
