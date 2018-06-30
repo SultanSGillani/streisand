@@ -124,6 +124,8 @@ class ForumGroupForTopicSerializer(ModelSerializer):
 class ForumTopicIndexSerializer(api_mixins.AllowFieldLimitingMixin, ModelSerializer):
     groups = ForumGroupForTopicSerializer(source='group', read_only=True)
     threads = PaginatedRelationField(ForumThreadForTopicSerializer, paginator=RelationPaginator)
+    number_of_posts = serializers.IntegerField(read_only=True)
+    number_of_threads = serializers.IntegerField(read_only=True)
 
     class Meta:
         model = ForumTopic
@@ -140,14 +142,13 @@ class ForumTopicIndexSerializer(api_mixins.AllowFieldLimitingMixin, ModelSeriali
             'number_of_posts',
         )
 
-        read_only_fields = ('number_of_posts', 'number_of_threads')
-
-    extra_kwargs = {
-        'sort_order': {'required': False},
-    }
-
 
 class ForumTopicItemSerializer(ModelSerializer):
+    sort_order = serializers.CharField(required=False)
+    number_of_posts = serializers.IntegerField(read_only=True)
+    number_of_threads = serializers.IntegerField(read_only=True)
+    latest_post = serializers.PrimaryKeyRelatedField(read_only=True)
+
     class Meta:
         model = ForumTopic
         fields = (
@@ -161,12 +162,6 @@ class ForumTopicItemSerializer(ModelSerializer):
             'number_of_posts',
             'latest_post',
         )
-
-        read_only_fields = ('number_of_posts', 'number_of_threads')
-
-        extra_kwargs = {
-            'sort_order': {'required': False},
-        }
 
 
 class ForumTopicForThreadSerializer(ModelSerializer):
@@ -243,6 +238,8 @@ class ForumPostItemSerializer(ModelSerializer):
 
 class ForumThreadItemSerializer(ModelSerializer):
     created_by = serializers.PrimaryKeyRelatedField(read_only=True)
+    modified_at = serializers.DateTimeField(read_only=True)
+    modified_by = serializers.PrimaryKeyRelatedField(read_only=True)
 
     class Meta:
         model = ForumThread
@@ -257,8 +254,6 @@ class ForumThreadItemSerializer(ModelSerializer):
             'is_sticky',
             'is_archived',
         )
-
-        read_only_fields = ('modified_at', 'modified_by')
 
     def create(self, validated_data):
         validated_data['created_by'] = self.context['request'].user
@@ -316,17 +311,23 @@ class NewsSerializer(api_mixins.AllowFieldLimitingMixin, ModelSerializer):
 
 
 class ForumThreadSubscriptionSerializer(api_mixins.AllowFieldLimitingMixin, ModelSerializer):
-    user = serializers.StringRelatedField(read_only=True)
+    user = serializers.PrimaryKeyRelatedField(read_only=True)
 
     class Meta:
         model = ForumThreadSubscription
         fields = (
+            'id',
             'user',
             'thread'
         )
 
+    def create(self, validated_data):
+        validated_data['user'] = self.context['request'].user
+        return super().create(validated_data)
+
 
 class ForumReportSerializer(api_mixins.AllowFieldLimitingMixin, ModelSerializer):
+
     class Meta:
         model = ForumReport
         fields = (
@@ -339,3 +340,7 @@ class ForumReportSerializer(api_mixins.AllowFieldLimitingMixin, ModelSerializer)
             'resolved_by',
             'date_resolved',
         )
+
+    def create(self, validated_data):
+        validated_data['reporting_user'] = self.context['request'].user
+        return super().create(validated_data)

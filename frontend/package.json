@@ -11,13 +11,13 @@
     "dev": "webpack-dev-server --config webpack.dev.js",
     "build": "webpack --config webpack.prod.js"
   },
-  "homepage": "https://git.pinigseu.xyz/jumpcut/jumpcut",
+  "homepage": "https://gitlab.pinigseu.xyz/jumpcut/jumpcut",
   "bugs": {
-    "url": "https://git.pinigseu.xyz/jumpcut/jumpcut/issues"
+    "url": "https://gitlab.pinigseu.xyz/jumpcut/jumpcut/issues"
   },
   "repository": {
     "type": "git",
-    "url": "https://git.pinigseu.xyz/jumpcut/jumpcut.git"
+    "url": "https://gitlab.pinigseu.xyz/jumpcut/jumpcut.git"
   },
   "dependencies": {
     "bbcode-to-react": "^0.2.9",
