@@ -22,6 +22,7 @@ class Release(models.Model):
     nfo = models.TextField()
     mediainfo = models.OneToOneField(
         to='mediainfo.Mediainfo',
+        related_name='release',
         null=True,
         on_delete=models.PROTECT,
     )

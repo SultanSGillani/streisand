@@ -1,8 +1,11 @@
 # -*- coding: utf-8 -*-
 
+from django.db import transaction
+
 from rest_framework import serializers
 
 from films.models import Film
+from mediainfo.models import Mediainfo
 from mediainfo.serializers import MediainfoSerializer
 from releases.models import Release, ReleaseComment
 
@@ -57,15 +60,17 @@ class ReleaseSerializer(serializers.ModelSerializer):
             'description',
         )
 
-    # def create(self, validated_data):
-    #
-    #     # TODO: something like the following, probably wrapped in a transaction:
-    #     mediainfo_text = validated_data.pop('mediainfo_text', None)
-    #     instance = super().create(validated_data)
-    #     if mediainfo_text:
-    #         instance.mediainfo = Mediainfo(text=mediainfo_text)
-    #         instance.save(update_fields=['mediainfo'])
-    #     return instance
+    def create(self, validated_data):
+
+        mediainfo_text = validated_data.pop('mediainfo_text', None)
+
+        with transaction.atomic():
+            if mediainfo_text:
+                mediainfo = Mediainfo.objects.create(text=mediainfo_text)
+                validated_data['mediainfo'] = mediainfo
+            instance = super().create(validated_data)
+
+        return instance
 
 
 class ReleaseCommentSerializer(serializers.ModelSerializer):

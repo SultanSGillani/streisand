@@ -51,7 +51,7 @@ class Migration(migrations.Migration):
         migrations.AddField(
             model_name='release',
             name='mediainfo',
-            field=models.OneToOneField(null=True, on_delete=django.db.models.deletion.PROTECT, to='mediainfo.Mediainfo'),
+            field=models.OneToOneField(null=True, on_delete=django.db.models.deletion.PROTECT, related_name='release', to='mediainfo.Mediainfo'),
         ),
         migrations.AddField(
             model_name='release',
