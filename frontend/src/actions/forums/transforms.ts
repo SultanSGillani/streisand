@@ -1,8 +1,9 @@
+
 import { IForumTopicResponse } from '../../models/forums/IForumTopic';
-import { IForumThreadResponse } from '../../models/forums/IForumThread';
-import { IForumGroupResponse, IForumGroupData } from '../../models/forums/IForumGroup';
 import { IForumPost, IForumPostResponse } from '../../models/forums/IForumPost';
 import { INewsPostData, INewsPostResponse } from '../../models/forums/INewsPost';
+import { IForumGroupResponse, IForumGroupData } from '../../models/forums/IForumGroup';
+import { IForumThreadPostsResponse, IForumThreadResponse } from '../../models/forums/IForumThread';
 
 export function transformGroups(response: IForumGroupResponse): IForumGroupData {
     const result: IForumGroupData = {
@@ -107,7 +108,7 @@ export function transformTopic(response: IForumTopicResponse): IForumGroupData {
     return result;
 }
 
-export function transformThread(response: IForumThreadResponse): IForumGroupData {
+export function transformThreadPosts(response: IForumThreadPostsResponse): IForumGroupData {
     const result: IForumGroupData = {
         groups: [],
         topics: [],
@@ -151,6 +152,43 @@ export function transformThread(response: IForumThreadResponse): IForumGroupData
             modifiedBy: post.modifiedBy
         });
         result.users.push(post.author);
+    }
+
+    return result;
+}
+
+export function transformThreads(response: IForumThreadResponse[]): IForumGroupData {
+    const result: IForumGroupData = {
+        groups: [],
+        topics: [],
+        threads: [],
+        posts: [],
+        users: []
+    };
+
+    for (const thread of response) {
+        const { groups: group, topics: topic } = thread;
+        result.groups.push({
+            id: group.id,
+            title: group.name
+        });
+
+        result.topics.push({
+            id: topic.id,
+            group: topic.group,
+            title: topic.name
+        });
+
+        result.threads.push({
+            id: thread.id,
+            title: thread.title,
+            topic: thread.topic,
+            numberOfPosts: thread.numberOfPosts,
+            createdAt: thread.createdAt,
+            createdBy: thread.createdBy,
+            isLocked: thread.isLocked,
+            isSticky: thread.isSticky
+        });
     }
 
     return result;
