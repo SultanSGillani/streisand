@@ -108,6 +108,7 @@ LOCAL_APPS = [
     'invites',
     'media_formats',
     'mediainfo',
+    'private_messages',
     'releases',
     'rotten_tomatoes',
     'tests',
