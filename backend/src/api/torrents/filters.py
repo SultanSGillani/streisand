@@ -11,17 +11,17 @@ class TorrentFilter(filters.FilterSet):
     moderated_by = filters.CharFilter(field_name='moderated_by__username', lookup_expr='icontains')
     film = filters.CharFilter(field_name='release__film__title', lookup_expr='icontains')
     film_id = filters.NumberFilter(field_name='release__film_id', lookup_expr='exact')
+    release = filters.NumberFilter(field_name='release', lookup_expr='exact')
 
     class Meta:
         model = TorrentFile
-        fields = {
-            'id': ['exact'],
-            'info_hash': ['exact'],
-            'uploaded_at': ['exact'],
-            'last_seeded': ['exact'],
-            'snatch_count': ['exact'],
-            'reseed_request': ['exact'],
-            'is_approved': ['exact'],
-            'release': ['exact', 'in'],
+        fields = (
+            'id',
+            'info_hash',
+            'uploaded_at',
+            'last_seeded',
+            'snatch_count',
+            'reseed_request',
+            'is_approved',
+        )
 
-        }
