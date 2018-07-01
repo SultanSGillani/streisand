@@ -24,4 +24,3 @@ class TorrentFilter(filters.FilterSet):
             'reseed_request',
             'is_approved',
         )
-
