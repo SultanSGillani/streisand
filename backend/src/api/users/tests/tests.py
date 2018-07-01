@@ -11,7 +11,7 @@ from invites.models import Invite
 from users.models import User
 
 
-class UserTest(APITestCase):
+class UserTests(APITestCase):
 
     @classmethod
     def setUpClass(cls):
