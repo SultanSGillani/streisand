@@ -14,12 +14,14 @@ class TorrentFilter(filters.FilterSet):
 
     class Meta:
         model = TorrentFile
-        fields = (
-            'id',
-            'info_hash',
-            'uploaded_at',
-            'last_seeded',
-            'snatch_count',
-            'reseed_request',
-            'is_approved',
-        )
+        fields = {
+            'id': ['exact'],
+            'info_hash': ['exact'],
+            'uploaded_at': ['exact'],
+            'last_seeded': ['exact'],
+            'snatch_count': ['exact'],
+            'reseed_request': ['exact'],
+            'is_approved': ['exact'],
+            'release': ['exact', 'in'],
+
+        }
