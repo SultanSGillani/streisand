@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 
 from .common_settings import *
+from datetime import timedelta
 
 
 INTERNAL_IPS = config(
