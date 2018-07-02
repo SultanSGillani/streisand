@@ -29,7 +29,7 @@ RUN apk add --update bash \
 RUN ln -sf /dev/stdout /var/log/nginx/access.log
 RUN ln -sf /dev/stderr /var/log/nginx/error.log
 
-COPY ./nginx/nginx.conf /etc/nginx.conf
+COPY ./nginx/nginx.conf /etc/nginx/nginx.conf
 COPY ./nginx/mime.types /etc/nginx/mime.types
 COPY ./nginx/uwsgi_params /etc/nginx/uwsgi_params
 
