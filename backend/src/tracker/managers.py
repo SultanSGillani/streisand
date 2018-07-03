@@ -1,9 +1,12 @@
 # -*- coding: utf-8 -*-
 
-from binascii import b2a_hex, a2b_base64
+from binascii import a2b_base64
+from random import sample
 
+from django.conf import settings
 from django.core.cache import cache
 from django.db import models
+from django.utils.timezone import now
 
 
 class SwarmManager(models.Manager):
@@ -35,8 +38,17 @@ class PeerQuerySet(models.QuerySet):
     def leechers(self):
         return self.filter(complete=False)
 
+    def active(self):
+        return self.filter(last_announce__gt=now() - (settings.TRACKER_ANNOUNCE_INTERVAL * 2))
+
     def compact(self, limit):
-        return a2b_base64(''.join(self.values_list('compact_representation', flat=True)[:limit]))
+        """
+        Returns a compact (6-byte) representation of peers, selected randomly from
+        the queryset, up to the provided limit.
+        """
+        peer_list = list(self.values_list('compact_representation', flat=True).distinct('ip_address', 'port'))
+        peer_list = sample(peer_list, min(limit, len(peer_list)))
+        return a2b_base64(''.join(peer_list))
 
 
 class TorrentClientManager(models.Manager):
@@ -52,15 +64,7 @@ class TorrentClientManager(models.Manager):
 
             # Create the whitelist from the database, and cache it
             client_whitelist = tuple(
-                [
-                    # The prefixes are in ASCII, but the rest of the peer_id can be
-                    # arbitrary bytes. So we'll go ahead and transform the prefix
-                    # into the format we'll be using for peer_id (a hex string) so
-                    # the comparison will be faster.
-                    b2a_hex(client.peer_id_prefix.encode('ascii')).decode('ascii')
-                    for client
-                    in self.filter(is_whitelisted=True)
-                ]
+                self.filter(is_whitelisted=True).values_list('peer_id_prefix', flat=True)
             )
             # Cache the whitelist for one hour
             cache.set(self.WHITELIST_CACHE_KEY, client_whitelist, 3600)

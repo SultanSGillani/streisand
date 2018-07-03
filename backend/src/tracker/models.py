@@ -51,7 +51,7 @@ class Peer(models.Model):
     user_announce_key = models.CharField(max_length=36, null=False, db_index=True)
     ip_address = models.GenericIPAddressField(null=False)
     port = models.IntegerField(null=False)
-    peer_id = models.CharField(max_length=40, null=False)
+    peer_id = models.CharField(max_length=60, null=False)
     user_agent = models.TextField()
     compact_representation = models.CharField(
         null=False,
@@ -68,7 +68,7 @@ class Peer(models.Model):
     complete = models.BooleanField(default=False, null=False)
 
     first_announce = models.DateTimeField(auto_now_add=True)
-    last_announce = models.DateTimeField(auto_now=True)
+    last_announce = models.DateTimeField(auto_now=True, db_index=True)
 
     objects = PeerQuerySet.as_manager()
 

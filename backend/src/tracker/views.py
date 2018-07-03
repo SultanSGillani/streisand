@@ -44,12 +44,8 @@ class AnnounceView(View):
         # Short circuit bad requests
         #
 
-        # Fail if the announce_key is invalid
-        if not User.objects.filter(announce_key_id=announce_key).exists():
-            return self.failure('Invalid announce key')
-
         # Fail if any required parameters are missing
-        if not self.REQUIRED_PARAMS <= request.GET.keys():
+        if not self.REQUIRED_PARAMS.issubset(request.GET):
             return self.failure('Announce request was missing one or more required parameters')
 
         # Fail if the client will not accept a compact response
@@ -67,18 +63,12 @@ class AnnounceView(View):
             return self.failure('Tracker could not parse announce request')
         else:
             info_hash = unquote_to_hex(params['info_hash'])
-            peer_id = unquote_to_hex(params['peer_id'])
+            peer_id = params['peer_id']
 
         # Fail if the client is not in the whitelist
         whitelisted_prefixes = TorrentClient.objects.get_whitelist()
         if not peer_id.startswith(whitelisted_prefixes):
             return self.failure('Your client is not in the whitelist')
-
-        # Fail if the torrent is not registered
-        try:
-            swarm = Swarm.objects.get(torrent_id=info_hash)
-        except Swarm.DoesNotExist:
-            return self.failure('Unregistered torrent')
 
         #
         # Get announce data
@@ -116,7 +106,8 @@ class AnnounceView(View):
 
         # Parameters we don't care about:
         #
-        #    no_peer_id - We always send compact responses
+        #    no_peer_id - We always send compact responses.  Might
+        #        want to rethink this for ipv6 compatibility.
         #
         #    ip - No proxy announcing allowed; we will distribute
         #        the IP address from which this request originated
@@ -127,17 +118,28 @@ class AnnounceView(View):
         #    key - This doesn't give us anything we don't already
         #        get from the announce_key
 
+        if event and event not in ('started', 'stopped', 'completed'):
+            return self.failure('Invalid event name "{event}"'.format(event=event))
+
         #
-        # Delete peers after two announce intervals have passed with no announce
+        # This is where we start making database queries.
         #
 
-        swarm.peers.filter(
-            last_announce__lt=time_stamp - (self.ANNOUNCE_INTERVAL * 2)
-        ).delete()
+        # Fail if the announce_key is invalid
+        if not User.objects.filter(announce_key_id=announce_key).exists():
+            return self.failure('Invalid announce key')
+
+        # Fail if the torrent is not registered
+        try:
+            swarm = Swarm.objects.get(torrent_id=info_hash)
+        except Swarm.DoesNotExist:
+            return self.failure('Unregistered torrent')
 
         #
         # Update the peer's stats
         #
+
+        suspicious_behaviors = []
 
         try:
 
@@ -151,6 +153,9 @@ class AnnounceView(View):
 
         except Peer.DoesNotExist:
 
+            if event != 'started':
+                suspicious_behaviors.append("No 'started' event for this peer.")
+
             # Add this client to the peer list
             client = swarm.peers.create(
                 user_announce_key=announce_key,
@@ -161,35 +166,27 @@ class AnnounceView(View):
                 bytes_remaining=bytes_left,
             )
 
+        if event == 'started':
+            if total_bytes_downloaded > 0 or total_bytes_uploaded > 0:
+                suspicious_behaviors.append("Upload or download reported as part of a 'started' event.")
+            client.bytes_uploaded = 0
+            client.bytes_downloaded = 0
+
         bytes_recently_downloaded = total_bytes_downloaded - client.bytes_downloaded
         if bytes_recently_downloaded > 0:
             client.bytes_downloaded = total_bytes_downloaded
         elif bytes_recently_downloaded < 0:
-            raise Exception('Something strange is happening here...')
+            suspicious_behaviors.append("Downloaded bytes delta is negative.")
 
         bytes_recently_uploaded = total_bytes_uploaded - client.bytes_uploaded
         if bytes_recently_uploaded > 0:
             client.bytes_uploaded = total_bytes_uploaded
         elif bytes_recently_uploaded < 0:
-            raise Exception('Something strange is happening here...')
+            suspicious_behaviors.append("Uploaded bytes delta is negative.")
 
         if event == 'completed' and bytes_left != 0:
-            raise Exception('Something strange is happening here...')
+            suspicious_behaviors.append("Bytes left is non-zero for 'completed' event.")
         client.complete = bytes_left == 0
-
-        client.save()
-
-        if event == 'started':
-            # TODO: something?
-            pass
-        elif event == 'stopped':
-            # TODO: something?
-            pass
-        elif event == 'completed':
-            # TODO: something?
-            pass
-        elif event:
-            return self.failure('Tracker could not parse announce request')
 
         #
         # Queue a task to handle record keeping for the site
@@ -200,6 +197,8 @@ class AnnounceView(View):
             torrent_info_hash=info_hash,
             new_bytes_uploaded=bytes_recently_uploaded,
             new_bytes_downloaded=bytes_recently_downloaded,
+            total_bytes_uploaded=total_bytes_uploaded,
+            total_bytes_downloaded=total_bytes_downloaded,
             bytes_remaining=bytes_left,
             event=event,
             ip_address=ip_address,
@@ -207,38 +206,42 @@ class AnnounceView(View):
             peer_id=peer_id,
             user_agent=user_agent,
             time_stamp=time_stamp,
+            suspicious_behaviors=suspicious_behaviors or None,
         )
 
         #
         # Prepare the response for the client
         #
 
-        # Get the peer list to send back
         if event == 'stopped':
+
             client.delete()
-            compact_peer_list_for_client = b''
+
+            # No need to get a list or count of peers
+            compact_peer_list = b''
+            active_seeder_count = 0
+            active_leecher_count = 0
+
         else:
+
             client.save()
+
+            # If we're responding to a seeder, only send them leechers
+            active_peers = swarm.peers.active()
             if client.complete:
-                # Leave seeders out of the peer list
-                compact_peer_list_for_client = swarm.peers.leechers().compact(limit=num_want)
-            else:
-                compact_peer_list_for_client = swarm.peers.all().compact(limit=num_want)
+                active_peers = active_peers.leechers()
 
-        # Get the number of seeders and leechers
-        complete = swarm.peers.seeders().count()
-        incomplete = swarm.peers.leechers().count()
+            compact_peer_list = active_peers.compact(limit=num_want)
+            active_seeder_count = swarm.peers.active().seeders().count()
+            active_leecher_count = swarm.peers.active().leechers().count()
 
-        # Put everything in a dictionary
-        response_dict = {
+        return BencodedResponse({
             'interval': self.ANNOUNCE_INTERVAL_IN_SECONDS,
             'min interval': self.ANNOUNCE_INTERVAL_IN_SECONDS,
-            'complete': complete,
-            'incomplete': incomplete,
-            'peers': compact_peer_list_for_client,
-        }
-
-        return BencodedResponse(response_dict)
+            'complete': active_seeder_count,
+            'incomplete': active_leecher_count,
+            'peers': compact_peer_list,
+        })
 
     @staticmethod
     def failure(reason):

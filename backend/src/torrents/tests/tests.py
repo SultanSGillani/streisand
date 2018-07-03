@@ -28,9 +28,12 @@ class TorrentAnnounceTests(TestCase):
             user_agent='',
             new_bytes_uploaded=amount,
             new_bytes_downloaded=0,
+            total_bytes_uploaded=amount,
+            total_bytes_downloaded=0,
             bytes_remaining=0,
             event='',
             time_stamp=now(),
+            suspicious_behaviors=None,
         )
 
     def test_announce_handler_tracks_uploaded_data(self):
