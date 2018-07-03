@@ -184,9 +184,10 @@ class AnnounceView(View):
         elif bytes_recently_uploaded < 0:
             suspicious_behaviors.append("Uploaded bytes delta is negative.")
 
+        client.bytes_remaining = bytes_left
+        client.complete = bytes_left == 0
         if event == 'completed' and bytes_left != 0:
             suspicious_behaviors.append("Bytes left is non-zero for 'completed' event.")
-        client.complete = bytes_left == 0
 
         #
         # Queue a task to handle record keeping for the site
