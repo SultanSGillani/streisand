@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { Row, Col, Card, CardTitle, CardText } from 'reactstrap';
+import { Card, CardTitle, CardText } from 'reactstrap';
 
 import IUser from '../../../models/IUser';
 import UserLink from '../../links/UserLink';
@@ -17,22 +17,18 @@ export interface IGeneralContentProps {
 export default function GeneralContent(props: IGeneralContentProps) {
     const { release, torrent, uploader } = props;
     return (
-        <Row className="mt-2">
-            <Col sm="6">
-                <Card body>
-                    <CardTitle>Release Information</CardTitle>
-                    <CardText>{release.releaseGroup} / {release.releaseName}</CardText>
-                    <TextView content={release.description} />
-                </Card>
-            </Col>
-            <Col sm="6">
-                <Card body>
-                    <CardTitle>User information</CardTitle>
-                    <CardText>
-                        Uploaded by <UserLink user={uploader} /> <TimeElapsed date={torrent.uploadedAt} />
-                    </CardText>
-                </Card>
-            </Col>
-        </Row>
+        <>
+            <Card body className="my-1">
+                <CardTitle>User information</CardTitle>
+                <CardText>
+                    Uploaded by <UserLink user={uploader} /> <TimeElapsed date={torrent.uploadedAt} />
+                </CardText>
+            </Card>
+            <Card body className="my-1">
+                <CardTitle>Release Information</CardTitle>
+                <CardText>{release.releaseGroup} / {release.releaseName}</CardText>
+                <TextView content={release.description} />
+            </Card>
+        </>
     );
 }

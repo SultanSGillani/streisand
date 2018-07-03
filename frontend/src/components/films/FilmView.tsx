@@ -60,7 +60,7 @@ class FilmViewComponent extends React.Component<CombinedProps> {
             }
         ];
         return (
-            <div>
+            <>
                 <CommandBar commands={commands} />
                 <h1>{film.title} [{film.year}]</h1>
                 <div style={styles.videoContainer}>
@@ -71,7 +71,7 @@ class FilmViewComponent extends React.Component<CombinedProps> {
                 <div>{tags}</div>
                 <h2>Torrents</h2>
                 <TorrentSection film={film} torrents={this.props.torrents} selected={this.props.torrentId} />
-            </div>
+            </>
         );
     }
 }

@@ -39,8 +39,8 @@ export default class TorrentInfoRow extends React.Component<Props, State> {
         return (
             <tr>
                 <td colSpan={4} className="p-0">
-                    <Collapse isOpen={isOpen} className="row no-gutters mb-2">
-                        <div className="col-sm-12">
+                    <Collapse isOpen={isOpen} className="row no-gutters mb-2" style={{ position: 'relative' }}>
+                        <div className="col-sm-12" style={{ position: 'absolute', left: 0, right: 0 }}>
                             <Nav tabs>
                                 <TabHeader id="general" title="General" activeTab={activeTab} setActiveTab={setActiveTab} />
                                 <TabHeader id="files" title="Files" activeTab={activeTab} setActiveTab={setActiveTab} />
