@@ -45,10 +45,21 @@ class PeerQuerySet(models.QuerySet):
         """
         Returns a compact (6-byte) representation of peers, selected randomly from
         the queryset, up to the provided limit.
+        https://wiki.theory.org/index.php/BitTorrentSpecification#Tracker_Response
         """
         peer_list = list(self.values_list('compact_representation', flat=True).distinct('ip_address', 'port'))
         peer_list = sample(peer_list, min(limit, len(peer_list)))
         return a2b_base64(''.join(peer_list))
+
+    def dictionary(self, limit):
+        """
+        Returns a list of peer dictionaries, selected randomly from the queryset,
+        up to the provided limit.
+        https://wiki.theory.org/index.php/BitTorrentSpecification#Tracker_Response
+        """
+        peer_list = [peer.dictionary_representation for peer in self.distinct('ip_address', 'port')]
+        peer_list = sample(peer_list, min(limit, len(peer_list)))
+        return peer_list
 
 
 class TorrentClientManager(models.Manager):

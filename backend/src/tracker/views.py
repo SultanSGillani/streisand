@@ -48,9 +48,13 @@ class AnnounceView(View):
         if not self.REQUIRED_PARAMS.issubset(request.GET):
             return self.failure('Announce request was missing one or more required parameters')
 
-        # Fail if the client will not accept a compact response
+        # Default to a compact response, and possibly fail if the client requests otherwise
         if request.GET.get('compact') == '0':
-            return self.failure('This tracker only sends compact responses')
+            compact_peers = False
+            if settings.COMPACT_PEERS_ONLY:
+                return self.failure('Tracker only sends compact responses')
+        else:
+            compact_peers = True
 
         # The `info_hash` and `peer_id` parameters include raw bytes, and
         # Django irreversibly encodes them into strings for request.GET,
@@ -106,8 +110,8 @@ class AnnounceView(View):
 
         # Parameters we don't care about:
         #
-        #    no_peer_id - We always send compact responses.  Might
-        #        want to rethink this for ipv6 compatibility.
+        #    no_peer_id - We default to compact responses.  When
+        #        we do send peer dictionaries, we send the peer id.
         #
         #    ip - No proxy announcing allowed; we will distribute
         #        the IP address from which this request originated
@@ -219,7 +223,7 @@ class AnnounceView(View):
             client.delete()
 
             # No need to get a list or count of peers
-            compact_peer_list = b''
+            active_peers = Peer.objects.none()
             active_seeder_count = 0
             active_leecher_count = 0
 
@@ -232,16 +236,20 @@ class AnnounceView(View):
             if client.complete:
                 active_peers = active_peers.leechers()
 
-            compact_peer_list = active_peers.compact(limit=num_want)
             active_seeder_count = swarm.peers.active().seeders().count()
             active_leecher_count = swarm.peers.active().leechers().count()
+
+        if compact_peers:
+            peer_list = active_peers.compact(limit=num_want)
+        else:
+            peer_list = active_peers.dictionary(limit=num_want)
 
         return BencodedResponse({
             'interval': self.ANNOUNCE_INTERVAL_IN_SECONDS,
             'min interval': self.ANNOUNCE_INTERVAL_IN_SECONDS,
             'complete': active_seeder_count,
             'incomplete': active_leecher_count,
-            'peers': compact_peer_list,
+            'peers': peer_list,
         })
 
     @staticmethod

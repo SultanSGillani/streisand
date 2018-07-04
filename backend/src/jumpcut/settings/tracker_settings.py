@@ -22,6 +22,8 @@ MIDDLEWARE = [
     'www.middleware.XForwardedForMiddleware',
 ]
 
+COMPACT_PEERS_ONLY = False
+
 
 if DEBUG:
     DEBUG_TOOLBAR_CONFIG = {
