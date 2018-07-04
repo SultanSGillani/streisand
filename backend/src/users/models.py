@@ -339,7 +339,7 @@ class UserAnnounce(models.Model):
     announce_key = models.UUIDField(null=False)
     ip_address = models.GenericIPAddressField(null=False)
     port = models.IntegerField(null=False)
-    peer_id = models.CharField(max_length=40, null=False)
+    peer_id = models.CharField(max_length=60, null=False)
     user_agent = models.TextField(null=False)
     new_bytes_uploaded = models.BigIntegerField(default=0, null=False)
     new_bytes_downloaded = models.BigIntegerField(default=0, null=False)
