@@ -86,6 +86,14 @@ class Peer(models.Model):
     def __repr__(self):
         return 'Peer <{peer}>'.format(peer=self.__str__())
 
+    @property
+    def dictionary_representation(self):
+        return {
+            'peer id': self.peer_id,
+            'ip': self.ip_address,
+            'port': self.port,
+        }
+
 
 class TorrentClient(models.Model):
 
