@@ -78,7 +78,7 @@ export function createRoutes(store: ReduxStore<Store.All>) {
                     <Route path="/releases/:page" component={ReleasesPage} />
                     <Redirect from="/releases" to="/releases/1" />
                     <Route path="/release/:releaseId" component={ReleasePage} />
-                    <Route path="/release/:releaseId/:mode" component={ReleasePage} />
+                    <Route path="/release/:releaseId/:torrentId" component={ReleasePage} />
                     <Redirect from="/release" to="/films/1" />
 
                     <Route path="/torrents/detached/:page" component={DetachedTorrentsPage} />

@@ -31,7 +31,7 @@ type ConnectedState = {
 
 type ConnectedDispatch = {
     getFilm: (id: number) => void;
-    getTorrents: (filmId: number) => void;
+    getTorrents: (id: number) => void;
 };
 
 type CombinedProps = ConnectedState & ConnectedDispatch & Props;
@@ -48,8 +48,8 @@ class FilmPageComponent extends React.Component<CombinedProps, void> {
         const changed = props.filmId !== this.props.filmId;
         const needUpdate = !status.failed && (!status.loaded || status.outdated);
         if (!status.loading && (changed || needUpdate)) {
-            this.props.getFilm(props.filmId);
-            this.props.getTorrents(props.filmId);
+            props.getFilm(props.filmId);
+            props.getTorrents(props.filmId);
         }
     }
 
@@ -85,7 +85,7 @@ const mapStateToProps = (state: Store.All, props: Props): ConnectedState => {
 
 const mapDispatchToProps = (dispatch: IDispatch): ConnectedDispatch => ({
     getFilm: (id: number) => dispatch(getFilm(id)),
-    getTorrents: (filmId: number) => dispatch(getTorrents(filmId))
+    getTorrents: (id: number) => dispatch(getTorrents(id))
 });
 
 const FilmPage: React.ComponentClass<Props> =

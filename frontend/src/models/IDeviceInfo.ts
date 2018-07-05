@@ -10,6 +10,7 @@ export const enum ScreenSize {
 
 export interface IDeviceInfo {
     screenSize: ScreenSize;
+    containerWidth: number;
 }
 
 export default IDeviceInfo;
