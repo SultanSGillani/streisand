@@ -5,6 +5,7 @@ import { IItemPages } from './base/IPagedItemSet';
 interface ITorrentItemSet extends IItemSet<ITorrent> {
     detached: IItemPages;
     byFilmId: { [id: number]: IItemPages };
+    byReleaseId: { [id: number]: IItemPages };
 }
 
 export default ITorrentItemSet;

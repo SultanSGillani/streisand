@@ -6,7 +6,7 @@ from urllib.parse import urlencode
 
 from django_dynamic_fixture import G
 
-from django.test import TestCase, RequestFactory
+from django.test import TestCase, RequestFactory, override_settings
 
 from users.models import User
 from torrents.models import TorrentFile
@@ -107,6 +107,7 @@ class AnnounceTests(TestCase):
         self.announce_view(request, announce_key=self.user.announce_key_id)
         self.assertEqual(handler_mock.call_count, 0)
 
+    @override_settings(COMPACT_PEERS_ONLY=True)
     def test_announce_handler_not_called__non_compact(self, handler_mock):
         self.announce_data.update({'compact': '0'})
         request = self.announce_request()

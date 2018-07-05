@@ -13,7 +13,7 @@ import { deleteFilm } from '../../actions/films/DeleteFilmAction';
 
 export type Props = {
     film: IFilm;
-    torrentId: number;
+    torrentId?: number;
 };
 
 type ConnectedState = {
@@ -59,6 +59,7 @@ class FilmViewComponent extends React.Component<CombinedProps> {
                 onExecute: () => { this.props.deleteFilm(film.id); }
             }
         ];
+        const urlPrefix = `/film/${film.id}`;
         return (
             <>
                 <CommandBar commands={commands} />
@@ -70,7 +71,9 @@ class FilmViewComponent extends React.Component<CombinedProps> {
                 <p>{film.description}</p>
                 <div>{tags}</div>
                 <h2>Torrents</h2>
-                <TorrentSection film={film} torrents={this.props.torrents} selected={this.props.torrentId} />
+                <TorrentSection film={film}
+                    torrents={this.props.torrents} includeReleaseInfo={true}
+                    selected={this.props.torrentId} urlPrefix={urlPrefix} />
             </>
         );
     }

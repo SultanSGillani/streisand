@@ -100,6 +100,7 @@ TRACKER_ANNOUNCE_INTERVAL = timedelta(minutes=40)
 SEED_TIME_QUOTA = timedelta(hours=96)
 HNR_GRACE_PERIOD = timedelta(days=14)
 DEAD_PEER_GRACE_PERIOD = timedelta(days=14)
+COMPACT_PEERS_ONLY = False
 
 LOCAL_APPS = [
     'comments',

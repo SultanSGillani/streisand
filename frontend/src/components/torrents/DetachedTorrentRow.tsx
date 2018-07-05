@@ -59,7 +59,7 @@ class TorrentRowComponent extends React.Component<CombinedProps, State> {
                     <td className="align-middle"><UserLink user={this.props.uploader} /></td>
                     <td className="align-middle"><TimeElapsed date={torrent.uploadedAt} /></td>
                     <td className="align-middle"><DataSize size={torrent.totalSizeInBytes} /></td>
-                    <TorrentActionCell torrent={torrent} page={page} />
+                    <TorrentActionCell torrent={torrent} page={page} includeDelete={true} />
                 </tr>
                 <tr>
                     <td colSpan={5} style={{ padding: 0 }}>

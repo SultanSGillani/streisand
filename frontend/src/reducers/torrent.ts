@@ -21,6 +21,7 @@ function byId(state: ItemMap = {}, action: Action): ItemMap {
             return markFailed(state, action.props.id);
         case 'RECEIVED_DETACHED_TORRENTS':
         case 'RECEIVED_FILM_TORRENTS':
+        case 'RECEIVED_RELEASE_TORRENTS':
             return addLoadedNodes(state, action.props.items);
         default:
             return state;
@@ -43,5 +44,20 @@ function byFilmId(state: Torrents = {}, action: Action): Torrents {
     }
 }
 
+const releasePagesReducer = getPagesReducer('RELEASE_TORRENTS');
+function byReleaseId(state: Torrents = {}, action: Action): Torrents {
+    switch (action.type) {
+        case 'REQUEST_RELEASE_TORRENTS':
+        case 'RECEIVED_RELEASE_TORRENTS':
+        case 'FAILED_RELEASE_TORRENTS':
+        case 'INVALIDATE_RELEASE_TORRENTS':
+            const currentItemSet = state[action.props.id];
+            const newItemSet = releasePagesReducer(currentItemSet, action);
+            return objectAssign({}, state, { [action.props.id]: newItemSet });
+        default:
+            return state;
+    }
+}
+
 const detached = getPagesReducer('DETACHED_TORRENTS');
-export default combineReducers<ITorrentItemSet>({ byId, byFilmId, detached });
+export default combineReducers<ITorrentItemSet>({ byId, byFilmId, byReleaseId, detached });
