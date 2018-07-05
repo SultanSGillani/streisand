@@ -15,9 +15,10 @@ RUN apk add --no-cache \
     jpeg-dev \
     zlib-dev \
     libffi-dev \
+    bash \
     postgresql-dev \
     libmemcached-dev \
-    zlib-dev \
+    mariadb-dev \
     mariadb-client-libs
 
 RUN apk add --no-cache --virtual .build-deps \
@@ -26,11 +27,6 @@ RUN apk add --no-cache --virtual .build-deps \
     linux-headers \
     gcc \
     libc-dev \
-    libffi-dev \
-    bash \
-    git \
-    nginx \
-    mariadb-dev \
     musl-dev
 
 RUN pip install pip --upgrade
