@@ -19,8 +19,8 @@ RUN apk add --update --no-cache \
     libffi-dev \
     postgresql-dev \
     libmemcached-dev \
-    zlib-dev \
     pcre-dev \
+    mariadb-dev \
     mariadb-client-libs \
 && addgroup -S nginx \
 && adduser -D -S -h /var/cache/nginx -s /sbin/nologin -G nginx nginx \
@@ -30,10 +30,6 @@ RUN apk add --update --no-cache \
     linux-headers \
     gcc \
     libc-dev \
-    libffi-dev \
-    bash \
-    git \
-    mariadb-dev \
     musl-dev \
 && pip install pip --upgrade \
 && pip install -r requirements.txt \
