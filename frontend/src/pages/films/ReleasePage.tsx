@@ -13,26 +13,27 @@ import ILoadingStatus from '../../models/base/ILoadingStatus';
 import { getMediaTypes } from '../../actions/MediaTypeAction';
 import ReleaseView from '../../components/releases/ReleaseView';
 import { getRelease } from '../../actions/releases/ReleaseAction';
-import UpdateReleaseView from '../../components/releases/UpdateReleaseView';
+import { getTorrents } from '../../actions/torrents/ReleaseTorrentsAction';
 
 export type Props = {
     params: {
-        mode: string;
         releaseId: string;
+        torrentId: string;
     };
 };
 
 type ConnectedState = {
     film?: IFilm;
     releaseId: number;
+    torrentId: number;
     release?: IRelease;
-    isEditMode: boolean;
     status: ILoadingStatus;
 };
 
 type ConnectedDispatch = {
     getMediaTypes: () => void;
     getRelease: (id: number) => void;
+    getTorrents: (id: number) => void;
 };
 
 type CombinedProps = ConnectedState & ConnectedDispatch & Props;
@@ -40,6 +41,7 @@ class ReleasePageComponent extends React.Component<CombinedProps, void> {
     public componentWillMount() {
         if (!this.props.status.loading) {
             this.props.getRelease(this.props.releaseId);
+            this.props.getTorrents(this.props.releaseId);
         }
         this.props.getMediaTypes();
     }
@@ -49,7 +51,8 @@ class ReleasePageComponent extends React.Component<CombinedProps, void> {
         const changed = props.releaseId !== this.props.releaseId;
         const needUpdate = !status.failed && (!status.loaded || status.outdated);
         if (!status.loading && (changed || needUpdate)) {
-            this.props.getRelease(props.releaseId);
+            props.getRelease(props.releaseId);
+            props.getTorrents(props.releaseId);
         }
     }
 
@@ -59,14 +62,8 @@ class ReleasePageComponent extends React.Component<CombinedProps, void> {
             return this.props.status.loading ? <Loading /> : <Empty />;
         }
 
-        if (this.props.isEditMode) {
-            return (
-                <UpdateReleaseView film={film} release={release} />
-            );
-        }
-
         return (
-            <ReleaseView film={film} release={release} />
+            <ReleaseView film={film} release={release} torrentId={this.props.torrentId} />
         );
     }
 }
@@ -80,13 +77,14 @@ const mapStateToProps = (state: Store.All, props: Props): ConnectedState => {
         release: releaseNode.item,
         status: releaseNode.status,
         film: filmNode && filmNode.item,
-        isEditMode: props.params.mode === 'edit'
+        torrentId: numericIdentifier(props.params.torrentId)
     };
 };
 
 const mapDispatchToProps = (dispatch: IDispatch): ConnectedDispatch => ({
     getMediaTypes: () => dispatch(getMediaTypes()),
-    getRelease: (id: number) => dispatch(getRelease(id))
+    getRelease: (id: number) => dispatch(getRelease(id)),
+    getTorrents: (id: number) => dispatch(getTorrents(id))
 });
 
 const ReleasePage: React.ComponentClass<Props> =

@@ -17,6 +17,7 @@ function byId(state: ItemMap = {}, action: Action): ItemMap {
         case 'RECEIVED_BULK_USERS':
         case 'RECEIVED_DETACHED_TORRENTS':
         case 'RECEIVED_FILM_TORRENTS':
+        case 'RECEIVED_RELEASE_TORRENTS':
             return addLoadedNodes(state, action.users);
         default:
             return state;

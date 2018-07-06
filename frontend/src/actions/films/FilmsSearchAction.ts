@@ -10,9 +10,10 @@ export interface IFilmSearchProps {
     description?: string;
     tags?: string;
     year?: number;
+    advanced?: boolean;
 }
+
 interface IActionProps extends IFilmSearchProps { }
-const PAGE_SIZE = globals.pageSize.films;
 
 export type RequestFilms = { type: 'REQUEST_FILM_SEARCH', props: IActionProps };
 export type ReceivedFilms = { type: 'RECEIVED_FILM_SEARCH', props: { page: number, pageSize: number, count: number, items: IFilm[] } };
@@ -23,11 +24,12 @@ export default FilmSearchAction;
 type Action = FilmSearchAction;
 
 function received(response: IPagedResponse<IFilm>, props: IActionProps): Action {
+    const pageSize = props.advanced ? globals.pageSize.films : globals.pageSize.simpleSearch;
     return {
         type: 'RECEIVED_FILM_SEARCH',
         props: {
             page: props.page,
-            pageSize: PAGE_SIZE,
+            pageSize: pageSize,
             count: response.count,
             items: response.results
         }
@@ -47,6 +49,7 @@ const fetch = generateAuthFetch({ errorPrefix, request, received, failure });
 export const filmSearchSaga = generateSage<RequestFilms>('REQUEST_FILM_SEARCH', fetch);
 
 function request(token: string, props: IActionProps): Promise<IPagedResponse<IFilm>> {
+    const pageSize = props.advanced ? globals.pageSize.films : globals.pageSize.simpleSearch;
     const search = `&title=${props.title || ''}&year=${props.year || ''}&description=${props.description || ''}&tags=${props.tags || ''}`;
-    return get({ token, url: `${globals.apiUrl}/films/?page=${props.page}&size=${PAGE_SIZE}${search}` });
+    return get({ token, url: `${globals.apiUrl}/films/?page=${props.page}&size=${pageSize}${search}` });
 }

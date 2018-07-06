@@ -70,6 +70,7 @@ class SearchFilmViewComponent extends React.Component<CombinedProps, State> {
         const { title, description, year } = this.state;
         this.props.searchFilm({
             title, description, year,
+            advanced: true,
             page: 1
         });
     }

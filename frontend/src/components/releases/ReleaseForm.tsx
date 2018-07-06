@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { Form, Card, CardBody, CardFooter, Button } from 'reactstrap';
+import { Form, Card, CardBody, CardFooter, Button, ButtonGroup } from 'reactstrap';
 
 import IMediaTypes from '../../models/IMediaTypes';
 import { ListInput } from '../generic/inputs/ListInput';
@@ -26,6 +26,7 @@ export type Props = {
     mediaTypes: IMediaTypes;
     intialValues?: IReleaseFormData;
     onSubmit?: (data: IReleaseFormData) => void;
+    onCancel?: () => void;
 };
 
 type State = IReleaseFormData;
@@ -62,10 +63,16 @@ export default class ReleaseForm extends React.Component<Props, State> {
         const buttonText = this.props.processing
             ? (isCreating ? 'creating release...' : 'updating release...')
             : (isCreating ? 'Create' : 'Update');
+        const cancelButton = !this.props.onCancel ? undefined : (
+            <Button className="col-auto" disabled={this.props.processing} onClick={this.props.onCancel}>Cancel</Button>
+        );
         const footer = isReadonly ? undefined : (
             <CardFooter>
                 <div className="row m-0 justify-content-end">
-                    <Button className="col-auto" color="primary" disabled={!canSubmit} onClick={() => onSubmit()}>{buttonText}</Button>
+                    <ButtonGroup>
+                        {cancelButton}
+                        <Button className="col-auto" color="primary" disabled={!canSubmit} onClick={() => onSubmit()}>{buttonText}</Button>
+                    </ButtonGroup>
                 </div>
             </CardFooter>
         );
@@ -111,7 +118,7 @@ export default class ReleaseForm extends React.Component<Props, State> {
                             setValue={(value: boolean) => this.setState({ is3d: value })} />
                     </Form>
                 </CardBody>
-                { footer }
+                {footer}
             </Card>
         );
     }

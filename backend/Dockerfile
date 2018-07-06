@@ -11,16 +11,23 @@ WORKDIR /code
 COPY ./requirements.txt ./requirements.txt
 COPY ./testing_requirements.txt ./testing_requirements.txt
 
-RUN apk add --no-cache jpeg-dev zlib-dev libffi-dev postgresql-dev libmemcached-dev zlib-dev
+RUN apk add --no-cache \
+    jpeg-dev \
+    zlib-dev \
+    libffi-dev \
+    bash \
+    postgresql-dev \
+    libmemcached-dev \
+    mariadb-dev \
+    mariadb-client-libs
 
-RUN apk add --no-cache --virtual .build-deps build-base python3-dev libffi-dev linux-headers \
-		    gcc \
-		    libc-dev \
-            libffi-dev \
-            bash git \
-            nginx \
-            mariadb-dev \
-            musl-dev
+RUN apk add --no-cache --virtual .build-deps \
+    build-base \
+    python3-dev \
+    linux-headers \
+    gcc \
+    libc-dev \
+    musl-dev
 
 RUN pip install pip --upgrade
 RUN pip install -r requirements.txt
@@ -32,4 +39,4 @@ COPY . .
 ENV PYTHONPATH /code/src
 
 EXPOSE 8000 7070
-CMD ["python", "src/manage.py", "runserver_plus", "0.0.0.0:8000"]
+CMD ["python", "src/manage.py", "runserver_plus", "[::]:8000"]

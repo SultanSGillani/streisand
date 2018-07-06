@@ -97,6 +97,10 @@ TRACKER_ANNOUNCE_URL_TEMPLATE = urljoin(TRACKER_URL, '{announce_key}/announce/')
 TORRENT_FILE_UPLOAD_MAX_SIZE = 1024 * 1024 * 5  # 5MB
 TRACKER_ANNOUNCE_INTERVAL = timedelta(minutes=40)
 
+SEED_TIME_QUOTA = timedelta(hours=96)
+HNR_GRACE_PERIOD = timedelta(days=14)
+DEAD_PEER_GRACE_PERIOD = timedelta(days=14)
+COMPACT_PEERS_ONLY = False
 
 LOCAL_APPS = [
     'comments',

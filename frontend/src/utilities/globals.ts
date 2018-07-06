@@ -19,6 +19,7 @@ export default {
         threads: defaultPageSize,
         invites: defaultPageSize,
         releases: defaultPageSize,
+        simpleSearch: 5,
         posts: 10
     }
 };
