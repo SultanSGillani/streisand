@@ -5,20 +5,20 @@ import IAuthInfo from '../models/IAuthInfo';
 import { getAuthToken } from '../utilities/storage';
 
 const authToken = getAuthToken();
-const defaultValue: IAuthInfo = {
+export const initialState: IAuthInfo = {
     isAuthenticated: !!authToken,
     isAuthenticating: false,
-    token: authToken
+    token: authToken,
 };
 
-function auth(state: IAuthInfo = defaultValue, action: Action): IAuthInfo {
+function auth(state: IAuthInfo = initialState, action: Action): IAuthInfo {
     switch (action.type) {
         case 'RECEIVED_LOGOUT':
         case 'FAILED_AUTHENTICATION':
             return {
                 isAuthenticated: false,
                 isAuthenticating: false,
-                token: ''
+                token: '',
             };
         case 'REQUEST_AUTHENTICATION':
             return assign({}, state, { isAuthenticating: true });
@@ -27,7 +27,7 @@ function auth(state: IAuthInfo = defaultValue, action: Action): IAuthInfo {
             return {
                 isAuthenticated: true,
                 isAuthenticating: false,
-                token: action.token
+                token: action.token,
             };
         default:
             return state;
