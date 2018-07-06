@@ -14,20 +14,21 @@ export interface ITextInputProps {
 export function StringInput(props: ITextInputProps) {
     const id = `${props.id}Input`;
     const type = props.type || 'text';
+    const value = props.value || ''
 
     if (props.isReadonly) {
         if (props.type === 'textarea') {
             return (
                 <FormGroup>
                     <Label for={id}>{props.label}</Label>
-                    <textarea id={id} value={props.value} className="form-control" readOnly rows={4} />
+                    <textarea id={id} value={value} className="form-control" readOnly rows={4} />
                 </FormGroup>
             );
         }
         return (
             <FormGroup>
                 <Label for={id}>{props.label}</Label>
-                <Input type={type} id={id} value={props.value} readOnly/>
+                <Input type={type} id={id} value={value} readOnly/>
             </FormGroup>
         );
     }
@@ -36,7 +37,7 @@ export function StringInput(props: ITextInputProps) {
         return (
             <FormGroup>
                 <Label for={id}>{props.label}</Label>
-                <textarea id={id} value={props.value} className="form-control"
+                <textarea id={id} value={value} className="form-control"
                     placeholder={props.placeholder} rows={4}
                     onChange={(event) => props.setValue(event.target.value)} />
             </FormGroup>
@@ -46,7 +47,7 @@ export function StringInput(props: ITextInputProps) {
     return (
         <FormGroup>
             <Label for={id}>{props.label}</Label>
-            <Input type={type} id={id} value={props.value} placeholder={props.placeholder}
+            <Input type={type} id={id} value={value} placeholder={props.placeholder}
                 onChange={(event) => props.setValue(event.target.value)} />
         </FormGroup>
     );

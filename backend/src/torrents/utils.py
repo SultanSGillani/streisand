@@ -101,7 +101,7 @@ class TorrentFileUploadParser(FileUploadParser):
 
         try:
             data['pieces'] = b2a_base64(info_dict['pieces']).decode('utf-8')
-        except KeyError:
+        except (KeyError, TypeError):
             raise ParseError("Info dict must contain pieces!")
 
         return data

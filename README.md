@@ -150,7 +150,7 @@ Once Docker for Windows has been installed, you will need to configure it so tha
 
 Git comes installed by default with Ubuntu for Windows. You can clone this repository immediately from your WSL Bash by running:
 
-`git clone git@git.pinigseu.xyz:jumpcut/jumpcut.git`
+`git clone git@gitlab.pinigseu.xyz:jumpcut/jumpcut.git`
 
 Make sure you have added your ssh key to git.
 

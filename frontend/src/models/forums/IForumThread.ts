@@ -26,6 +26,9 @@ export interface IForumThreadResponse {
     createdAt: string; // Date
     createdBy: number;
     numberOfPosts: number;
+}
+
+export interface IForumThreadPostsResponse extends IForumThreadResponse {
     posts: {
         count: number;
         results: {

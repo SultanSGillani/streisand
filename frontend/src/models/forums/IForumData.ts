@@ -3,7 +3,7 @@ import { IForumGroup } from './IForumGroup';
 import { IForumTopic } from './IForumTopic';
 import { IForumThread } from './IForumThread';
 import ILoadingStatus from '../base/ILoadingStatus';
-import { INestedPages } from '../base/IPagedItemSet';
+import { INestedPages, IItemPages } from '../base/IPagedItemSet';
 
 export interface IForumGroupData {
     status: ILoadingStatus;
@@ -18,6 +18,7 @@ export type ForumTopicData = {
 export type ForumThreadData = {
     byId: { [id: number]: IForumThread };
     byTopic: INestedPages;
+    search: IItemPages;
 };
 
 export type ForumPostData = {

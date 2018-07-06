@@ -23,7 +23,8 @@ def async_email(*args, **kwargs):
 
 @shared_task
 def handle_announce(announce_key, torrent_info_hash, new_bytes_uploaded, new_bytes_downloaded,
-                    bytes_remaining, event, ip_address, port, peer_id, user_agent, time_stamp):
+                    total_bytes_uploaded, total_bytes_downloaded, bytes_remaining, event,
+                    ip_address, port, peer_id, user_agent, time_stamp, suspicious_behaviors):
     """
     Event handler for announces made to the tracker.
 
@@ -83,8 +84,8 @@ def handle_announce(announce_key, torrent_info_hash, new_bytes_uploaded, new_byt
     # Track upload/download stats
     torrent_stats.bytes_uploaded = F('bytes_uploaded') + new_bytes_uploaded
     torrent_stats.bytes_downloaded = F('bytes_downloaded') + new_bytes_downloaded
-    user.bytes_downloaded = F('bytes_downloaded') + new_bytes_downloaded
     user.bytes_uploaded = F('bytes_uploaded') + new_bytes_uploaded
+    user.bytes_downloaded = F('bytes_downloaded') + new_bytes_downloaded
 
     # Save changes
     torrent_stats.save()
@@ -102,7 +103,7 @@ def handle_announce(announce_key, torrent_info_hash, new_bytes_uploaded, new_byt
     )
 
     # Announce logging
-    if user.log_successful_announces or Feature.objects.is_enabled('log_all_announces'):
+    if suspicious_behaviors or user.log_successful_announces or Feature.objects.is_enabled('log_all_announces'):
         user.logged_announces.create(
             time_stamp=time_stamp,
             torrent_id=torrent_info_hash,
@@ -111,10 +112,13 @@ def handle_announce(announce_key, torrent_info_hash, new_bytes_uploaded, new_byt
             port=port,
             peer_id=peer_id,
             user_agent=user_agent,
-            new_bytes_downloaded=new_bytes_downloaded,
             new_bytes_uploaded=new_bytes_uploaded,
+            new_bytes_downloaded=new_bytes_downloaded,
+            total_bytes_uploaded=total_bytes_uploaded,
+            total_bytes_downloaded=total_bytes_downloaded,
             bytes_remaining=bytes_remaining,
             event=event,
+            suspicious_behaviors=suspicious_behaviors,
         )
 
 

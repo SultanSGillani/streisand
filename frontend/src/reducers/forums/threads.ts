@@ -8,6 +8,7 @@ import { IForumThread } from '../../models/forums/IForumThread';
 import { ForumThreadData } from '../../models/forums/IForumData';
 import { INestedPages, IItemPage, IItemPages } from '../../models/base/IPagedItemSet';
 import ForumTopicAction, { ReceivedForumTopic } from '../../actions/forums/topics/ForumTopicAction';
+import { getPagesReducer } from '../utilities/pages';
 
 type Action = ForumAction | NewsAction;
 
@@ -71,4 +72,5 @@ function processThreads(params: IThreadProcessingParams): INestedPages {
     });
 }
 
-export default combineReducers<ForumThreadData>({ byId, byTopic });
+const search = getPagesReducer('THREAD_SEARCH');
+export default combineReducers<ForumThreadData>({ byId, byTopic, search });

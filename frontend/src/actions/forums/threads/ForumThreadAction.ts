@@ -1,12 +1,12 @@
 import { put } from 'redux-saga/effects';
 
-import { transformThread } from '../transforms';
+import { transformThreadPosts } from '../transforms';
 import globals from '../../../utilities/globals';
 import { get } from '../../../utilities/Requestor';
 import { getUsers } from '../../users/BulkUserAction';
 import { IForumGroupData } from '../../../models/forums/IForumGroup';
 import { generateAuthFetch, generateSage } from '../../sagas/generators';
-import { IForumThreadResponse } from '../../../models/forums/IForumThread';
+import { IForumThreadPostsResponse } from '../../../models/forums/IForumThread';
 
 interface IActionProps { id: number; page: number; }
 const PAGE_SIZE = globals.pageSize.posts;
@@ -23,8 +23,8 @@ type ForumThreadAction = RequestThread | ReceivedThread | FailedThread | Invalid
 export default ForumThreadAction;
 type Action = ForumThreadAction;
 
-function* received(response: IForumThreadResponse, props: IActionProps) {
-    const data = transformThread(response);
+function* received(response: IForumThreadPostsResponse, props: IActionProps) {
+    const data = transformThreadPosts(response);
     yield put<Action>({
         type: 'RECEIVED_FORUM_THREAD',
         props: {
@@ -56,6 +56,6 @@ const errorPrefix = (props: IActionProps) => `Fetching page ${props.page} of the
 const fetch = generateAuthFetch({ errorPrefix, request, received, failure });
 export const forumThreadSaga = generateSage<RequestThread>('REQUEST_FORUM_THREAD', fetch);
 
-function request(token: string, props: IActionProps): Promise<IForumThreadResponse> {
+function request(token: string, props: IActionProps): Promise<IForumThreadPostsResponse> {
     return get({ token, url: `${globals.apiUrl}/forum-thread-index/${props.id}/?page=${props.page}&size=${PAGE_SIZE}` });
 }

@@ -11,12 +11,14 @@ import TorrentInfoRow from './TorrentInfoRow';
 import { ITorrent } from '../../models/ITorrent';
 import { getItem } from '../../utilities/mapping';
 import TorrentActionCell from './TorrentActionCell';
-import { ScreenSize } from '../../models/IDeviceInfo';
+import { IDeviceInfo } from '../../models/IDeviceInfo';
 
 export type Props = {
     film: IFilm;
+    urlPrefix: string;
     torrent: ITorrent;
     startOpen: boolean;
+    includeReleaseInfo: boolean;
 };
 
 type State = {
@@ -27,10 +29,10 @@ type State = {
 type ConnectedState = {
     uploader?: IUser;
     release?: IRelease;
-    screenSize: ScreenSize;
+    deviceInfo: IDeviceInfo;
 };
 
-type ConnectedDispatch = { };
+type ConnectedDispatch = {};
 
 type CombinedProps = Props & ConnectedDispatch & ConnectedState;
 class TorrentRowComponent extends React.Component<CombinedProps, State> {
@@ -45,15 +47,14 @@ class TorrentRowComponent extends React.Component<CombinedProps, State> {
 
     public render() {
         const { isOpen } = this.state;
-        const { film, torrent, release, uploader, screenSize } = this.props;
-        if (!release) {
-            return <tr><td colSpan={3}>Torrent is not connected to a release.</td></tr>;
-        }
-
-        const name = getTorrentName(release);
+        const { torrent, release, uploader, deviceInfo, includeReleaseInfo } = this.props;
+        const name = (release && includeReleaseInfo) ? getReleaseName(release) : getTorrentName(torrent);
         const toggle = () => this.setState({ isOpen: !this.state.isOpen });
-        const secondRowProps = { torrent, release, uploader, isOpen, screenSize };
-        const link = `/film/${film.id}/${torrent.id}`;
+        const secondRowProps = {
+            torrent, uploader, isOpen, deviceInfo,
+            release: includeReleaseInfo ? release : undefined
+        };
+        const link = `${this.props.urlPrefix}/${torrent.id}`;
         return (
             <>
                 <tr>
@@ -62,7 +63,9 @@ class TorrentRowComponent extends React.Component<CombinedProps, State> {
                     </td>
                     <td className="align-middle">{torrent.snatchCount}</td>
                     <td className="align-middle"><DataSize size={torrent.totalSizeInBytes} /></td>
-                    <TorrentActionCell film={film} torrent={torrent} />
+                    <TorrentActionCell torrent={torrent}
+                        includeDelete={!(release && includeReleaseInfo)}
+                        includeRelease={!!(release && includeReleaseInfo)} />
                 </tr>
                 <TorrentInfoRow {...secondRowProps} />
             </>
@@ -70,7 +73,19 @@ class TorrentRowComponent extends React.Component<CombinedProps, State> {
     }
 }
 
-function getTorrentName(release: IRelease) {
+function getTorrentName(torrent: ITorrent): string {
+    if (torrent.directoryName) {
+        return torrent.directoryName;
+    }
+
+    if (torrent.files && torrent.files.length) {
+        return torrent.files[0].path;
+    }
+
+    return '<Empty torrent>';
+}
+
+function getReleaseName(release: IRelease): string {
     let name = `${release.codec} / ${release.container} / ${release.sourceMedia} / ${release.resolution}`;
     if (release.is3d) {
         name += ' / 3D';
@@ -84,7 +99,7 @@ function getTorrentName(release: IRelease) {
 
 const mapStateToProps = (state: Store.All, props: Props): ConnectedState => {
     return {
-        screenSize: state.deviceInfo.screenSize,
+        deviceInfo: state.deviceInfo,
         release: getItem({
             id: props.torrent.release,
             byId: state.sealed.release.byId

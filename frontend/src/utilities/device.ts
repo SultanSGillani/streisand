@@ -8,14 +8,3 @@ export function getScreenSize(): ScreenSize {
     if (width < 1200) { return ScreenSize.large; }
     return ScreenSize.extraLarge;
 }
-
-export function watchScreenSize(onChange: (s: ScreenSize) => void) {
-    let currentSize = getScreenSize();
-    return () => {
-        const size = getScreenSize();
-        if (size !== currentSize) {
-            currentSize = size;
-            onChange(size);
-        }
-    };
-}

@@ -4,7 +4,7 @@ from uuid import uuid4
 
 from django.conf import settings
 from django.contrib.auth.models import AbstractUser
-from django.contrib.postgres.fields.citext import CICharField
+from django.contrib.postgres.fields import CICharField, JSONField
 from django.db import models, transaction
 from django.db.models import Sum
 from django.urls import reverse
@@ -339,12 +339,15 @@ class UserAnnounce(models.Model):
     announce_key = models.UUIDField(null=False)
     ip_address = models.GenericIPAddressField(null=False)
     port = models.IntegerField(null=False)
-    peer_id = models.CharField(max_length=40, null=False)
+    peer_id = models.CharField(max_length=60, null=False)
     user_agent = models.TextField(null=False)
     new_bytes_uploaded = models.BigIntegerField(default=0, null=False)
     new_bytes_downloaded = models.BigIntegerField(default=0, null=False)
+    total_bytes_uploaded = models.BigIntegerField(default=0, null=False)
+    total_bytes_downloaded = models.BigIntegerField(default=0, null=False)
     bytes_remaining = models.BigIntegerField(null=False)
     event = models.CharField(max_length=16, null=False)
+    suspicious_behaviors = JSONField(null=True)
 
     class Meta:
         get_latest_by = 'time_stamp'

@@ -7,19 +7,25 @@ import ITorrent from '../../models/ITorrent';
 
 export type Props = {
     film: IFilm;
-    selected: number;
+    urlPrefix: string;
+    selected?: number;
     torrents: ITorrent[];
+    includeReleaseInfo: boolean;
 };
 
 export default function TorrentSection(props: Props) {
     const { torrents, film } = props;
     if (!torrents.length) {
-        return <p>There are no torrents uploaded for this film yet.</p>;
+        return <p>There were no torrents found.</p>;
     }
 
     const rows = torrents.map((torrent: ITorrent) => {
         const startOpen = torrent.id === props.selected;
-        return (<TorrentRow film={film} torrent={torrent} key={torrent.id} startOpen={startOpen} />);
+        return (
+            <TorrentRow film={film} torrent={torrent} key={torrent.id}
+                includeReleaseInfo={props.includeReleaseInfo}
+                startOpen={startOpen} urlPrefix={props.urlPrefix} />
+        );
     });
 
     return (
