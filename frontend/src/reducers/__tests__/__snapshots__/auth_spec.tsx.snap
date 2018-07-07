@@ -1,13 +1,5 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`reducers/auth returns default state when given un-recognized action 1`] = `
-Object {
-  "isAuthenticated": false,
-  "isAuthenticating": false,
-  "token": undefined,
-}
-`;
-
 exports[`reducers/auth returns empty state on "FAILED_AUTHENTICATION" 1`] = `
 Object {
   "isAuthenticated": false,

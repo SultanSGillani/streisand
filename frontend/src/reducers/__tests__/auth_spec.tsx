@@ -10,7 +10,8 @@ describe('reducers/auth', () => {
     });
 
     it('returns state with isAuthenticating: true', () => {
-        expect(auth(initialState, { type: 'REQUEST_AUTHENTICATION' })).toMatchSnapshot();
+        const props = { username: 'jumpcut', password: 'jumpcut' }
+        expect(auth(initialState, { type: 'REQUEST_AUTHENTICATION', props })).toMatchSnapshot();
     });
 
     it('returns state with isAuthenticating: true and token: "12345"', () => {
@@ -19,9 +20,5 @@ describe('reducers/auth', () => {
 
     it('returns state with isAuthenticating: true and token: "12345"', () => {
         expect(auth(initialState, { type: 'RECEIVED_REGISTRATION', token: '12345' })).toMatchSnapshot()
-    });
-
-    it('returns default state when given un-recognized action', () => {
-        expect(auth(initialState, { type: 'UNRECOGNIZED' })).toMatchSnapshot()
     });
 });
