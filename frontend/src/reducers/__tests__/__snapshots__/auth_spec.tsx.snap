@@ -1,0 +1,41 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`reducers/auth returns empty state on "FAILED_AUTHENTICATION" 1`] = `
+Object {
+  "isAuthenticated": false,
+  "isAuthenticating": false,
+  "token": "",
+}
+`;
+
+exports[`reducers/auth returns empty state on "RECEIVED_LOGOUT" 1`] = `
+Object {
+  "isAuthenticated": false,
+  "isAuthenticating": false,
+  "token": "",
+}
+`;
+
+exports[`reducers/auth returns state with isAuthenticating: true 1`] = `
+Object {
+  "isAuthenticated": false,
+  "isAuthenticating": true,
+  "token": undefined,
+}
+`;
+
+exports[`reducers/auth returns state with isAuthenticating: true and token: "12345" 1`] = `
+Object {
+  "isAuthenticated": true,
+  "isAuthenticating": false,
+  "token": "12345",
+}
+`;
+
+exports[`reducers/auth returns state with isAuthenticating: true and token: "12345" 2`] = `
+Object {
+  "isAuthenticated": true,
+  "isAuthenticating": false,
+  "token": "12345",
+}
+`;

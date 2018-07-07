@@ -21,7 +21,7 @@ A private BitTorrent tracker written with Python, Django, Redis, and React.
 * Before you get started make sure and set your environment variables. There is an .env.template file in the root of
 the project. First copy the file as .env 
 
-- Run `cp .env.template .env` and then set and save these. 
+- Run `cp .env.template .env` and then set and save these. Make sure to run the command inside the `frontend` folder too. 
 
  Once that is complete you can build the project. For the production server, to test production, or if you are not using docker,
  there is an .env.template file in the backend folder that should be updated as well.
