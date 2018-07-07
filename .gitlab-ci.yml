@@ -24,6 +24,7 @@ cache:
   paths:
     - .cache/
     - venv/
+    - node_modules/
 before_script:
   - pip install virtualenv
   - virtualenv venv
