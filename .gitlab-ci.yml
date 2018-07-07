@@ -5,7 +5,7 @@ services:
  - redis:latest
 stages:
  - test_python
- - test_node
+ - test_react
  - release
  - deploy
 variables:
@@ -32,7 +32,7 @@ before_script:
   - pip install -r requirements.txt
   - pip install -r testing_requirements.txt
 python_linter:
-  stage: test
+  stage: test_python
   script:
     - invoke run-python-linter
   allow_failure: false
@@ -46,11 +46,13 @@ python_tests:
     - invoke fixtures
     - invoke run-python-tests --coverage
   allow_failure: false
-node_test:
-  image: node: latest
-  stage: node_test
+test_react:
+  image: node
+  stage: test_react
+  before_script:
+    - echo hi
   script: 
-     - cd frontend
+     - cd ../frontend
      - npm i
      - npm run test
 release_develop:
