@@ -65,7 +65,7 @@ export default class FilmForm extends React.Component<Props, State> {
                         <StringInput id="poster" label="Poster url" placeholder="Film poster"
                             value={this.state.posterUrl} setValue={(value: string) => this.setState({ posterUrl: value })} />
                         <StringInput id="trailer" label="Trailer url" placeholder="Youtube url or identifier"
-                            value={this.state.trailerUrl} setValue={(value: string) => this.setState({ trailerUrl: value })} />
+                            value={this.state.trailerUrl} setValue={(value: string) => this.setState({ trailerUrl: this._assembleUrl(value) })} />
                         <NumericInput id="duration" label="Duration (in minutes)"
                             value={this.state.duration} setValue={(value: number) => this.setState({ duration: value })} />
                         <NumericInput id="year" label="Year of release"
@@ -79,6 +79,14 @@ export default class FilmForm extends React.Component<Props, State> {
                 </CardFooter>
             </Card>
         );
+    }
+
+    private _assembleUrl(value: string): string {
+        const regexUrl = /(?:https?):\/\/(\w+:?\w*)?(\S+)(:\d+)?(\/|\/([\w#!:.?+=&%!\-\/]))?/;
+        if (regexUrl.test(value)) {
+            return value
+        }
+        return `https://www.youtube.com/watch?v=${value}`;
     }
 
     private _canSubmit(): boolean {
