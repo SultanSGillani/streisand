@@ -51,9 +51,8 @@ test_react:
   image: node
   stage: test_react
   before_script:
-    - echo hi
-  script: 
-     - cd frontend
+    - cd frontend
+  script:
      - npm i
      - npm run test
 release_develop:
