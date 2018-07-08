@@ -5,14 +5,14 @@ MAINTAINER JumpCut
 
 WORKDIR /react
 
-COPY package.json ./
-COPY .env ./
+COPY package.json yarn.lock .env ./
 
-RUN npm install
+RUN yarn
+
 ENV PATH="/react/node_modules/.bin:$PATH"
 
 EXPOSE 3000
 
 COPY . .
 
-CMD ["npm", "run", "dev"]
+CMD ["yarn", "run", "dev"]
