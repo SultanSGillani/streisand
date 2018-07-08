@@ -102,20 +102,6 @@
     }
   },
   {
-    "pk": "e6504d31dedeffe8318651fcfcfa54afe6da129c",
-    "model": "tracker.swarm",
-    "fields": {
-      "torrent": "e6504d31dedeffe8318651fcfcfa54afe6da129c"
-    }
-  },
-  {
-    "pk": "5bb0cdea515b32d291c1ff25bcf5a491561e5ade",
-    "model": "tracker.swarm",
-    "fields": {
-      "torrent": "5bb0cdea515b32d291c1ff25bcf5a491561e5ade"
-    }
-  },
-  {
     "pk": 1,
     "model": "www.feature",
     "fields": {

@@ -12,7 +12,7 @@ from users.models import User
 from torrents.models import TorrentFile
 
 from tracker.bencoding import bdecode
-from tracker.models import Swarm, Peer, TorrentClient
+from tracker.models import Peer, TorrentClient
 from tracker.views import AnnounceView
 
 
@@ -25,18 +25,17 @@ class AnnounceTests(TestCase):
         self.user = G(User)
         self.torrent = G(TorrentFile, pieces='', directory_name='', files=[])
         G(TorrentClient, peer_id_prefix='-DE1360-', is_whitelisted=True)
-        self.swarm = G(Swarm, torrent=self.torrent)
         for i in range(10):
             G(
                 Peer,
-                swarm=self.swarm,
+                torrent=self.torrent,
                 port=5000 + i,
                 ip_address='127.0.0.1',
                 peer_id='-DE1360-xxxxxxxxxxxx',
                 user_announce_key=self.user.announce_key_id,
             )
         self.announce_data = {
-            'info_hash': a2b_hex(self.swarm.torrent_id),
+            'info_hash': a2b_hex(self.torrent.info_hash),
             'peer_id': '-DE1360-xxxxxxxxxxxx',
             'uploaded': '123',
             'downloaded': '456',
@@ -59,8 +58,9 @@ class AnnounceTests(TestCase):
         request = self.announce_request()
         self.announce_view(request, announce_key=self.user.announce_key_id)
         handler_mock.assert_called_once_with(
+            user_id=self.user.id,
             announce_key=self.user.announce_key_id,
-            torrent_info_hash=self.swarm.torrent_id,
+            torrent_info_hash=self.torrent.info_hash,
             new_bytes_uploaded=123,
             new_bytes_downloaded=456,
             total_bytes_uploaded=123,
@@ -80,8 +80,9 @@ class AnnounceTests(TestCase):
         request = self.announce_request()
         self.announce_view(request, announce_key=self.user.announce_key_id)
         handler_mock.assert_called_once_with(
+            user_id=self.user.id,
             announce_key=self.user.announce_key_id,
-            torrent_info_hash=self.swarm.torrent_id,
+            torrent_info_hash=self.torrent.info_hash,
             new_bytes_uploaded=123,
             new_bytes_downloaded=456,
             total_bytes_uploaded=123,
@@ -163,10 +164,10 @@ class AnnounceTests(TestCase):
         compact_peers = response['peers']
 
         # Six bytes for each peer's compact representation
-        self.assertEqual(len(compact_peers), self.swarm.peers.count() * 6)
+        self.assertEqual(len(compact_peers), self.torrent.peers.count() * 6)
 
         # Make sure each one is present
-        for peer in self.swarm.peers.all():
+        for peer in self.torrent.peers.all():
             self.assertIn(
                 a2b_base64(peer.compact_representation),
                 compact_peers,

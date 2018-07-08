@@ -2,33 +2,11 @@
 
 from uuid import uuid4
 
+from django.conf import settings
 from django.db import models
+from django.utils.timezone import now
 
-from .managers import PeerQuerySet, TorrentClientManager, SwarmManager
-
-
-class Swarm(models.Model):
-
-    torrent = models.OneToOneField(
-        to='torrents.TorrentFile',
-        to_field='info_hash',
-        related_name='swarm',
-        primary_key=True,
-        on_delete=models.CASCADE,
-    )
-
-    objects = SwarmManager()
-
-    class Meta:
-        permissions = (
-            ('can_leech', "Can receive peer lists from the tracker"),
-        )
-
-    def __str__(self):
-        return self.torrent_id
-
-    def __repr__(self):
-        return self.__str__()
+from .managers import PeerQuerySet, TorrentClientManager
 
 
 class Peer(models.Model):
@@ -41,15 +19,28 @@ class Peer(models.Model):
     # we use an auto-generated UUIDField as the primary key.
     id = models.UUIDField(default=uuid4, primary_key=True, editable=False)
 
-    swarm = models.ForeignKey(
-        to='tracker.Swarm',
+    torrent = models.ForeignKey(
+        to='torrents.TorrentFile',
         db_index=True,
         related_name='peers',
         null=False,
         on_delete=models.CASCADE,
     )
-    user_announce_key = models.CharField(max_length=36, null=False, db_index=True)
-    ip_address = models.GenericIPAddressField(null=False)
+    user = models.ForeignKey(
+        to='users.User',
+        db_index=True,
+        related_name='peers',
+        null=False,
+        on_delete=models.CASCADE,
+    )
+    announce_key = models.ForeignKey(
+        to='users.UserAnnounceKey',
+        db_index=True,
+        related_name='peers',
+        null=False,
+        on_delete=models.CASCADE,
+    )
+    ip_address = models.GenericIPAddressField(null=False, protocol='IPv4')
     port = models.IntegerField(null=False)
     peer_id = models.CharField(max_length=60, null=False)
     user_agent = models.TextField()
@@ -73,9 +64,8 @@ class Peer(models.Model):
     objects = PeerQuerySet.as_manager()
 
     class Meta:
-        # If a client restarts, all of these might be the same, except for peer_id
-        unique_together = ['swarm', 'user_announce_key', 'ip_address', 'port', 'peer_id']
-        index_together = ['swarm', 'user_announce_key', 'ip_address', 'port', 'peer_id']
+        unique_together = ['torrent', 'ip_address', 'port']
+        index_together = ['torrent', 'ip_address', 'port']
 
     def __str__(self):
         return '{ip}:{port}'.format(
@@ -93,6 +83,10 @@ class Peer(models.Model):
             'ip': self.ip_address,
             'port': self.port,
         }
+
+    @property
+    def is_active(self):
+        return self.last_announce > now() - (settings.TRACKER_ANNOUNCE_INTERVAL * 2)
 
 
 class TorrentClient(models.Model):

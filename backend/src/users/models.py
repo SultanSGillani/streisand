@@ -116,6 +116,7 @@ class User(AbstractUser):
     class Meta:
         permissions = (
             ('can_invite', "Can invite new users"),
+            ('can_leech', "Can receive peer lists from the tracker"),
             ('unlimited_invites', "Can invite unlimited new users"),
             ('custom_title', "Can edit own custom title"),
         )
@@ -158,11 +159,9 @@ class User(AbstractUser):
 
     @property
     def seeding_size(self):
-        seeding_size = Peer.objects.seeders().filter(
-            user_announce_key=self.announce_key_id,
-        ).aggregate(
-            Sum('swarm__torrent__size_in_bytes')
-        )['swarm__torrent__size_in_bytes__sum']
+        seeding_size = Peer.objects.seeders().active().filter(user=self).aggregate(
+            Sum('torrent__size_in_bytes')
+        )['torrent__size_in_bytes__sum']
 
         if seeding_size:
             return seeding_size

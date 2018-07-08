@@ -22,9 +22,9 @@ def async_email(*args, **kwargs):
 
 
 @shared_task
-def handle_announce(announce_key, torrent_info_hash, new_bytes_uploaded, new_bytes_downloaded,
-                    total_bytes_uploaded, total_bytes_downloaded, bytes_remaining, event,
-                    ip_address, port, peer_id, user_agent, time_stamp, suspicious_behaviors):
+def handle_announce(user_id, announce_key, torrent_info_hash, new_bytes_uploaded, new_bytes_downloaded,
+                    total_bytes_uploaded, total_bytes_downloaded, bytes_remaining, event, ip_address,
+                    port, peer_id, user_agent, time_stamp, suspicious_behaviors):
     """
     Event handler for announces made to the tracker.
 
@@ -33,7 +33,7 @@ def handle_announce(announce_key, torrent_info_hash, new_bytes_uploaded, new_byt
     this handler logs all the announce info.
     """
 
-    (torrent_stats, torrent, user) = get_or_create_torrent_stats(torrent_info_hash, announce_key)
+    (torrent_stats, torrent, user) = get_or_create_torrent_stats(torrent_info_hash, user_id)
 
     if bytes_remaining == 0 and event != 'stopped':
 
@@ -122,18 +122,18 @@ def handle_announce(announce_key, torrent_info_hash, new_bytes_uploaded, new_byt
         )
 
 
-def get_or_create_torrent_stats(torrent_info_hash, announce_key):
+def get_or_create_torrent_stats(torrent_info_hash, user_id):
 
     try:
         torrent_stats = TorrentStats.objects.filter(
-            user__announce_key_id=announce_key,
+            user_id=user_id,
             torrent_id=torrent_info_hash,
         ).select_related(
             'user',
             'torrent',
         ).get()
     except TorrentStats.DoesNotExist:
-        user = User.objects.get(announce_key_id=announce_key)
+        user = User.objects.get(id=user_id)
         torrent = TorrentFile.objects.get(info_hash=torrent_info_hash)
         torrent_stats = TorrentStats.objects.create(
             user=user,
