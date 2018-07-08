@@ -1,11 +1,11 @@
 # -*- coding: utf-8 -*-
 
-from rest_framework.viewsets import ModelViewSet
-from rest_framework.permissions import IsAdminUser
+from rest_framework.viewsets import ModelViewSet, ReadOnlyModelViewSet
+from rest_framework.permissions import IsAdminUser, IsAuthenticated
 
-from tracker.models import Peer, Swarm, TorrentClient
+from tracker.models import Peer, TorrentClient
 
-from .serializers import TorrentClientSerializer, SwarmSerializer, PeerSerializer
+from .serializers import TorrentClientSerializer, PeerSerializer, AdminPeerSerializer
 
 
 class TorrentClientViewSet(ModelViewSet):
@@ -15,24 +15,19 @@ class TorrentClientViewSet(ModelViewSet):
 
     serializer_class = TorrentClientSerializer
     permission_classes = [IsAdminUser]
-    queryset = TorrentClient.objects.all()
+    queryset = TorrentClient.objects.all().order_by('is_whitelisted', 'peer_id_prefix')
 
 
-class SwarmViewSet(ModelViewSet):
+class PeerViewSet(ReadOnlyModelViewSet):
     """
-    Torrent Swarms
-    """
-
-    serializer_class = SwarmSerializer
-    permission_classes = [IsAdminUser]
-    queryset = Swarm.objects.all()
-
-
-class PeerViewSet(ModelViewSet):
-    """
-    Torrent Swarm Peers
+    Peers in a torrent's swarm
     """
 
-    serializer_class = PeerSerializer
-    permission_classes = [IsAdminUser]
-    queryset = Peer.objects.all()
+    permission_classes = [IsAuthenticated]
+    queryset = Peer.objects.all().order_by('-first_announce')
+
+    def get_serializer_class(self):
+        if self.request.user.is_staff:
+            return AdminPeerSerializer
+        else:
+            return PeerSerializer

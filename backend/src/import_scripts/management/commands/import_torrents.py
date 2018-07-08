@@ -8,8 +8,8 @@ from pytz import UTC
 from import_scripts.management.commands import MySQLCommand
 from films.models import Film
 from mediainfo.models import Mediainfo
-from torrents.models import Release, TorrentFile
-from tracker.models import Swarm
+from releases.models import Release
+from torrents.models import TorrentFile
 from users.models import User
 
 
@@ -67,8 +67,6 @@ class Command(MySQLCommand):
         if codec == 'h.264':
             codec = 'H.264'
 
-        file_list = []
-
         nfo_text = ''
         if bbcode_description:
             description = bbcode_description.encode('latin-1').decode('utf-8').strip()
@@ -93,8 +91,6 @@ class Command(MySQLCommand):
         else:
             description = ''
 
-        metainfo = TorrentFile.objects.create()
-        swarm = Swarm.objects.create(torrent_id=info_hash)
         uploader = User.objects.filter(old_id=uploader_id).first()
         moderator = User.objects.filter(username=last_moderated_by_username).first()
 
@@ -108,26 +104,27 @@ class Command(MySQLCommand):
         else:
             mediainfo = None
 
-        torrent = Release.objects.create(
-            old_id=torrent_id,
+        release = Release.objects.create(
             film=film,
             cut=special_edition_title if is_special_edition else 'Theatrical',
             description=description,
             nfo=nfo_text,
             mediainfo=mediainfo,
-            swarm=swarm,
-            metainfo=metainfo,
-            file_list=file_list,
-            uploaded_by=uploader,
             source_media_id=source_media,
             resolution_id=resolution,
             codec_id=codec,
             container_id=container,
-            release_name=release_name.encode('latin-1').decode('utf-8') if release_name else '',
+            name=release_name.encode('latin-1').decode('utf-8') if release_name else '',
             is_scene=is_scene,
-            size_in_bytes=size_in_bytes,
-            is_approved=is_approved,
+        )
+        torrent = TorrentFile.objects.create(
+            old_id=torrent_id,
+            info_hash=info_hash,
+            release=release,
+            total_size_in_bytes=size_in_bytes,
+            uploaded_by=uploader,
             moderated_by=moderator,
+            is_approved=is_approved,
         )
         torrent.uploaded_at = uploaded_at.replace(tzinfo=UTC)
         torrent.save()

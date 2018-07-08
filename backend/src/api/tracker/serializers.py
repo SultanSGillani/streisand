@@ -2,21 +2,33 @@
 
 from rest_framework import serializers
 
-from tracker.models import Swarm, Peer, TorrentClient
+from tracker.models import Peer, TorrentClient
+
+from ..users.serializers import DisplayUserSerializer
 
 
-class SwarmSerializer(serializers.ModelSerializer):
+class AdminPeerSerializer(serializers.ModelSerializer):
 
-    class Meta:
-        model = Swarm
-        fields = '__all__'
-
-
-class PeerSerializer(serializers.ModelSerializer):
+    user = DisplayUserSerializer()
+    is_active = serializers.BooleanField()
 
     class Meta:
         model = Peer
         fields = '__all__'
+
+
+class PeerSerializer(AdminPeerSerializer):
+
+    class Meta(AdminPeerSerializer.Meta):
+        fields = (
+            'user',
+            'bytes_uploaded',
+            'bytes_downloaded',
+            'bytes_remaining',
+            'user_agent',
+            'is_active',
+        )
+        read_only_fields = fields
 
 
 class TorrentClientSerializer(serializers.ModelSerializer):

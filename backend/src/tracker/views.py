@@ -6,10 +6,11 @@ from django.utils.timezone import now
 from django.views.generic import View
 
 from users.models import User
+from torrents.models import TorrentFile
 from www.tasks import handle_announce
 
 from .bencoding import bencode
-from .models import Peer, Swarm, TorrentClient
+from .models import Peer, TorrentClient
 from .utils import unquote_to_hex
 
 
@@ -130,13 +131,16 @@ class AnnounceView(View):
         #
 
         # Fail if the announce_key is invalid
-        if not User.objects.filter(announce_key_id=announce_key).exists():
+        try:
+            user = User.objects.filter(announce_key_id=announce_key).only('id').get()
+            user_id = user.id
+        except User.DoesNotExist:
             return self.failure('Invalid announce key')
 
         # Fail if the torrent is not registered
         try:
-            swarm = Swarm.objects.get(torrent_id=info_hash)
-        except Swarm.DoesNotExist:
+            torrent = TorrentFile.objects.get(info_hash=info_hash)
+        except TorrentFile.DoesNotExist:
             return self.failure('Unregistered torrent')
 
         #
@@ -145,24 +149,26 @@ class AnnounceView(View):
 
         suspicious_behaviors = []
 
-        try:
+        # If there are old peer records for this same ip/port, this announce takes precedence
+        torrent.peers.filter(
+            ip_address=ip_address,
+            port=port,
+        ).exclude(
+            peer_id=peer_id,
+            announce_key=announce_key,
+        ).delete()
 
-            # Fetch the client from the current peer list
-            client = swarm.peers.get(
-                user_announce_key=announce_key,
-                ip_address=ip_address,
-                port=port,
-                peer_id=peer_id,
-            )
+        client = torrent.peers.filter(ip_address=ip_address, port=port).first()
 
-        except Peer.DoesNotExist:
+        if not client:
 
             if event != 'started':
                 suspicious_behaviors.append("No 'started' event for this peer.")
 
             # Add this client to the peer list
-            client = swarm.peers.create(
-                user_announce_key=announce_key,
+            client = torrent.peers.create(
+                user_id=user_id,
+                announce_key_id=announce_key,
                 ip_address=ip_address,
                 port=port,
                 peer_id=peer_id,
@@ -198,6 +204,7 @@ class AnnounceView(View):
         #
 
         handle_announce.delay(
+            user_id=user_id,
             announce_key=announce_key,
             torrent_info_hash=info_hash,
             new_bytes_uploaded=bytes_recently_uploaded,
@@ -232,12 +239,12 @@ class AnnounceView(View):
             client.save()
 
             # If we're responding to a seeder, only send them leechers
-            active_peers = swarm.peers.active()
+            active_peers = torrent.peers.active()
             if client.complete:
                 active_peers = active_peers.leechers()
 
-            active_seeder_count = swarm.peers.active().seeders().count()
-            active_leecher_count = swarm.peers.active().leechers().count()
+            active_seeder_count = torrent.peers.active().seeders().count()
+            active_leecher_count = torrent.peers.active().leechers().count()
 
         if compact_peers:
             peer_list = active_peers.compact(limit=num_want)
