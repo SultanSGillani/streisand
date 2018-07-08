@@ -28,11 +28,12 @@ class AnnounceTests(TestCase):
         for i in range(10):
             G(
                 Peer,
+                user=self.user,
                 torrent=self.torrent,
                 port=5000 + i,
                 ip_address='127.0.0.1',
                 peer_id='-DE1360-xxxxxxxxxxxx',
-                user_announce_key=self.user.announce_key_id,
+                announce_key=self.user.announce_key_id,
             )
         self.announce_data = {
             'info_hash': a2b_hex(self.torrent.info_hash),
