@@ -9,7 +9,6 @@ from django.urls import reverse
 from django.utils.timezone import now
 
 from tracker.bencoding import bencode, sha1
-from users.models import User
 
 from .utils import generate_unique_download_key
 
@@ -175,12 +174,6 @@ class TorrentFile(models.Model):
             self.last_seeded is None or self.last_seeded < one_day_ago,
             self.reseed_request is None or self.reseed_request.created_at < one_week_ago,
         ))
-
-    @property
-    def seeders(self):
-        return User.objects.filter(
-            announce_key__in=self.swarm.peers.seeders().values_list('user_announce_key', flat=True)
-        )
 
     def request_reseed(self, user):
         self.reseed_request = self.reseed_requests.create(

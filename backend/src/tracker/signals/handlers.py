@@ -14,5 +14,5 @@ def handle_new_peer(**kwargs):
         peer = kwargs['instance']
         compact_ip = bytes([int(s) for s in peer.ip_address.split('.')])
         compact_port = peer.port.to_bytes(2, byteorder='big')
-        peer.compact_representation = b2a_base64(compact_ip + compact_port).decode('ascii')
+        peer.compact_representation = b2a_base64(compact_ip + compact_port).decode('ascii').strip()
         peer.save()

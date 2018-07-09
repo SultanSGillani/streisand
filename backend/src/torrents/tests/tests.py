@@ -20,6 +20,7 @@ class TorrentAnnounceTests(TestCase):
 
     def upload(self, amount):
         handle_announce(
+            user_id=self.user.id,
             announce_key=self.user.announce_key_id,
             torrent_info_hash=self.torrent.info_hash,
             peer_id='baz',
