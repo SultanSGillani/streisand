@@ -132,8 +132,8 @@ class AnnounceView(View):
 
         # Fail if the announce_key is invalid
         try:
-            user = User.objects.filter(announce_key_id=announce_key).only('id').get()
-            user_id = user.id
+            request.user = User.objects.get(announce_key_id=announce_key)
+            user_id = request.user.id
         except User.DoesNotExist:
             return self.failure('Invalid announce key')
 

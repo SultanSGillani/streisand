@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
 
+from django_filters import rest_framework as filters
 from rest_framework.viewsets import ModelViewSet, ReadOnlyModelViewSet
 from rest_framework.permissions import IsAdminUser, IsAuthenticated
 
@@ -24,7 +25,9 @@ class PeerViewSet(ReadOnlyModelViewSet):
     """
 
     permission_classes = [IsAuthenticated]
-    queryset = Peer.objects.all().order_by('-first_announce')
+    filter_backends = [filters.DjangoFilterBackend]
+    filter_fields = ['torrent_id']
+    queryset = Peer.objects.select_related('user', 'torrent').order_by('complete', '-first_announce')
 
     def get_serializer_class(self):
         if self.request.user.is_staff:

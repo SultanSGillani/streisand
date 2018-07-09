@@ -78,9 +78,6 @@ class Collection(models.Model):
     def __str__(self):
         return self.title
 
-    def __len__(self):
-        return self.film.count()
-
     def get_absolute_url(self):
         return reverse('collection-detail', args=[self.id])
 
