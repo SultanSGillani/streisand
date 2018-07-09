@@ -69,7 +69,7 @@ def handle_announce(user_id, announce_key, torrent_info_hash, new_bytes_uploaded
             torrent_stats.hnr_countdown_started_at = time_stamp
 
         # If time is up, check for HNR
-        elif torrent_stats.hnr_countdown_started_at + settings.HNR_GRACE_PERIOD > time_stamp:
+        elif torrent_stats.hnr_countdown_started_at + settings.HNR_GRACE_PERIOD < time_stamp:
             torrent_stats.is_hit_and_run = torrent_stats.seed_time < settings.SEED_TIME_QUOTA
 
     # Track snatches
