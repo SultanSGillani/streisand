@@ -4,8 +4,8 @@ services:
 
   api:
     build: backend
-    container_name: api_dev
     command: python src/manage.py runserver_plus [::]:8000
+    container_name: api_dev
     depends_on:
     - postgres
     - redis
@@ -18,8 +18,8 @@ services:
     - ./backend:/code
   frontend:
     build: frontend
-    container_name: frontend
     command: yarn run dev
+    container_name: frontend
     env_file: ./frontend/.env
     ports:
     - 8001:3000
@@ -40,12 +40,12 @@ services:
   tracker:
     build:
       context: ./backend
-    container_name: tracker_dev
     command: python src/manage.py runserver_plus 0.0.0.0:7070
+    container_name: tracker_dev
     depends_on:
+    - api
     - postgres
     - redis
-    - api
     env_file: ./.env
     environment:
       DJANGO_SETTINGS_MODULE: jumpcut.settings.tracker_settings
