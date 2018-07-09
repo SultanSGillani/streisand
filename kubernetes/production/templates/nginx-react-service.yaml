@@ -2,7 +2,7 @@ apiVersion: v1
 kind: Service
 metadata:
   annotations:
-    kompose.cmd: kompose convert -c --file docker-compose.production.yml
+    kompose.cmd: kompose convert -f docker-compose.production.yml -c
     kompose.version: 1.13.0 (84fa826)
   creationTimestamp: null
   labels:
@@ -10,12 +10,12 @@ metadata:
   name: nginx-react
 spec:
   ports:
-  - name: "443"
-    port: 443
-    targetPort: 443
   - name: "80"
     port: 80
     targetPort: 80
+  - name: "443"
+    port: 443
+    targetPort: 443
   selector:
     io.kompose.service: nginx-react
 status:

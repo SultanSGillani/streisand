@@ -2,7 +2,7 @@ apiVersion: extensions/v1beta1
 kind: Deployment
 metadata:
   annotations:
-    kompose.cmd: kompose convert -c --file docker-compose.production.yml
+    kompose.cmd: kompose convert -f docker-compose.production.yml -c
     kompose.version: 1.13.0 (84fa826)
   creationTimestamp: null
   labels:
@@ -39,6 +39,11 @@ spec:
           valueFrom:
             configMapKeyRef:
               key: CORS_ORIGIN_ALLOW_ALL
+              name: api-backend--env
+        - name: CSRF_COOKIE_SECURE
+          valueFrom:
+            configMapKeyRef:
+              key: CSRF_COOKIE_SECURE
               name: api-backend--env
         - name: DATABASE_URL
           valueFrom:
@@ -85,20 +90,30 @@ spec:
             configMapKeyRef:
               key: EMAIL_USE_TLS
               name: api-backend--env
-        - name: HOST
-          valueFrom:
-            configMapKeyRef:
-              key: HOST
-              name: api-backend--env
         - name: HOST_DOMAIN
           valueFrom:
             configMapKeyRef:
               key: HOST_DOMAIN
               name: api-backend--env
+        - name: IGNORE_RECIPIENT_STATUS
+          valueFrom:
+            configMapKeyRef:
+              key: IGNORE_RECIPIENT_STATUS
+              name: api-backend--env
         - name: INTERNAL_IPS
           valueFrom:
             configMapKeyRef:
               key: INTERNAL_IPS
+              name: api-backend--env
+        - name: MAILGUN_API_KEY
+          valueFrom:
+            configMapKeyRef:
+              key: MAILGUN_API_KEY
+              name: api-backend--env
+        - name: MAILGUN_SENDER_DOMAIN
+          valueFrom:
+            configMapKeyRef:
+              key: MAILGUN_SENDER_DOMAIN
               name: api-backend--env
         - name: MYSQLDB_NAME
           valueFrom:
@@ -155,6 +170,11 @@ spec:
             configMapKeyRef:
               key: SENTRY_DSN
               name: api-backend--env
+        - name: SESSION_COOKIE_SECURE
+          valueFrom:
+            configMapKeyRef:
+              key: SESSION_COOKIE_SECURE
+              name: api-backend--env
         - name: SITE_NAME
           valueFrom:
             configMapKeyRef:
@@ -184,6 +204,11 @@ spec:
           valueFrom:
             configMapKeyRef:
               key: TRACKER_URL
+              name: api-backend--env
+        - name: WEBHOOK_SECRET
+          valueFrom:
+            configMapKeyRef:
+              key: WEBHOOK_SECRET
               name: api-backend--env
         image: gitlab.pinigseu.xyz:4567/jumpcut/jumpcut:latest
         name: api

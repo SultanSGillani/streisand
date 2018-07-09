@@ -1,38 +1,43 @@
 apiVersion: v1
 data:
-  ALLOWED_HOSTS: ""
+  ALLOWED_HOSTS: '*'
   BANDIT_EMAIL: ""
-  CELERY_ALWAYS_EAGER: "True"
+  CELERY_ALWAYS_EAGER: "False"
   CORS_ORIGIN_ALLOW_ALL: "True"
+  CSRF_COOKIE_SECURE: "True"
   DATABASE_URL: postgres://postgres:postgres@postgres:5432/postgres
   DEBUG: "True"
-  DEFAULT_FROM_EMAIL: ""
-  DEFAULT_REPLY_TO_EMAIL: ""
-  EMAIL_HOST: ""
-  EMAIL_HOST_PASSWORD: ""
-  EMAIL_HOST_USER: ""
+  DEFAULT_FROM_EMAIL: admin@pinigseu.xyz
+  DEFAULT_REPLY_TO_EMAIL: reply@pinigseu.xyz
+  EMAIL_HOST: pinigseu.xyz
+  EMAIL_HOST_PASSWORD: 6018ecc7a7f1da9110792f484ece0dd0-e44cc7c1-902353ab
+  EMAIL_HOST_USER: admin@pinigseu.xyz
   EMAIL_PORT: "587"
   EMAIL_USE_TLS: "True"
-  HOST: localhost
-  HOST_DOMAIN: alghaib.com
+  HOST_DOMAIN: pinigseu.xyz
+  IGNORE_RECIPIENT_STATUS: "False"
   INTERNAL_IPS: 10.0.0.2, 127.0.0.1
-  MYSQL_HOST: localhost
+  MAILGUN_API_KEY: 905707051d5b82df9b58c8f9f20a5a82-0470a1f7-5475a05d
+  MAILGUN_SENDER_DOMAIN: pinigseu.xyz
+  MYSQL_HOST: pinigseu.xyz
   MYSQL_PORT: "3306"
-  MYSQL_PWD: fuckneebs
+  MYSQL_PWD: fuckalistair
   MYSQL_USER: root
-  MYSQLDB_NAME: tc
+  MYSQLDB_NAME: something
   OLD_SITE_HASH: ""
   PRODUCTION: "False"
   REDIS_URL: redis://redis:6379
   RT_API_KEY: ""
-  SECRET_KEY: changeme
-  SENTRY_DSN: https://f710024c877d4b9494d82dd5bf037928@sentry.io/1229785
+  SECRET_KEY: 4eg37=@)=ys4pltd2vq-q6tp
+  SENTRY_DSN: https://64124b453df04c66bac631af941c0195:91fe0d0d7554415b95176c6b118f8547@sentry.io/1229284
+  SESSION_COOKIE_SECURE: "True"
   SITE_NAME: jumpcut
-  SITE_URL: https://api.alghaib.com
+  SITE_URL: https://pinigseu.xyz
   TEST_RUNNER: jumpcut.tests.CustomTestSuiteRunner
   TESTING_DATABASE_URL: postgres://postgres:postgres@postgres:5432/postgres
-  TESTING_WSGI_APPLICATION: jumpcut.www_wsgi.application
-  TRACKER_URL: https://tracker.alghaib.com
+  TESTING_WSGI_APPLICATION: jumpcut.testing_wsgi.application
+  TRACKER_URL: https://tracker.pinigseu.xyz
+  WEBHOOK_SECRET: 7XeQ40H7BW7cAf55:kX1xji097MAn2tjI
 kind: ConfigMap
 metadata:
   creationTimestamp: null
