@@ -46,7 +46,7 @@ python_tests:
     - invoke fixtures
     - invoke run-python-tests --coverage
   allow_failure: false
-test_react:
+react_tests:
   image: node:latest
   stage: test_react
   before_script:
@@ -57,6 +57,11 @@ test_react:
     - node_modules/
   script:
      - yarn run test
+react_linting:
+  stage: test_react
+  script:
+     - tslint -c tslint.json 'src/**/*.ts'
+  allow_failure: true # for now
 release_develop:
   image: tmaier/docker-compose:latest
   variables:
