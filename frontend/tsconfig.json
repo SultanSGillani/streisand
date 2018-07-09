@@ -17,9 +17,6 @@
             "./typings"
         ]
     },
-    "extends": [
-    "tslint-config-airbnb"
-  ],
     "include": [
         "./src/**/*"
     ]
