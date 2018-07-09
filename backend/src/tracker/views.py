@@ -165,9 +165,6 @@ class AnnounceView(View):
             if event != 'started':
                 suspicious_behaviors.append("No 'started' event for this peer.")
 
-            if event != 'started':
-                suspicious_behaviors.append("No 'started' event for this peer.")
-
             # Add this client to the peer list
             client = torrent.peers.create(
                 user_id=user_id,
