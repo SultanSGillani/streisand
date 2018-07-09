@@ -9,27 +9,6 @@ from django.db import models
 from django.utils.timezone import now
 
 
-class SwarmManager(models.Manager):
-
-    PEER_LIST_CACHE_KEY = 'swarm_peers_{info_hash}'
-
-    def get_peer_list(self, info_hash):
-
-        cache_key = self.PEER_LIST_CACHE_KEY.format(info_hash=info_hash)
-
-        # Try to fetch the queryset from cache
-        peer_list = cache.get(cache_key)
-
-        if peer_list is None:
-
-            # Get the peer list from the database, and cache it
-            swarm = self.get(torrent_id=info_hash)
-            peer_list = swarm.peers.all()
-            cache.set(cache_key, peer_list)
-
-        return peer_list
-
-
 class PeerQuerySet(models.QuerySet):
 
     def seeders(self):
@@ -47,7 +26,7 @@ class PeerQuerySet(models.QuerySet):
         the queryset, up to the provided limit.
         https://wiki.theory.org/index.php/BitTorrentSpecification#Tracker_Response
         """
-        peer_list = list(self.values_list('compact_representation', flat=True).distinct('ip_address', 'port'))
+        peer_list = list(self.values_list('compact_representation', flat=True))
         peer_list = sample(peer_list, min(limit, len(peer_list)))
         return a2b_base64(''.join(peer_list))
 

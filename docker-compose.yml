@@ -19,7 +19,7 @@ services:
   frontend:
     build: frontend
     container_name: frontend
-    command: npm run dev
+    command: yarn run dev
     env_file: ./frontend/.env
     ports:
     - 8001:3000
@@ -41,7 +41,7 @@ services:
     build:
       context: ./backend
     container_name: tracker_dev
-    command: python src/manage.py runserver_plus [::]:7070
+    command: python src/manage.py runserver_plus 0.0.0.0:7070
     depends_on:
     - postgres
     - redis

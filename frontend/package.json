@@ -9,7 +9,8 @@
     "prep": "cp .env.template .env",
     "start": "webpack-dev-server --open --config webpack.dev.js",
     "dev": "webpack-dev-server --config webpack.dev.js",
-    "build": "webpack --config webpack.prod.js"
+    "build": "webpack --config webpack.prod.js",
+    "test": "jest"
   },
   "homepage": "https://gitlab.pinigseu.xyz/jumpcut/jumpcut",
   "bugs": {
@@ -18,6 +19,20 @@
   "repository": {
     "type": "git",
     "url": "https://gitlab.pinigseu.xyz/jumpcut/jumpcut.git"
+  },
+  "jest": {
+    "transform": {
+      "^.+\\.tsx?$": "ts-jest"
+    },
+    "testRegex": "(/__tests__/.*|(\\.|/)(test|spec))\\.(jsx?|tsx?)$",
+    "moduleFileExtensions": [
+      "ts",
+      "tsx",
+      "js",
+      "jsx",
+      "json",
+      "node"
+    ]
   },
   "dependencies": {
     "bbcode-to-react": "^0.2.9",
@@ -37,6 +52,7 @@
     "@babel/core": "^7.0.0-beta.47",
     "@babel/plugin-syntax-jsx": "^7.0.0-beta.47",
     "@babel/plugin-syntax-typescript": "^7.0.0-beta.47",
+    "@types/jest": "^23.1.4",
     "@types/object-assign": "^4.0.30",
     "@types/react": "^16.3.14",
     "@types/react-dom": "^16.0.5",
@@ -49,12 +65,15 @@
     "express": "^4.15.3",
     "html-webpack-plugin": "^3.2.0",
     "install": "^0.11.0",
+    "jest": "^23.3.0",
     "npm": "^6.1.0",
     "react-hot-loader": "^4.2.0",
+    "react-test-renderer": "^16.4.1",
     "redux-devtools": "^3.3.2",
     "redux-devtools-dock-monitor": "^1.1.1",
     "redux-devtools-log-monitor": "^1.2.0",
     "request": "^2.81.0",
+    "ts-jest": "^23.0.0",
     "ts-loader": "^4.3.0",
     "tslint": "^5.9.1",
     "typescript": "^2.8.1",

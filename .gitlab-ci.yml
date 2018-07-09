@@ -4,7 +4,8 @@ services:
  - docker:dind
  - redis:latest
 stages:
- - test
+ - test_python
+ - test_react
  - release
  - deploy
 variables:
@@ -31,12 +32,12 @@ before_script:
   - pip install -r requirements.txt
   - pip install -r testing_requirements.txt
 python_linter:
-  stage: test
+  stage: test_python
   script:
     - invoke run-python-linter
   allow_failure: false
 python_tests:
-  stage: test
+  stage: test_python
   script:
     # Test for missing migrations
     - src/manage.py makemigrations --check --dry-run || (echo "Missing migrations"; false)
@@ -45,7 +46,17 @@ python_tests:
     - invoke fixtures
     - invoke run-python-tests --coverage
   allow_failure: false
-
+test_react:
+  image: node:latest
+  stage: test_react
+  before_script:
+    - cd frontend
+    - yarn
+  cache:
+    paths:
+    - node_modules/
+  script:
+     - yarn run test
 release_develop:
   image: tmaier/docker-compose:latest
   variables:

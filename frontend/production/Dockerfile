@@ -5,13 +5,13 @@ MAINTAINER JumpCut
 
 WORKDIR /react
 
-COPY package.json package-lock.json .env ./
+COPY package.json yarn.lock .env ./
 
-RUN npm install
+RUN yarn
 
 COPY . .
 
-RUN npm run build
+RUN yarn run build
 
 FROM nginx:alpine
 
