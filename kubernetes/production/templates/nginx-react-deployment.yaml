@@ -1,0 +1,47 @@
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  annotations:
+    kompose.cmd: kompose convert -c --file docker-compose.production.yml
+    kompose.version: 1.13.0 (84fa826)
+  creationTimestamp: null
+  labels:
+    io.kompose.service: nginx-react
+  name: nginx-react
+spec:
+  replicas: 1
+  strategy:
+    type: Recreate
+  template:
+    metadata:
+      creationTimestamp: null
+      labels:
+        io.kompose.service: nginx-react
+    spec:
+      containers:
+      - env:
+        - name: APIURL
+          valueFrom:
+            configMapKeyRef:
+              key: APIURL
+              name: nginx-react-frontend--env
+        - name: NODE_ENV
+          valueFrom:
+            configMapKeyRef:
+              key: NODE_ENV
+              name: nginx-react-frontend--env
+        image: nginx-react
+        name: nginx_react
+        ports:
+        - containerPort: 443
+        - containerPort: 80
+        resources: {}
+        volumeMounts:
+        - mountPath: /usr/share/nginx/src/
+          name: nginx-react-claim0
+      restartPolicy: Always
+      volumes:
+      - name: nginx-react-claim0
+        persistentVolumeClaim:
+          claimName: nginx-react-claim0
+status: {}

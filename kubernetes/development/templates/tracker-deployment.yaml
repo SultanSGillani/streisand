@@ -1,0 +1,221 @@
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  annotations:
+    kompose.cmd: kompose convert -c
+    kompose.version: 1.13.0 (84fa826)
+  creationTimestamp: null
+  labels:
+    io.kompose.service: tracker
+  name: tracker
+spec:
+  replicas: 1
+  strategy:
+    type: Recreate
+  template:
+    metadata:
+      creationTimestamp: null
+      labels:
+        io.kompose.service: tracker
+    spec:
+      containers:
+      - args:
+        - python
+        - src/manage.py
+        - runserver_plus
+        - 0.0.0.0:7070
+        env:
+        - name: ALLOWED_HOSTS
+          valueFrom:
+            configMapKeyRef:
+              key: ALLOWED_HOSTS
+              name: tracker-env
+        - name: BANDIT_EMAIL
+          valueFrom:
+            configMapKeyRef:
+              key: BANDIT_EMAIL
+              name: tracker-env
+        - name: CORS_ORIGIN_ALLOW_ALL
+          valueFrom:
+            configMapKeyRef:
+              key: CORS_ORIGIN_ALLOW_ALL
+              name: tracker-env
+        - name: CORS_URL_REGEX
+          valueFrom:
+            configMapKeyRef:
+              key: CORS_URL_REGEX
+              name: tracker-env
+        - name: DATABASE_URL
+          valueFrom:
+            configMapKeyRef:
+              key: DATABASE_URL
+              name: tracker-env
+        - name: DEBUG
+          valueFrom:
+            configMapKeyRef:
+              key: DEBUG
+              name: tracker-env
+        - name: DEFAULT_FROM_EMAIL
+          valueFrom:
+            configMapKeyRef:
+              key: DEFAULT_FROM_EMAIL
+              name: tracker-env
+        - name: DEFAULT_REPLY_TO_EMAIL
+          valueFrom:
+            configMapKeyRef:
+              key: DEFAULT_REPLY_TO_EMAIL
+              name: tracker-env
+        - name: EMAIL_HOST
+          valueFrom:
+            configMapKeyRef:
+              key: EMAIL_HOST
+              name: tracker-env
+        - name: EMAIL_HOST_PASSWORD
+          valueFrom:
+            configMapKeyRef:
+              key: EMAIL_HOST_PASSWORD
+              name: tracker-env
+        - name: EMAIL_HOST_USER
+          valueFrom:
+            configMapKeyRef:
+              key: EMAIL_HOST_USER
+              name: tracker-env
+        - name: EMAIL_PORT
+          valueFrom:
+            configMapKeyRef:
+              key: EMAIL_PORT
+              name: tracker-env
+        - name: EMAIL_USE_TLS
+          valueFrom:
+            configMapKeyRef:
+              key: EMAIL_USE_TLS
+              name: tracker-env
+        - name: HOST
+          valueFrom:
+            configMapKeyRef:
+              key: HOST
+              name: tracker-env
+        - name: HOST_IP
+          valueFrom:
+            configMapKeyRef:
+              key: HOST_IP
+              name: tracker-env
+        - name: MYSQLDB_NAME
+          valueFrom:
+            configMapKeyRef:
+              key: MYSQLDB_NAME
+              name: tracker-env
+        - name: MYSQL_HOST
+          valueFrom:
+            configMapKeyRef:
+              key: MYSQL_HOST
+              name: tracker-env
+        - name: MYSQL_PORT
+          valueFrom:
+            configMapKeyRef:
+              key: MYSQL_PORT
+              name: tracker-env
+        - name: MYSQL_PWD
+          valueFrom:
+            configMapKeyRef:
+              key: MYSQL_PWD
+              name: tracker-env
+        - name: MYSQL_USER
+          valueFrom:
+            configMapKeyRef:
+              key: MYSQL_USER
+              name: tracker-env
+        - name: OLD_SITE_HASH
+          valueFrom:
+            configMapKeyRef:
+              key: OLD_SITE_HASH
+              name: tracker-env
+        - name: PRODUCTION
+          valueFrom:
+            configMapKeyRef:
+              key: PRODUCTION
+              name: tracker-env
+        - name: REDIS_URL
+          valueFrom:
+            configMapKeyRef:
+              key: REDIS_URL
+              name: tracker-env
+        - name: RT_API_KEY
+          valueFrom:
+            configMapKeyRef:
+              key: RT_API_KEY
+              name: tracker-env
+        - name: SECRET_KEY
+          valueFrom:
+            configMapKeyRef:
+              key: SECRET_KEY
+              name: tracker-env
+        - name: SITE_NAME
+          valueFrom:
+            configMapKeyRef:
+              key: SITE_NAME
+              name: tracker-env
+        - name: SITE_URL
+          valueFrom:
+            configMapKeyRef:
+              key: SITE_URL
+              name: tracker-env
+        - name: TESTING_DB_HOST
+          valueFrom:
+            configMapKeyRef:
+              key: TESTING_DB_HOST
+              name: tracker-env
+        - name: TESTING_DB_NAME
+          valueFrom:
+            configMapKeyRef:
+              key: TESTING_DB_NAME
+              name: tracker-env
+        - name: TESTING_DB_PASS
+          valueFrom:
+            configMapKeyRef:
+              key: TESTING_DB_PASS
+              name: tracker-env
+        - name: TESTING_DB_PORT
+          valueFrom:
+            configMapKeyRef:
+              key: TESTING_DB_PORT
+              name: tracker-env
+        - name: TESTING_DB_SERVICE
+          valueFrom:
+            configMapKeyRef:
+              key: TESTING_DB_SERVICE
+              name: tracker-env
+        - name: TESTING_DB_USER
+          valueFrom:
+            configMapKeyRef:
+              key: TESTING_DB_USER
+              name: tracker-env
+        - name: TESTING_WSGI_APPLICATION
+          valueFrom:
+            configMapKeyRef:
+              key: TESTING_WSGI_APPLICATION
+              name: tracker-env
+        - name: TEST_RUNNER
+          valueFrom:
+            configMapKeyRef:
+              key: TEST_RUNNER
+              name: tracker-env
+        - name: TRACKER_URL
+          valueFrom:
+            configMapKeyRef:
+              key: TRACKER_URL
+              name: tracker-env
+        image: tracker
+        name: tracker_dev
+        ports:
+        - containerPort: 7070
+        resources: {}
+        volumeMounts:
+        - mountPath: /code
+          name: tracker-claim0
+      restartPolicy: Always
+      volumes:
+      - name: tracker-claim0
+        persistentVolumeClaim:
+          claimName: tracker-claim0
+status: {}

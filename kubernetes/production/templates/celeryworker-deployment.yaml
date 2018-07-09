@@ -1,0 +1,203 @@
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  annotations:
+    kompose.cmd: kompose convert -c --file docker-compose.production.yml
+    kompose.version: 1.13.0 (84fa826)
+  creationTimestamp: null
+  labels:
+    io.kompose.service: celeryworker
+  name: celeryworker
+spec:
+  replicas: 1
+  strategy:
+    type: Recreate
+  template:
+    metadata:
+      creationTimestamp: null
+      labels:
+        io.kompose.service: celeryworker
+    spec:
+      containers:
+      - args:
+        - bash
+        - -c
+        - celery worker --workdir /code/src -A jumpcut -l info
+        env:
+        - name: ALLOWED_HOSTS
+          valueFrom:
+            configMapKeyRef:
+              key: ALLOWED_HOSTS
+              name: celeryworker-backend--env
+        - name: BANDIT_EMAIL
+          valueFrom:
+            configMapKeyRef:
+              key: BANDIT_EMAIL
+              name: celeryworker-backend--env
+        - name: CELERY_ALWAYS_EAGER
+          valueFrom:
+            configMapKeyRef:
+              key: CELERY_ALWAYS_EAGER
+              name: celeryworker-backend--env
+        - name: CORS_ORIGIN_ALLOW_ALL
+          valueFrom:
+            configMapKeyRef:
+              key: CORS_ORIGIN_ALLOW_ALL
+              name: celeryworker-backend--env
+        - name: DATABASE_URL
+          valueFrom:
+            configMapKeyRef:
+              key: DATABASE_URL
+              name: celeryworker-backend--env
+        - name: DEBUG
+          valueFrom:
+            configMapKeyRef:
+              key: DEBUG
+              name: celeryworker-backend--env
+        - name: DEFAULT_FROM_EMAIL
+          valueFrom:
+            configMapKeyRef:
+              key: DEFAULT_FROM_EMAIL
+              name: celeryworker-backend--env
+        - name: DEFAULT_REPLY_TO_EMAIL
+          valueFrom:
+            configMapKeyRef:
+              key: DEFAULT_REPLY_TO_EMAIL
+              name: celeryworker-backend--env
+        - name: EMAIL_HOST
+          valueFrom:
+            configMapKeyRef:
+              key: EMAIL_HOST
+              name: celeryworker-backend--env
+        - name: EMAIL_HOST_PASSWORD
+          valueFrom:
+            configMapKeyRef:
+              key: EMAIL_HOST_PASSWORD
+              name: celeryworker-backend--env
+        - name: EMAIL_HOST_USER
+          valueFrom:
+            configMapKeyRef:
+              key: EMAIL_HOST_USER
+              name: celeryworker-backend--env
+        - name: EMAIL_PORT
+          valueFrom:
+            configMapKeyRef:
+              key: EMAIL_PORT
+              name: celeryworker-backend--env
+        - name: EMAIL_USE_TLS
+          valueFrom:
+            configMapKeyRef:
+              key: EMAIL_USE_TLS
+              name: celeryworker-backend--env
+        - name: HOST
+          valueFrom:
+            configMapKeyRef:
+              key: HOST
+              name: celeryworker-backend--env
+        - name: HOST_DOMAIN
+          valueFrom:
+            configMapKeyRef:
+              key: HOST_DOMAIN
+              name: celeryworker-backend--env
+        - name: INTERNAL_IPS
+          valueFrom:
+            configMapKeyRef:
+              key: INTERNAL_IPS
+              name: celeryworker-backend--env
+        - name: MYSQLDB_NAME
+          valueFrom:
+            configMapKeyRef:
+              key: MYSQLDB_NAME
+              name: celeryworker-backend--env
+        - name: MYSQL_HOST
+          valueFrom:
+            configMapKeyRef:
+              key: MYSQL_HOST
+              name: celeryworker-backend--env
+        - name: MYSQL_PORT
+          valueFrom:
+            configMapKeyRef:
+              key: MYSQL_PORT
+              name: celeryworker-backend--env
+        - name: MYSQL_PWD
+          valueFrom:
+            configMapKeyRef:
+              key: MYSQL_PWD
+              name: celeryworker-backend--env
+        - name: MYSQL_USER
+          valueFrom:
+            configMapKeyRef:
+              key: MYSQL_USER
+              name: celeryworker-backend--env
+        - name: OLD_SITE_HASH
+          valueFrom:
+            configMapKeyRef:
+              key: OLD_SITE_HASH
+              name: celeryworker-backend--env
+        - name: PRODUCTION
+          valueFrom:
+            configMapKeyRef:
+              key: PRODUCTION
+              name: celeryworker-backend--env
+        - name: REDIS_URL
+          valueFrom:
+            configMapKeyRef:
+              key: REDIS_URL
+              name: celeryworker-backend--env
+        - name: RT_API_KEY
+          valueFrom:
+            configMapKeyRef:
+              key: RT_API_KEY
+              name: celeryworker-backend--env
+        - name: SECRET_KEY
+          valueFrom:
+            configMapKeyRef:
+              key: SECRET_KEY
+              name: celeryworker-backend--env
+        - name: SENTRY_DSN
+          valueFrom:
+            configMapKeyRef:
+              key: SENTRY_DSN
+              name: celeryworker-backend--env
+        - name: SITE_NAME
+          valueFrom:
+            configMapKeyRef:
+              key: SITE_NAME
+              name: celeryworker-backend--env
+        - name: SITE_URL
+          valueFrom:
+            configMapKeyRef:
+              key: SITE_URL
+              name: celeryworker-backend--env
+        - name: TESTING_DATABASE_URL
+          valueFrom:
+            configMapKeyRef:
+              key: TESTING_DATABASE_URL
+              name: celeryworker-backend--env
+        - name: TESTING_WSGI_APPLICATION
+          valueFrom:
+            configMapKeyRef:
+              key: TESTING_WSGI_APPLICATION
+              name: celeryworker-backend--env
+        - name: TEST_RUNNER
+          valueFrom:
+            configMapKeyRef:
+              key: TEST_RUNNER
+              name: celeryworker-backend--env
+        - name: TRACKER_URL
+          valueFrom:
+            configMapKeyRef:
+              key: TRACKER_URL
+              name: celeryworker-backend--env
+        image: gitlab.pinigseu.xyz:4567/jumpcut/jumpcut:latest
+        name: celeryworker
+        resources: {}
+        volumeMounts:
+        - mountPath: /code/src
+          name: celeryworker-claim0
+      restartPolicy: Always
+      volumes:
+      - name: celeryworker-claim0
+        persistentVolumeClaim:
+          claimName: celeryworker-claim0
+status: {}

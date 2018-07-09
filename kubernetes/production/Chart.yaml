@@ -1,0 +1,7 @@
+name: docker-compose.production
+description: A generated Helm Chart for docker-compose.production from Skippbox Kompose
+version: 0.0.1
+keywords:
+  - docker-compose.production
+sources:
+home:

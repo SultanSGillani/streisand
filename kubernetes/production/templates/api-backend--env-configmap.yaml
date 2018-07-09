@@ -1,0 +1,41 @@
+apiVersion: v1
+data:
+  ALLOWED_HOSTS: ""
+  BANDIT_EMAIL: ""
+  CELERY_ALWAYS_EAGER: "True"
+  CORS_ORIGIN_ALLOW_ALL: "True"
+  DATABASE_URL: postgres://postgres:postgres@postgres:5432/postgres
+  DEBUG: "True"
+  DEFAULT_FROM_EMAIL: ""
+  DEFAULT_REPLY_TO_EMAIL: ""
+  EMAIL_HOST: ""
+  EMAIL_HOST_PASSWORD: ""
+  EMAIL_HOST_USER: ""
+  EMAIL_PORT: "587"
+  EMAIL_USE_TLS: "True"
+  HOST: localhost
+  HOST_DOMAIN: alghaib.com
+  INTERNAL_IPS: 10.0.0.2, 127.0.0.1
+  MYSQL_HOST: localhost
+  MYSQL_PORT: "3306"
+  MYSQL_PWD: fuckneebs
+  MYSQL_USER: root
+  MYSQLDB_NAME: tc
+  OLD_SITE_HASH: ""
+  PRODUCTION: "False"
+  REDIS_URL: redis://redis:6379
+  RT_API_KEY: ""
+  SECRET_KEY: changeme
+  SENTRY_DSN: https://f710024c877d4b9494d82dd5bf037928@sentry.io/1229785
+  SITE_NAME: jumpcut
+  SITE_URL: https://api.alghaib.com
+  TEST_RUNNER: jumpcut.tests.CustomTestSuiteRunner
+  TESTING_DATABASE_URL: postgres://postgres:postgres@postgres:5432/postgres
+  TESTING_WSGI_APPLICATION: jumpcut.www_wsgi.application
+  TRACKER_URL: https://tracker.alghaib.com
+kind: ConfigMap
+metadata:
+  creationTimestamp: null
+  labels:
+    io.kompose.service: api-backend--env
+  name: api-backend--env
