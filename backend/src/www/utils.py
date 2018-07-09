@@ -64,6 +64,6 @@ def email(subject='', template='', context=None, from_email=None, reply_to=None,
 
 def ratio(bytes_uploaded, bytes_downloaded):
     if bytes_downloaded == 0:
-        return 0.0
+        return None
     else:
         return round(bytes_uploaded / bytes_downloaded, 3)
