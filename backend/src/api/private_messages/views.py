@@ -1,68 +1,61 @@
+from rest_framework import mixins, permissions
 from rest_framework import viewsets
-from rest_framework import mixins, permissions, status
-from rest_framework.response import Response
-from rest_framework.decorators import action
 
-from api.mixins import MultiSerializerViewSetMixin
-from private_messages.models import Conversation
+from private_messages.models import Message
+
 from . import serializers
 
 
-class ConversationViewSet(MultiSerializerViewSetMixin, viewsets.GenericViewSet,
-                          mixins.ListModelMixin, mixins.RetrieveModelMixin):
-    """
-    For all conversations. Please note the pagination on the messages for a pm
-    """
+class MessageViewSet(mixins.CreateModelMixin,
+                     mixins.ListModelMixin,
+                     mixins.RetrieveModelMixin,
+                     mixins.DestroyModelMixin,
+                     viewsets.GenericViewSet):
+
+    serializer_class = serializers.MessageSerializer
     permission_classes = [permissions.IsAuthenticated]
+    queryset = Message.objects.all().select_related(
+        'reply_to'
+    ).filter(
+        reply_to__isnull=True
+    ).order_by(
+        'level'
+    )
 
-    serializer_class = serializers.ConversationSerializer
-    serializer_action_classes = {
-        'list': serializers.ConversationSerializer,
-        'create': serializers.InitialMessageSerializer,
-        'retrieve': serializers.ConversationDetailSerializer,
-        'reply': serializers.ReplySerializer
-    }
 
-    def get_queryset(self, *args, **kwargs):
-        return Conversation.objects.for_user(self.request.user)
+class InboxViewSet(mixins.ListModelMixin,
+                   mixins.RetrieveModelMixin,
+                   viewsets.GenericViewSet):
 
-    # Custom create model - for different (hacky) behaviour
-    def create(self, request, *args, **kwargs):
-        serializer = self.get_serializer(data=request.data)
-        serializer.is_valid(raise_exception=True)
-        serializer.save()
-        # hack alert - https://github.com/encode/django-rest-framework/issues/1563
-        # we want to return the detail serializer back from the api not the request
-        conversation = Conversation.objects.get(id=serializer.data['pk'])
-        conv_serializer = serializers.ConversationDetailSerializer(
-            conversation, context={'request': self.request})
-        return Response(conv_serializer.data, status=status.HTTP_201_CREATED)
+    serializer_class = serializers.MessageSerializer
+    permission_classes = [permissions.IsAuthenticated]
+    queryset = Message.objects.all(
+    ).select_related(
+        'reply_to',
+        'sender',
+        'recipient'
+    ).prefetch_related(
+        'reply_to',
+    ).order_by(
+        '-created_at',
+        'level'
+    ).distinct()
 
-    @action(methods=['post'], detail=True)
-    def reply(self, request, pk=None):
-        """
-        Add a new message to the chain
-        """
-        conversation = self.get_object()
-        serializer = serializers.ReplySerializer(
-            data=request.data,
-            context={
-                'request': request,
-                'conversation': conversation
-            })
-        serializer.is_valid(raise_exception=True)
-        serializer.save()
-        conv_serializer = serializers.ConversationDetailSerializer(
-            conversation, context={'request': self.request})
-        return Response(conv_serializer.data, status=status.HTTP_201_CREATED)
 
-    @action(methods=['post'], detail=True)
-    def mark_read(self, request, pk=None):
-        """
-        Mark a thread as read
-        """
-        conversation = self.get_object()
-        conversation.clear_notification(request.user)
-        conv_serializer = serializers.ConversationDetailSerializer(
-            conversation, context={'request': self.request})
-        return Response(conv_serializer.data, status=status.HTTP_201_CREATED)
+class ReplyMessageViewSet(mixins.CreateModelMixin,
+                          mixins.ListModelMixin,
+                          mixins.RetrieveModelMixin,
+                          viewsets.GenericViewSet):
+
+    serializer_class = serializers.ReplyMessageSerializer
+    permission_classes = [permissions.IsAuthenticated]
+    queryset = Message.objects.all().select_related(
+        'reply_to',
+        'sender',
+        'recipient'
+    ).filter(
+        reply_to__isnull=False,
+    ).order_by(
+        '-created_at',
+        'subject',
+    ).distinct()

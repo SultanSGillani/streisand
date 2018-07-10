@@ -20,6 +20,7 @@ THIRD_PARTY_APPS = [
     'django_su',
     'drf_yasg',
     'knox',
+    'mptt',
     'raven.contrib.django.raven_compat',
     'rest_framework',
     'rest_framework_filters',
@@ -91,7 +92,7 @@ REST_FRAMEWORK = {
         'rest_framework.renderers.BrowsableAPIRenderer',
     ],
     'DEFAULT_PARSER_CLASSES': [
-        'djangorestframework_camel_case.parser.CamelCaseJSONParser'
+        'djangorestframework_camel_case.parser.CamelCaseJSONParser',
     ],
     'DEFAULT_PAGINATION_CLASS': 'api.pagination.DetailPagination',
     'PAGE_SIZE': 50,
