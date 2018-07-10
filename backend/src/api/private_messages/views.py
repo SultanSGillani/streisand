@@ -6,56 +6,52 @@ from private_messages.models import Message
 from . import serializers
 
 
-class MessageViewSet(mixins.CreateModelMixin,
-                     mixins.ListModelMixin,
-                     mixins.RetrieveModelMixin,
-                     mixins.DestroyModelMixin,
+class MessageViewSet(mixins.CreateModelMixin, mixins.ListModelMixin,
+                     mixins.RetrieveModelMixin, mixins.DestroyModelMixin,
                      viewsets.GenericViewSet):
 
     serializer_class = serializers.MessageSerializer
     permission_classes = [permissions.IsAuthenticated]
-    queryset = Message.objects.all().select_related(
-        'reply_to'
-    ).filter(
-        reply_to__isnull=True
-    ).order_by(
-        'level'
-    )
+    queryset = Message.objects.all().select_related('reply_to').filter(
+        reply_to__isnull=True).order_by('level')
 
 
-class InboxViewSet(mixins.ListModelMixin,
-                   mixins.RetrieveModelMixin,
+class InboxViewSet(mixins.ListModelMixin, mixins.RetrieveModelMixin,
                    viewsets.GenericViewSet):
 
     serializer_class = serializers.MessageSerializer
     permission_classes = [permissions.IsAuthenticated]
-    queryset = Message.objects.all(
-    ).select_related(
-        'reply_to',
-        'sender',
-        'recipient'
-    ).prefetch_related(
-        'reply_to',
-    ).order_by(
-        '-created_at',
-        'level'
-    ).distinct()
+    queryset = Message.objects.all().select_related(
+        'reply_to', 'sender',
+        'recipient').prefetch_related('reply_to').order_by(
+            '-created_at', 'level').distinct()
+
+    def get_queryset(self):
+        queryset = Message.objects.all().filter(recipient=self.request.user)
+
+        return queryset
 
 
-class ReplyMessageViewSet(mixins.CreateModelMixin,
-                          mixins.ListModelMixin,
-                          mixins.RetrieveModelMixin,
-                          viewsets.GenericViewSet):
+class OutBoxViewSet(mixins.ListModelMixin, mixins.RetrieveModelMixin,
+                    viewsets.GenericViewSet):
+
+    serializer_class = serializers.MessageSerializer
+    permission_classes = [permissions.IsAuthenticated]
+    queryset = Message.objects.all().select_related(
+        'reply_to', 'sender', 'recipient').prefetch_related(
+            'reply_to',).order_by('-created_at', 'level').distinct()
+
+    def get_queryset(self):
+        queryset = Message.objects.all().filter(sender=self.request.user)
+        return queryset
+
+
+class ReplyMessageViewSet(mixins.CreateModelMixin, mixins.ListModelMixin,
+                          mixins.RetrieveModelMixin, viewsets.GenericViewSet):
 
     serializer_class = serializers.ReplyMessageSerializer
     permission_classes = [permissions.IsAuthenticated]
     queryset = Message.objects.all().select_related(
-        'reply_to',
-        'sender',
-        'recipient'
-    ).filter(
-        reply_to__isnull=False,
-    ).order_by(
-        '-created_at',
-        'subject',
-    ).distinct()
+        'reply_to', 'sender', 'recipient').filter(
+            reply_to__isnull=False,).order_by('-created_at',
+                                              'subject').distinct()
