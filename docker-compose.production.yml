@@ -5,20 +5,50 @@ version: '3'
 services:
   api:
     image: gitlab.pinigseu.xyz:4567/jumpcut/jumpcut:latest
+    container_name: api
+    volumes:
+    - ./backend/src:/code/src/
     build:
       context: ./backend
       dockerfile: ./production/Dockerfile
-    container_name: api
-    depends_on:
-    - postgres
-    - redis
-    env_file: ./backend/.env
     ports:
     - 7070:7070
     - 8000:8000
+    env_file: ./backend/.env
+    depends_on:
+    - postgres
+    - redis
     restart: always
+  celerybeat:
+    image: gitlab.pinigseu.xyz:4567/jumpcut/jumpcut:latest
+    command: bash -c "celery beat --workdir /code/src -A jumpcut -l info"
+    container_name: celerybeat
     volumes:
-    - ./backend/src:/code/src/
+    - ./backend/src:/code/src
+    env_file: ./backend/.env
+    environment:
+      C_FORCE_ROOT: 'true'
+      DJANGO_SETTINGS_MODULE: jumpcut.settings.www_settings
+      PYTHONPATH: /code/src
+    depends_on:
+    - celeryworker
+    - postgres
+    - redis
+  celeryworker:
+    image: gitlab.pinigseu.xyz:4567/jumpcut/jumpcut:latest
+    command: bash -c "celery worker --workdir /code/src -A jumpcut -l info"
+    container_name: celeryworker
+    volumes:
+    - ./backend/src:/code/src
+    env_file: ./backend/.env
+    environment:
+      C_FORCE_ROOT: 'true'
+      DJANGO_SETTINGS_MODULE: jumpcut.settings.www_settings
+      PYTHONPATH: /code/src
+    depends_on:
+    - api
+    - postgres
+    - redis
   nginx_react:
     build:
       context: ./frontend
@@ -28,41 +58,11 @@ services:
     - api
     env_file: ./frontend/.env
     ports:
-    - 80:80
     - 443:443
+    - 80:80
     restart: always
     volumes:
     - ./backend/src:/usr/share/nginx/src/
-  celeryworker:
-      image: gitlab.pinigseu.xyz:4567/jumpcut/jumpcut:latest
-      command: bash -c "celery worker --workdir /code/src -A jumpcut -l info"
-      environment:
-        PYTHONPATH: /code/src
-        C_FORCE_ROOT: "true"
-        DJANGO_SETTINGS_MODULE: jumpcut.settings.www_settings
-      env_file: ./backend/.env
-      container_name: celeryworker
-      volumes:
-      - ./backend/src:/code/src
-      depends_on:
-      - postgres
-      - redis
-      - api
-  celerybeat:
-      image: gitlab.pinigseu.xyz:4567/jumpcut/jumpcut:latest
-      command: bash -c "celery beat --workdir /code/src -A jumpcut -l info"
-      environment:
-        PYTHONPATH: /code/src
-        C_FORCE_ROOT: "true"
-        DJANGO_SETTINGS_MODULE: jumpcut.settings.www_settings
-      env_file: ./backend/.env
-      container_name: celerybeat
-      volumes:
-      - ./backend/src:/code/src
-      depends_on:
-      - postgres
-      - redis
-      - celeryworker
   postgres:
     image: postgres:alpine
     container_name: db
@@ -78,4 +78,3 @@ services:
     restart: always
 volumes:
   pgdata:
-  

@@ -40,8 +40,8 @@ class TorrentStats(models.Model):
     last_seeded = models.DateTimeField(null=True)
     seed_time = models.DurationField(default=timedelta(minutes=0))
 
-    hnr_countdown_started_at = models.DateTimeField(null=True)
-    is_hit_and_run = models.NullBooleanField()
+    hnr_countdown_started_at = models.DateTimeField(null=True, default=None)
+    is_hit_and_run = models.NullBooleanField(default=None)
 
     class Meta:
         unique_together = ['user', 'torrent']
