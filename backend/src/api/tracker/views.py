@@ -27,7 +27,14 @@ class PeerViewSet(ReadOnlyModelViewSet):
     permission_classes = [IsAuthenticated]
     filter_backends = [filters.DjangoFilterBackend]
     filter_fields = ['torrent_id']
-    queryset = Peer.objects.select_related('user', 'torrent').order_by('complete', '-first_announce')
+
+    def get_queryset(self):
+        return Peer.objects.active().select_related(
+            'user__user_class',
+        ).order_by(
+            'complete',
+            '-first_announce',
+        )
 
     def get_serializer_class(self):
         if self.request.user.is_staff:
