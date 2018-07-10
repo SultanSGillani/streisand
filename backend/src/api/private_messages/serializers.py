@@ -50,8 +50,8 @@ class ReplyMessageSerializer(serializers.ModelSerializer, AllowFieldLimitingMixi
             'subject',
             'body',
             'is_deleted',
-            'is_opened',
-            'children'
+            'last_opened',
+            'children',
         )
 
     def create(self, validated_data):

@@ -10,7 +10,7 @@ from users.models import User
 
 class Message(MPTTModel):
     reply_to = TreeForeignKey('self', on_delete=models.CASCADE, null=True, blank=True, related_name='children')
-    subject = models.CharField(max_length=200)
+    subject = models.CharField(max_length=200, unique=True)
     body = models.TextField()
     sender = models.ForeignKey(User, related_name='sent_messages', on_delete=models.SET_NULL, null=True)
     recipient = models.ForeignKey(User, related_name='received_messages', on_delete=models.SET_NULL, null=True)
