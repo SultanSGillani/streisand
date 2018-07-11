@@ -35,7 +35,7 @@ type ConnectedDispatch = {
 };
 
 type CombinedProps = ConnectedState & ConnectedDispatch & Props;
-class FilmPageComponent extends React.Component<CombinedProps, void> {
+class FilmPageComponent extends React.Component<CombinedProps> {
     public componentWillMount() {
         if (!this.props.status.loading) {
             this.props.getFilm(this.props.filmId);

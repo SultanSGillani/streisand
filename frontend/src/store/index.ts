@@ -13,6 +13,7 @@ import ILocationInfo from '../models/ILocationInfo';
 import IForumData from '../models/forums/IForumData';
 import ITorrentItemSet from '../models/ITorrentItemSet';
 import { IItemList, IItemPages } from '../models/base/IPagedItemSet';
+import { ITrackerPeer } from '../models/ITrackerPeer';
 
 namespace Store {
     export type Users = IItemList<IUser>;
@@ -22,6 +23,7 @@ namespace Store {
     export type Wikis = IItemList<IWiki> & {
         creating: boolean;
     };
+    export type Peers = IItemList<ITrackerPeer>;
     export type Invites = IItemList<IInvite>;
     export type News = { latest: number | null; loading: boolean; };
     export type CurrentUser = { id: number | null; loading: boolean; };
@@ -34,6 +36,7 @@ namespace Store {
         film: Films;
         torrent: ITorrentItemSet;
         release: Releases;
+        peer: Peers;
         wiki: Wikis;
         news: News;
         forums: IForumData;
