@@ -11,7 +11,7 @@ class PublicUserFilter(filters.FilterSet):
         model = User
         fields = {
             'id': ['in'],
-            'username': ['exact', 'in', 'startswith'],
+            'username': ['exact', 'in', 'startswith', 'icontains'],
         }
 
 
@@ -22,7 +22,7 @@ class UserFilter(filters.FilterSet):
     class Meta:
         model = User
         fields = {
-            'username': ['exact', 'in', 'startswith'],
+            'username': ['exact', 'in', 'startswith', 'icontains'],
             'user_class__name': ['exact', 'in', 'startswith'],
         }
 

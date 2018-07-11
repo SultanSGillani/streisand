@@ -4,7 +4,19 @@ import warnings
 class AllowFieldLimitingMixin(object):
     """
     A serializer mixin that takes an additional `fields` argument that controls
-    which fields should be displayed.
+    which fields should be displayed. Note that this mixin must be added
+    before the ModelSerializer.
+
+    For Example:
+
+    .. code:: python
+
+        ```
+        SomethingSerializer(AllowFieldLimitingMixin, ModelSerializer):
+
+        ...
+
+        ```
     """
 
     @property
