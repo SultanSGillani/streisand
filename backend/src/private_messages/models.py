@@ -9,8 +9,8 @@ from users.models import User
 
 
 class Message(MPTTModel):
-    reply_to = TreeForeignKey('self', on_delete=models.CASCADE, null=True, blank=True, related_name='children')
-    subject = models.CharField(max_length=200, unique=True)
+    reply_to = TreeForeignKey('self', on_delete=models.CASCADE, null=True, blank=True, related_name='children', db_index=True)
+    subject = models.CharField(max_length=200)
     body = models.TextField()
     sender = models.ForeignKey(User, related_name='sent_messages', on_delete=models.SET_NULL, null=True)
     recipient = models.ForeignKey(User, related_name='received_messages', on_delete=models.SET_NULL, null=True)
@@ -28,7 +28,6 @@ class Message(MPTTModel):
 
     class MPTTMeta:
         parent_attr = 'reply_to'
-        order_insertion_by = ['subject']
 
     def clean(self, *args, **kwargs):
         if self.sender == self.recipient:
