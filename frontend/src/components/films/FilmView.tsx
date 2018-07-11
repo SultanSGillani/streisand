@@ -44,7 +44,7 @@ class FilmViewComponent extends React.Component<CombinedProps> {
         const trailerId = getYouTubeId(film.trailerUrl);
         const youtubeUrl = `//www.youtube.com/embed/${trailerId}?rel=0&amp;wmode=transparent`;
         const tags = film.genreTags.map((tag: string) => {
-            return (<span className="label label-default" key={tag}>{tag}</span>);
+            return (<span className="badge badge-secondary" key={tag}>{tag}</span>);
         });
         const commands: ICommand[] = [
             {
@@ -68,8 +68,8 @@ class FilmViewComponent extends React.Component<CombinedProps> {
                     <iframe style={styles.video} src={youtubeUrl} frameBorder="0"></iframe>
                 </div>
                 <h2>Description</h2>
+                <>{tags}</>
                 <p>{film.description}</p>
-                <div>{tags}</div>
                 <h2>Torrents</h2>
                 <TorrentSection film={film}
                     torrents={this.props.torrents} includeReleaseInfo={true}
