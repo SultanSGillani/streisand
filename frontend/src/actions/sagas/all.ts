@@ -10,6 +10,7 @@ import { allTorrentSaga } from '../torrents';
 import { allReleaseSaga } from '../releases';
 import { mediaTypeSaga } from '../MediaTypeAction';
 import { allInviteSaga } from '../invites';
+import { allPeerSaga } from '../peers';
 
 export default function* rootSaga() {
     yield all([
@@ -22,6 +23,7 @@ export default function* rootSaga() {
         allReleaseSaga(),
         newsSaga(),
         mediaTypeSaga(),
-        allInviteSaga()
+        allInviteSaga(),
+        allPeerSaga()
     ]);
 }

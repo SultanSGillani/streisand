@@ -5,9 +5,10 @@ import { combineReducers } from './helpers';
 import news from './news';
 import auth from './auth';
 import wiki from './wiki';
+import peer from './peer';
+import film from './film';
 import invite from './invite';
 import forums from './forums';
-import film from './film';
 import torrent from './torrent';
 import user from './users/user';
 import release from './release';
@@ -23,7 +24,8 @@ const combined = combineReducers<Store.UserSealed>({
     news,
     forums,
     release,
-    invite
+    invite,
+    peer
 });
 
 export default (state: Store.UserSealed, action: Action) => {

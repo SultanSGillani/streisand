@@ -13,7 +13,8 @@ function byId(state: ItemMap = {}, action: Action): ItemMap {
         case 'RECEIVED_USER':
         case 'RECEIVED_CURRENT_USER':
         case 'RECEIVED_USER_UPDATE':
-            return addLoadedNode(state, action.user);
+        return addLoadedNode(state, action.user);
+        case 'RECEIVED_PEERS':
         case 'RECEIVED_BULK_USERS':
         case 'RECEIVED_DETACHED_TORRENTS':
         case 'RECEIVED_FILM_TORRENTS':
