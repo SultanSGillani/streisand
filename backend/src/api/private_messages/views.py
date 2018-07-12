@@ -74,7 +74,7 @@ class InboxViewSet(ListModelMixin, RetrieveModelMixin, UpdateModelMixin, Generic
     filter_class = MessageFilter
 
     def get_serializer_class(self):
-        if self.request.method == 'PUT':
+        if self.request.method in ['PUT', 'PATCH']:
             return RecipientTrashSerializer
         return MessageSerializer
 
@@ -129,7 +129,7 @@ class OutBoxViewSet(ListModelMixin, RetrieveModelMixin, UpdateModelMixin, Generi
     filter_class = MessageFilter
 
     def get_serializer_class(self):
-        if self.request.method == 'PUT':
+        if self.request.method in ['PUT', 'PATCH']:
             return SenderTrashSerializer
         return MessageSerializer
 
