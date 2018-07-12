@@ -55,9 +55,7 @@ class ReplyMessageViewSet(ModelViewSet):
         'parent',
         'sender',
         'recipient'
-    ).filter(
-        parent__isnull=False,
-    ).order_by('-sent_at', 'level')
+    ).filter(parent__isnull=False).order_by('-sent_at', 'level')
 
 
 class InboxViewSet(ListModelMixin, RetrieveModelMixin, UpdateModelMixin, GenericViewSet):
@@ -79,6 +77,11 @@ class InboxViewSet(ListModelMixin, RetrieveModelMixin, UpdateModelMixin, Generic
         if self.request.method == 'PUT':
             return RecipientTrashSerializer
         return MessageSerializer
+
+    # We change serializer class here on PUT requests because we do not want the is_deleted field to be required
+    # for the initial serializer this viewset uses (MessageSerializer) since it is the first endpoint needed for
+    # initial messages. The deleted_inbox field is never Null,
+    # so we only request this to PUT and send to the Trash Inbox
 
     def get_queryset(self):
         queryset = Message.objects.all().filter(

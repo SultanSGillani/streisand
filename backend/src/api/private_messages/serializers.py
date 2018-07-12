@@ -14,7 +14,7 @@ class ReplyMessageSerializer(AllowFieldLimitingMixin, serializers.ModelSerialize
     Reply to the initial Message. We are selecting the parent message, and then
     adding child messages to the initial message.
 
-    /api/v1/messages/reply/{parent_id}/reply/
+    /api/v1/messages/{parent_id}/reply/
 
     """
     sender = DisplayUserSerializer(read_only=True)
@@ -38,7 +38,7 @@ class ReplyMessageSerializer(AllowFieldLimitingMixin, serializers.ModelSerialize
 
     # See here https://github.com/encode/django-rest-framework/issues/2555#issuecomment-253201525
     # The reason we are instantiating the DisplayUserSerializer here is because Context
-    # does not have access to request initial per the below error.
+    # does not have access to request initially per the below error.
     # This could be because of MPTT / Parent/child relationships in this model.
     # ('Context does not have access to request')
 
@@ -73,7 +73,7 @@ class MessageSerializer(AllowFieldLimitingMixin, serializers.ModelSerializer):
 
     # See here https://github.com/encode/django-rest-framework/issues/2555#issuecomment-253201525
     # The reason we are instantiating the DisplayUserSerializer here is because Context
-    # does not have access to request initial per the below error.
+    # does not have access to request initially per the below error.
     # ('Context does not have access to request')
 
     def __init__(self, *args, **kwargs):
