@@ -1,32 +1,44 @@
-from rest_framework import mixins, permissions
-from rest_framework import viewsets
+from django_filters import rest_framework as filters
+from rest_framework.mixins import CreateModelMixin, ListModelMixin, RetrieveModelMixin
+from rest_framework.permissions import IsAuthenticated, IsAdminUser
+from rest_framework.viewsets import GenericViewSet, ModelViewSet
 from rest_framework_extensions.mixins import NestedViewSetMixin
-
 
 from private_messages.models import Message
 
-from . import serializers
+from .filters import MessageFilter
+from .serializers import MessageSerializer, ReplyMessageSerializer
 
 
-class MessageViewSet(NestedViewSetMixin, mixins.CreateModelMixin, mixins.ListModelMixin,
-                     mixins.RetrieveModelMixin, mixins.DestroyModelMixin,
-                     viewsets.GenericViewSet):
+class MessageViewSet(NestedViewSetMixin, CreateModelMixin, ListModelMixin,
+                     RetrieveModelMixin, GenericViewSet):
 
-    serializer_class = serializers.MessageSerializer
-    permission_classes = [permissions.IsAuthenticated]
+    serializer_class = MessageSerializer
+    permission_classes = [IsAuthenticated]
+    filter_backends = [filters.DjangoFilterBackend]
+    filter_class = MessageFilter
+
     queryset = Message.objects.all().select_related('parent').filter(
         parent__isnull=True).order_by('level')
 
 
-class InboxViewSet(mixins.ListModelMixin, mixins.RetrieveModelMixin,
-                   viewsets.GenericViewSet):
+class AdminMessageViewSet(ModelViewSet):
 
-    serializer_class = serializers.MessageSerializer
-    permission_classes = [permissions.IsAuthenticated]
-    queryset = Message.objects.all().select_related(
-        'parent', 'sender',
-        'recipient').prefetch_related('parent').order_by(
-            '-created_at', 'level').distinct()
+    serializer_class = MessageSerializer
+    permission_classes = [IsAdminUser]
+    filter_backends = [filters.DjangoFilterBackend]
+    filter_class = MessageFilter
+    
+    queryset = Message.objects.all().select_related('parent').order_by(
+        '-sent_at')
+
+
+class InboxViewSet(ListModelMixin, RetrieveModelMixin, GenericViewSet):
+
+    serializer_class = MessageSerializer
+    permission_classes = [IsAuthenticated]
+    filter_backends = [filters.DjangoFilterBackend]
+    filter_class = MessageFilter
 
     def get_queryset(self):
         queryset = Message.objects.all().filter(recipient=self.request.user)
@@ -34,26 +46,44 @@ class InboxViewSet(mixins.ListModelMixin, mixins.RetrieveModelMixin,
         return queryset
 
 
-class OutBoxViewSet(mixins.ListModelMixin, mixins.RetrieveModelMixin,
-                    viewsets.GenericViewSet):
+class TrashBoxViewSet(ListModelMixin, RetrieveModelMixin, GenericViewSet):
 
-    serializer_class = serializers.MessageSerializer
-    permission_classes = [permissions.IsAuthenticated]
-    queryset = Message.objects.all().select_related(
-        'parent', 'sender', 'recipient').prefetch_related(
-            'parent',).order_by('-sent_at', 'level').distinct()
+    serializer_class = MessageSerializer
+    permission_classes = [IsAuthenticated]
+    filter_backends = [filters.DjangoFilterBackend]
+    filter_class = MessageFilter
 
     def get_queryset(self):
-        queryset = Message.objects.all().filter(sender=self.request.user)
+        queryset = Message.objects.all().filter(
+             recipient=self.request.user,
+             recipient_deleted_at__isnull=True,
+        ).order_by('-sent_at')
+
         return queryset
 
 
-class ReplyMessageViewSet(viewsets.ModelViewSet):
+class OutBoxViewSet(ListModelMixin, RetrieveModelMixin, GenericViewSet):
 
-    serializer_class = serializers.ReplyMessageSerializer
-    permission_classes = [permissions.IsAuthenticated]
+    serializer_class = MessageSerializer
+    permission_classes = [IsAuthenticated]
+    filter_backends = [filters.DjangoFilterBackend]
+    filter_class = MessageFilter
+
+    def get_queryset(self):
+        queryset = Message.objects.all().select_related(
+            'parent', 'sender',
+            'recipient').filter(sender=self.request.user).order_by(
+                '-sent_at', 'level')
+        return queryset
+
+
+class ReplyMessageViewSet(ModelViewSet):
+
+    serializer_class = ReplyMessageSerializer
+    permission_classes = [IsAuthenticated]
+    filter_backends = [filters.DjangoFilterBackend]
+    filter_class = MessageFilter
+    
     queryset = Message.objects.all().select_related(
         'parent', 'sender', 'recipient').filter(
-            parent__isnull=False,).order_by('-sent_at',
-                                              'subject').distinct()
-
+            parent__isnull=False,).order_by('-sent_at', 'level')

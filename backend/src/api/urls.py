@@ -46,8 +46,8 @@ router.register(r'groups', viewset=users_views.GroupViewSet, base_name='group')
 # PMs
 router.register(r'inbox', viewset=pm_views.InboxViewSet, base_name='inbox')
 router.register(r'outbox', viewset=pm_views.OutBoxViewSet, base_name='outbox')
-# router.register(r'messages', viewset=pm_views.MessageViewSet, base_name='message')
-# router.register(r'reply', viewset=pm_views.ReplyMessageViewSet, base_name='reply')
+router.register(r'trash', viewset=pm_views.TrashBoxViewSet, base_name='trash')
+router.register(r'staff', viewset=pm_views.AdminMessageViewSet, base_name='staff-box')
 
 router.register(r'messages', pm_views.MessageViewSet).register(
   r'replies',
