@@ -5,7 +5,10 @@ from django.conf.urls import url, include
 from drf_yasg import openapi
 from drf_yasg.views import get_schema_view
 from knox import views as knox_views
-from rest_framework import routers, permissions
+from rest_framework_extensions.routers import (
+    ExtendedDefaultRouter as DefaultRouter
+)
+from rest_framework import permissions
 from rest_framework.documentation import include_docs_urls
 
 from .films import views as films_views
@@ -33,7 +36,7 @@ SchemaView = get_schema_view(
     permission_classes=(permissions.IsAuthenticated,),
 )
 
-router = routers.DefaultRouter()
+router = DefaultRouter()
 
 # Users
 router.register(r'users', viewset=users_views.AdminUserViewSet, base_name='user')
@@ -43,8 +46,14 @@ router.register(r'groups', viewset=users_views.GroupViewSet, base_name='group')
 # PMs
 router.register(r'inbox', viewset=pm_views.InboxViewSet, base_name='inbox')
 router.register(r'outbox', viewset=pm_views.OutBoxViewSet, base_name='outbox')
-router.register(r'messages', viewset=pm_views.MessageViewSet, base_name='message')
-router.register(r'reply', viewset=pm_views.ReplyMessageViewSet, base_name='reply')
+# router.register(r'messages', viewset=pm_views.MessageViewSet, base_name='message')
+# router.register(r'reply', viewset=pm_views.ReplyMessageViewSet, base_name='reply')
+
+router.register(r'messages', pm_views.MessageViewSet).register(
+  r'replies',
+  pm_views.ReplyMessageViewSet,
+  'messages-reply',
+  parents_query_lookups=['parent_id'])
 
 # Invites
 router.register(r'invites', viewset=invites_views.InviteViewSet, base_name='invite')

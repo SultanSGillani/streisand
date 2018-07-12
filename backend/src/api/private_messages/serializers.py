@@ -1,3 +1,6 @@
+# -*- coding: utf-8 -*-
+
+
 from rest_framework import serializers
 from rest_framework_recursive.fields import RecursiveField
 
@@ -8,24 +11,28 @@ from ..mixins import AllowFieldLimitingMixin
 from ..users.serializers import DisplayUserSerializer
 
 
-class MessageSerializer(serializers.ModelSerializer, AllowFieldLimitingMixin):
+class ReplyMessageSerializer(AllowFieldLimitingMixin, serializers.ModelSerializer):
     sender = DisplayUserSerializer(read_only=True)
     recipient = serializers.PrimaryKeyRelatedField(queryset=User.objects.all())
-    subject = serializers.CharField()
     children = serializers.ListField(read_only=True, child=RecursiveField(), source='children.all')
+    sent_at = serializers.DateTimeField(read_only=True)
+    replied_at = serializers.DateTimeField(read_only=True)
+    parent = serializers.PrimaryKeyRelatedField(queryset=Message.objects.all(), required=True)
 
     class Meta:
         model = Message
         fields = (
             'id',
-            'reply_to',
-            'children',
+            'parent',
             'level',
             'sender',
             'recipient',
-            'subject',
             'body',
-            'is_deleted',
+            'sender_deleted_at',
+            'recipient_deleted_at',
+            'sent_at',
+            'replied_at',
+            'children',
         )
 
     def create(self, validated_data):
@@ -33,25 +40,27 @@ class MessageSerializer(serializers.ModelSerializer, AllowFieldLimitingMixin):
         return super().create(validated_data)
 
 
-class ReplyMessageSerializer(serializers.ModelSerializer, AllowFieldLimitingMixin):
+class MessageSerializer(AllowFieldLimitingMixin, serializers.ModelSerializer):
     sender = DisplayUserSerializer(read_only=True)
-    recipient = serializers.PrimaryKeyRelatedField(read_only=True)
+    recipient = serializers.PrimaryKeyRelatedField(queryset=User.objects.all())
+    subject = serializers.CharField(allow_blank=False)
     children = serializers.ListField(read_only=True, child=RecursiveField(), source='children.all')
-    subject = serializers.StringRelatedField(source='reply_to.subject', read_only=True)
+    sent_at = serializers.DateTimeField(read_only=True)
+    replied_at = serializers.DateTimeField(read_only=True)
 
     class Meta:
         model = Message
         fields = (
             'id',
-            'reply_to',
+            'parent',
+            'children',
             'level',
             'sender',
             'recipient',
             'subject',
             'body',
-            'is_deleted',
-            'last_opened',
-            'children',
+            'sent_at',
+            'replied_at',
         )
 
     def create(self, validated_data):
