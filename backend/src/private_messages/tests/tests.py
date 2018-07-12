@@ -1,9 +1,9 @@
 from django.test import TestCase
 from django.test.client import RequestFactory
 from django.utils import timezone
+
 from private_messages.models import Message
 from private_messages.models import inbox
-
 from users.models import User
 
 
@@ -54,7 +54,7 @@ class DeleteTestCase(TestCase):
             Message.objects.inbox(self.dantheman)[0].subject,
             'Subject Text 1'
         )
-        #undelete
+
         self.msg1.sender_deleted_at = None
         self.msg2.recipient_deleted_at = None
         self.msg1.save()
@@ -65,6 +65,7 @@ class DeleteTestCase(TestCase):
 
 class InboxCountTestCase(TestCase):
     """Test inbox-count."""
+
     def setUp(self):
         self.factory = RequestFactory()
         self.user = User.objects.create_user(
