@@ -6,12 +6,6 @@ from private_messages.models import Message
 
 
 class MessageFilter(filters.FilterSet):
-    sender_deleted = filters.BooleanFilter(
-        field_name='sender_deleted_at', lookup_expr='isnull'
-    )
-    recipient_deleted = filters.BooleanFilter(
-        field_name='sender_deleted_at', lookup_expr='isnull'
-    )
     subject = filters.CharFilter(field_name='subject', lookup_expr='icontains')
     body = filters.CharFilter(field_name='body', lookup_expr='icontains')
 
@@ -26,7 +20,9 @@ class MessageFilter(filters.FilterSet):
             'id': ['in'],
             'tree_id': ['exact', 'in'],
             'sender__username': ['exact', 'in', 'startswith', 'icontains'],
-            'recipient__username': ['exact', 'in', 'startswith', 'icontains']
+            'recipient__username': ['exact', 'in', 'startswith', 'icontains'],
+            'deleted_outbox': ['exact'],
+            'deleted_inbox': ['exact'],
         }
 
 
@@ -45,4 +41,3 @@ class MessageReplyFilter(filters.FilterSet):
             'sender__username': ['exact', 'in', 'startswith', 'icontains'],
             'recipient__username': ['exact', 'in', 'startswith', 'icontains']
         }
-

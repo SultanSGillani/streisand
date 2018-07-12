@@ -1,25 +1,26 @@
 # -*- coding: utf-8 -*-
 
 from django.conf.urls import url, include
-
 from drf_yasg import openapi
 from drf_yasg.views import get_schema_view
 from knox import views as knox_views
+from rest_framework import permissions
+from rest_framework.documentation import include_docs_urls
+
+# We are using the ExtendedDefaultRouter to extend the messages url to replies and nest them by Parent PK.
 from rest_framework_extensions.routers import (
     ExtendedDefaultRouter as DefaultRouter
 )
-from rest_framework import permissions
-from rest_framework.documentation import include_docs_urls
 
 from .films import views as films_views
 from .forums import views as forums_views
 from .invites import views as invites_views
+from .private_messages import views as pm_views
 from .releases import views as releases_views
 from .torrents import views as torrents_views
 from .tracker import views as tracker_views
 from .users import views as users_views
 from .wiki import views as wiki_views
-from .private_messages import views as pm_views
 
 swagger_info = openapi.Info(
     title="Streisand API",
@@ -45,16 +46,17 @@ router.register(r'groups', viewset=users_views.GroupViewSet, base_name='group')
 
 # PMs
 router.register(r'inbox', viewset=pm_views.InboxViewSet, base_name='inbox')
-router.register(r'outbox', viewset=pm_views.OutBoxViewSet, base_name='outbox')
 router.register(r'inbox-trash', viewset=pm_views.InboxTrashViewSet, base_name='inbox-trash')
+router.register(r'outbox', viewset=pm_views.OutBoxViewSet, base_name='outbox')
 router.register(r'outbox-trash', viewset=pm_views.OutBoxTrashViewSet, base_name='outbox-trash')
 router.register(r'staff', viewset=pm_views.AdminMessageViewSet, base_name='staff-box')
 
+# Reply to the initial Message /api/v1/messages/{parent_id}/reply
 router.register(r'messages', pm_views.MessageViewSet).register(
-  r'replies',
-  pm_views.ReplyMessageViewSet,
-  'messages-reply',
-  parents_query_lookups=['parent_id'])
+    r'reply',
+    pm_views.ReplyMessageViewSet,
+    'messages-reply',
+    parents_query_lookups=['parent_id'])
 
 # Invites
 router.register(r'invites', viewset=invites_views.InviteViewSet, base_name='invite')
@@ -73,10 +75,12 @@ router.register(r'release-comments', viewset=releases_views.ReleaseCommentViewSe
 
 # Torrents
 router.register(r'torrent-files', viewset=torrents_views.TorrentFileViewSet, base_name='torrent-file')
-router.register(r'torrents-no-releases', viewset=torrents_views.TorrentFileWithNoReleaseViewSet, base_name='torrent-no-release')
+router.register(r'torrents-no-releases', viewset=torrents_views.TorrentFileWithNoReleaseViewSet,
+                base_name='torrent-no-release')
 router.register(r'torrent-stats', viewset=torrents_views.TorrentStatsViewSet, base_name='torrent-stat')
 router.register(r'torrent-requests', viewset=torrents_views.TorrentRequestViewSet, base_name='torrent-request')
-router.register(r'torrent-reseed-requests', viewset=torrents_views.ReseedRequestViewSet, base_name='torrent-reseed-request')
+router.register(r'torrent-reseed-requests', viewset=torrents_views.ReseedRequestViewSet,
+                base_name='torrent-reseed-request')
 
 # Tracker
 router.register(r'torrent-clients', viewset=tracker_views.TorrentClientViewSet, base_name='torrent-client')
@@ -91,7 +95,8 @@ router.register(r'forum-topic-items', viewset=forums_views.ForumTopicItemViewSet
 router.register(r'forum-thread-index', viewset=forums_views.ForumThreadIndexViewSet, base_name='forum-thread-index')
 router.register(r'forum-thread-items', viewset=forums_views.ForumThreadItemViewSet, base_name='forum-thread-items')
 router.register(r'forum-post-items', viewset=forums_views.ForumPostItemViewSet, base_name='forum-post-items')
-router.register(r'forum-thread-subscriptions', viewset=forums_views.ForumThreadSubscriptionViewSet, base_name='forum-thread-subscription')
+router.register(r'forum-thread-subscriptions', viewset=forums_views.ForumThreadSubscriptionViewSet,
+                base_name='forum-thread-subscription')
 router.register(r'forum-reports', viewset=forums_views.ForumReportViewSet, base_name='forum-report')
 
 # News Posts
@@ -121,7 +126,8 @@ urlpatterns = [
     url(r'^change-password/$', users_views.ChangePasswordView.as_view()),
 
     # Registration
-    url(r'^check-invite-key/(?P<pk>[0-9a-f\-]{36})/$', invites_views.InviteCheckViewSet.as_view(), name='invite-key-check'),
+    url(r'^check-invite-key/(?P<pk>[0-9a-f\-]{36})/$', invites_views.InviteCheckViewSet.as_view(),
+        name='invite-key-check'),
     url(r'^check-username/$', users_views.UsernameAvailabilityView.as_view(), name='username-check'),
     url(r'^register-user/$', users_views.UserRegistrationView.as_view(), name='user-registration'),
 
