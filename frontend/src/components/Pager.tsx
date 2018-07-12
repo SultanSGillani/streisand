@@ -48,7 +48,7 @@ class PagerComponent extends React.Component<CombinedProps> {
             );
         }
         return (
-            <Pagination className="justify-content-center">
+            <Pagination className="center-pagination">
                 <Page disabled={page === 1} page={1} url={`${uri}/1`} value="«"
                     title="first page" onPageChange={onPageChange} />
                 {pages}
