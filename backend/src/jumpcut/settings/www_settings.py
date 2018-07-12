@@ -19,6 +19,7 @@ THIRD_PARTY_APPS = [
     'django_filters',
     'django_su',
     'drf_yasg',
+    'haystack',
     'knox',
     'raven.contrib.django.raven_compat',
     'rest_framework',
@@ -122,6 +123,13 @@ SWAGGER_SETTINGS = {
 SWAGGER_SETTINGS.update({'VALIDATOR_URL': 'http://localhost:8189'})
 REDOC_SETTINGS = {
     'LAZY_RENDERING': True,
+}
+
+HAYSTACK_CONNECTIONS = {
+    'default': {
+        'ENGINE': 'haystack.backends.whoosh_backend.WhooshEngine',
+        'PATH': os.path.join(os.path.dirname(__file__), 'whoosh_index'),
+    },
 }
 
 SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
