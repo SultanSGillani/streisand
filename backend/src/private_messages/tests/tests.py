@@ -17,7 +17,7 @@ class MessageSendTests(TestCase):
                             subject='Subject Text', body='Body Text')
         self.msg1.save()
 
-    def TestBasicSentMessage(self):
+    def test_basic_sent_message(self):
         self.assertEqual(self.msg1.sender, self.fuckneebs)
         self.assertEqual(self.msg1.recipient, self.dantheman)
         self.assertEqual(self.msg1.subject, 'Subject Text')
@@ -43,7 +43,7 @@ class MessageDeleteTests(TestCase):
         self.msg1.save()
         self.msg2.save()
 
-    def TestBasicSentMessage(self):
+    def test_basic_delete_message(self):
         self.assertEqual(Message.objects.outbox(self.fuckneebs).count(), 1)
         self.assertEqual(
             Message.objects.outbox(self.fuckneebs)[0].subject,
@@ -81,13 +81,13 @@ class InboxCountTests(TestCase):
             sender=self.user
         )
 
-    def TestCountForEmptyInbox(self):
+    def test_count_for_empty_inbox(self):
         """Test message count for user with empty inbox."""
         r = self.factory.get('/')
         r.user = self.user
         self.assertEquals(inbox(r), {'messages_inbox_count': 0})
 
-    def TestCountForInboxWithMessage(self):
+    def test_count_for_inbox_with_message(self):
         """Test message count for user with one unread message."""
         r = self.factory.get('/')
         r.user = self.user_2
