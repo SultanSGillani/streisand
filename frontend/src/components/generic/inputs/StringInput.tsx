@@ -14,7 +14,7 @@ export interface ITextInputProps {
 export function StringInput(props: ITextInputProps) {
     const id = `${props.id}Input`;
     const type = props.type || 'text';
-    const value = props.value || ''
+    const value = props.value || '';
 
     if (props.isReadonly) {
         if (props.type === 'textarea') {
@@ -28,7 +28,7 @@ export function StringInput(props: ITextInputProps) {
         return (
             <FormGroup>
                 <Label for={id}>{props.label}</Label>
-                <Input type={type} id={id} value={value} readOnly/>
+                <Input type={type} id={id} value={value} readOnly />
             </FormGroup>
         );
     }
