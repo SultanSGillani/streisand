@@ -16,10 +16,10 @@ class Message(MPTTModel):
     body = models.TextField()
     sender = models.ForeignKey(User, related_name='sent_messages', on_delete=models.SET_NULL, null=True)
     recipient = models.ForeignKey(User, related_name='received_messages', on_delete=models.SET_NULL, null=True)
-    sent_at = models.DateTimeField(null=True)
+    sent_at = models.DateTimeField(blank=True, null=True)
     replied_at = models.DateTimeField(auto_now_add=True)
-    sender_deleted_at = models.DateTimeField(auto_now_add=True)
-    recipient_deleted_at = models.DateTimeField(auto_now_add=True)
+    sender_deleted_at = models.DateTimeField(blank=True, null=True)
+    recipient_deleted_at = models.DateTimeField(blank=True, null=True)
 
     objects = MessageManager()
 

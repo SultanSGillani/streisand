@@ -61,3 +61,27 @@ class MessageSerializer(AllowFieldLimitingMixin, serializers.ModelSerializer):
     def create(self, validated_data):
         validated_data['sender'] = self.context['request'].user
         return super().create(validated_data)
+        
+        
+class SenderTrashSerializer(serializers.ModelSerializer):
+    sender_deleted_date = serializers.DateTimeField(required=True, source='sender_deleted_at')
+    
+    class Meta:
+        model = Message
+        fields = (
+            'id',
+            'parent',
+            'sender_deleted_date'
+        )
+        
+        
+ class RecipientTrashSerializer(serializers.ModelSerializer):
+    recipient_deleted_date = serializers.DateTimeField(required=True, source='recipient_deleted_at')
+    
+    class Meta:
+        model = Message
+        fields = (
+            'id',
+            'parent',
+            'recipient_deleted_date'
+        )

@@ -6,12 +6,14 @@ from rest_framework_extensions.mixins import NestedViewSetMixin
 
 from private_messages.models import Message
 
-from .filters import MessageFilter
-from .serializers import MessageSerializer, ReplyMessageSerializer
+from .filters import MessageFilter, MessageReplyFilter
+from .serializers import MessageSerializer, ReplyMessageSerializer, SenderTrashSerializer, RecipientTrashSerializer
 
 
-class MessageViewSet(NestedViewSetMixin, CreateModelMixin, ListModelMixin,
-                     RetrieveModelMixin, GenericViewSet):
+class MessageViewSet(
+    NestedViewSetMixin, CreateModelMixin, ListModelMixin, RetrieveModelMixin,
+    GenericViewSet
+):
 
     serializer_class = MessageSerializer
     permission_classes = [IsAuthenticated]
@@ -19,7 +21,8 @@ class MessageViewSet(NestedViewSetMixin, CreateModelMixin, ListModelMixin,
     filter_class = MessageFilter
 
     queryset = Message.objects.all().select_related('parent').filter(
-        parent__isnull=True).order_by('level')
+        parent__isnull=True
+    ).order_by('level')
 
 
 class AdminMessageViewSet(ModelViewSet):
@@ -28,25 +31,34 @@ class AdminMessageViewSet(ModelViewSet):
     permission_classes = [IsAdminUser]
     filter_backends = [filters.DjangoFilterBackend]
     filter_class = MessageFilter
-    
-    queryset = Message.objects.all().select_related('parent').order_by(
-        '-sent_at')
+
+    queryset = Message.objects.all().select_related('parent'
+                                                   ).order_by('-sent_at')
 
 
-class InboxViewSet(ListModelMixin, RetrieveModelMixin, GenericViewSet):
+class InboxViewSet(
+    ListModelMixin, RetrieveModelMixin, UpdateModelMixin, GenericViewSet
+):
 
-    serializer_class = MessageSerializer
     permission_classes = [IsAuthenticated]
     filter_backends = [filters.DjangoFilterBackend]
     filter_class = MessageFilter
 
+    def get_serializer_class(self):
+        if self.request.method == 'PUT':
+            return RecipientTrashSerializer
+        return MessageSerializer
+
     def get_queryset(self):
-        queryset = Message.objects.all().filter(recipient=self.request.user)
+        queryset = Message.objects.all().filter(
+            recipient=self.request.user,
+            recipient_deleted_at__isnull=True,
+        ).order_by('-sent_at')
 
         return queryset
 
 
-class TrashBoxViewSet(ListModelMixin, RetrieveModelMixin, GenericViewSet):
+class InboxTrashViewSet(ListModelMixin, RetrieveModelMixin, GenericViewSet):
 
     serializer_class = MessageSerializer
     permission_classes = [IsAuthenticated]
@@ -55,14 +67,35 @@ class TrashBoxViewSet(ListModelMixin, RetrieveModelMixin, GenericViewSet):
 
     def get_queryset(self):
         queryset = Message.objects.all().filter(
-             recipient=self.request.user,
-             recipient_deleted_at__isnull=True,
+            recipient=self.request.user,
+            recipient_deleted_at__isnull=False,
         ).order_by('-sent_at')
 
         return queryset
 
 
-class OutBoxViewSet(ListModelMixin, RetrieveModelMixin, GenericViewSet):
+class OutBoxViewSet(
+    ListModelMixin, RetrieveModelMixin, UpdateModelMixin, GenericViewSet
+):
+
+    serializer_class = MessageSerializer
+    permission_classes = [IsAuthenticated]
+    filter_backends = [filters.DjangoFilterBackend]
+    filter_class = MessageFilter
+
+    def get_serializer_class(self):
+        if self.request.method == 'PUT':
+            return SenderTrashSerializer
+        return MessageSerializer
+
+    def get_queryset(self):
+        queryset = Message.objects.all().filter(
+            sender=self.request.user,
+            sender_deleted_at__isnull=False,
+        ).order_by('-sent_at')
+
+
+class OutBoxTrashViewSet(ListModelMixin, RetrieveModelMixin, GenericViewSet):
 
     serializer_class = MessageSerializer
     permission_classes = [IsAuthenticated]
@@ -70,10 +103,11 @@ class OutBoxViewSet(ListModelMixin, RetrieveModelMixin, GenericViewSet):
     filter_class = MessageFilter
 
     def get_queryset(self):
-        queryset = Message.objects.all().select_related(
-            'parent', 'sender',
-            'recipient').filter(sender=self.request.user).order_by(
-                '-sent_at', 'level')
+        queryset = Message.objects.all().filter(
+            recipient=self.request.user,
+            recipient_deleted_at__isnull=False,
+        ).order_by('-sent_at')
+
         return queryset
 
 
@@ -82,8 +116,10 @@ class ReplyMessageViewSet(ModelViewSet):
     serializer_class = ReplyMessageSerializer
     permission_classes = [IsAuthenticated]
     filter_backends = [filters.DjangoFilterBackend]
-    filter_class = MessageFilter
-    
+    filter_class = MessageReplyFilter
+
     queryset = Message.objects.all().select_related(
-        'parent', 'sender', 'recipient').filter(
-            parent__isnull=False,).order_by('-sent_at', 'level')
+        'parent', 'sender', 'recipient'
+    ).filter(
+        parent__isnull=False,
+    ).order_by('-sent_at', 'level')
