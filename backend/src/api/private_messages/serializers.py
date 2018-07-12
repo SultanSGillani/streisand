@@ -54,6 +54,7 @@ class ReplyMessageSerializer(AllowFieldLimitingMixin, serializers.ModelSerialize
 class MessageSerializer(AllowFieldLimitingMixin, serializers.ModelSerializer):
     sender = DisplayUserSerializer(read_only=True)
     recipient = serializers.PrimaryKeyRelatedField(queryset=User.objects.all())
+    deleted_message = serializers.SerializerMethodField()
     subject = serializers.CharField(allow_blank=False)
     children = serializers.ListField(read_only=True, child=RecursiveField(), source='children.all')
 
@@ -66,10 +67,16 @@ class MessageSerializer(AllowFieldLimitingMixin, serializers.ModelSerializer):
             'level',
             'sender',
             'recipient',
+            'deleted_message',
             'subject',
             'body',
             'sent_at',
         )
+
+    def get_deleted_message(self, obj):
+        if obj.sender_deleted_at or obj.recipient_deleted_at is not None:
+            return True
+        return False
 
     # See here https://github.com/encode/django-rest-framework/issues/2555#issuecomment-253201525
     # The reason we are instantiating the DisplayUserSerializer here is because Context
