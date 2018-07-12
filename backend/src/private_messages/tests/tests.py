@@ -7,7 +7,7 @@ from private_messages.models import inbox
 from users.models import User
 
 
-class SendTestCase(TestCase):
+class MessageSendTests(TestCase):
     def setUp(self):
         self.fuckneebs = User.objects.create_user(
             'FuckNeebs', 'user1@example.com', '123456')
@@ -28,7 +28,7 @@ class SendTestCase(TestCase):
         self.assertEqual(self.dantheman.sent_messages.count(), 0)
 
 
-class DeleteTestCase(TestCase):
+class MessageDeleteTests(TestCase):
     def setUp(self):
         self.fuckneebs = User.objects.create_user(
             'user3', 'user3@example.com', '123456')
@@ -63,7 +63,7 @@ class DeleteTestCase(TestCase):
         self.assertEqual(Message.objects.inbox(self.dantheman).count(), 2)
 
 
-class InboxCountTestCase(TestCase):
+class InboxCountTests(TestCase):
     """Test inbox-count."""
 
     def setUp(self):
