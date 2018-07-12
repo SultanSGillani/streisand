@@ -17,7 +17,7 @@ class SendTestCase(TestCase):
                             subject='Subject Text', body='Body Text')
         self.msg1.save()
 
-    def testBasic(self):
+    def TestBasicSentMessage(self):
         self.assertEqual(self.msg1.sender, self.fuckneebs)
         self.assertEqual(self.msg1.recipient, self.dantheman)
         self.assertEqual(self.msg1.subject, 'Subject Text')
@@ -43,7 +43,7 @@ class DeleteTestCase(TestCase):
         self.msg1.save()
         self.msg2.save()
 
-    def testBasic(self):
+    def TestBasicSentMessage(self):
         self.assertEqual(Message.objects.outbox(self.fuckneebs).count(), 1)
         self.assertEqual(
             Message.objects.outbox(self.fuckneebs)[0].subject,
@@ -81,13 +81,13 @@ class InboxCountTestCase(TestCase):
             sender=self.user
         )
 
-    def test_context_processor_user_empty(self):
+    def TestCountForEmptyInbox(self):
         """Test message count for user with empty inbox."""
         r = self.factory.get('/')
         r.user = self.user
         self.assertEquals(inbox(r), {'messages_inbox_count': 0})
 
-    def test_context_processor_user_count(self):
+    def TestCountForInboxWithMessage(self):
         """Test message count for user with one unread message."""
         r = self.factory.get('/')
         r.user = self.user_2
