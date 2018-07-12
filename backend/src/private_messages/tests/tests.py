@@ -2,8 +2,7 @@ from django.test import TestCase
 from django.test.client import RequestFactory
 from django.utils import timezone
 
-from private_messages.models import Message
-from private_messages.models import inbox
+from private_messages.models import Message, inbox
 from users.models import User
 
 
