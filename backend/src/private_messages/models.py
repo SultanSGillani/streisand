@@ -16,10 +16,10 @@ class Message(MPTTModel):
     body = models.TextField()
     sender = models.ForeignKey(User, related_name='sent_messages', on_delete=models.SET_NULL, null=True)
     recipient = models.ForeignKey(User, related_name='received_messages', on_delete=models.SET_NULL, null=True)
-    sent_at = models.DateTimeField(null=True, blank=True)
-    replied_at = models.DateTimeField(null=True, blank=True)
-    sender_deleted_at = models.DateTimeField(null=True, blank=True)
-    recipient_deleted_at = models.DateTimeField(null=True, blank=True)
+    sent_at = models.DateTimeField(blank=True, null=True)
+    replied_at = models.DateTimeField(auto_now_add=True)
+    sender_deleted_at = models.DateTimeField(blank=True, null=True)
+    recipient_deleted_at = models.DateTimeField(blank=True, null=True)
 
     objects = MessageManager()
 
@@ -31,14 +31,6 @@ class Message(MPTTModel):
 
     def __str__(self):
         return self.subject
-
-    def _is_sender(self, user):
-        if self.sender == user:
-            return True
-        elif self.recipient == user:
-            return False
-        else:
-            raise ValueError('user is not involved in this message')
 
     def save(self, **kwargs):
         if self.sender == self.recipient:
@@ -58,7 +50,7 @@ def inbox_count(user):
     Returns the number of unread messages for the given user but does not
     mark them as read
     """
-    return Message.objects.filter(recipient=user, read_at__isnull=True, recipient_deleted_at__isnull=True).count()
+    return Message.objects.filter(recipient=user, recipient_deleted_at__isnull=True).count()
 
 
 def inbox(request):

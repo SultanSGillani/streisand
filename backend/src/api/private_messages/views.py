@@ -1,125 +1,125 @@
-# -*- coding: utf-8 -*-
-
-from django_filters.rest_framework import DjangoFilterBackend
-from rest_framework.decorators import action
-from rest_framework.response import Response
-from rest_framework.status import HTTP_201_CREATED
-
-from rest_framework.mixins import CreateModelMixin, ListModelMixin, DestroyModelMixin, RetrieveModelMixin
-from rest_framework.permissions import IsAuthenticated
+from django_filters import rest_framework as filters
+from rest_framework.mixins import CreateModelMixin, ListModelMixin, RetrieveModelMixin, UpdateModelMixin
+from rest_framework.permissions import IsAuthenticated, IsAdminUser
 from rest_framework.viewsets import GenericViewSet, ModelViewSet
+from rest_framework_extensions.mixins import NestedViewSetMixin
 
 from private_messages.models import Message
 
-from .serializers import MessageSerializer, ReplyMessageSerializer
-from .filters import MessageFilter
+from .filters import MessageFilter, MessageReplyFilter
+from .serializers import MessageSerializer, ReplyMessageSerializer, SenderTrashSerializer, RecipientTrashSerializer
 
 
-class MessageViewSet(ModelViewSet):
-    lookup_field = 'pk'
+class MessageViewSet(
+    NestedViewSetMixin, CreateModelMixin, ListModelMixin, RetrieveModelMixin,
+    GenericViewSet
+):
+
     serializer_class = MessageSerializer
-    queryset = Message.objects.all().select_related(
-        'parent',
-    ).filter(
+    permission_classes = [IsAuthenticated]
+    filter_backends = [filters.DjangoFilterBackend]
+    filter_class = MessageFilter
+
+    queryset = Message.objects.all().select_related('parent').filter(
         parent__isnull=True
-    )
-    permission_classes = [IsAuthenticated]
-    filter_class = MessageFilter
-    filter_backends = [DjangoFilterBackend]
-
-    @action(methods=['get'], detail=False)
-    def messages(self, request, pk=None):
-        message = self.get_object()
-
-        qs = message.objects.all().order_by('-sent_at')
-
-        page = self.paginate_queryset(qs)
-        if page is not None:
-            serializer = MessageSerializer(page, many=True)
-            return self.get_paginated_response(serializer.data)
-
-        serializer = MessageSerializer(qs, many=True)
-        return Response(serializer.data)
-
-    @action(methods=['post'], detail=True)
-    def reply(self, request, pk=None):
-        message = self.get_object()
-
-        serializer = ReplyMessageSerializer(data=request.data)
-        if serializer.is_valid():
-            message = Message.objects.create(**request.data)
-
-        return Response({'id': message.id})
-
-        # return Message.objects.all().select_related(
-        #     'parent',
-        #     'sender',
-        #     'recipient'
-        # ).filter(
-        #     recipient=self.request.user,
-        #     parent__is_null=False,
-        # ).order_by(
-        #     '-sent_at',
-        #     'level'
-        # )
+    ).order_by('level')
 
 
-class InboxViewSet(ListModelMixin, RetrieveModelMixin, GenericViewSet):
+class AdminMessageViewSet(ModelViewSet):
+
     serializer_class = MessageSerializer
-    permission_classes = [IsAuthenticated]
+    permission_classes = [IsAdminUser]
+    filter_backends = [filters.DjangoFilterBackend]
     filter_class = MessageFilter
-    filter_backends = [DjangoFilterBackend]
+
+    queryset = Message.objects.all().select_related('parent'
+                                                   ).order_by('-sent_at')
+
+
+class InboxViewSet(
+    ListModelMixin, RetrieveModelMixin, UpdateModelMixin, GenericViewSet
+):
+
+    permission_classes = [IsAuthenticated]
+    filter_backends = [filters.DjangoFilterBackend]
+    filter_class = MessageFilter
+
+    def get_serializer_class(self):
+        if self.request.method == 'PUT':
+            return RecipientTrashSerializer
+        return MessageSerializer
 
     def get_queryset(self):
-        return Message.objects.all().select_related(
-            'parent',
-            'sender',
-            'recipient'
-        ).filter(
-            recipient=self.request.user
-        ).order_by(
-            '-sent_at',
-            'level'
-        )
+        queryset = Message.objects.all().filter(
+            recipient=self.request.user,
+            recipient_deleted_at__isnull=True,
+        ).order_by('-sent_at')
+
+        return queryset
 
 
-class OutBoxViewSet(ListModelMixin, RetrieveModelMixin, DestroyModelMixin, GenericViewSet):
+class InboxTrashViewSet(ListModelMixin, RetrieveModelMixin, GenericViewSet):
+
     serializer_class = MessageSerializer
     permission_classes = [IsAuthenticated]
+    filter_backends = [filters.DjangoFilterBackend]
     filter_class = MessageFilter
-    filter_backends = [DjangoFilterBackend]
 
     def get_queryset(self):
-        return Message.objects.all().select_related(
-            'parent',
-            'sender',
-            'recipient'
-        ).filter(
-            sender=self.request.user
-        ).order_by(
-            '-sent_at',
-            'level'
-        )
+        queryset = Message.objects.all().filter(
+            recipient=self.request.user,
+            recipient_deleted_at__isnull=False,
+        ).order_by('-sent_at')
+
+        return queryset
 
 
-class ReplyMessageViewSet(CreateModelMixin, ListModelMixin, DestroyModelMixin,
-                          RetrieveModelMixin, GenericViewSet):
-    """
-    ViewSets for Replies only. For this to work correctly you must select a parent message to reply to.
-    This viewset will only return
-    """
+class OutBoxViewSet(
+    ListModelMixin, RetrieveModelMixin, UpdateModelMixin, GenericViewSet
+):
+
+    serializer_class = MessageSerializer
+    permission_classes = [IsAuthenticated]
+    filter_backends = [filters.DjangoFilterBackend]
+    filter_class = MessageFilter
+
+    def get_serializer_class(self):
+        if self.request.method == 'PUT':
+            return SenderTrashSerializer
+        return MessageSerializer
+
+    def get_queryset(self):
+        queryset = Message.objects.all().filter(
+            sender=self.request.user,
+            sender_deleted_at__isnull=False,
+        ).order_by('-sent_at')
+
+
+class OutBoxTrashViewSet(ListModelMixin, RetrieveModelMixin, GenericViewSet):
+
+    serializer_class = MessageSerializer
+    permission_classes = [IsAuthenticated]
+    filter_backends = [filters.DjangoFilterBackend]
+    filter_class = MessageFilter
+
+    def get_queryset(self):
+        queryset = Message.objects.all().filter(
+            recipient=self.request.user,
+            recipient_deleted_at__isnull=False,
+        ).order_by('-sent_at')
+
+        return queryset
+
+
+class ReplyMessageViewSet(ModelViewSet):
 
     serializer_class = ReplyMessageSerializer
     permission_classes = [IsAuthenticated]
-    filter_class = MessageFilter
-    filter_backends = [DjangoFilterBackend]
+    filter_backends = [filters.DjangoFilterBackend]
+    filter_class = MessageReplyFilter
+
     queryset = Message.objects.all().select_related(
-        'parent',
-        'sender',
-        'recipient'
+        'parent', 'sender', 'recipient'
     ).filter(
         parent__isnull=False,
-    ).order_by(
-        '-sent_at',
-        'subject'
-    )
+    ).order_by('-sent_at', 'level')

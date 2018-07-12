@@ -2,6 +2,7 @@
 
 
 from rest_framework import serializers
+
 from rest_framework_recursive.fields import RecursiveField
 
 from private_messages.models import Message
@@ -15,10 +16,7 @@ class ReplyMessageSerializer(AllowFieldLimitingMixin, serializers.ModelSerialize
     sender = DisplayUserSerializer(read_only=True)
     recipient = serializers.PrimaryKeyRelatedField(queryset=User.objects.all())
     children = serializers.ListField(read_only=True, child=RecursiveField(), source='children.all')
-    subject = serializers.StringRelatedField(read_only=True)
-    sent_at = serializers.DateTimeField(read_only=True)
-    read_at = serializers.DateTimeField(read_only=True)
-    replied_at = serializers.DateTimeField(read_only=True)
+
 
     class Meta:
         model = Message
@@ -28,12 +26,9 @@ class ReplyMessageSerializer(AllowFieldLimitingMixin, serializers.ModelSerialize
             'level',
             'sender',
             'recipient',
-            'subject',
             'body',
             'sender_deleted_at',
             'recipient_deleted_at',
-            'sent_at',
-            'read_at',
             'replied_at',
             'children',
         )
@@ -48,9 +43,6 @@ class MessageSerializer(AllowFieldLimitingMixin, serializers.ModelSerializer):
     recipient = serializers.PrimaryKeyRelatedField(queryset=User.objects.all())
     subject = serializers.CharField(allow_blank=False)
     children = serializers.ListField(read_only=True, child=RecursiveField(), source='children.all')
-    sent_at = serializers.DateTimeField(read_only=True)
-    read_at = serializers.DateTimeField(read_only=True)
-    replied_at = serializers.DateTimeField(read_only=True)
 
     class Meta:
         model = Message
@@ -64,10 +56,31 @@ class MessageSerializer(AllowFieldLimitingMixin, serializers.ModelSerializer):
             'subject',
             'body',
             'sent_at',
-            'read_at',
-            'replied_at',
         )
 
     def create(self, validated_data):
         validated_data['sender'] = self.context['request'].user
         return super().create(validated_data)
+
+class SenderTrashSerializer(serializers.ModelSerializer):
+    sender_deleted_date = serializers.DateTimeField(required=True, source='sender_deleted_at')
+
+    class Meta:
+        model = Message
+        fields = (
+            'id',
+            'parent',
+            'sender_deleted_date'
+        )
+
+
+class RecipientTrashSerializer(serializers.ModelSerializer):
+    recipient_deleted_date = serializers.DateTimeField(required=True, source='recipient_deleted_at')
+
+    class Meta:
+        model = Message
+        fields = (
+            'id',
+            'parent',
+            'recipient_deleted_date'
+        )
