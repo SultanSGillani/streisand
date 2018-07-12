@@ -1,4 +1,5 @@
 import * as React from 'react';
+import { Link } from 'react-router';
 import { connect } from 'react-redux';
 import { push } from 'react-router-redux';
 
@@ -104,7 +105,10 @@ class ReleaseViewComponent extends React.Component<CombinedProps, State> {
         return (
             <div>
                 <CommandBar commands={commands} />
-                <h1>{film.title} [{film.year}]</h1>
+                <h1>Film Release</h1>
+                <Link to={`/film/${film.id}`}>
+                    <p className="text-center">{film.title} [{film.year}]</p>
+                </Link>
                 <ReleaseForm intialValues={data} mediaTypes={mediaTypes} processing={false} />
                 {torrentSection}
             </div>
