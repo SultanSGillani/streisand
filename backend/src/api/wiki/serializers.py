@@ -1,9 +1,18 @@
 # -*- coding: utf-8 -*-
 
+from drf_haystack.serializers import HaystackSerializer
 from rest_framework.serializers import ModelSerializer, HyperlinkedIdentityField
 
-
 from wiki.models import WikiArticle
+from wiki.search_indexes import WikiIndex
+
+
+class WikiSearchSerializer(HaystackSerializer):
+    class Meta:
+        index_classes = [WikiIndex]
+        fields = [
+            "text", "title", "body"
+        ]
 
 
 class WikiCreateUpdateDestroySerializer(ModelSerializer):
@@ -12,11 +21,11 @@ class WikiCreateUpdateDestroySerializer(ModelSerializer):
         fields = (
             'id', 'created_at', 'created_by', 'modified_at', 'modified_by', 'title', 'body',
             'read_access_minimum_user_class',
-            'write_access_minimum_user_class',)
+            'write_access_minimum_user_class',
+        )
 
 
 class WikiViewListOnlySerializer(ModelSerializer):
-
     class Meta:
         model = WikiArticle
         fields = (
@@ -32,7 +41,6 @@ class WikiViewListOnlySerializer(ModelSerializer):
 
 
 class WikiBodySerializer(ModelSerializer):
-
     url = HyperlinkedIdentityField(view_name="wiki-body-detail")
 
     class Meta:

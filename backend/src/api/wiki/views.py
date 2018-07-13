@@ -2,14 +2,30 @@
 
 from django.db.models import Q
 
+from drf_haystack.viewsets import HaystackViewSet
 from rest_framework import mixins
 from rest_framework.filters import SearchFilter, OrderingFilter
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.viewsets import GenericViewSet
 
 from wiki.models import WikiArticle
+from .serializers import (
+    WikiCreateUpdateDestroySerializer,
+    WikiBodySerializer,
+    WikiViewListOnlySerializer,
+    WikiSearchSerializer
+)
 
-from .serializers import WikiCreateUpdateDestroySerializer, WikiBodySerializer, WikiViewListOnlySerializer
+
+class WikiSearchView(HaystackViewSet):
+
+    # `index_models` is an optional list of which models you would like to include
+    # in the search result. You might have several models indexed, and this provides
+    # a way to filter out those of no interest for this particular view.
+    # (Translates to `SearchQuerySet().models(*index_models)` behind the scenes.
+    index_models = [WikiArticle]
+
+    serializer_class = WikiSearchSerializer
 
 
 class WikiArticleCreateUpdateDestroyViewSet(mixins.CreateModelMixin,

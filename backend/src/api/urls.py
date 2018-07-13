@@ -83,7 +83,9 @@ router.register(r'news-posts', viewset=forums_views.NewsPostViewSet, base_name='
 # Wiki
 router.register(r'wikis', viewset=wiki_views.WikiArticleCreateUpdateDestroyViewSet, base_name='wiki')
 router.register(r'wiki-articles', viewset=wiki_views.WikiArticleViewListOnlyViewSet, base_name='wiki-article')
+router.register(r'wiki-articles/search', viewset=wiki_views.WikiSearchView, base_name='wiki-search')
 router.register(r'wiki-bodies', viewset=wiki_views.WikiArticleBodyViewSet, base_name='wiki-body')
+
 
 urlpatterns = [
 

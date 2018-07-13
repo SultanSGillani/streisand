@@ -7,7 +7,6 @@ from .managers import WikiArticleQuerySet
 
 
 class WikiArticle(models.Model):
-
     old_id = models.PositiveIntegerField(null=True, db_index=True)
 
     created_at = models.DateTimeField(auto_now_add=True)
