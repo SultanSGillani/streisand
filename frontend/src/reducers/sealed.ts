@@ -12,6 +12,7 @@ import forums from './forums';
 import torrent from './torrent';
 import user from './users/user';
 import release from './release';
+import comment from './comment';
 import currentUser from './users/currentUser';
 
 const combined = combineReducers<Store.UserSealed>({
@@ -25,7 +26,8 @@ const combined = combineReducers<Store.UserSealed>({
     forums,
     release,
     invite,
-    peer
+    peer,
+    comment
 });
 
 export default (state: Store.UserSealed, action: Action) => {

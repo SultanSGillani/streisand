@@ -20,6 +20,7 @@ export default {
         invites: defaultPageSize,
         releases: defaultPageSize,
         peers: defaultPageSize,
+        comments: defaultPageSize,
         simpleSearch: 5,
         posts: 10
     }
