@@ -2,6 +2,7 @@ import AuthAction from './auth';
 import WikiAction from './wikis';
 import FilmAction from './films';
 import UserAction from './users';
+import PeerAction from './peers';
 import ForumAction from './forums';
 import TorrentAction from './torrents';
 import DeviceAction from './DeviceAction';
@@ -16,5 +17,6 @@ type Action = MessageAction
     | TorrentAction
     | ForumAction
     | DeviceAction
-    | WikiAction;
+    | WikiAction
+    | PeerAction;
 export default Action;

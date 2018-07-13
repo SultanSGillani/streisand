@@ -12,9 +12,11 @@ export default function TorrentInfo(props: ITorrentInfoProps) {
     return (
         <Row>
             <Col>
-                <Card body style={{ maxHeight: '250px', overflowY: 'scroll' }}>
+                <Card body>
                     <CardTitle>Release Information (nfo)</CardTitle>
-                    <CardText>{release.nfo}</CardText>
+                    <CardText style={{ maxHeight: '250px', overflowY: 'scroll' }}>
+                        <pre>{release.nfo}</pre>
+                    </CardText>
                 </Card>
             </Col>
         </Row>

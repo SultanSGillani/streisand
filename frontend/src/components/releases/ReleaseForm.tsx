@@ -3,6 +3,7 @@ import { Form, Card, CardBody, CardFooter, Button, ButtonGroup } from 'reactstra
 
 import IMediaTypes from '../../models/IMediaTypes';
 import { ListInput } from '../generic/inputs/ListInput';
+import { BBCodeInput } from '../generic/inputs/BBCodeInput';
 import { StringInput } from '../generic/inputs/StringInput';
 import { BooleanInput } from '../generic/inputs/BooleanInput';
 
@@ -86,7 +87,7 @@ export default class ReleaseForm extends React.Component<Props, State> {
                         <StringInput id="releaseName" label="Release name" isReadonly={isReadonly}
                             placeholder="Film release name" value={this.state.releaseName}
                             setValue={(value: string) => this.setState({ releaseName: value })} />
-                        <StringInput id="description" label="Description" isReadonly={isReadonly}
+                        <BBCodeInput id="description" label="Release description" isReadonly={isReadonly}
                             placeholder="Film release description" value={this.state.description}
                             setValue={(value: string) => this.setState({ description: value })} />
                         <StringInput id="cut" label="Cut" placeholder="Film release cut"
@@ -104,9 +105,11 @@ export default class ReleaseForm extends React.Component<Props, State> {
                         <ListInput id="sourceMedia" label="Source media" value={this.state.sourceMedia}
                             values={this.props.mediaTypes.sourceMedia} isReadonly={isReadonly}
                             setValue={(value: string) => this.setState({ sourceMedia: value })} />
-                        <StringInput type="textarea" id="nfo" label="NFO" isReadonly={isReadonly}
-                            placeholder="Film release nfo" value={this.state.nfo}
-                            setValue={(value: string) => this.setState({ nfo: value })} />
+                        <pre>
+                            <StringInput type="textarea" id="nfo" label="NFO" isReadonly={isReadonly}
+                                placeholder="Film release nfo" value={this.state.nfo}
+                                setValue={(value: string) => this.setState({ nfo: value })} />
+                        </pre>
                         <BooleanInput id="isScene" label="Scene"
                             value={this.state.isScene} isReadonly={isReadonly}
                             setValue={(value: boolean) => this.setState({ isScene: value })} />

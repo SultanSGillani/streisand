@@ -9,6 +9,6 @@ type Props = {
 export default function DataSize(props: Props) {
     const size = getSize(props.size);
     return (
-        <span>{size}</span>
+        <span title={`${props.size} bytes`}>{size}</span>
     );
 }

@@ -7,10 +7,11 @@ import Store from '../store';
 import { ScreenSize } from '../models/IDeviceInfo';
 
 export type Props = {
-    uri: string;
+    uri?: string;
     page: number;
     total: number;
     pageSize: number;
+    onPageChange?: (page: number) => void;
 };
 
 type ConnectedState = {
@@ -20,7 +21,7 @@ type ConnectedState = {
 type CombinedProps = Props & ConnectedState;
 class PagerComponent extends React.Component<CombinedProps> {
     public render() {
-        const { uri, page, total = 0, pageSize = 0 } = this.props;
+        const { uri, page, onPageChange, total = 0, pageSize = 0 } = this.props;
         const pageCount = Math.ceil(total / (pageSize || 1));
         if (pageCount <= 1) {
             // No need to render paging controls if there is only one page
@@ -40,13 +41,19 @@ class PagerComponent extends React.Component<CombinedProps> {
         for (let i = left; i <= right; i++) {
             const start = pageSize * (i - 1) + 1;
             const end = Math.min(start + pageSize - 1, total);
-            pages.push(<Page key={i} active={i === page} url={`${uri}/${i}`} title={`${start} - ${end}`} value={i} />);
+            pages.push(
+                <Page key={i} active={i === page} page={i}
+                    url={`${uri}/${i}`} title={`${start} - ${end}`}
+                    value={i} onPageChange={onPageChange} />
+            );
         }
         return (
-            <Pagination className="justify-content-center">
-                <Page disabled={page === 1} url={`${uri}/1`} value="«" title="first page" />
+            <Pagination className="center-pagination">
+                <Page disabled={page === 1} page={1} url={`${uri}/1`} value="«"
+                    title="first page" onPageChange={onPageChange} />
                 {pages}
-                <Page disabled={page === pageCount} url={`${uri}/${pageCount}`} value="»" title="last page" />
+                <Page disabled={page === pageCount} page={pageCount} value="»"
+                    url={`${uri}/${pageCount}`} title="last page" onPageChange={onPageChange} />
             </Pagination>
         );
     }
@@ -56,14 +63,25 @@ type PageProps = {
     url: string;
     title: string;
     value: string | number;
+    page: number;
     active?: boolean;
     disabled?: boolean;
+    onPageChange?: (page: number) => void;
 };
 
 function Page(props: PageProps) {
+    if (!props.onPageChange) {
+        return (
+            <PaginationItem title={props.title} disabled={props.disabled} active={props.active}>
+                <LinkContainer to={props.url}><PaginationLink>{props.value}</PaginationLink></LinkContainer>
+            </PaginationItem>
+        );
+    }
+
+    const onClick = () => props.onPageChange && props.onPageChange(props.page);
     return (
         <PaginationItem title={props.title} disabled={props.disabled} active={props.active}>
-            <LinkContainer to={props.url}><PaginationLink>{props.value}</PaginationLink></LinkContainer>
+            <PaginationLink onClick={onClick}>{props.value}</PaginationLink>
         </PaginationItem>
     );
 }
