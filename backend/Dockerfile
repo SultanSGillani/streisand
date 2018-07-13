@@ -6,33 +6,42 @@ ENV PYTHONPATH /code/src
 
 RUN mkdir /code
 
+COPY ./install_xapian.sh /tmp/install_xapian.sh
+RUN chmod +x /tmp/install_xapian.sh
+
 WORKDIR /code
 
-COPY ./requirements.txt ./requirements.txt
-COPY ./testing_requirements.txt ./testing_requirements.txt
+COPY ./requirements.txt ./
+COPY ./testing_requirements.txt ./
+COPY ./uwsgi ./
 
-RUN apk add --no-cache \
+RUN apk add --update --no-cache \
     jpeg-dev \
     zlib-dev \
-    libffi-dev \
     bash \
+    libffi-dev \
+    curl \
     postgresql-dev \
     libmemcached-dev \
+    pcre-dev \
     mariadb-dev \
-    mariadb-client-libs
-
-RUN apk add --no-cache --virtual .build-deps \
+    mariadb-client-libs \
+    zlib-dev \
+&& addgroup -S nginx \
+&& adduser -D -S -h /var/cache/nginx -s /sbin/nologin -G nginx nginx \
+&& apk add --no-cache --virtual .build-deps \
     build-base \
     python3-dev \
     linux-headers \
     gcc \
     libc-dev \
-    musl-dev
+    musl-dev \
 
-RUN pip install pip --upgrade
-RUN pip install -r requirements.txt
-RUN pip install -r testing_requirements.txt
+&& pip install pip --upgrade \
+&& pip install -r requirements.txt \
+&& pip install -r testing_requirements.txt
 
+RUN /tmp/install_xapian.sh 1.4.6
 RUN apk del .build-deps
 
 COPY . .
