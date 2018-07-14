@@ -22,6 +22,7 @@ class CollectionCommentViewSet(ModelViewSet):
     serializer_class = CollectionCommentSerializer
     queryset = CollectionComment.objects.all().select_related(
         'author',
+        'author__user_class',
         'collection',
     ).order_by('-id')
 
@@ -44,6 +45,7 @@ class FilmCommentViewSet(ModelViewSet):
     serializer_class = FilmCommentSerializer
     queryset = FilmComment.objects.all().select_related(
         'author',
+        'author__user_class',
         'film',
     ).order_by('-id')
 
