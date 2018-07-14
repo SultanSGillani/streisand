@@ -35,11 +35,12 @@ class CollectionFilter(filters.FilterSet):
 class FilmCommentFilter(filters.FilterSet):
     film_title = filters.CharFilter(field_name='film__title', lookup_expr='icontains')
 
+    film_id = filters.NumberFilter(field_name='film__id', lookup_expr='exact')
+
     class Meta:
         model = FilmComment
         fields = {
             'id': ['exact', 'in'],
-            'film_id': ['in', 'exact'],
             'author__username': ['iexact', 'istartswith'],
             'text': ['icontains', 'istartswith'],
         }
