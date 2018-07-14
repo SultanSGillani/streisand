@@ -44,6 +44,7 @@ router.register(r'invites', viewset=invites_views.InviteViewSet, base_name='invi
 
 # Films
 router.register(r'films', viewset=films_views.FilmViewSet, base_name='film')
+router.register(r'films-search', viewset=films_views.FilmSearchView, base_name='film-search')
 router.register(r'film-comments', viewset=films_views.FilmCommentViewSet, base_name='film-comment')
 
 # Film Collections

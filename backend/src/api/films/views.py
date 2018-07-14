@@ -2,6 +2,7 @@
 
 from django_filters.rest_framework import DjangoFilterBackend
 
+from drf_haystack.viewsets import HaystackViewSet
 from rest_framework import response, status
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.viewsets import ModelViewSet
@@ -11,7 +12,13 @@ from films.models import Film, Collection, CollectionComment, FilmComment
 
 from .filters import FilmFilter, CollectionFilter
 from .serializers import AdminFilmSerializer, CollectionSerializer, FilmCommentSerializer, \
-    CollectionCommentSerializer, PublicFilmSerializer
+    CollectionCommentSerializer, PublicFilmSerializer, FilmSearchSerializer
+    
+
+class FilmSearchView(HaystackViewSet):
+
+    index_models = [Film]
+    serializer_class = FilmSearchSerializer
 
 
 class CollectionCommentViewSet(ModelViewSet):

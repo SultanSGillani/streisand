@@ -1,2 +1,4 @@
 {{ object.title }}
 {{ object.body }}
+{{ object.author }}
+{{ object.date_created }}

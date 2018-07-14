@@ -11,7 +11,7 @@ class WikiSearchSerializer(HaystackSerializer):
     class Meta:
         index_classes = [WikiIndex]
         fields = [
-            "text", "title", "body"
+            "text", "title", "body", "author", "date_created"
         ]
 
 

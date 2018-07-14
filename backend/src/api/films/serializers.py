@@ -1,14 +1,23 @@
 # -*- coding: utf-8 -*-
 
 from django.core.paginator import Paginator
+from drf_haystack.serializers import HaystackSerializer
 from rest_framework import serializers
 
 from api.mixins import AllowFieldLimitingMixin
 from api.users.serializers import DisplayUserSerializer
 from films.models import Film, Collection, CollectionComment, FilmComment
-
+from films.search_indexes import FilmIndex
 
 # TODO: Add permissions for film and collection creation, and deletion.
+
+
+class FilmSearchSerializer(HaystackSerializer):
+    class Meta:
+        index_classes = [FilmIndex]
+        fields = [
+            "text", "title", "description"
+        ]
 
 
 class FilmCommentSerializer(serializers.ModelSerializer):
