@@ -10,7 +10,7 @@ from rest_framework.viewsets import ModelViewSet
 from api.pagination import DetailPagination
 from films.models import Film, Collection, CollectionComment, FilmComment
 
-from .filters import FilmFilter, CollectionFilter
+from .filters import FilmFilter, CollectionFilter, FilmCommentFilter, CollectionCommentFilter
 from .serializers import AdminFilmSerializer, CollectionSerializer, FilmCommentSerializer, \
     CollectionCommentSerializer, PublicFilmSerializer, FilmSearchSerializer
     
@@ -29,14 +29,11 @@ class CollectionCommentViewSet(ModelViewSet):
     serializer_class = CollectionCommentSerializer
     queryset = CollectionComment.objects.all().select_related(
         'author',
-    ).prefetch_related(
         'collection',
-        'author',
-    ).order_by(
-        '-id'
-    ).distinct(
-        'id'
-    )
+    ).order_by('-id')
+
+    filter_backends = [DjangoFilterBackend]
+    filter_class = CollectionCommentFilter
 
     def create(self, request, *args, **kwargs):
         serializer = self.get_serializer(data=request.data)
@@ -54,14 +51,11 @@ class FilmCommentViewSet(ModelViewSet):
     serializer_class = FilmCommentSerializer
     queryset = FilmComment.objects.all().select_related(
         'author',
-    ).prefetch_related(
         'film',
-        'author',
-    ).order_by(
-        '-id'
-    ).distinct(
-        'id'
-    )
+    ).order_by('-id')
+
+    filter_backends = [DjangoFilterBackend]
+    filter_class = FilmCommentFilter
 
     def create(self, request, *args, **kwargs):
         serializer = self.get_serializer(data=request.data)

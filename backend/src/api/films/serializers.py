@@ -9,8 +9,6 @@ from api.users.serializers import DisplayUserSerializer
 from films.models import Film, Collection, CollectionComment, FilmComment
 from films.search_indexes import FilmIndex
 
-# TODO: Add permissions for film and collection creation, and deletion.
-
 
 class FilmSearchSerializer(HaystackSerializer):
     class Meta:
@@ -20,7 +18,7 @@ class FilmSearchSerializer(HaystackSerializer):
         ]
 
 
-class FilmCommentSerializer(serializers.ModelSerializer):
+class FilmCommentSerializer(AllowFieldLimitingMixin, serializers.ModelSerializer):
     """
       Serializer for Film Comments. author is the users foreign key to FIlm comments.
       We are returning the author into a foreign key representation, and string representation.
@@ -63,7 +61,7 @@ class CollectionCommentSerializer(AllowFieldLimitingMixin, serializers.ModelSeri
         return super().create(validated_data)
 
 
-class AdminFilmSerializer(serializers.ModelSerializer):
+class AdminFilmSerializer(AllowFieldLimitingMixin, serializers.ModelSerializer):
     """
       Serializer for For Films. This is the serializer that Administrators/staff will have access to.
       """
