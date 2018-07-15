@@ -14,8 +14,31 @@ services:
       DJANGO_SETTINGS_MODULE: jumpcut.settings.www_settings
     ports:
     - 8000:8000
+    networks:
+     - jumpcut
     volumes:
     - ./backend:/code
+  elasticsearch:
+    image: docker.elastic.co/elasticsearch/elasticsearch:6.1.4
+    container_name: elasticsearch
+    hostname: elasticsearch
+    environment:
+      - cluster.name=docker-cluster
+      - bootstrap.memory_lock=true
+      - "ES_JAVA_OPTS=-Xms512m -Xmx512m"
+    ulimits:
+      memlock:
+        soft: -1
+        hard: -1
+    volumes:
+      - esdata:/usr/share/elasticsearch/data
+    ports:
+      - 9200:9200
+    networks:
+     - jumpcut
+    depends_on:
+    - api
+    - postgres
   frontend:
     build: frontend
     command: yarn run dev
@@ -23,6 +46,8 @@ services:
     env_file: ./frontend/.env
     ports:
     - 8001:3000
+    networks:
+     - jumpcut
     volumes:
     - ./frontend/src:/react/src
   postgres:
@@ -32,11 +57,15 @@ services:
     - pgdata:/var/lib/postgresql/data/
     ports:
     - 5432:5432
+    networks:
+     - jumpcut
     env_file: ./.env
     restart: always
   redis:
     image: redis:alpine
     container_name: redis_dev
+    networks:
+     - jumpcut
   tracker:
     build:
       context: ./backend
@@ -51,7 +80,13 @@ services:
       DJANGO_SETTINGS_MODULE: jumpcut.settings.tracker_settings
     ports:
     - 7070:7070
+    networks:
+     - jumpcut
     volumes:
     - ./backend:/code
 volumes:
   pgdata:
+  esdata:
+
+networks:
+  jumpcut:

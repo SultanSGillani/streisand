@@ -14,24 +14,31 @@ services:
     ports:
     - 7070:7070
     - 8000:8000
+    networks:
+     - jumpcut
     env_file: ./backend/.env
     depends_on:
     - postgres
     - redis
     restart: always
   elasticsearch:
-    image: docker.elastic.co/elasticsearch/elasticsearch:6.1.0
+    image: docker.elastic.co/elasticsearch/elasticsearch:6.1.4
     container_name: elasticsearch
-    ports:
-      - "9200:9200"
-      - "9300:9300"
+    hostname: elasticsearch
+    environment:
+      - cluster.name=docker-cluster
+      - bootstrap.memory_lock=true
+      - "ES_JAVA_OPTS=-Xms512m -Xmx512m"
     ulimits:
       memlock:
         soft: -1
         hard: -1
-      nofile:
-        soft: 65536
-        hard: 65536
+    volumes:
+      - esdata:/usr/share/elasticsearch/data
+    ports:
+      - 9200:9200
+    networks:
+     - jumpcut
     depends_on:
     - api
     - postgres
@@ -73,6 +80,8 @@ services:
     depends_on:
     - api
     env_file: ./frontend/.env
+    networks:
+     - jumpcut
     ports:
     - 443:443
     - 80:80
@@ -84,6 +93,8 @@ services:
     container_name: db
     volumes:
     - pgdata:/var/lib/postgresql/data/
+    networks:
+     - jumpcut
     ports:
     - 5432:5432
     env_file: ./backend/.env
@@ -92,5 +103,11 @@ services:
     image: redis:alpine
     container_name: redis
     restart: always
+    networks:
+     - jumpcut
 volumes:
   pgdata:
+  esdata:
+
+networks:
+  jumpcut:
