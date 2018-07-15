@@ -29,6 +29,8 @@ before_script:
   - virtualenv venv
   - source venv/bin/activate
   - cd backend
+  - chmod +x ./install_xapian.sh
+  - ./install_xapian.sh 1.4.6
   - pip install -r requirements.txt
   - pip install -r testing_requirements.txt
 python_linter:
