@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { connect } from 'react-redux';
 
-import SiteNav from '../components/SiteNav';
+import SiteNav from '../components/siteNav/SiteNav';
 import { IDispatch } from '../actions/ActionTypes';
 import { ScreenSize } from '../models/IDeviceInfo';
 import { getScreenSize } from '../utilities/device';

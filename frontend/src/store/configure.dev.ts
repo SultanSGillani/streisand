@@ -3,7 +3,7 @@ import createSagaMiddleware from 'redux-saga';
 import { createStore, applyMiddleware, compose } from 'redux';
 import { routerMiddleware } from 'react-router-redux';
 
-import Store from './index';
+import Store from '.';
 import reducers from '../reducers';
 import sagas from '../actions/sagas/all';
 import DevTools from '../components/DevTools';

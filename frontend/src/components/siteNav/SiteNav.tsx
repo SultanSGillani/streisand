@@ -3,9 +3,10 @@ import { connect } from 'react-redux';
 import { LinkContainer } from 'react-router-bootstrap';
 import { Collapse, Navbar, NavbarToggler, Nav, NavItem, NavbarBrand, NavLink } from 'reactstrap';
 
-import Store from '../store';
-import SearchBox from './search/SearchBox';
-import CurrentUserLink from './users/CurrentUserLink';
+import Store from '../../store';
+import SearchBox from '../search/SearchBox';
+import Notifications from './Notifications';
+import CurrentUserLink from './CurrentUserLink';
 
 export type Props = {};
 type State = {
@@ -49,6 +50,7 @@ class SiteNavComponent extends React.Component<CombinedProps, State> {
                         <Collapse isOpen={this.state.isOpen} navbar>
                             {isAuthenticated && this._getLinks()}
                             <Nav className="ml-auto" navbar>
+                                <NavItem><Notifications /></NavItem>
                                 <CurrentUserLink />
                             </Nav>
                         </Collapse>
