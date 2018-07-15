@@ -3,8 +3,9 @@ services:
  - postgres
  - docker:dind
  - redis:latest
- - name: elasticsearch:docker.elasticsearch.co/elasticsearch/elasticsearch:5.6.0
+ - name: docker.elastic.co/elasticsearch/elasticsearch:5.5.2
    alias: elasticsearch
+  command: [ "bin/elasticsearch", "-Expack.security.enabled=false", "-Ediscovery.type=single-node" ]
 
 stages:
  - test_python
