@@ -9,7 +9,7 @@ class WikiIndex(indexes.SearchIndex, indexes.Indexable):
     body = indexes.CharField(model_attr='body')
     author = indexes.CharField(model_attr='created_by__username', null=True)
     date_created = indexes.DateTimeField(model_attr='created_at', null=True)
-    
+
     def get_model(self):
         return WikiArticle
 

@@ -11,9 +11,8 @@ from api.pagination import DetailPagination
 from films.models import Film, Collection, CollectionComment, FilmComment
 
 from .filters import FilmFilter, CollectionFilter, FilmCommentFilter, CollectionCommentFilter
-from .serializers import AdminFilmSerializer, CollectionSerializer, FilmCommentSerializer, \
-    CollectionCommentSerializer, PublicFilmSerializer, FilmSearchSerializer
-    
+from .serializers import AdminFilmSerializer, CollectionSerializer, FilmCommentSerializer, CollectionCommentSerializer, PublicFilmSerializer, FilmSearchSerializer
+
 
 class FilmSearchView(HaystackViewSet):
 
