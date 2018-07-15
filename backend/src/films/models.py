@@ -52,6 +52,34 @@ class Film(models.Model):
             self.rotten_tomatoes = FilmRottenTomatoes.objects.create_from_imdb_tt_id(self.imdb.tt_id)
             self.save()
 
+    # non-existing relation.
+    @property
+    def rotten_tomatoes_indexing(self):
+        """Rotten Tomatoes for indexing.
+
+        Used in Elasticsearch indexing.
+        """
+        if self.rotten_tomatoes is not None:
+            return self.rotten_tomatoes.name
+
+    @property
+    def imdb_indexing(self):
+        """Rotten Tomatoes for indexing.
+
+        Used in Elasticsearch indexing.
+        """
+        if self.imdb is not None:
+            return self.imdb.tt_id
+
+    @property
+    def comments_indexing(self):
+        """Rotten Tomatoes for indexing.
+
+        Used in Elasticsearch indexing.
+        """
+        if self.comments is not None:
+            return self.comments.text
+
 
 class FilmComment(Comment):
     film = models.ForeignKey(

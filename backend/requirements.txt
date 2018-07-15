@@ -31,6 +31,7 @@ elasticsearch-dsl==6.1.0
 django-elasticsearch-dsl
 django-elasticsearch-dsl-drf
 drf-yasg[validation]==1.8.0
+https://github.com/chibisov/drf-extensions/archive/master.zip # DRF extensions new plugin not in pypy yet
 kombu==4.2.1.0
 psycopg2==2.7.5 --no-binary psycopg2; sys_platform == 'linux'
 psycopg2-binary; sys_platform == 'win'

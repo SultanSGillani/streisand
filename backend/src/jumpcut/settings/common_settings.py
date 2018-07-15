@@ -17,10 +17,8 @@ from urllib.parse import urljoin
 import dj_database_url
 from decouple import config
 
-
 AUTH_USER_MODEL = 'users.User'
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.dirname(__file__)))
-
 
 SECRET_KEY = config('SECRET_KEY')
 
@@ -43,7 +41,6 @@ if HOST_IP:
 HOST_DOMAIN = config('HOST_DOMAIN', default='jumpcut.to')
 if HOST_DOMAIN:
     ALLOWED_HOSTS.append('.' + HOST_DOMAIN)
-
 
 EMAIL_USE_TLS = config('EMAIL_USE_TLS', cast=bool, default=True)
 EMAIL_PORT = config('EMAIL_PORT', cast=int, default=587)
@@ -68,14 +65,12 @@ DATABASES = {
 if PRODUCTION:
     DATABASES['default']['CONN_MAX_AGE'] = None
 
-
 CELERY_ALWAYS_EAGER = config('CELERY_ALWAYS_EAGER', cast=bool, default=True)
 CELERY_IGNORE_RESULT = True
 CELERY_TASK_SERIALIZER = 'pickle'
 CELERY_ACCEPT_CONTENT = ['pickle']
 BROKER_URL = REDIS_URL + '/0'
 BROKER_TRANSPORT_OPTIONS = {'fanout_patterns': True}
-
 
 CACHES = {
     'default': {
@@ -87,7 +82,6 @@ CACHES = {
         }
     }
 }
-
 
 SITE_NAME = config('SITE_NAME', default='jumpcut')
 SITE_URL = config('SITE_URL', default='http://localhost:8000/')
@@ -114,6 +108,7 @@ LOCAL_APPS = [
     'mediainfo',
     'releases',
     'rotten_tomatoes',
+    'search_indexes',  # Elasticsearch integration with the Django
     'tests',
     'torrent_requests',
     'torrent_stats',

@@ -1,8 +1,8 @@
 # -*- coding: utf-8 -*-
 
-from .common_settings import *
 from datetime import timedelta
 
+from .common_settings import *
 
 INTERNAL_IPS = config(
     'INTERNAL_IPS', cast=lambda v: [s.strip() for s in v.split(',')], default='10.0.0.2')
@@ -10,7 +10,6 @@ INTERNAL_IPS = config(
 DEBUG_TOOLBAR_CONFIG = {
     "SHOW_TOOLBAR_CALLBACK": lambda request: True,
 }
-
 
 THIRD_PARTY_APPS = [
     'anymail',
@@ -136,8 +135,12 @@ ELASTICSEARCH_DSL = {
     },
 }
 
-
 ELASTICSEARCH_DSL_SIGNAL_PROCESSOR = 'django_elasticsearch_dsl.signals.RealTimeSignalProcessor'
+
+# Name of the Elasticsearch index
+ELASTICSEARCH_INDEX_NAMES = {
+    'search_indexes.documents.film': 'film',
+}
 
 SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
 SESSION_COOKIE_SECURE = config('SESSION_COOKIE_SECURE', cast=bool, default=False)
@@ -277,9 +280,7 @@ if DEBUG and not TESTING:
     ]
     BANDIT_EMAIL = config('BANDIT_EMAIL', default='')
 
-
 if TESTING:
-
     TEST_RUNNER = 'tests.test_utils.CustomTestSuiteRunner'
 
     DDF_FILL_NULLABLE_FIELDS = False
@@ -308,6 +309,5 @@ if TESTING:
     EMAIL_HOST = "localhost"
     # https://docs.djangoproject.com/en/dev/ref/settings/#email-port
     EMAIL_PORT = 1025
-
 
 INSTALLED_APPS = THIRD_PARTY_APPS + DJANGO_APPS + LOCAL_APPS
