@@ -36,16 +36,6 @@ class ReplyMessageSerializer(AllowFieldLimitingMixin, serializers.ModelSerialize
             'children',
         )
 
-    # See here https://github.com/encode/django-rest-framework/issues/2555#issuecomment-253201525
-    # The reason we are instantiating the DisplayUserSerializer here is because Context
-    # does not have access to request initially per the below error.
-    # This could be because of MPTT / Parent/child relationships in this model.
-    # ('Context does not have access to request')
-
-    def __init__(self, *args, **kwargs):
-        super().__init__(*args, **kwargs)
-        self.fields['sender'] = DisplayUserSerializer(context=self.context)
-
     def create(self, validated_data):
         validated_data['sender'] = self.context['request'].user
         return super().create(validated_data)
@@ -77,15 +67,6 @@ class MessageSerializer(AllowFieldLimitingMixin, serializers.ModelSerializer):
         if obj.sender_deleted_at or obj.recipient_deleted_at is not None:
             return True
         return False
-
-    # See here https://github.com/encode/django-rest-framework/issues/2555#issuecomment-253201525
-    # The reason we are instantiating the DisplayUserSerializer here is because Context
-    # does not have access to request initially per the below error.
-    # ('Context does not have access to request')
-
-    def __init__(self, *args, **kwargs):
-        super().__init__(*args, **kwargs)
-        self.fields['sender'] = DisplayUserSerializer(context=self.context)
 
     def create(self, validated_data):
         validated_data['sender'] = self.context['request'].user
