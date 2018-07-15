@@ -3,7 +3,8 @@ services:
  - postgres
  - docker:dind
  - redis:latest
- - elasticsearch:docker.elasticsearch.co/elasticsearch/elasticsearch:5.6.0
+ - name: elasticsearch:docker.elasticsearch.co/elasticsearch/elasticsearch:5.6.0
+   alias: elasticsearch
 
 stages:
  - test_python
