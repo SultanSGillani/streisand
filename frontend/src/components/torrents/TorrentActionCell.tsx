@@ -4,6 +4,7 @@ import { push } from 'react-router-redux';
 import { Button, ButtonGroup } from 'reactstrap';
 
 import globals from '../../utilities/globals';
+import AwesomeIcon from '../generic/AwesomeIcon';
 import { ITorrent } from '../../models/ITorrent';
 import { IDispatch } from '../../actions/ActionTypes';
 import { deleteTorrent, IActionProps } from '../../actions/torrents/DeleteTorrentAction';
@@ -42,16 +43,16 @@ class TorrentActionCellComponent extends React.Component<CombinedProps> {
                 <div className="row justify-content-end no-gutters">
                     <ButtonGroup className="col-auto ml-auto" color="default" size="sm">
                         <a className="btn btn-secondary" href={downloadUrl} title="Download torrent file" role="button">
-                            <i className="fas fa-arrow-down fa-lg" />
+                            <AwesomeIcon type="arrow-down" size="lg" />
                         </a>
                         {includeRelease &&
                             <Button onClick={onEdit} title="View release">
-                                <i className="fas fa-info-circle fa-lg" />
+                                <AwesomeIcon type="info-circle" size="lg" />
                             </Button>
                         }
                         {includeDelete &&
                             <Button color="danger" onClick={onDelete} title="Delete torrent">
-                                <i className="fas fa-trash-alt fa-lg" />
+                                <AwesomeIcon type="trash-alt" size="lg" />
                             </Button>
                         }
                     </ButtonGroup>

@@ -21,6 +21,7 @@ class FilmCommentSerializer(AllowFieldLimitingMixin, serializers.ModelSerializer
     class Meta:
         model = FilmComment
         fields = (
+            'id',
             'film',
             'author',
             'text',
@@ -42,6 +43,7 @@ class CollectionCommentSerializer(AllowFieldLimitingMixin, serializers.ModelSeri
     class Meta:
         model = CollectionComment
         fields = (
+            'id',
             'collection',
             'author',
             'text',
