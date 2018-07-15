@@ -23,6 +23,11 @@ THIRD_PARTY_APPS = [
     'raven.contrib.django.raven_compat',
     'rest_framework',
     'rest_framework_filters',
+    # Django Elasticsearch integration
+    'django_elasticsearch_dsl',
+
+    # Django REST framework Elasticsearch integration (this package)
+    'django_elasticsearch_dsl_drf',
 ]
 
 DJANGO_APPS = [
@@ -91,7 +96,7 @@ REST_FRAMEWORK = {
         'rest_framework.renderers.BrowsableAPIRenderer',
     ],
     'DEFAULT_PARSER_CLASSES': [
-        'djangorestframework_camel_case.parser.CamelCaseJSONParser'
+        'djangorestframework_camel_case.parser.CamelCaseJSONParser',
     ],
     'DEFAULT_PAGINATION_CLASS': 'api.pagination.DetailPagination',
     'PAGE_SIZE': 50,
@@ -123,6 +128,16 @@ SWAGGER_SETTINGS.update({'VALIDATOR_URL': 'http://localhost:8189'})
 REDOC_SETTINGS = {
     'LAZY_RENDERING': True,
 }
+
+# Elasticsearch configuration
+ELASTICSEARCH_DSL = {
+    'default': {
+        'hosts': 'elasticsearch:9200'
+    },
+}
+
+
+ELASTICSEARCH_DSL_SIGNAL_PROCESSOR = 'django_elasticsearch_dsl.signals.RealTimeSignalProcessor'
 
 SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
 SESSION_COOKIE_SECURE = config('SESSION_COOKIE_SECURE', cast=bool, default=False)
