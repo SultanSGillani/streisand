@@ -9,12 +9,13 @@ export interface ICommentInfo {
 
 export function transformComment(response: ICommentResponse): ICommentInfo {
     const users: IUser[] = [];
-    const { author, ...comment } = response;
+    const { author, text, ...comment } = response;
     users.push(author);
     return {
         users,
         comment: {
             ...comment,
+            body: text,
             author: author.id
         }
     };
@@ -29,10 +30,11 @@ export function transformComments(response: ICommentResponse[]): ICommentsInfo {
     const users: IUser[] = [];
     const comments: IComment[] = [];
     for (const raw of response) {
-        const { author, ...comment } = raw;
+        const { author, text, ...comment } = raw;
         users.push(author);
         comments.push({
             ...comment,
+            body: text,
             author: author.id
         });
     }

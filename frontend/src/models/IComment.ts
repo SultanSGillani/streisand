@@ -20,13 +20,18 @@ export interface IComment {
     id: number;
     film: number;
     author: number;
-    text: string;
+    body: string;
     createdAt: string;
     modifiedAt: string;
 }
 
 export interface ICommentCreation {
     film: number;
+    text: string;
+}
+
+export interface ICommentUpdate {
+    id: number;
     text: string;
 }
 

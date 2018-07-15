@@ -1,11 +1,9 @@
 import * as React from 'react';
-import { Table } from 'reactstrap';
 import { connect } from 'react-redux';
 
 import Pager from '../Pager';
 import Store from '../../store';
 import CommentRow from './CommentRow';
-import Empty from '../generic/Empty';
 import IFilm from '../../models/IFilm';
 import Loading from '../generic/Loading';
 import { IComment } from '../../models/IComment';
@@ -50,8 +48,8 @@ class CommentListComponent extends React.Component<CombinedProps> {
 
     public render() {
         const { film, comments, page, total, pageSize, changePage } = this.props;
-        if (!comments.length) {
-            return this.props.status.loading ? <Loading /> : <Empty />;
+        if (!comments.length && this.props.status.loading) {
+            return <Loading />;
         }
 
         const pager = <Pager onPageChange={changePage} total={total} page={page} pageSize={pageSize} />;
@@ -59,20 +57,12 @@ class CommentListComponent extends React.Component<CombinedProps> {
             return (<CommentRow film={film} comment={comment} key={comment.id} />);
         });
         return (
-            <div>
-                <Table className="table-borderless" striped hover>
-                    <thead>
-                        <tr>
-                            <th>User</th>
-                            <th>text</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        {rows}
-                    </tbody>
-                </Table>
+            <>
+                <h2>Comments</h2>
                 {pager}
-            </div>
+                {rows}
+                {pager}
+            </>
         );
     }
 }
