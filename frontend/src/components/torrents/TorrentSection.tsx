@@ -4,6 +4,7 @@ import { Table } from 'reactstrap';
 import TorrentRow from './TorrentRow';
 import IFilm from '../../models/IFilm';
 import ITorrent from '../../models/ITorrent';
+import AwesomeIcon from '../generic/AwesomeIcon';
 
 export type Props = {
     film: IFilm;
@@ -33,7 +34,7 @@ export default function TorrentSection(props: Props) {
             <thead>
                 <tr>
                     <th>Torrent</th>
-                    <th><i className="fas fa-sync fa-lg" /></th>
+                    <th><AwesomeIcon type="sync" size="lg" /></th>
                     <th colSpan={2}>Size</th>
                 </tr>
             </thead>

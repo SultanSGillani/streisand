@@ -7,6 +7,7 @@ import Avatar from '../users/Avatar';
 import IUser from '../../models/IUser';
 import UserLink from '../links/UserLink';
 import TextView from '../bbcode/TextView';
+import AwesomeIcon from '../generic/AwesomeIcon';
 import TimeElapsed from '../generic/TimeElapsed';
 import { getItem } from '../../utilities/mapping';
 import { ScreenSize } from '../../models/IDeviceInfo';
@@ -98,10 +99,10 @@ class ForumPostComponent extends React.Component<CombinedProps, State> {
                         <div className="col-auto ml-auto">
                             <ButtonGroup color="default" size="sm">
                                 <Button onClick={onEdit}>
-                                    <i className="fas fa-pencil-alt fa-lg" />
+                                    <AwesomeIcon type="pencil-alt" size="lg" />
                                 </Button>
                                 <Button color="danger" onClick={onDelete}>
-                                    <i className="fas fa-trash fa-lg" />
+                                    <AwesomeIcon type="trash" size="lg" />
                                 </Button>
                             </ButtonGroup>
                         </div>
