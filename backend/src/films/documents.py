@@ -1,10 +1,7 @@
 from django_elasticsearch_dsl import DocType, Index
 
-from elasticsearch_dsl import connections
-
 from .models import Film
 
-connections.create_connection(hosts=['elasticsearch'], timeout=20)
 
 # Name of the Elasticsearch index
 film = Index('films')
