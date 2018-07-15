@@ -1,16 +1,14 @@
 import * as React from 'react';
-
-import ICommandProps from './ICommandProps';
 import { Button, ButtonDropdown, DropdownToggle, DropdownMenu, DropdownItem } from 'reactstrap';
 
-function getIcon(type: string) {
-    return <i className={`fas fa-${type} fa-sm`} />;
-}
+import ICommandProps from './ICommandProps';
+import AwesomeIcon from '../../generic/AwesomeIcon';
 
 function MenuItem(props: ICommandProps) {
+    const icon = props.icon && <AwesomeIcon type={props.icon}/>;
     return (
         <DropdownItem onClick={props.onExecute}>
-            {props.icon && <span style={{ width: '28px', display: 'inline-block' }}>{props.icon && getIcon(props.icon)}</span>}
+            {props.icon && <span style={{ width: '28px', display: 'inline-block' }}>{icon}</span>}
             {props.label || props.title}
         </DropdownItem>
     );
@@ -35,7 +33,7 @@ class Command extends React.Component<ICommandProps, CommandState> {
                 <ButtonDropdown size="md" isOpen={this.state.dropdownOpen} toggle={toggle} title={this.props.title}>
                     <DropdownToggle caret>
                         <span>
-                            {this.props.icon && getIcon(this.props.icon)}
+                            {this.props.icon && <AwesomeIcon type={this.props.icon}/>}
                             {this.props.label}
                         </span>
                     </DropdownToggle>
@@ -47,7 +45,7 @@ class Command extends React.Component<ICommandProps, CommandState> {
         } else {
             return (
                 <Button color="secondary" size="md" title={this.props.title} onClick={this.props.onExecute}>
-                    {this.props.icon && getIcon(this.props.icon)}
+                    {this.props.icon && <AwesomeIcon type={this.props.icon}/>}
                     {this.props.label}
                 </Button>
             );
