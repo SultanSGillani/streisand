@@ -9,10 +9,10 @@ import Empty from '../generic/Empty';
 import Loading from '../generic/Loading';
 import { ITorrent } from '../../models/ITorrent';
 import { IDispatch } from '../../actions/ActionTypes';
-import { getNodeItems } from '../../utilities/mapping';
 import { ITrackerPeer } from '../../models/ITrackerPeer';
 import { getPeers } from '../../actions/peers/PeersAction';
-import ILoadingStatus, { defaultStatus } from '../../models/base/ILoadingStatus';
+import ILoadingStatus from '../../models/base/ILoadingStatus';
+import { getNodeItems, getItemPage, getList } from '../../utilities/mapping';
 
 export type Props = {
     page: number;
@@ -84,12 +84,12 @@ class PeerListComponent extends React.Component<CombinedProps> {
 }
 
 const mapStateToProps = (state: Store.All, props: Props): ConnectedState => {
-    const list = state.sealed.peer.list;
-    const page = list.pages[props.page];
+    const list = getList(state.sealed.peer.byTorrentId[props.torrent.id]);
+    const page = getItemPage({ list, page: props.page });
     return {
         total: list.count,
         pageSize: list.pageSize,
-        status: page ? page.status : defaultStatus,
+        status: page.status,
         peers: getNodeItems({
             page: props.page,
             byId: state.sealed.peer.byId,

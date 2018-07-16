@@ -9,11 +9,12 @@ import IMessage from '../models/IMessage';
 import IAuthInfo from '../models/IAuthInfo';
 import IDeviceInfo from '../models/IDeviceInfo';
 import IMediaTypes from '../models/IMediaTypes';
+import IPeerItemSet from '../models/IPeerItemSet';
 import ILocationInfo from '../models/ILocationInfo';
 import IForumData from '../models/forums/IForumData';
 import ITorrentItemSet from '../models/ITorrentItemSet';
+import ICommentItemSet from '../models/ICommentItemSet';
 import { IItemList, IItemPages } from '../models/base/IPagedItemSet';
-import { ITrackerPeer } from '../models/ITrackerPeer';
 
 namespace Store {
     export type Users = IItemList<IUser>;
@@ -23,11 +24,12 @@ namespace Store {
     export type Wikis = IItemList<IWiki> & {
         creating: boolean;
     };
-    export type Peers = IItemList<ITrackerPeer>;
+    export type Peers = IPeerItemSet;
     export type Invites = IItemList<IInvite>;
     export type News = { latest: number | null; loading: boolean; };
     export type CurrentUser = { id: number | null; loading: boolean; };
     export type Releases = IItemList<IRelease>;
+    export type Comments = ICommentItemSet;
 
     export type UserSealed = {
         currentUser: CurrentUser;
@@ -41,6 +43,7 @@ namespace Store {
         news: News;
         forums: IForumData;
         invite: Invites;
+        comment: Comments;
     };
 
     export type All = {

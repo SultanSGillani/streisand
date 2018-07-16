@@ -9,6 +9,7 @@ import CommandBar, { ICommand } from '../CommandBar';
 import { IDispatch } from '../../actions/ActionTypes';
 import { getNodeItems } from '../../utilities/mapping';
 import TorrentSection from '../torrents/TorrentSection';
+import CommentSection from '../comments/CommentSection';
 import { deleteFilm } from '../../actions/films/DeleteFilmAction';
 
 export type Props = {
@@ -74,6 +75,7 @@ class FilmViewComponent extends React.Component<CombinedProps> {
                 <TorrentSection film={film}
                     torrents={this.props.torrents} includeReleaseInfo={true}
                     selected={this.props.torrentId} urlPrefix={urlPrefix} />
+                <CommentSection film={film} />
             </>
         );
     }
