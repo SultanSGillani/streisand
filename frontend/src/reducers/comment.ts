@@ -7,6 +7,7 @@ import { INodeMap } from '../models/base/ItemSet';
 import { getPagesReducer } from './utilities/pages';
 import { addLoadedNode, addLoadedNodes } from './utilities/mutations';
 import { IComment } from '../models/IComment';
+import { IItemPages } from '../models/base/IPagedItemSet';
 
 type ItemMap = INodeMap<IComment>;
 function byId(state: ItemMap = {}, action: Action): ItemMap {
@@ -25,5 +26,19 @@ function byId(state: ItemMap = {}, action: Action): ItemMap {
     }
 }
 
-const list = getPagesReducer('COMMENTS');
-export default combineReducers<Store.Comments>({ byId, list });
+const filmPagesReducer = getPagesReducer('COMMENTS');
+type Comments = { [id: number]: IItemPages };
+function byFilmId(state: Comments = {}, action: Action): Comments {
+    switch (action.type) {
+        case 'REQUEST_COMMENTS':
+        case 'RECEIVED_COMMENTS':
+        case 'FAILED_COMMENTS':
+            const currentItemSet = state[action.props.id];
+            const newItemSet = filmPagesReducer(currentItemSet, action);
+            return objectAssign({}, state, { [action.props.id]: newItemSet });
+        default:
+            return state;
+    }
+}
+
+export default combineReducers<Store.Comments>({ byId, byFilmId });

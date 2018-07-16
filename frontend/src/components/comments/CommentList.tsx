@@ -8,9 +8,9 @@ import IFilm from '../../models/IFilm';
 import Loading from '../generic/Loading';
 import { IComment } from '../../models/IComment';
 import { IDispatch } from '../../actions/ActionTypes';
-import { getNodeItems } from '../../utilities/mapping';
+import ILoadingStatus from '../../models/base/ILoadingStatus';
 import { getComments } from '../../actions/comments/CommentsAction';
-import ILoadingStatus, { defaultStatus } from '../../models/base/ILoadingStatus';
+import { getNodeItems, getList, getItemPage } from '../../utilities/mapping';
 
 export type Props = {
     page: number;
@@ -68,12 +68,12 @@ class CommentListComponent extends React.Component<CombinedProps> {
 }
 
 const mapStateToProps = (state: Store.All, props: Props): ConnectedState => {
-    const list = state.sealed.comment.list;
-    const page = list.pages[props.page];
+    const list = getList(state.sealed.comment.byFilmId[props.film.id]);
+    const page = getItemPage({ list, page: props.page });
     return {
         total: list.count,
         pageSize: list.pageSize,
-        status: page ? page.status : defaultStatus,
+        status: page.status,
         comments: getNodeItems({
             page: props.page,
             byId: state.sealed.comment.byId,

@@ -7,13 +7,13 @@ import IInvite from '../models/IInvite';
 import IRelease from '../models/IRelease';
 import IMessage from '../models/IMessage';
 import IAuthInfo from '../models/IAuthInfo';
-import { IComment } from '../models/IComment';
 import IDeviceInfo from '../models/IDeviceInfo';
 import IMediaTypes from '../models/IMediaTypes';
 import IPeerItemSet from '../models/IPeerItemSet';
 import ILocationInfo from '../models/ILocationInfo';
 import IForumData from '../models/forums/IForumData';
 import ITorrentItemSet from '../models/ITorrentItemSet';
+import ICommentItemSet from '../models/ICommentItemSet';
 import { IItemList, IItemPages } from '../models/base/IPagedItemSet';
 
 namespace Store {
@@ -29,7 +29,7 @@ namespace Store {
     export type News = { latest: number | null; loading: boolean; };
     export type CurrentUser = { id: number | null; loading: boolean; };
     export type Releases = IItemList<IRelease>;
-    export type Comments = IItemList<IComment>;
+    export type Comments = ICommentItemSet;
 
     export type UserSealed = {
         currentUser: CurrentUser;
