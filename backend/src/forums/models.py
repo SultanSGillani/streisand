@@ -1,10 +1,11 @@
 # -*- coding: utf-8 -*-
 
-from positions import PositionField
-
 from django.db import models
 from django.db.models import F
 from django.urls import reverse
+from django.utils import timezone
+
+from positions import PositionField
 
 from .managers import ForumGroupQuerySet, ForumTopicQuerySet, ForumThreadQuerySet, ForumPostQuerySet
 
@@ -111,7 +112,7 @@ class ForumThread(models.Model):
     title = models.CharField(max_length=1024)
     is_locked = models.BooleanField(default=False)
     is_sticky = models.BooleanField(default=False)
-    created_at = models.DateTimeField(auto_now_add=True)
+    created_at = models.DateTimeField(editable=False)
     created_by = models.ForeignKey(
         to='users.User',
         related_name='forum_threads_created',
@@ -120,7 +121,7 @@ class ForumThread(models.Model):
     )
     modified = models.BooleanField(default=False)
     is_archived = models.BooleanField(default=False)
-    modified_at = models.DateTimeField(auto_now=True, null=True)
+    modified_at = models.DateTimeField(null=True)
     modified_count = models.PositiveIntegerField(default=0, editable=False)
     modified_by = models.ForeignKey(
         to='users.User',
@@ -169,9 +170,12 @@ class ForumThread(models.Model):
 
     def save(self, *args, **kwargs):
         if self.pk:
+            self.created_at = timezone.now()
+        self.modified_at__isNull = True
+        if self.modified_by is not None:
+            self.modified_at = timezone.now()
             if self.modified:
                 self.modified_count = F('modified_count') + 1
-
         super(ForumThread, self).save(*args, **kwargs)
 
         if self.pk:
@@ -189,9 +193,9 @@ class ForumPost(models.Model):
         on_delete=models.PROTECT,
     )
     body = models.TextField()
-    created_at = models.DateTimeField(auto_now_add=True)
+    created_at = models.DateTimeField()
     modified = models.BooleanField(default=False)
-    modified_at = models.DateTimeField(auto_now=True, null=True, editable=False)
+    modified_at = models.DateTimeField(null=True, editable=False)
     modified_count = models.PositiveIntegerField(default=0, editable=False)
     modified_by = models.ForeignKey(
         to='users.User',
@@ -225,15 +229,13 @@ class ForumPost(models.Model):
         )
 
     def save(self, *args, **kwargs):
-        if self.pk:
-            if self.modified:
-                self.modified_count = F('modified_count') + 1
-
-        super(ForumPost, self).save(*args, **kwargs)
-
-        if self.pk:
-            # As we use F expression, its not possible to know modified_count until refresh from db
-            self.refresh_from_db()
+        ''' On save, update timestamps '''
+        if not self.id:
+            self.created_at = timezone.now()
+        self.modified_at__isNull = True
+        if self.modified_by is not None:
+            self.modified_at = timezone.now()
+        return super(ForumPost, self).save(*args, **kwargs)
 
 
 class ForumReport(models.Model):

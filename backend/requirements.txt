@@ -29,7 +29,7 @@ djangorestframework-camel-case==1.0b1
 djangorestframework-filters
 drf-yasg[validation]==1.8.0
 kombu==4.2.1.0
-psycopg2==2.7.5 --no-binary psycopg2
+psycopg2==2.7.5 --no-binary psycopg2; sys_platform == 'linux'
 psycopg2-binary; sys_platform == 'win'
 pycparser==2.18
 python-decouple==3.1
