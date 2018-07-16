@@ -64,7 +64,7 @@ class FilmDocument(DocType):
         }
     )
 
-    year = fields.IntegerField()
+    year = fields.IntegerField(attr='year')
 
     class Meta(object):
         """Meta options."""

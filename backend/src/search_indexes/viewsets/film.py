@@ -15,15 +15,18 @@ from django_elasticsearch_dsl_drf.filter_backends import (
 )
 from django_elasticsearch_dsl_drf.viewsets import BaseDocumentViewSet
 
+from api.pagination import DetailPagination
+
 from search_indexes.documents.film import FilmDocument
 from search_indexes.serializers.film import FilmDocumentSerializer
 
 
 class FilmDocumentView(BaseDocumentViewSet):
-    """The BookDocument view."""
+    """The FilmDocument view."""
 
     document = FilmDocument
     serializer_class = FilmDocumentSerializer
+    pagination_class = DetailPagination
     lookup_field = 'id'
     filter_backends = [
         FilteringFilterBackend,
@@ -36,6 +39,7 @@ class FilmDocumentView(BaseDocumentViewSet):
     search_fields = (
         'title',
         'description',
+        'year',
     )
     # Define filter fields
     filter_fields = {
@@ -56,7 +60,7 @@ class FilmDocumentView(BaseDocumentViewSet):
         'imdb': 'imdb.raw',
         'year': {
             'field': 'year.raw',
-            # Note, that we limit the lookups of `price` field in this
+            # Note, that we limit the lookups of `year` field in this
             # example, to `range`, `gt`, `gte`, `lt` and `lte` filters.
             'lookups': [
                 LOOKUP_FILTER_RANGE,
@@ -71,9 +75,7 @@ class FilmDocumentView(BaseDocumentViewSet):
     ordering_fields = {
         'id': 'id',
         'title': 'title.raw',
-        'price': 'price.raw',
-        'state': 'state.raw',
-        'publication_date': 'publication_date',
+        'year': 'year.raw',
     }
     # Specify default ordering
     ordering = ('id', 'title', 'year',)
