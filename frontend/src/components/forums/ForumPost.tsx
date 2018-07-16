@@ -1,18 +1,13 @@
 import * as React from 'react';
 import { connect } from 'react-redux';
-import { Card, CardBody, CardHeader, Button, ButtonGroup, CardFooter } from 'reactstrap';
 
 import Store from '../../store';
-import Avatar from '../users/Avatar';
 import IUser from '../../models/IUser';
-import UserLink from '../links/UserLink';
-import TextView from '../bbcode/TextView';
-import TimeElapsed from '../generic/TimeElapsed';
+import UserPost from '../generic/UserPost';
 import { getItem } from '../../utilities/mapping';
 import { ScreenSize } from '../../models/IDeviceInfo';
 import { IDispatch } from '../../actions/ActionTypes';
 import IForumPost from '../../models/forums/IForumPost';
-import Editor, { IEditorHandle } from '../bbcode/Editor';
 import { updatePost } from '../../actions/forums/posts/UpdatePostAction';
 import { IActionProps, deleteForumPost } from '../../actions/forums/posts/DeletePostAction';
 
@@ -21,32 +16,19 @@ export type Props = {
     post: IForumPost;
 };
 
-type State = {
-    editMode: boolean;
-};
-
 type ConnectedState = {
     author?: IUser;
     modifiedBy?: IUser;
     screenSize: ScreenSize;
 };
+
 type ConnectedDispatch = {
     deleteForumPost: (props: IActionProps) => void;
     updatePost: (id: number, content: string) => void;
 };
 
 type CombinedProps = Props & ConnectedDispatch & ConnectedState;
-class ForumPostComponent extends React.Component<CombinedProps, State> {
-    private _editorHandle: IEditorHandle;
-
-    constructor(props: CombinedProps) {
-        super(props);
-
-        this.state = {
-            editMode: false
-        };
-    }
-
+class ForumPostComponent extends React.Component<CombinedProps> {
     public render() {
         const { post, author, page } = this.props;
         const onDelete = () => {
@@ -57,87 +39,20 @@ class ForumPostComponent extends React.Component<CombinedProps, State> {
             });
         };
 
-        const onEdit = () => { this.setState({ editMode: true }); };
-        const onCancel = () => { this.setState({ editMode: false }); };
-        const onHandle = (handle: IEditorHandle) => { this._editorHandle = handle; };
-        const onSave = () => {
-            this.props.updatePost(post.id, this._editorHandle.getContent());
-            this.setState({ editMode: false });
+        const onUpdate = (content: string) => {
+            this.props.updatePost(post.id, content);
         };
 
-        if (this.state.editMode) {
-            return (
-                <Card className="border-primary mb-2">
-                    <CardHeader>
-                        <UserLink user={author} /> <TimeElapsed date={post.createdAt} />
-                    </CardHeader>
-                    <CardBody>
-                        <Editor content={post.body} size="small" receiveHandle={onHandle} />
-                    </CardBody>
-                    <CardFooter>
-                        <div className="row m-0 justify-content-end">
-                            <ButtonGroup>
-                                <Button onClick={onCancel}>Cancel</Button>
-                                <Button color="primary" onClick={onSave}>Update post</Button>
-                            </ButtonGroup>
-                        </div>
-                    </CardFooter>
-                </Card >
-            );
-        }
-
-        const avatar = this.props.screenSize < ScreenSize.medium ? undefined :
-            <div className="col-auto"><Avatar user={author} /></div>;
         return (
-            <Card className="mb-2">
-                <CardHeader>
-                    <div className="row">
-                        <div className="col-auto">
-                            <UserLink user={author} /> <TimeElapsed date={post.createdAt} />
-                        </div>
-                        <div className="col-auto ml-auto">
-                            <ButtonGroup color="default" size="sm">
-                                <Button onClick={onEdit}>
-                                    <i className="fas fa-pencil-alt fa-lg" />
-                                </Button>
-                                <Button color="danger" onClick={onDelete}>
-                                    <i className="fas fa-trash fa-lg" />
-                                </Button>
-                            </ButtonGroup>
-                        </div>
-                    </div>
-                </CardHeader>
-                <CardBody>
-                    <div className="row">
-                        {avatar}
-                        <div className="col">
-                            <TextView content={post.body || ''} />
-                        </div>
-                    </div>
-                </CardBody>
-                {this._getStandardFooter()}
-            </Card >
+            <UserPost
+                post={post}
+                author={author}
+                modifiedBy={this.props.modifiedBy}
+                screenSize={this.props.screenSize}
+                deletePost={onDelete}
+                updatePost={onUpdate}
+            />
         );
-    }
-
-    private _getStandardFooter() {
-        let content;
-        const { post, modifiedBy } = this.props;
-        const modified = (post.modifiedAt && post.modifiedAt !== post.createdAt) ? <TimeElapsed date={ post.modifiedAt } /> : undefined;
-        if (modifiedBy) {
-            content = (<div>Modified by <UserLink user={modifiedBy} /> {modified}</div>);
-        } else if (modified) {
-            content = (<div>Modified {modified}</div>);
-        }
-        if (content) {
-            return (
-                <CardFooter>
-                    <div className="row m-0 justify-content-end">
-                        {content}
-                    </div>
-                </CardFooter>
-            );
-        }
     }
 }
 

@@ -1,4 +1,3 @@
-
 import IUser from '../../models/IUser';
 import globals from '../../utilities/globals';
 import { get } from '../../utilities/Requestor';
@@ -13,7 +12,7 @@ const PAGE_SIZE = globals.pageSize.peers;
 export type RequestPeers = { type: 'REQUEST_PEERS', props: IActionProps };
 export type ReceivedPeers = {
     type: 'RECEIVED_PEERS',
-    props: { page: number, pageSize: number, count: number, items: ITrackerPeer[] },
+    props: { id: number, page: number, pageSize: number, count: number, items: ITrackerPeer[] },
     users: IUser[]
 };
 export type FailedPeers = { type: 'FAILED_PEERS', props: IActionProps };
@@ -27,6 +26,7 @@ function received(response: IPagedResponse<ITrackerPeerResponse>, props: IAction
     return {
         type: 'RECEIVED_PEERS',
         props: {
+            id: props.id,
             page: props.page,
             pageSize: PAGE_SIZE,
             count: response.count,
