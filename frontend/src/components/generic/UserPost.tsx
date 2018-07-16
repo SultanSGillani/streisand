@@ -9,6 +9,7 @@ import TimeElapsed from './TimeElapsed';
 import { IUserPost } from '../../models/IUserPost';
 import { ScreenSize } from '../../models/IDeviceInfo';
 import Editor, { IEditorHandle } from '../bbcode/Editor';
+import AwesomeIcon from './AwesomeIcon';
 
 export type Props = {
     author?: IUser;
@@ -79,10 +80,10 @@ export default class UserPost extends React.Component<Props, State> {
                         <div className="col-auto ml-auto">
                             <ButtonGroup color="default" size="sm">
                                 <Button onClick={onEdit}>
-                                    <i className="fas fa-pencil-alt fa-lg" />
+                                    <AwesomeIcon type="pencil-alt" size="lg" />
                                 </Button>
                                 <Button color="danger" onClick={onDelete}>
-                                    <i className="fas fa-trash fa-lg" />
+                                    <AwesomeIcon type="trash" size="lg" />
                                 </Button>
                             </ButtonGroup>
                         </div>
@@ -104,7 +105,7 @@ export default class UserPost extends React.Component<Props, State> {
     private _getStandardFooter() {
         let content;
         const { post, modifiedBy } = this.props;
-        const modified = (post.modifiedAt && post.modifiedAt !== post.createdAt) ? <TimeElapsed date={ post.modifiedAt } /> : undefined;
+        const modified = (post.modifiedAt && post.modifiedAt !== post.createdAt) ? <TimeElapsed date={post.modifiedAt} /> : undefined;
         if (modifiedBy) {
             content = (<div>Modified by <UserLink user={modifiedBy} /> {modified}</div>);
         } else if (modified) {
