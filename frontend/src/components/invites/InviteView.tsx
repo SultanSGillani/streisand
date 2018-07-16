@@ -3,7 +3,7 @@ import { connect } from 'react-redux';
 import { Card, CardBody, Form, CardFooter, Button } from 'reactstrap';
 
 import Store from '../../store';
-import { IDispatch } from '../../actions/ActionTypes';
+import { IDispatch } from '../../state/actions/ActionTypes';
 import { StringInput } from '../generic/inputs/StringInput';
 import { sendInvite } from '../../actions/invites/CreateInviteAction';
 

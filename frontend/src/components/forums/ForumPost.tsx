@@ -6,7 +6,7 @@ import IUser from '../../models/IUser';
 import UserPost from '../generic/UserPost';
 import { getItem } from '../../utilities/mapping';
 import { ScreenSize } from '../../models/IDeviceInfo';
-import { IDispatch } from '../../actions/ActionTypes';
+import { IDispatch } from '../../state/actions/ActionTypes';
 import IForumPost from '../../models/forums/IForumPost';
 import { updatePost } from '../../actions/forums/posts/UpdatePostAction';
 import { IActionProps, deleteForumPost } from '../../actions/forums/posts/DeletePostAction';

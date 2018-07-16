@@ -3,7 +3,7 @@ import { connect } from 'react-redux';
 
 import Store from '../../store';
 import Empty from '../../components/generic/Empty';
-import { IDispatch } from '../../actions/ActionTypes';
+import { IDispatch } from '../../state/actions/ActionTypes';
 import Loading from '../../components/generic/Loading';
 import IForumThread from '../../models/forums/IForumThread';
 import ForumThreadView from '../../components/forums/ForumThreadView';

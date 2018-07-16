@@ -9,7 +9,7 @@ import IUser from '../../models/IUser';
 import Loading from '../generic/Loading';
 import NewPost from '../generic/NewPost';
 import { IComment } from '../../models/IComment';
-import { IDispatch } from '../../actions/ActionTypes';
+import { IDispatch } from '../../state/actions/ActionTypes';
 import ILoadingStatus from '../../models/base/ILoadingStatus';
 import { getComments } from '../../actions/comments/CommentsAction';
 import { createComment } from '../../actions/comments/CreateCommentAction';

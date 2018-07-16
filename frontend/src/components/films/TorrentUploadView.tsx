@@ -5,7 +5,7 @@ import { connect } from 'react-redux';
 import Store from '../../store';
 import IFilm from '../../models/IFilm';
 import IMediaTypes from '../../models/IMediaTypes';
-import { IDispatch } from '../../actions/ActionTypes';
+import { IDispatch } from '../../state/actions/ActionTypes';
 import ReleaseForm, { IReleaseFormData } from '../releases/ReleaseForm';
 import { uploadTorrent } from '../../actions/torrents/UploadTorrentAction';
 import { createRelease, IActionProps as IReleaseProps } from '../../actions/releases/CreateReleaseAction';

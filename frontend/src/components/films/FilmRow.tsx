@@ -5,7 +5,7 @@ import { connect } from 'react-redux';
 import Store from '../../store';
 import IFilm from '../../models/IFilm';
 import DeleteCell from '../generic/DeleteCell';
-import { IDispatch } from '../../actions/ActionTypes';
+import { IDispatch } from '../../state/actions/ActionTypes';
 import { ScreenSize } from '../../models/IDeviceInfo';
 import { deleteFilm, IActionProps } from '../../actions/films/DeleteFilmAction';
 

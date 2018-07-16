@@ -5,7 +5,7 @@ import Store from '../store';
 import IUser from '../models/IUser';
 import { getNode } from '../utilities/mapping';
 import Empty from '../components/generic/Empty';
-import { IDispatch } from '../actions/ActionTypes';
+import { IDispatch } from '../state/actions/ActionTypes';
 import Loading from '../components/generic/Loading';
 import UserView from '../components/users/UserView';
 import { numericIdentifier } from '../utilities/shim';

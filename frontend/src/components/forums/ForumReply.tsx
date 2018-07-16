@@ -5,7 +5,7 @@ import Store from '../../store';
 import IUser from '../../models/IUser';
 import NewPost from '../generic/NewPost';
 import { getItem } from '../../utilities/mapping';
-import { IDispatch } from '../../actions/ActionTypes';
+import { IDispatch } from '../../state/actions/ActionTypes';
 import { IForumThread } from '../../models/forums/IForumThread';
 import { IForumPostUpdate } from '../../models/forums/IForumPost';
 import { postReply } from '../../actions/forums/posts/CreatePostAction';

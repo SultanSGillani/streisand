@@ -8,7 +8,7 @@ import IFilm from '../../models/IFilm';
 import IRelease, { IReleaseUpdate } from '../../models/IRelease';
 import IMediaTypes from '../../models/IMediaTypes';
 import CommandBar, { ICommand } from '../CommandBar';
-import { IDispatch } from '../../actions/ActionTypes';
+import { IDispatch } from '../../state/actions/ActionTypes';
 import ReleaseForm, { IReleaseFormData } from './ReleaseForm';
 import { deleteRelease } from '../../actions/releases/DeleteReleaseAction';
 import { getNodeItems } from '../../utilities/mapping';

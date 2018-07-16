@@ -10,7 +10,7 @@ import Loading from './generic/Loading';
 import TextView from './bbcode/TextView';
 import { getItem } from '../utilities/mapping';
 import TimeElapsed from './generic/TimeElapsed';
-import { IDispatch } from '../actions/ActionTypes';
+import { IDispatch } from '../state/actions/ActionTypes';
 import { getLatestNews } from '../actions/NewsAction';
 import { IForumPost } from '../models/forums/IForumPost';
 import { IForumThread } from '../models/forums/IForumThread';

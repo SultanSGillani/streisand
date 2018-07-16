@@ -4,7 +4,7 @@ import { Card, Form, CardBody, CardFooter, Button, CardTitle } from 'reactstrap'
 
 import Store from '../../store';
 import FilmList from './FilmList';
-import { IDispatch } from '../../actions/ActionTypes';
+import { IDispatch } from '../../state/actions/ActionTypes';
 import { StringInput } from '../generic/inputs/StringInput';
 import { NumericInput } from '../generic/inputs/NumericInput';
 import { searchFilm, IFilmSearchProps } from '../../actions/films/FilmsSearchAction';

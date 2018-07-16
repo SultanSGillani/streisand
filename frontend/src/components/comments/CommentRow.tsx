@@ -7,7 +7,7 @@ import IFilm from '../../models/IFilm';
 import UserPost from '../generic/UserPost';
 import { getItem } from '../../utilities/mapping';
 import { ScreenSize } from '../../models/IDeviceInfo';
-import { IDispatch } from '../../actions/ActionTypes';
+import { IDispatch } from '../../state/actions/ActionTypes';
 import { IComment, ICommentUpdate } from '../../models/IComment';
 import { updateComment } from '../../actions/comments/UpdateCommentAction';
 import { deleteComment, IActionProps } from '../../actions/comments/DeleteCommentAction';

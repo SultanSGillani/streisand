@@ -2,7 +2,7 @@ import * as React from 'react';
 import { connect } from 'react-redux';
 import { Card, CardBody, CardTitle, Form, FormGroup, Label, Input, CardFooter, Button } from 'reactstrap';
 
-import { IDispatch } from '../../actions/ActionTypes';
+import { IDispatch } from '../../state/actions/ActionTypes';
 import { IForumTopic } from '../../models/forums/IForumTopic';
 import { INewForumThreadPayload, createForumThread } from '../../actions/forums/threads/CreateThreadAction';
 

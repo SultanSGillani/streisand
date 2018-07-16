@@ -2,11 +2,11 @@ import * as React from 'react';
 import { connect } from 'react-redux';
 
 import Store from '../../store';
-import { IDispatch } from '../../actions/ActionTypes';
+import { IDispatch } from '../../state/actions/ActionTypes';
 import Loading from '../../components/generic/Loading';
 import ForumView from '../../components/forums/ForumView';
 import ILoadingStatus from '../../models/base/ILoadingStatus';
-import { getForumGroups } from '../../actions/forums/ForumGroupsAction';
+import { getForumGroups } from '../../state/forum/group/actions/ForumGroupsAction';
 
 export type Props = {};
 

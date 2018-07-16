@@ -8,7 +8,7 @@ import ForumPostCell from './ForumPostCell';
 import DeleteCell from '../generic/DeleteCell';
 import EmptyThreadCell from './EmptyThreadCell';
 import { getItem } from '../../utilities/mapping';
-import { IDispatch } from '../../actions/ActionTypes';
+import { IDispatch } from '../../state/actions/ActionTypes';
 import { ScreenSize } from '../../models/IDeviceInfo';
 import IForumThread from '../../models/forums/IForumThread';
 import { IActionProps, deleteForumThread } from '../../actions/forums/threads/DeleteThreadAction';

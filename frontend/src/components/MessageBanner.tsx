@@ -4,8 +4,8 @@ import { Alert, Badge } from 'reactstrap';
 
 import Store from '../store';
 import IMessage from '../models/IMessage';
-import { IDispatch } from '../actions/ActionTypes';
-import { removeError } from '../actions/MessageAction';
+import { IDispatch } from '../state/actions/ActionTypes';
+import { removeError } from '../state/message/actions/MessageAction';
 
 export type Props = {};
 type State = { showMore: boolean };

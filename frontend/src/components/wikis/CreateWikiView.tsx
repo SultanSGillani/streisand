@@ -5,7 +5,7 @@ import { Input, FormGroup } from 'reactstrap';
 import Store from '../../store';
 import { IWikiUpdate } from '../../models/IWiki';
 import CommandBar, { ICommand } from '../CommandBar';
-import { IDispatch } from '../../actions/ActionTypes';
+import { IDispatch } from '../../state/actions/ActionTypes';
 import Editor, { IEditorHandle } from '../bbcode/Editor';
 import { createWiki } from '../../actions/wikis/CreateWikiAction';
 

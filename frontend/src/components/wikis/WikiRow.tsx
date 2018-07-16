@@ -5,7 +5,7 @@ import { connect } from 'react-redux';
 import Store from '../../store';
 import IWiki from '../../models/IWiki';
 import DeleteCell from '../generic/DeleteCell';
-import { IDispatch } from '../../actions/ActionTypes';
+import { IDispatch } from '../../state/actions/ActionTypes';
 import { ScreenSize } from '../../models/IDeviceInfo';
 import { IActionProps, deleteWiki } from '../../actions/wikis/DeleteWikiAction';
 

@@ -3,7 +3,7 @@ import { connect } from 'react-redux';
 
 import Store from '../../store';
 import { IFilmUpdate } from '../../models/IFilm';
-import { IDispatch } from '../../actions/ActionTypes';
+import { IDispatch } from '../../state/actions/ActionTypes';
 import FilmForm, { IFilmFormData } from './FilmForm';
 import { createFilm } from '../../actions/films/CreateFilmAction';
 

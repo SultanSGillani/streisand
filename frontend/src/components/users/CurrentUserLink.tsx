@@ -7,7 +7,7 @@ import { UncontrolledDropdown, DropdownToggle, DropdownMenu, DropdownItem } from
 import Store from '../../store';
 import IUser from '../../models/IUser';
 import { getItem } from '../../utilities/mapping';
-import { IDispatch } from '../../actions/ActionTypes';
+import { IDispatch } from '../../state/actions/ActionTypes';
 import { logout } from '../../actions/auth/LogoutAction';
 import { getCurrentUser } from '../../actions/users/CurrentUserAction';
 

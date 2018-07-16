@@ -2,7 +2,7 @@ import * as React from 'react';
 import { connect } from 'react-redux';
 
 import Store from '../store';
-import { IDispatch } from '../actions/ActionTypes';
+import { IDispatch } from '../state/actions/ActionTypes';
 import { parsePageNumber } from '../utilities/shim';
 import ILoadingStatus, { defaultStatus } from '../models/base/ILoadingStatus';
 import DetachedTorrentsView from '../components/torrents/DetachedTorrentsView';

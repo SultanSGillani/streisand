@@ -4,7 +4,7 @@ import { FormGroup, Input } from 'reactstrap';
 
 import TextView from '../bbcode/TextView';
 import WikiCommandBar from './WikiCommandBar';
-import { IDispatch } from '../../actions/ActionTypes';
+import { IDispatch } from '../../state/actions/ActionTypes';
 import IWiki, { IWikiUpdate } from '../../models/IWiki';
 import Editor, { IEditorHandle } from '../bbcode/Editor';
 import { updateWiki } from '../../actions/wikis/UpdateWikiAction';

@@ -8,7 +8,7 @@ import PeerRow from './PeerRow';
 import Empty from '../generic/Empty';
 import Loading from '../generic/Loading';
 import { ITorrent } from '../../models/ITorrent';
-import { IDispatch } from '../../actions/ActionTypes';
+import { IDispatch } from '../../state/actions/ActionTypes';
 import { ITrackerPeer } from '../../models/ITrackerPeer';
 import { getPeers } from '../../actions/peers/PeersAction';
 import ILoadingStatus from '../../models/base/ILoadingStatus';

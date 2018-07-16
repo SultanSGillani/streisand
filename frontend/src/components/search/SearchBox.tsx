@@ -5,7 +5,7 @@ import { Dropdown, DropdownMenu, DropdownItem, Input } from 'reactstrap';
 
 import Store from '../../store';
 import { debounce } from '../../utilities/async';
-import { IDispatch } from '../../actions/ActionTypes';
+import { IDispatch } from '../../state/actions/ActionTypes';
 import FilmResults, { hasFilmResults } from './FilmResults';
 import { IFilmSearchProps, searchFilm } from '../../actions/films/FilmsSearchAction';
 import { IThreadSearchProps, searchThread } from '../../actions/forums/threads/ThreadSearchAction';

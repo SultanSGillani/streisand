@@ -6,7 +6,7 @@ import Store from '../../store';
 import IFilm from '../../models/IFilm';
 import ITorrent from '../../models/ITorrent';
 import CommandBar, { ICommand } from '../CommandBar';
-import { IDispatch } from '../../actions/ActionTypes';
+import { IDispatch } from '../../state/actions/ActionTypes';
 import { getNodeItems } from '../../utilities/mapping';
 import TorrentSection from '../torrents/TorrentSection';
 import CommentSection from '../comments/CommentSection';

@@ -6,7 +6,7 @@ import { Button, ButtonGroup } from 'reactstrap';
 import globals from '../../utilities/globals';
 import AwesomeIcon from '../generic/AwesomeIcon';
 import { ITorrent } from '../../models/ITorrent';
-import { IDispatch } from '../../actions/ActionTypes';
+import { IDispatch } from '../../state/actions/ActionTypes';
 import { deleteTorrent, IActionProps } from '../../actions/torrents/DeleteTorrentAction';
 
 export type Props = {

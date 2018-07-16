@@ -6,7 +6,7 @@ import Store from '../../store';
 import ForumPostCell from './ForumPostCell';
 import DeleteCell from '../generic/DeleteCell';
 import { ScreenSize } from '../../models/IDeviceInfo';
-import { IDispatch } from '../../actions/ActionTypes';
+import { IDispatch } from '../../state/actions/ActionTypes';
 import IForumTopic from '../../models/forums/IForumTopic';
 import { deleteForumTopic, IActionProps } from '../../actions/forums/topics/DeleteTopicAction';
 

@@ -5,7 +5,7 @@ import Store from '../../store';
 import IInvite from '../../models/IInvite';
 import DeleteCell from '../generic/DeleteCell';
 import TimeElapsed from '../generic/TimeElapsed';
-import { IDispatch } from '../../actions/ActionTypes';
+import { IDispatch } from '../../state/actions/ActionTypes';
 import { ScreenSize } from '../../models/IDeviceInfo';
 import { IActionProps, deleteInvite } from '../../actions/invites/DeleteInviteAction';
 

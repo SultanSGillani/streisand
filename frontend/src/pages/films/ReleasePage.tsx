@@ -1,19 +1,19 @@
 import * as React from 'react';
 import { connect } from 'react-redux';
 
-import Store from '../../store';
+import Store from '../../state/store';
 import IFilm from '../../models/IFilm';
 import IRelease from '../../models/IRelease';
 import { getNode } from '../../utilities/mapping';
 import Empty from '../../components/generic/Empty';
-import { IDispatch } from '../../actions/ActionTypes';
 import Loading from '../../components/generic/Loading';
 import { numericIdentifier } from '../../utilities/shim';
+import { IDispatch } from '../../state/actions/ActionTypes';
 import ILoadingStatus from '../../models/base/ILoadingStatus';
-import { getMediaTypes } from '../../actions/MediaTypeAction';
 import ReleaseView from '../../components/releases/ReleaseView';
-import { getRelease } from '../../actions/releases/ReleaseAction';
-import { getTorrents } from '../../actions/torrents/ReleaseTorrentsAction';
+import { getRelease } from '../../state/release/actions/ReleaseAction';
+import { getTorrents } from '../../state/torrent/actions/FilmTorrentsAction';
+import { getMediaTypes } from '../../state/mediaTypes/actions/MediaTypeAction';
 
 export type Props = {
     params: {
