@@ -1,12 +1,11 @@
 import * as React from 'react';
 import { connect } from 'react-redux';
-import { Card, CardBody, CardTitle, Button, CardFooter } from 'reactstrap';
 
 import Store from '../../store';
 import IUser from '../../models/IUser';
+import NewPost from '../generic/NewPost';
 import { getItem } from '../../utilities/mapping';
 import { IDispatch } from '../../actions/ActionTypes';
-import Editor, { IEditorHandle } from '../bbcode/Editor';
 import { IForumThread } from '../../models/forums/IForumThread';
 import { IForumPostUpdate } from '../../models/forums/IForumPost';
 import { postReply } from '../../actions/forums/posts/CreatePostAction';
@@ -16,7 +15,7 @@ export type Props = {
 };
 
 type ConnectedState = {
-    author?: IUser;
+    currentUser?: IUser;
 };
 
 type ConnectedDispatch = {
@@ -25,36 +24,28 @@ type ConnectedDispatch = {
 
 type CombinedProps = Props & ConnectedDispatch & ConnectedState;
 class ForumReplyComponent extends React.Component<CombinedProps> {
-    private _editorHandle: IEditorHandle;
-
     public render() {
-        const onHandle = (handle: IEditorHandle) => { this._editorHandle = handle; };
-        const onSave = () => {
-            const content = this._editorHandle.getContent();
+        const onSave = (content: string) => {
             this.props.postReply({
                 thread: this.props.thread.id,
                 body: content
             });
         };
+
         return (
-            <Card className="border-primary mb-3">
-                <CardBody>
-                    <CardTitle>Post your reply</CardTitle>
-                    <Editor content={''} size="small" receiveHandle={onHandle} />
-                </CardBody>
-                <CardFooter>
-                    <div className="row m-0 justify-content-end">
-                        <Button className="col-auto" color="primary" onClick={onSave}>Post reply</Button>
-                    </div>
-                </CardFooter>
-            </Card>
+            <NewPost
+                createPost={onSave}
+                saveText="Post reply"
+                author={this.props.currentUser}
+                title="Post a new message for this thread"
+            />
         );
     }
 }
 
 const mapStateToProps = (state: Store.All, props: Props): ConnectedState => {
     return {
-        author: getItem({
+        currentUser: getItem({
             id: state.sealed.currentUser.id,
             byId: state.sealed.user.byId
         })

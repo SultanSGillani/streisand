@@ -16,12 +16,15 @@ type ConnectedState = {
 type CombinedProps = Props & ConnectedState;
 class TimeElapsedComponent extends React.Component<CombinedProps> {
     public render() {
-        if (!this.props.date) {
+        const { date } = this.props;
+        if (!date) {
             return;
         }
+
         const levels = this.props.screenSize > ScreenSize.small ? 2 : 1;
-        const diff = getDateDiff({ past: this.props.date, levels });
-        return diff;
+        const diff = getDateDiff({ past: date, levels });
+        const title = typeof date === 'string' ? date : date.toISOString();
+        return <span title={title}>{diff}</span>;
     }
 }
 

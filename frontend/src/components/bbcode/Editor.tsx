@@ -6,6 +6,7 @@ import EditorCommandBar from './commands/EditorCommandBar';
 import TextEditor, { ITextEditorHandle } from './TextEditor';
 
 export interface IEditorHandle {
+    focusEditor: () => void;
     getContent: () => string;
 }
 
@@ -39,6 +40,11 @@ export default class Editor extends React.Component<Props, State> {
     public componentDidMount() {
         if (this.props.receiveHandle) {
             this.props.receiveHandle({
+                focusEditor: () => {
+                    if (!this.state.preview && this._textEditor) {
+                        return this._textEditor.focusEditor();
+                    }
+                },
                 getContent: () => {
                     if (!this.state.preview && this._textEditor) {
                         return this._textEditor.getContent();

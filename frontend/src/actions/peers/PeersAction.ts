@@ -1,4 +1,3 @@
-
 import IUser from '../../models/IUser';
 import globals from '../../utilities/globals';
 import { get } from '../../utilities/Requestor';

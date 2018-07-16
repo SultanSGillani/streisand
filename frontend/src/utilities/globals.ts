@@ -21,6 +21,7 @@ export default {
         releases: defaultPageSize,
         peers: defaultPageSize,
         simpleSearch: 5,
+        comments: 10,
         posts: 10
     }
 };

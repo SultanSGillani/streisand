@@ -20,8 +20,8 @@ function byId(state: ItemMap = {}, action: Action): ItemMap {
 }
 
 const torrentPagesReducer = getPagesReducer('PEERS');
-type Torrents = { [id: number]: IItemPages };
-function byTorrentId(state: Torrents = {}, action: Action): Torrents {
+type Peers = { [id: number]: IItemPages };
+function byTorrentId(state: Peers = {}, action: Action): Peers {
     switch (action.type) {
         case 'REQUEST_PEERS':
         case 'RECEIVED_PEERS':
