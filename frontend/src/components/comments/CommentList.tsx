@@ -53,15 +53,19 @@ class CommentListComponent extends React.Component<CombinedProps> {
 
     public render() {
         const { film, comments, page, total, pageSize, changePage } = this.props;
-        if (!comments.length && this.props.status.loading) {
-            return <Loading />;
-        }
 
         const onSave = (content: string) => this.props.createComment(film.id, content);
         const pager = <Pager onPageChange={changePage} total={total} page={page} pageSize={pageSize} />;
         const rows = comments.map((comment: IComment) => {
             return (<CommentRow film={film} comment={comment} key={comment.id} />);
         });
+        const commentList = !comments.length && this.props.status.loading ? <Loading /> : (
+            <>
+                {pager}
+                {rows}
+                {pager}
+            </>
+        );
         return (
             <>
                 <h2>Comments</h2>
@@ -71,9 +75,7 @@ class CommentListComponent extends React.Component<CombinedProps> {
                     author={this.props.currentUser}
                     title="Post a new comment for this film"
                 />
-                {pager}
-                {rows}
-                {pager}
+                {commentList}
             </>
         );
     }
