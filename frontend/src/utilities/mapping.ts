@@ -1,12 +1,12 @@
 import IItemNode from '../models/base/IItemNode';
 import { INodeMap } from '../models/base/ItemSet';
-import { IItemPage } from '../models/base/IPagedItemSet';
+import { IItemPage, IItemPages } from '../models/base/IPagedItemSet';
 import { defaultStatus } from '../models/base/ILoadingStatus';
 
 export interface IGetItemsProps<T> {
     page: number;
     pages: { [page: number]: IItemPage };
-    byId: { [id: number]: T};
+    byId: { [id: number]: T };
 }
 
 /**
@@ -47,15 +47,15 @@ export function getNodeItems<T>(props: IGetNodeItemsProps<T>): T[] {
     return items;
 }
 
-/**
- * Returns the item for the given item assuming the item was loaded.
- */
 export interface IGetItemProps<T> {
     id?: number | null;
     fallback?: boolean;
     byId: INodeMap<T>;
 }
 
+/**
+ * Returns the item for the given item assuming the item was loaded.
+ */
 export function getItem<T>(props: IGetItemProps<T>): T | undefined {
     const node = props.byId[props.id as number];
     if (node && node.item) {
@@ -67,4 +67,30 @@ export function getItem<T>(props: IGetItemProps<T>): T | undefined {
 
 export function getNode<T>(props: IGetItemProps<T>): IItemNode<T> {
     return props.byId[props.id as number] || { status: defaultStatus };
+}
+
+export interface IGetItemPageProps {
+    page: number;
+    list?: IItemPages;
+}
+
+export function getItemPage(props: IGetItemPageProps): IItemPage {
+    if (props.list) {
+        const page = props.list.pages[props.page];
+        if (page) {
+            return page;
+        }
+    }
+    return {
+        items: [],
+        status: defaultStatus
+    };
+}
+
+export function getList(list?: IItemPages): IItemPages {
+    return list ? list : {
+        count: 0,
+        pages: [],
+        pageSize: 0
+    };
 }

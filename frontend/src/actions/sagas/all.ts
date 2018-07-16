@@ -11,6 +11,7 @@ import { allReleaseSaga } from '../releases';
 import { mediaTypeSaga } from '../MediaTypeAction';
 import { allInviteSaga } from '../invites';
 import { allPeerSaga } from '../peers';
+import { allCommentSaga } from '../comments';
 
 export default function* rootSaga() {
     yield all([
@@ -24,6 +25,7 @@ export default function* rootSaga() {
         newsSaga(),
         mediaTypeSaga(),
         allInviteSaga(),
-        allPeerSaga()
+        allPeerSaga(),
+        allCommentSaga()
     ]);
 }
