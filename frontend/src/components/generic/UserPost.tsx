@@ -41,7 +41,10 @@ export default class UserPost extends React.Component<Props, State> {
 
         const onEdit = () => this.setState({ editMode: true });
         const onCancel = () => this.setState({ editMode: false });
-        const onHandle = (handle: IEditorHandle) => { this._editorHandle = handle; };
+        const onHandle = (handle: IEditorHandle) => {
+            handle.focusEditor();
+            this._editorHandle = handle;
+        };
         const onSave = () => {
             this.props.updatePost(this._editorHandle.getContent());
             this.setState({ editMode: false });

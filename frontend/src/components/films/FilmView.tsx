@@ -11,7 +11,6 @@ import { getNodeItems } from '../../utilities/mapping';
 import TorrentSection from '../torrents/TorrentSection';
 import CommentSection from '../comments/CommentSection';
 import { deleteFilm } from '../../actions/films/DeleteFilmAction';
-import { createComment } from '../../actions/comments/CreateCommentAction';
 
 export type Props = {
     film: IFilm;
@@ -26,7 +25,6 @@ type ConnectedDispatch = {
     editFilm: (id: number) => void;
     deleteFilm: (id: number) => void;
     uploadTorrent: (id: number) => void;
-    createComment: (film: number, text: string) => void;
 };
 
 const styles: { [key: string]: any } = {
@@ -60,11 +58,6 @@ class FilmViewComponent extends React.Component<CombinedProps> {
                 label: 'Delete',
                 status: 'danger',
                 onExecute: () => { this.props.deleteFilm(film.id); }
-            }, {
-                label: 'Comment',
-                onExecute: () => {
-                    this.props.createComment(film.id, 'Something');
-                }
             }
         ];
         const urlPrefix = `/film/${film.id}`;
@@ -102,8 +95,7 @@ const mapStateToProps = (state: Store.All, props: Props): ConnectedState => {
 const mapDispatchToProps = (dispatch: IDispatch): ConnectedDispatch => ({
     deleteFilm: (id: number) => dispatch(deleteFilm({ id })),
     editFilm: (id: number) => dispatch(push(`/film/${id}/edit`)),
-    uploadTorrent: (id: number) => dispatch(push(`/torrents/upload/${id}`)),
-    createComment: (film: number, text: string) => dispatch(createComment({ film, text }))
+    uploadTorrent: (id: number) => dispatch(push(`/torrents/upload/${id}`))
 });
 
 const FilmView: React.ComponentClass<Props> =

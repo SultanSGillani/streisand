@@ -6,6 +6,7 @@ import { post } from '../../utilities/Requestor';
 import { generateAuthFetch, generateSage } from '../sagas/generators';
 import { ICommentCreation, IComment, ICommentResponse } from '../../models/IComment';
 import { transformComment } from './transforms';
+import { invalidate } from './CommentsAction';
 
 interface IActionProps extends ICommentCreation { }
 
@@ -17,10 +18,14 @@ type CreateCommentAction = RequestNewComment | ReceivedNewComment | FailedNewCom
 export default CreateCommentAction;
 type Action = CreateCommentAction;
 
-function* received(response: ICommentResponse) {
+function* received(response: ICommentResponse, props: IActionProps) {
     const info = transformComment(response);
     yield put<Action>({ type: 'RECEIVED_NEW_COMMENT', comment: info.comment });
-    // yield put(push(`/wiki/${wiki.id}`));
+
+    // Invalidate the first page of comments
+    yield put(invalidate({ id: props.film, page: 1 }));
+    // TODO: Navigate to the first page of comments
+    // yield put(push(`/film/${props.film}`));
 }
 
 function failure(props: IActionProps): Action {

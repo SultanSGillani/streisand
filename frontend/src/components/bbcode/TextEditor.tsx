@@ -1,6 +1,7 @@
 import * as React from 'react';
 
 export interface ITextEditorHandle {
+    focusEditor: () => void;
     getContent: () => string;
     injectTag: (tag: string, value?: string) => void;
     injectText: (text: string, cursor?: number) => void;
@@ -34,6 +35,11 @@ export default class TextEditor extends React.Component<Props, State> {
     public componentDidMount() {
         if (this.props.receiveHandle) {
             this.props.receiveHandle({
+                focusEditor: () => {
+                    if (this._textArea) {
+                        this._textArea.focus();
+                    }
+                },
                 getContent: () => {
                     return this.state.content;
                 },

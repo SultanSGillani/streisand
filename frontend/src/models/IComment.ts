@@ -32,6 +32,7 @@ export interface ICommentCreation {
 
 export interface ICommentUpdate {
     id: number;
+    film: number;
     text: string;
 }
 

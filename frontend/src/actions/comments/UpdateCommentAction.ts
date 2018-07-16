@@ -5,7 +5,7 @@ import { putRequest } from '../../utilities/Requestor';
 import { generateAuthFetch, generateSage } from '../sagas/generators';
 import { ICommentUpdate, ICommentResponse, IComment } from '../../models/IComment';
 
-interface IActionProps extends ICommentUpdate { id: number; }
+interface IActionProps extends ICommentUpdate { }
 
 export type RequestCommentUpdate = { type: 'REQUEST_COMMENT_UPDATE', props: IActionProps };
 export type ReceivedtCommentUpdate = { type: 'RECEIVED_COMMENT_UPDATE', comment: IComment };
@@ -24,8 +24,8 @@ function failure(props: IActionProps): Action {
     return { type: 'FAILED_COMMENT_UPDATE', props };
 }
 
-export function updateComment(id: number, text: string): Action {
-    return { type: 'REQUEST_COMMENT_UPDATE', props: { id, text } };
+export function updateComment(update: ICommentUpdate): Action {
+    return { type: 'REQUEST_COMMENT_UPDATE', props: update };
 }
 
 const errorPrefix = (props: IActionProps) => `Updating a comment (${props.id}) failed`;

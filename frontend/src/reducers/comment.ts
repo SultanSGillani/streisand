@@ -33,6 +33,7 @@ function byFilmId(state: Comments = {}, action: Action): Comments {
         case 'REQUEST_COMMENTS':
         case 'RECEIVED_COMMENTS':
         case 'FAILED_COMMENTS':
+        case 'INVALIDATE_COMMENTS':
             const currentItemSet = state[action.props.id];
             const newItemSet = filmPagesReducer(currentItemSet, action);
             return objectAssign({}, state, { [action.props.id]: newItemSet });

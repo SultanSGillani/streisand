@@ -5,12 +5,12 @@ import Store from '../../store';
 import IUser from '../../models/IUser';
 import IFilm from '../../models/IFilm';
 import UserPost from '../generic/UserPost';
-import { IComment } from '../../models/IComment';
 import { getItem } from '../../utilities/mapping';
 import { ScreenSize } from '../../models/IDeviceInfo';
 import { IDispatch } from '../../actions/ActionTypes';
-import { deleteComment, IActionProps } from '../../actions/comments/DeleteCommentAction';
+import { IComment, ICommentUpdate } from '../../models/IComment';
 import { updateComment } from '../../actions/comments/UpdateCommentAction';
+import { deleteComment, IActionProps } from '../../actions/comments/DeleteCommentAction';
 
 export type Props = {
     film: IFilm;
@@ -24,24 +24,28 @@ type ConnectedState = {
 
 type ConnectedDispatch = {
     deleteComment: (props: IActionProps) => void;
-    updateComment: (id: number, content: string) => void;
+    updateComment: (update: ICommentUpdate) => void;
 };
 
 type CombinedProps = Props & ConnectedDispatch & ConnectedState;
 class CommentRowComponent extends React.Component<CombinedProps> {
     public render() {
-        const { comment, user } = this.props;
+        const { film, comment, user } = this.props;
 
         const onDelete = () => {
             this.props.deleteComment({
                 id: comment.id,
                 currentPage: 1,
-                film: this.props.film.id
+                film: film.id
             });
          };
 
         const onUpdate = (content: string) => {
-            this.props.updateComment(comment.id, content);
+            this.props.updateComment({
+                id: comment.id,
+                film: film.id,
+                text: content
+            });
          };
 
         return (
@@ -68,7 +72,7 @@ const mapStateToProps = (state: Store.All, props: Props): ConnectedState => {
 
 const mapDispatchToProps = (dispatch: IDispatch): ConnectedDispatch => ({
     deleteComment: (props: IActionProps) => dispatch(deleteComment(props)),
-    updateComment: (id: number, content: string) => dispatch(updateComment(id, content))
+    updateComment: (update: ICommentUpdate) => dispatch(updateComment(update))
 });
 
 const CommentRow: React.ComponentClass<Props> =

@@ -5,12 +5,15 @@ import Pager from '../Pager';
 import Store from '../../store';
 import CommentRow from './CommentRow';
 import IFilm from '../../models/IFilm';
+import IUser from '../../models/IUser';
 import Loading from '../generic/Loading';
+import NewPost from '../generic/NewPost';
 import { IComment } from '../../models/IComment';
 import { IDispatch } from '../../actions/ActionTypes';
 import ILoadingStatus from '../../models/base/ILoadingStatus';
 import { getComments } from '../../actions/comments/CommentsAction';
-import { getNodeItems, getList, getItemPage } from '../../utilities/mapping';
+import { createComment } from '../../actions/comments/CreateCommentAction';
+import { getNodeItems, getList, getItemPage, getItem } from '../../utilities/mapping';
 
 export type Props = {
     page: number;
@@ -21,11 +24,13 @@ export type Props = {
 type ConnectedState = {
     total: number;
     pageSize: number;
+    currentUser?: IUser;
     comments: IComment[];
     status: ILoadingStatus;
 };
 type ConnectedDispatch = {
     getComments: (id: number, page?: number) => void;
+    createComment: (film: number, text: string) => void;
 };
 
 type CombinedProps = Props & ConnectedDispatch & ConnectedState;
@@ -52,6 +57,7 @@ class CommentListComponent extends React.Component<CombinedProps> {
             return <Loading />;
         }
 
+        const onSave = (content: string) => this.props.createComment(film.id, content);
         const pager = <Pager onPageChange={changePage} total={total} page={page} pageSize={pageSize} />;
         const rows = comments.map((comment: IComment) => {
             return (<CommentRow film={film} comment={comment} key={comment.id} />);
@@ -59,6 +65,12 @@ class CommentListComponent extends React.Component<CombinedProps> {
         return (
             <>
                 <h2>Comments</h2>
+                <NewPost
+                    createPost={onSave}
+                    saveText="Post comment"
+                    author={this.props.currentUser}
+                    title="Post a new comment for this film"
+                />
                 {pager}
                 {rows}
                 {pager}
@@ -72,8 +84,12 @@ const mapStateToProps = (state: Store.All, props: Props): ConnectedState => {
     const page = getItemPage({ list, page: props.page });
     return {
         total: list.count,
-        pageSize: list.pageSize,
         status: page.status,
+        pageSize: list.pageSize,
+        currentUser: getItem({
+            id: state.sealed.currentUser.id,
+            byId: state.sealed.user.byId
+        }),
         comments: getNodeItems({
             page: props.page,
             byId: state.sealed.comment.byId,
@@ -83,7 +99,8 @@ const mapStateToProps = (state: Store.All, props: Props): ConnectedState => {
 };
 
 const mapDispatchToProps = (dispatch: IDispatch): ConnectedDispatch => ({
-    getComments: (id: number, page?: number) => dispatch(getComments(id, page))
+    getComments: (id: number, page?: number) => dispatch(getComments(id, page)),
+    createComment: (film: number, text: string) => dispatch(createComment({ film, text }))
 });
 
 const CommentList: React.ComponentClass<Props> =
