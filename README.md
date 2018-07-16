@@ -14,6 +14,8 @@ A private BitTorrent tracker written with Python, Django, Redis, and React.
   [Windows](https://store.docker.com/editions/community/docker-ce-desktop-windows),
   [compose](https://docs.docker.com/compose/install/))
   
+  * Note: For ElasticSearch you must set the following settings: "sysctl -w vm.max_map_count=262144"
+  
 
 
 ### Environment Files:
