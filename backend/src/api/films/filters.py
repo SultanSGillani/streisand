@@ -27,6 +27,7 @@ class CollectionFilter(filters.FilterSet):
     class Meta:
         model = Collection
         fields = {
+            'id': ['exact', 'in'],
             'films__title': ['iexact', 'istartswith', 'icontains'],
             'creator__username': ['icontains', 'istartswith'],
             'title': ['iexact', 'istartswith'],
