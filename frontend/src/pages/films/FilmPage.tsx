@@ -12,7 +12,7 @@ import { IDispatch } from '../../state/actions/ActionTypes';
 import ILoadingStatus from '../../models/base/ILoadingStatus';
 import { getFilm } from '../../state/film/actions/FilmAction';
 import UpdateFilmView from '../../components/films/UpdateFilmView';
-import { getTorrents } from '../../state/torrent/actions/ReleaseTorrentsAction';
+import { getTorrents } from '../../state/torrent/actions/FilmTorrentsAction';
 
 export type Props = {
     params: {

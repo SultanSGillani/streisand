@@ -12,8 +12,8 @@ import { IDispatch } from '../../state/actions/ActionTypes';
 import ILoadingStatus from '../../models/base/ILoadingStatus';
 import ReleaseView from '../../components/releases/ReleaseView';
 import { getRelease } from '../../state/release/actions/ReleaseAction';
-import { getTorrents } from '../../state/torrent/actions/FilmTorrentsAction';
 import { getMediaTypes } from '../../state/mediaTypes/actions/MediaTypeAction';
+import { getTorrents } from '../../state/torrent/actions/ReleaseTorrentsAction';
 
 export type Props = {
     params: {
