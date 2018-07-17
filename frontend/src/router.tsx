@@ -20,6 +20,9 @@ import InviteView from './components/invites/InviteView';
 import WikiPage from './pages/wikis/WikiPage';
 import WikisPage from './pages/wikis/WikisPage';
 
+import CollectionPage from './pages/collections/CollectionPage';
+import CollectionsPage from './pages/collections/CollectionsPage';
+
 import FilmPage from './pages/films/FilmPage';
 import FilmsPage from './pages/films/FilmsPage';
 import CreateFilmView from './components/films/CreateFilmView';
@@ -33,6 +36,7 @@ import ForumTopicPage from './pages/forums/ForumTopicPage';
 import ForumThreadPage from './pages/forums/ForumThreadPage';
 import CreateWikiView from './components/wikis/CreateWikiView';
 import SearchFilmView from './components/films/SearchFilmView';
+import CreateCollectionView from './components/collections/CreateCollectionView';
 
 export function createRoutes(store: ReduxStore<Store.All>) {
     function requireAuth(nextState: RouterState, replace: RedirectFunction) {
@@ -90,6 +94,12 @@ export function createRoutes(store: ReduxStore<Store.All>) {
                     <Redirect from="/wikis" to="/wikis/1" />
                     <Route path="/wiki/:wikiId" component={WikiPage} />
                     <Redirect from="/wiki" to="/wikis/1" />
+
+                    <Route path="/collections/create" component={CreateCollectionView} />
+                    <Route path="/collections/:page" component={CollectionsPage} />
+                    <Redirect from="/collections" to="/collections/1" />
+                    <Route path="/collection/:collectionId" component={CollectionPage} />
+                    <Redirect from="/wiki" to="/collections/1" />
 
                     <Route path="/forum" component={ForumPage} />
                     <Route path="/forum/topic/:topicId/:page" component={ForumTopicPage} />

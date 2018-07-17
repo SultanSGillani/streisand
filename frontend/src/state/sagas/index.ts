@@ -11,6 +11,7 @@ import { allInviteSaga } from '../invite/sagas';
 import { allTorrentSaga } from '../torrent/sagas';
 import { allReleaseSaga } from '../release/sagas';
 import { allCommentSaga } from '../comment/sagas';
+import { allCollectionSaga } from '../collection/sagas';
 import { allMediaTypeSaga } from '../mediaTypes/sagas';
 
 export default function* rootSaga() {
@@ -26,6 +27,7 @@ export default function* rootSaga() {
         allTorrentSaga(),
         allReleaseSaga(),
         allCommentSaga(),
+        allCollectionSaga(),
         allMediaTypeSaga()
     ]);
 }

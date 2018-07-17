@@ -14,10 +14,12 @@ import invite from '../invite/reducer';
 import torrent from '../torrent/reducer';
 import release from '../release/reducer';
 import comment from '../comment/reducer';
+import collection from '../collection/reducer';
 
 const combined = combineReducers<ISealedStore>({
     auth,
     user,
+    collection,
     film,
     torrent,
     wiki,

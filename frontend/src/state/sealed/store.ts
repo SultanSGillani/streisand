@@ -10,6 +10,8 @@ import { IReleaseStore } from '../release/store';
 import { IInviteStore } from '../invite/store';
 import { IPeerStore } from '../peer/store';
 import { ICommentStore } from '../comment/store';
+import { ICollectionStore } from '../collection/store';
+
 
 export interface ISealedStore {
     auth: IAuthStore;
@@ -23,4 +25,5 @@ export interface ISealedStore {
     invite: IInviteStore;
     peer: IPeerStore;
     comment: ICommentStore;
+    collection: ICollectionStore;
 }

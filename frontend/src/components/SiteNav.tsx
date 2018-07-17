@@ -65,6 +65,7 @@ class SiteNavComponent extends React.Component<CombinedProps, State> {
                 <NavItem><LinkContainer to="/films"><NavLink>Films</NavLink></LinkContainer></NavItem>
                 <NavItem><LinkContainer to="/wikis"><NavLink>Wikis</NavLink></LinkContainer></NavItem>
                 <NavItem><LinkContainer to="/forum"><NavLink>Forum</NavLink></LinkContainer></NavItem>
+                <NavItem><LinkContainer to="/collections"><NavLink>Collections</NavLink></LinkContainer></NavItem>
             </Nav>
         );
     }

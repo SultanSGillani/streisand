@@ -13,6 +13,7 @@ export default {
     apiUrl: `${baseUrl}/api/v1`,
     pageSize: {
         wikis: defaultPageSize,
+        collections: defaultPageSize,
         films: defaultPageSize,
         torrents: defaultPageSize,
         filmTorrents: defaultPageSize,
