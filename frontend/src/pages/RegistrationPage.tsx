@@ -2,10 +2,10 @@ import * as React from 'react';
 import { connect } from 'react-redux';
 import { Card, Form, FormGroup, Input, Label, CardBody, CardFooter, Button, CardTitle } from 'reactstrap';
 
-import { IDispatch } from '../actions/ActionTypes';
-import { showError } from '../actions/MessageAction';
+import { IDispatch } from '../state/actions/ActionTypes';
+import { showError } from '../state/message/actions/MessageAction';
 import { StringInput } from '../components/generic/inputs/StringInput';
-import { register, IActionProps } from '../actions/auth/RegisterAction';
+import { register, IActionProps } from '../state/auth/actions/RegisterAction';
 
 export type Props = {
     params: {

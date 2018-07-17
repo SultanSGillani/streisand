@@ -1,11 +1,11 @@
 import * as React from 'react';
 import { Card, Table, CardText } from 'reactstrap';
 
-import DataSize from '../../generic/DataSize';
-import { ITorrent, ITorrentFile } from '../../../models/ITorrent';
 import IUser from '../../../models/IUser';
 import UserLink from '../../links/UserLink';
+import DataSize from '../../generic/DataSize';
 import TimeElapsed from '../../generic/TimeElapsed';
+import { ITorrent, ITorrentFile } from '../../../models/ITorrent';
 
 export interface ITorrentFilesProps {
     torrent: ITorrent;

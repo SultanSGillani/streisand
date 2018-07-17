@@ -1,12 +1,12 @@
 import * as React from 'react';
 import { connect } from 'react-redux';
 
-import Store from '../../store';
-import { IDispatch } from '../../actions/ActionTypes';
+import Store from '../../state/store';
 import { parsePageNumber } from '../../utilities/shim';
 import Loading from '../../components/generic/Loading';
 import WikisView from '../../components/wikis/WikisView';
-import { getWikis } from '../../actions/wikis/WikisAction';
+import { IDispatch } from '../../state/actions/ActionTypes';
+import { getWikis } from '../../state/wiki/actions/WikisAction';
 import ILoadingStatus, { defaultStatus } from '../../models/base/ILoadingStatus';
 
 export type Props = {

@@ -2,9 +2,9 @@ import * as React from 'react';
 import { connect } from 'react-redux';
 import { Card, CardBody, CardTitle, Form, FormGroup, Label, Input, CardFooter, Button } from 'reactstrap';
 
-import { IDispatch } from '../../actions/ActionTypes';
+import { IDispatch } from '../../state/actions/ActionTypes';
 import { IForumGroup } from '../../models/forums/IForumGroup';
-import { INewForumTopicPayload, createForumTopic } from '../../actions/forums/topics/CreateTopicAction';
+import { INewForumTopicPayload, createForumTopic } from '../../state/forum/topic/actions/CreateTopicAction';
 
 export type Props = {
     groups: IForumGroup[];

@@ -4,7 +4,7 @@ import { push } from 'react-router-redux';
 
 import FilmList from './FilmList';
 import CommandBar, { ICommand } from '../CommandBar';
-import { IDispatch } from '../../actions/ActionTypes';
+import { IDispatch } from '../../state/actions/ActionTypes';
 
 export type Props = {
     page: number;

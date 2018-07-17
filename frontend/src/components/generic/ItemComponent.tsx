@@ -6,7 +6,7 @@ import { INodeMap } from '../../models/base/ItemSet';
 import ILoadingStatus from '../../models/base/ILoadingStatus';
 import { numericIdentifier } from '../../utilities/shim';
 import { getNode } from '../../utilities/mapping';
-import { IDispatch } from '../../actions/ActionTypes';
+import { IDispatch } from '../../state/actions/ActionTypes';
 
 export interface IItemComponentOptions<T> {
     getId: () => string;
