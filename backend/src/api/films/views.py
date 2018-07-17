@@ -2,16 +2,15 @@
 
 from django_filters.rest_framework import DjangoFilterBackend
 
-from rest_framework import response, status
+from rest_framework import response, status, mixins
 from rest_framework.permissions import IsAuthenticated
-from rest_framework.viewsets import ModelViewSet
+from rest_framework.viewsets import ModelViewSet, GenericViewSet
 
-from api.pagination import DetailPagination
 from films.models import Film, Collection, CollectionComment, FilmComment
 
 from .filters import FilmFilter, CollectionFilter, FilmCommentFilter, CollectionCommentFilter
-from .serializers import AdminFilmSerializer, CollectionSerializer, FilmCommentSerializer, \
-    CollectionCommentSerializer, PublicFilmSerializer
+from .serializers import AdminFilmSerializer, CollectionListSerializer, FilmCommentSerializer, \
+    CollectionCommentSerializer, PublicFilmSerializer, CollectionCreateSerializer
 
 
 class CollectionCommentViewSet(ModelViewSet):
@@ -60,36 +59,40 @@ class FilmCommentViewSet(ModelViewSet):
         return response.Response(status=status.HTTP_400_BAD_REQUEST)
 
 
-class CollectionViewSet(ModelViewSet):
+class CollectionViewSet(mixins.ListModelMixin, mixins.RetrieveModelMixin, GenericViewSet):
     """
     API endpoint that allows film-collections to be viewed or edited.
     """
     permission_classes = [IsAuthenticated]
-    serializer_class = CollectionSerializer
-    pagination_class = DetailPagination
+    serializer_class = CollectionListSerializer
     queryset = Collection.objects.all().select_related(
         'creator',
     ).prefetch_related(
         'films',
         'films__genre_tags',
-        'films__lists',
-        'films__comments',
-        'comments',
-        'comments__author',
     ).order_by(
         '-id',
-    ).distinct(
-        'id'
     )
+
     filter_backends = [DjangoFilterBackend]
     filter_class = CollectionFilter
 
-    def create(self, request, *args, **kwargs):
-        serializer = self.get_serializer(data=request.data)
-        if serializer.is_valid():
-            serializer.save(creator=self.request.user)
-            return response.Response(data=serializer.data)
-        return response.Response(status=status.HTTP_400_BAD_REQUEST)
+
+class CollectionCreateViewSet(mixins.RetrieveModelMixin, mixins.UpdateModelMixin, mixins.CreateModelMixin,
+                              mixins.DestroyModelMixin, GenericViewSet):
+    """
+    API endpoint that allows film-collections to be viewed or edited.
+    """
+    permission_classes = [IsAuthenticated]
+    serializer_class = CollectionCreateSerializer
+    queryset = Collection.objects.all().select_related(
+        'creator',
+    ).prefetch_related(
+        'films',
+        'films__genre_tags',
+    ).order_by(
+        '-id',
+    )
 
 
 class FilmViewSet(ModelViewSet):
