@@ -1,16 +1,16 @@
 import * as React from 'react';
 import { connect } from 'react-redux';
 
-import Store from '../../store';
+import Store from '../../state/store';
 import IUser from '../../models/IUser';
 import IFilm from '../../models/IFilm';
 import UserPost from '../generic/UserPost';
 import { getItem } from '../../utilities/mapping';
 import { ScreenSize } from '../../models/IDeviceInfo';
-import { IDispatch } from '../../actions/ActionTypes';
+import { IDispatch } from '../../state/actions/ActionTypes';
 import { IComment, ICommentUpdate } from '../../models/IComment';
-import { updateComment } from '../../actions/comments/UpdateCommentAction';
-import { deleteComment, IActionProps } from '../../actions/comments/DeleteCommentAction';
+import { updateComment } from '../../state/comment/actions/UpdateCommentAction';
+import { deleteComment, IActionProps } from '../../state/comment/actions/DeleteCommentAction';
 
 export type Props = {
     film: IFilm;

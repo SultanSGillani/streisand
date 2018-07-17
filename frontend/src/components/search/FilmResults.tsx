@@ -3,7 +3,7 @@ import { connect } from 'react-redux';
 import { DropdownItem } from 'reactstrap';
 import { LinkContainer } from 'react-router-bootstrap';
 
-import Store from '../../store';
+import Store from '../../state/store';
 import IFilm from '../../models/IFilm';
 import { getNodeItems } from '../../utilities/mapping';
 import ILoadingStatus, { defaultStatus } from '../../models/base/ILoadingStatus';

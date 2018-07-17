@@ -2,10 +2,10 @@ import * as React from 'react';
 import { connect } from 'react-redux';
 import { Card, CardBody, Form, CardFooter, Button } from 'reactstrap';
 
-import Store from '../../store';
-import { IDispatch } from '../../actions/ActionTypes';
+import Store from '../../state/store';
+import { IDispatch } from '../../state/actions/ActionTypes';
 import { StringInput } from '../generic/inputs/StringInput';
-import { sendInvite } from '../../actions/invites/CreateInviteAction';
+import { sendInvite } from '../../state/invite/actions/CreateInviteAction';
 
 export type Props = {};
 

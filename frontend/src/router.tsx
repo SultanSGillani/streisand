@@ -2,7 +2,7 @@ import * as React from 'react';
 import { Store as ReduxStore } from 'redux';
 import { Route, Redirect, RouterState, RedirectFunction } from 'react-router';
 
-import Store from './store';
+import Store from './state/store';
 
 import App from './pages/App';
 import Themes from './components/Themes';
