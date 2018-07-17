@@ -44,7 +44,7 @@ class CommentRowComponent extends React.Component<CombinedProps> {
             this.props.updateComment({
                 id: comment.id,
                 film: film.id,
-                text: content
+                body: content
             });
          };
 
