@@ -17,6 +17,7 @@ class FilmCommentSerializer(AllowFieldLimitingMixin, serializers.ModelSerializer
       We are returning the author into a foreign key representation, and string representation.
       """
     author = DisplayUserSerializer(read_only=True)
+    body = serializers.CharField(source='text')
 
     class Meta:
         model = FilmComment
@@ -24,7 +25,7 @@ class FilmCommentSerializer(AllowFieldLimitingMixin, serializers.ModelSerializer
             'id',
             'film',
             'author',
-            'text',
+            'body',
             'created_at',
             'modified_at'
         )
@@ -39,6 +40,7 @@ class CollectionCommentSerializer(AllowFieldLimitingMixin, serializers.ModelSeri
     Same as the Film Comment Serializer
     """
     author = DisplayUserSerializer(read_only=True)
+    body = serializers.CharField(source='text')
 
     class Meta:
         model = CollectionComment

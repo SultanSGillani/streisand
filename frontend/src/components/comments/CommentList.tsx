@@ -30,7 +30,7 @@ type ConnectedState = {
 };
 type ConnectedDispatch = {
     getComments: (id: number, page?: number) => void;
-    createComment: (film: number, text: string) => void;
+    createComment: (film: number, body: string) => void;
 };
 
 type CombinedProps = Props & ConnectedDispatch & ConnectedState;
@@ -102,7 +102,7 @@ const mapStateToProps = (state: Store.All, props: Props): ConnectedState => {
 
 const mapDispatchToProps = (dispatch: IDispatch): ConnectedDispatch => ({
     getComments: (id: number, page?: number) => dispatch(getComments(id, page)),
-    createComment: (film: number, text: string) => dispatch(createComment({ film, text }))
+    createComment: (film: number, body: string) => dispatch(createComment({ film, body }))
 });
 
 const CommentList: React.ComponentClass<Props> =
