@@ -1,4 +1,4 @@
-import auth, { initialState } from '../../state/auth/reducer';
+import auth, { initialState } from '../reducer';
 
 describe('reducers/auth', () => {
     it ('returns empty state on "RECEIVED_LOGOUT"', () => {
