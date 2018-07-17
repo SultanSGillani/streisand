@@ -11,7 +11,7 @@ export interface ICommentResponse {
         username: string;
         userClass: string;
     };
-    text: string;
+    body: string;
     createdAt: string;
     modifiedAt: string;
 }
@@ -27,13 +27,13 @@ export interface IComment {
 
 export interface ICommentCreation {
     film: number;
-    text: string;
+    body: string;
 }
 
 export interface ICommentUpdate {
     id: number;
     film: number;
-    text: string;
+    body: string;
 }
 
 export default IComment;
