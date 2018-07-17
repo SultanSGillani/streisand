@@ -3,11 +3,11 @@ import { Table } from 'reactstrap';
 import { connect } from 'react-redux';
 
 import Pager from '../Pager';
-import Store from '../../store';
+import InviteRow from './InviteRow';
+import Store from '../../state/store';
+import IInvite from '../../models/IInvite';
 import { ScreenSize } from '../../models/IDeviceInfo';
 import { getNodeItems } from '../../utilities/mapping';
-import IInvite from '../../models/IInvite';
-import InviteRow from './InviteRow';
 
 export type Props = {
     page: number;

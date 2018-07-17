@@ -2,7 +2,7 @@ import * as React from 'react';
 import { Table } from 'reactstrap';
 import { connect } from 'react-redux';
 
-import Store from '../../store';
+import Store from '../../state/store';
 import ForumTopicRow from './ForumTopicRow';
 import { ScreenSize } from '../../models/IDeviceInfo';
 import IForumGroup from '../../models/forums/IForumGroup';
@@ -63,7 +63,7 @@ class ForumGroupComponent extends React.Component<CombinedProps> {
 
 const mapStateToProps = (state: Store.All, props: Props): ConnectedState => {
     const topics = (props.group.topics || []).map((topicId: number) => {
-        return state.sealed.forums.topics.byId[topicId];
+        return state.sealed.forum.topic.byId[topicId];
     });
     return {
         topics: topics as IForumTopic[],

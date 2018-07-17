@@ -1,15 +1,15 @@
 import * as React from 'react';
 import { connect } from 'react-redux';
 
-import Store from '../../store';
+import Store from '../../state/store';
 import IUser from '../../models/IUser';
 import UserPost from '../generic/UserPost';
 import { getItem } from '../../utilities/mapping';
 import { ScreenSize } from '../../models/IDeviceInfo';
-import { IDispatch } from '../../actions/ActionTypes';
 import IForumPost from '../../models/forums/IForumPost';
-import { updatePost } from '../../actions/forums/posts/UpdatePostAction';
-import { IActionProps, deleteForumPost } from '../../actions/forums/posts/DeletePostAction';
+import { IDispatch } from '../../state/actions/ActionTypes';
+import { updatePost } from '../../state/forum/post/actions/UpdatePostAction';
+import { deleteForumPost, IActionProps } from '../../state/forum/post/actions/DeletePostAction';
 
 export type Props = {
     page: number;

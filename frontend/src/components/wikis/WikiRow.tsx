@@ -2,12 +2,12 @@ import * as React from 'react';
 import { Link } from 'react-router';
 import { connect } from 'react-redux';
 
-import Store from '../../store';
+import Store from '../../state/store';
 import IWiki from '../../models/IWiki';
 import DeleteCell from '../generic/DeleteCell';
-import { IDispatch } from '../../actions/ActionTypes';
 import { ScreenSize } from '../../models/IDeviceInfo';
-import { IActionProps, deleteWiki } from '../../actions/wikis/DeleteWikiAction';
+import { IDispatch } from '../../state/actions/ActionTypes';
+import { IActionProps, deleteWiki } from '../../state/wiki/actions/DeleteWikiAction';
 
 export type Props = {
     wiki: IWiki;

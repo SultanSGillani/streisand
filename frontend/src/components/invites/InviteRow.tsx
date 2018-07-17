@@ -1,13 +1,13 @@
 import * as React from 'react';
 import { connect } from 'react-redux';
 
-import Store from '../../store';
+import Store from '../../state/store';
 import IInvite from '../../models/IInvite';
 import DeleteCell from '../generic/DeleteCell';
 import TimeElapsed from '../generic/TimeElapsed';
-import { IDispatch } from '../../actions/ActionTypes';
 import { ScreenSize } from '../../models/IDeviceInfo';
-import { IActionProps, deleteInvite } from '../../actions/invites/DeleteInviteAction';
+import { IDispatch } from '../../state/actions/ActionTypes';
+import { IActionProps, deleteInvite } from '../../state/invite/actions/DeleteInviteAction';
 
 export type Props = {
     invite: IInvite;

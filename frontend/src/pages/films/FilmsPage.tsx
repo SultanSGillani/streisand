@@ -1,11 +1,11 @@
 import * as React from 'react';
 import { connect } from 'react-redux';
 
-import Store from '../../store';
-import { IDispatch } from '../../actions/ActionTypes';
+import Store from '../../state/store';
 import { parsePageNumber } from '../../utilities/shim';
 import FilmsView from '../../components/films/FilmsView';
-import { getFilms } from '../../actions/films/FilmsAction';
+import { IDispatch } from '../../state/actions/ActionTypes';
+import { getFilms } from '../../state/film/actions/FilmsAction';
 import ILoadingStatus, { defaultStatus } from '../../models/base/ILoadingStatus';
 
 export type Props = {

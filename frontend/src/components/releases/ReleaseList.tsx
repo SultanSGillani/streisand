@@ -3,8 +3,8 @@ import { Table } from 'reactstrap';
 import { connect } from 'react-redux';
 
 import Pager from '../Pager';
-import Store from '../../store';
 import Empty from '../generic/Empty';
+import Store from '../../state/store';
 import ReleaseRow from './ReleaseRow';
 import Loading from '../generic/Loading';
 import IRelease from '../../models/IRelease';

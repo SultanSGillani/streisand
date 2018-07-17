@@ -4,12 +4,12 @@ import { replace } from 'react-router-redux';
 import { LinkContainer } from 'react-router-bootstrap';
 import { UncontrolledDropdown, DropdownToggle, DropdownMenu, DropdownItem } from 'reactstrap';
 
-import Store from '../../store';
+import Store from '../../state/store';
 import IUser from '../../models/IUser';
 import { getItem } from '../../utilities/mapping';
-import { IDispatch } from '../../actions/ActionTypes';
-import { logout } from '../../actions/auth/LogoutAction';
-import { getCurrentUser } from '../../actions/users/CurrentUserAction';
+import { IDispatch } from '../../state/actions/ActionTypes';
+import { logout } from '../../state/auth/actions/LogoutAction';
+import { getCurrentUser } from '../../state/user/actions/CurrentUserAction';
 
 export type Props = {};
 
@@ -60,10 +60,10 @@ class CurrentUserLinkComponent extends React.Component<CombinedProps> {
 }
 
 const mapStateToProps = (state: Store.All): ConnectedState => ({
-    loading: state.sealed.currentUser.loading,
+    loading: state.sealed.user.current.loading,
     isAuthenticated: state.sealed.auth.isAuthenticated,
     currentUser: getItem({
-        id: state.sealed.currentUser.id,
+        id: state.sealed.user.current.id,
         byId: state.sealed.user.byId
     })
 });
