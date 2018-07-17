@@ -108,7 +108,6 @@ class PublicFilmSerializer(AdminFilmSerializer):
 
 class CollectionCreateSerializer(serializers.ModelSerializer):
 
-    creator = DisplayUserSerializer(read_only=True)
     films_count = serializers.SerializerMethodField()
 
     class Meta:
