@@ -33,9 +33,8 @@ class CollectionFilter(filters.FilterSet):
 
 
 class FilmCommentFilter(filters.FilterSet):
-    film_title = filters.CharFilter(field_name='film__title', lookup_expr='icontains')
-
     film_id = filters.NumberFilter(field_name='film__id', lookup_expr='exact')
+    film_title = filters.CharFilter(field_name='film__title', lookup_expr='icontains')
     body = filters.CharFilter(field_name='text', lookup_expr='icontains')
 
     class Meta:
