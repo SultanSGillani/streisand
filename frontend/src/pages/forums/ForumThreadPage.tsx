@@ -1,14 +1,14 @@
 import * as React from 'react';
 import { connect } from 'react-redux';
 
-import Store from '../../store';
+import Store from '../../state/store';
 import Empty from '../../components/generic/Empty';
-import { IDispatch } from '../../actions/ActionTypes';
 import Loading from '../../components/generic/Loading';
+import { IDispatch } from '../../state/actions/ActionTypes';
 import IForumThread from '../../models/forums/IForumThread';
 import ForumThreadView from '../../components/forums/ForumThreadView';
 import { numericIdentifier, parsePageNumber } from '../../utilities/shim';
-import { getPosts } from '../../actions/forums/threads/ForumThreadAction';
+import { getPosts } from '../../state/forum/thread/actions/ForumThreadAction';
 import ILoadingStatus, { defaultStatus } from '../../models/base/ILoadingStatus';
 
 export type Props = {
@@ -61,9 +61,9 @@ class ForumThreadPageComponent extends React.Component<CombinedProps, void> {
 const mapStateToProps = (state: Store.All, props: Props): ConnectedState => {
     const pageNumber = parsePageNumber(props.params && props.params.page);
     const threadId = numericIdentifier(props.params.threadId);
-    const threadPages = state.sealed.forums.posts.byThread[threadId];
+    const threadPages = state.sealed.forum.post.byThread[threadId];
     const page = threadPages && threadPages.pages[pageNumber];
-    const item = state.sealed.forums.threads.byId[threadId];
+    const item = state.sealed.forum.thread.byId[threadId];
     const thread = item || undefined;
 
     return {

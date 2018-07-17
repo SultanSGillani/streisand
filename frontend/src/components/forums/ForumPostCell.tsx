@@ -2,7 +2,7 @@ import * as React from 'react';
 import { Link } from 'react-router';
 import { connect } from 'react-redux';
 
-import Store from '../../store';
+import Store from '../../state/store';
 import IUser from '../../models/IUser';
 import UserLink from '../links/UserLink';
 import TimeElapsed from '../generic/TimeElapsed';
@@ -43,8 +43,8 @@ class ForumPostCellComponent extends React.Component<CombinedProps> {
 
 const mapStateToProps = (state: Store.All, props: Props): ConnectedState => {
     const postId = props.id || props.id === 0 ? props.id : -1;
-    const post = state.sealed.forums.posts.byId[postId];
-    const thread = post && state.sealed.forums.threads.byId[post.thread];
+    const post = state.sealed.forum.post.byId[postId];
+    const thread = post && state.sealed.forum.thread.byId[post.thread];
     return {
         post: post as IForumPost,
         thread: thread as IForumThread,

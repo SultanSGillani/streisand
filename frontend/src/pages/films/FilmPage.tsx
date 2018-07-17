@@ -1,18 +1,18 @@
 import * as React from 'react';
 import { connect } from 'react-redux';
 
-import Store from '../../store';
+import Store from '../../state/store';
 import IFilm from '../../models/IFilm';
 import { getNode } from '../../utilities/mapping';
 import Empty from '../../components/generic/Empty';
-import { IDispatch } from '../../actions/ActionTypes';
 import Loading from '../../components/generic/Loading';
 import FilmView from '../../components/films/FilmView';
 import { numericIdentifier } from '../../utilities/shim';
-import { getFilm } from '../../actions/films/FilmAction';
+import { IDispatch } from '../../state/actions/ActionTypes';
 import ILoadingStatus from '../../models/base/ILoadingStatus';
-import { getTorrents } from '../../actions/torrents/FilmTorrentsAction';
+import { getFilm } from '../../state/film/actions/FilmAction';
 import UpdateFilmView from '../../components/films/UpdateFilmView';
+import { getTorrents } from '../../state/torrent/actions/FilmTorrentsAction';
 
 export type Props = {
     params: {

@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { connect } from 'react-redux';
 
-import Store from '../../store';
+import Store from '../../state/store';
 import IUser from '../../models/IUser';
 import UserLink from '../links/UserLink';
 import DataSize from '../generic/DataSize';

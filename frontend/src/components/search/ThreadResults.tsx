@@ -3,13 +3,13 @@ import { connect } from 'react-redux';
 import { DropdownItem } from 'reactstrap';
 import { LinkContainer } from 'react-router-bootstrap';
 
-import Store from '../../store';
+import Store from '../../state/store';
 import { getItems } from '../../utilities/mapping';
 import { IForumThread } from '../../models/forums/IForumThread';
 import ILoadingStatus, { defaultStatus } from '../../models/base/ILoadingStatus';
 
 export const hasThreadResults = (state: Store.All): boolean => {
-    const page = state.sealed.forums.threads.search.pages[1];
+    const page = state.sealed.forum.thread.search.pages[1];
     if (page && page.status.loading) {
         return true;
     }
@@ -48,13 +48,13 @@ class ThreadResultsComponent extends React.Component<CombinedProps> {
 }
 
 const mapStateToProps = (state: Store.All, props: Props): ConnectedState => {
-    const page = state.sealed.forums.threads.search.pages[1];
+    const page = state.sealed.forum.thread.search.pages[1];
     return {
         status: page ? page.status : defaultStatus,
         threads: getItems({
             page: 1,
-            byId: state.sealed.forums.threads.byId,
-            pages: state.sealed.forums.threads.search.pages
+            byId: state.sealed.forum.thread.byId,
+            pages: state.sealed.forum.thread.search.pages
         })
     };
 };

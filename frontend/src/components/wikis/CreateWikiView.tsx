@@ -2,12 +2,12 @@ import * as React from 'react';
 import { connect } from 'react-redux';
 import { Input, FormGroup } from 'reactstrap';
 
-import Store from '../../store';
+import Store from '../../state/store';
 import { IWikiUpdate } from '../../models/IWiki';
 import CommandBar, { ICommand } from '../CommandBar';
-import { IDispatch } from '../../actions/ActionTypes';
 import Editor, { IEditorHandle } from '../bbcode/Editor';
-import { createWiki } from '../../actions/wikis/CreateWikiAction';
+import { IDispatch } from '../../state/actions/ActionTypes';
+import { createWiki } from '../../state/wiki/actions/CreateWikiAction';
 
 export type Props = {};
 

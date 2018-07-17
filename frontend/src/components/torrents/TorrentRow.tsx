@@ -2,7 +2,7 @@ import * as React from 'react';
 import { Link } from 'react-router';
 import { connect } from 'react-redux';
 
-import Store from '../../store';
+import Store from '../../state/store';
 import IUser from '../../models/IUser';
 import IFilm from '../../models/IFilm';
 import DataSize from '../generic/DataSize';

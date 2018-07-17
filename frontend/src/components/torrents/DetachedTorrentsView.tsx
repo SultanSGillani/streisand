@@ -3,8 +3,8 @@ import { Table } from 'reactstrap';
 import { connect } from 'react-redux';
 
 import Pager from '../Pager';
-import Store from '../../store';
 import Empty from '../generic/Empty';
+import Store from '../../state/store';
 import Loading from '../generic/Loading';
 import { ITorrent } from '../../models/ITorrent';
 import { ScreenSize } from '../../models/IDeviceInfo';

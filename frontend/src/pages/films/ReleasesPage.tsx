@@ -1,11 +1,11 @@
 import * as React from 'react';
 import { connect } from 'react-redux';
 
-import Store from '../../store';
-import { IDispatch } from '../../actions/ActionTypes';
+import Store from '../../state/store';
 import { parsePageNumber } from '../../utilities/shim';
+import { IDispatch } from '../../state/actions/ActionTypes';
 import ReleaseList from '../../components/releases/ReleaseList';
-import { getReleases } from '../../actions/releases/ReleasesAction';
+import { getReleases } from '../../state/release/actions/ReleasesAction';
 import ILoadingStatus, { defaultStatus } from '../../models/base/ILoadingStatus';
 
 export type Props = {

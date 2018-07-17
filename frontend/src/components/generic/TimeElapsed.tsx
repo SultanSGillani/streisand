@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { connect } from 'react-redux';
 
-import Store from '../../store';
+import Store from '../../state/store';
 import { ScreenSize } from '../../models/IDeviceInfo';
 import { getDateDiff } from '../../utilities/dates';
 

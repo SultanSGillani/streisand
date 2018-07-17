@@ -1,14 +1,14 @@
 import * as React from 'react';
 import { connect } from 'react-redux';
 
-import Store from '../../store';
+import Store from '../../state/store';
 import IUser from '../../models/IUser';
 import NewPost from '../generic/NewPost';
 import { getItem } from '../../utilities/mapping';
-import { IDispatch } from '../../actions/ActionTypes';
+import { IDispatch } from '../../state/actions/ActionTypes';
 import { IForumThread } from '../../models/forums/IForumThread';
 import { IForumPostUpdate } from '../../models/forums/IForumPost';
-import { postReply } from '../../actions/forums/posts/CreatePostAction';
+import { postReply } from '../../state/forum/post/actions/CreatePostAction';
 
 export type Props = {
     thread: IForumThread;
@@ -46,7 +46,7 @@ class ForumReplyComponent extends React.Component<CombinedProps> {
 const mapStateToProps = (state: Store.All, props: Props): ConnectedState => {
     return {
         currentUser: getItem({
-            id: state.sealed.currentUser.id,
+            id: state.sealed.user.current.id,
             byId: state.sealed.user.byId
         })
     };

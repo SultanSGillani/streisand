@@ -2,9 +2,9 @@ import * as React from 'react';
 import { connect } from 'react-redux';
 
 import Pager from '../Pager';
-import Store from '../../store';
 import ForumPost from './ForumPost';
 import ForumReply from './ForumReply';
+import Store from '../../state/store';
 import { getItems } from '../../utilities/mapping';
 import IForumPost from '../../models/forums/IForumPost';
 import IForumThread from '../../models/forums/IForumThread';
@@ -43,13 +43,13 @@ class ForumThreadViewComponent extends React.Component<CombinedProps> {
 }
 
 const mapStateToProps = (state: Store.All, props: Props): ConnectedState => {
-    const pages = state.sealed.forums.posts.byThread[props.thread.id];
+    const pages = state.sealed.forum.post.byThread[props.thread.id];
     return {
         total: pages ? pages.count : 0,
         pageSize: pages ? pages.pageSize : 0,
         posts: getItems({
             page: props.page,
-            byId: state.sealed.forums.posts.byId,
+            byId: state.sealed.forum.post.byId,
             pages: pages ? pages.pages : {}
         })
     };

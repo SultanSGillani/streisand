@@ -2,11 +2,11 @@ import * as React from 'react';
 import { connect } from 'react-redux';
 
 import SiteNav from '../components/SiteNav';
-import { IDispatch } from '../actions/ActionTypes';
+import { IDispatch } from '../state/actions/ActionTypes';
 import { ScreenSize } from '../models/IDeviceInfo';
 import { getScreenSize } from '../utilities/device';
 import MessageBanner from '../components/MessageBanner';
-import { updateScreenSize } from '../actions/DeviceAction';
+import { updateScreenSize } from '../state/deviceInfo/actions/DeviceAction';
 
 export type Props = {};
 
