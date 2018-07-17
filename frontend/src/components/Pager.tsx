@@ -3,7 +3,7 @@ import { connect } from 'react-redux';
 import { LinkContainer } from 'react-router-bootstrap';
 import { Pagination, PaginationItem, PaginationLink } from 'reactstrap';
 
-import Store from '../store';
+import Store from '../state/store';
 import { ScreenSize } from '../models/IDeviceInfo';
 
 export type Props = {

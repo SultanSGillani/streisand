@@ -2,7 +2,7 @@ import * as React from 'react';
 import { connect } from 'react-redux';
 import { Card, CardHeader, CardBody, CardTitle } from 'reactstrap';
 
-import Store from '../store';
+import Store from '../state/store';
 import Empty from './generic/Empty';
 import IUser from '../models/IUser';
 import UserLink from './links/UserLink';
@@ -11,9 +11,9 @@ import TextView from './bbcode/TextView';
 import { getItem } from '../utilities/mapping';
 import TimeElapsed from './generic/TimeElapsed';
 import { IDispatch } from '../state/actions/ActionTypes';
-import { getLatestNews } from '../actions/NewsAction';
 import { IForumPost } from '../models/forums/IForumPost';
 import { IForumThread } from '../models/forums/IForumThread';
+import { getLatestNews } from '../state/news/actions/NewsAction';
 
 export type Props = {};
 
@@ -84,13 +84,13 @@ class LatestNewsComponent extends React.Component<CombinedProps> {
 const mapStateToProps = (state: Store.All, props: Props): ConnectedState => {
     const loading = state.sealed.news.loading;
     const loaded = !loading && !!state.sealed.news.latest;
-    const post = state.sealed.news.latest ? state.sealed.forums.posts.byId[state.sealed.news.latest] : undefined;
+    const post = state.sealed.news.latest ? state.sealed.forum.post.byId[state.sealed.news.latest] : undefined;
     const author = getItem({
         fallback: true,
         id: post && post.author,
         byId: state.sealed.user.byId
     });
-    const thread = post && state.sealed.forums.threads.byId[post.thread] as IForumThread;
+    const thread = post && state.sealed.forum.thread.byId[post.thread] as IForumThread;
 
     return { post, author, thread, loading, loaded };
 };

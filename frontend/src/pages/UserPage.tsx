@@ -1,16 +1,16 @@
 import * as React from 'react';
 import { connect } from 'react-redux';
 
-import Store from '../store';
+import Store from '../state/store';
 import IUser from '../models/IUser';
 import { getNode } from '../utilities/mapping';
 import Empty from '../components/generic/Empty';
-import { IDispatch } from '../state/actions/ActionTypes';
 import Loading from '../components/generic/Loading';
 import UserView from '../components/users/UserView';
 import { numericIdentifier } from '../utilities/shim';
-import { getUser } from '../actions/users/UserAction';
+import { IDispatch } from '../state/actions/ActionTypes';
 import ILoadingStatus from '../models/base/ILoadingStatus';
+import { getUser } from '../state/user/actions/UserAction';
 
 export type Props = {
     params: {

@@ -5,7 +5,7 @@ import { Card, Form, FormGroup, Input, Label, CardBody, CardFooter, Button, Card
 import { IDispatch } from '../state/actions/ActionTypes';
 import { showError } from '../state/message/actions/MessageAction';
 import { StringInput } from '../components/generic/inputs/StringInput';
-import { register, IActionProps } from '../actions/auth/RegisterAction';
+import { register, IActionProps } from '../state/auth/actions/RegisterAction';
 
 export type Props = {
     params: {

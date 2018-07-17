@@ -3,7 +3,7 @@ import { Table } from 'reactstrap';
 import { connect } from 'react-redux';
 
 import Pager from '../Pager';
-import Store from '../../store';
+import Store from '../../state/store';
 import ForumThreadRow from './ForumThreadRow';
 import { getItems } from '../../utilities/mapping';
 import ForumThreadCreator from './ForumThreadCreator';
@@ -60,14 +60,14 @@ class ForumTopicViewComponent extends React.Component<CombinedProps> {
 }
 
 const mapStateToProps = (state: Store.All, props: Props): ConnectedState => {
-    const pages = state.sealed.forums.threads.byTopic[props.topic.id];
+    const pages = state.sealed.forum.thread.byTopic[props.topic.id];
     return {
         total: pages ? pages.count : 0,
         pageSize: pages ? pages.pageSize : 0,
         screenSize: state.deviceInfo.screenSize,
         threads: getItems({
             page: props.page,
-            byId: state.sealed.forums.threads.byId,
+            byId: state.sealed.forum.thread.byId,
             pages: pages ? pages.pages : {}
         })
     };

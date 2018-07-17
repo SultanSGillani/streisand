@@ -2,9 +2,9 @@ import * as React from 'react';
 import { connect } from 'react-redux';
 
 import FilmForm, { IFilmFormData } from './FilmForm';
-import { IDispatch } from '../../state/actions/ActionTypes';
 import IFilm, { IFilmUpdate } from '../../models/IFilm';
-import { updateFilm } from '../../actions/films/UpdateFilmAction';
+import { IDispatch } from '../../state/actions/ActionTypes';
+import { updateFilm } from '../../state/film/actions/UpdateFilmAction';
 
 export type Props = {
     film: IFilm;

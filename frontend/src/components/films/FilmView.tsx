@@ -2,15 +2,15 @@ import * as React from 'react';
 import { connect } from 'react-redux';
 import { push } from 'react-router-redux';
 
-import Store from '../../store';
+import Store from '../../state/store';
 import IFilm from '../../models/IFilm';
 import ITorrent from '../../models/ITorrent';
 import CommandBar, { ICommand } from '../CommandBar';
-import { IDispatch } from '../../state/actions/ActionTypes';
 import { getNodeItems } from '../../utilities/mapping';
 import TorrentSection from '../torrents/TorrentSection';
 import CommentSection from '../comments/CommentSection';
-import { deleteFilm } from '../../actions/films/DeleteFilmAction';
+import { IDispatch } from '../../state/actions/ActionTypes';
+import { deleteFilm } from '../../state/film/actions/DeleteFilmAction';
 
 export type Props = {
     film: IFilm;

@@ -6,7 +6,7 @@ import { browserHistory } from 'react-router';
 import { syncHistoryWithStore } from 'react-router-redux';
 
 import Root from './pages/Root.dev';
-import configureStore from './store/configure.dev';
+import configureStore from './state/store/configure.dev';
 
 const store = configureStore(browserHistory);
 const rootElement = document.getElementById('index');

@@ -5,11 +5,11 @@ import { ListGroup, ListGroupItem, Nav, NavItem, NavLink, TabContent, TabPane, C
 import Avatar from './Avatar';
 import TextView from '../bbcode/TextView';
 import { getDateDiff } from '../../utilities/dates';
-import { IDispatch } from '../../state/actions/ActionTypes';
 import IUser, { IUserUpdate } from '../../models/IUser';
 import Editor, { IEditorHandle } from '../bbcode/Editor';
 import { StringInput } from '../generic/inputs/StringInput';
-import { updateUser } from '../../actions/users/UpdateUserAction';
+import { IDispatch } from '../../state/actions/ActionTypes';
+import { updateUser } from '../../state/user/actions/UpdateUserAction';
 
 export type Props = {
     user: IUser;

@@ -4,7 +4,7 @@ import { Card, CardBody, CardTitle, Form, FormGroup, Label, Input, CardFooter, B
 
 import { IDispatch } from '../../state/actions/ActionTypes';
 import { IForumGroup } from '../../models/forums/IForumGroup';
-import { INewForumTopicPayload, createForumTopic } from '../../actions/forums/topics/CreateTopicAction';
+import { INewForumTopicPayload, createForumTopic } from '../../state/forum/topic/actions/CreateTopicAction';
 
 export type Props = {
     groups: IForumGroup[];

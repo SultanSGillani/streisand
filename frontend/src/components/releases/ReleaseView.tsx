@@ -3,18 +3,18 @@ import { Link } from 'react-router';
 import { connect } from 'react-redux';
 import { push } from 'react-router-redux';
 
-import Store from '../../store';
+import Store from '../../state/store';
 import IFilm from '../../models/IFilm';
-import IRelease, { IReleaseUpdate } from '../../models/IRelease';
+import { ITorrent } from '../../models/ITorrent';
 import IMediaTypes from '../../models/IMediaTypes';
 import CommandBar, { ICommand } from '../CommandBar';
+import { getNodeItems } from '../../utilities/mapping';
+import TorrentSection from '../torrents/TorrentSection';
 import { IDispatch } from '../../state/actions/ActionTypes';
 import ReleaseForm, { IReleaseFormData } from './ReleaseForm';
-import { deleteRelease } from '../../actions/releases/DeleteReleaseAction';
-import { getNodeItems } from '../../utilities/mapping';
-import { ITorrent } from '../../models/ITorrent';
-import { updateRelease } from '../../actions/releases/UpdateReleaseAction';
-import TorrentSection from '../torrents/TorrentSection';
+import IRelease, { IReleaseUpdate } from '../../models/IRelease';
+import { deleteRelease } from '../../state/release/actions/DeleteReleaseAction';
+import { updateRelease } from '../../state/release/actions/UpdateReleaseAction';
 
 export type Props = {
     film: IFilm;

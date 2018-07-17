@@ -1,16 +1,16 @@
 import * as React from 'react';
 import { connect } from 'react-redux';
 
-import Store from '../../store';
+import Store from '../../state/store';
 import IWiki from '../../models/IWiki';
 import { getNode } from '../../utilities/mapping';
 import Empty from '../../components/generic/Empty';
-import { IDispatch } from '../../state/actions/ActionTypes';
 import Loading from '../../components/generic/Loading';
 import WikiView from '../../components/wikis/WikiView';
 import { numericIdentifier } from '../../utilities/shim';
-import { getWiki } from '../../actions/wikis/WikiAction';
+import { IDispatch } from '../../state/actions/ActionTypes';
 import ILoadingStatus from '../../models/base/ILoadingStatus';
+import { getWiki } from '../../state/wiki/actions/WikiAction';
 
 export type Props = {
     params: {

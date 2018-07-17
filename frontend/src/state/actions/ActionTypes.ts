@@ -1,4 +1,5 @@
-import Store from '../../store';
+
+import Store from '../store';
 import { AnyAction } from 'redux';
 import { RouterAction } from 'react-router-redux';
 

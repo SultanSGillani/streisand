@@ -7,7 +7,7 @@ import globals from '../../utilities/globals';
 import AwesomeIcon from '../generic/AwesomeIcon';
 import { ITorrent } from '../../models/ITorrent';
 import { IDispatch } from '../../state/actions/ActionTypes';
-import { deleteTorrent, IActionProps } from '../../actions/torrents/DeleteTorrentAction';
+import { deleteTorrent, IActionProps } from '../../state/torrent/actions/DeleteTorrentAction';
 
 export type Props = {
     page?: number;

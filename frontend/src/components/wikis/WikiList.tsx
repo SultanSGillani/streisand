@@ -3,8 +3,8 @@ import { Table } from 'reactstrap';
 import { connect } from 'react-redux';
 
 import Pager from '../Pager';
-import Store from '../../store';
 import WikiRow from './WikiRow';
+import Store from '../../state/store';
 import IWiki from '../../models/IWiki';
 import { ScreenSize } from '../../models/IDeviceInfo';
 import { getNodeItems } from '../../utilities/mapping';

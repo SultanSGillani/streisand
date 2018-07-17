@@ -2,14 +2,14 @@ import * as React from 'react';
 import { Button } from 'reactstrap';
 import { connect } from 'react-redux';
 
-import Store from '../../store';
+import Store from '../../state/store';
 import IFilm from '../../models/IFilm';
 import IMediaTypes from '../../models/IMediaTypes';
 import { IDispatch } from '../../state/actions/ActionTypes';
 import ReleaseForm, { IReleaseFormData } from '../releases/ReleaseForm';
-import { uploadTorrent } from '../../actions/torrents/UploadTorrentAction';
-import { createRelease, IActionProps as IReleaseProps } from '../../actions/releases/CreateReleaseAction';
-import { attachToRelease, IActionProps as ITorrentProps } from '../../actions/torrents/UpdateTorrentAction';
+import { uploadTorrent } from '../../state/torrent/actions/UploadTorrentAction';
+import { createRelease, IActionProps as IReleaseProps } from '../../state/release/actions/CreateReleaseAction';
+import { attachToRelease, IActionProps as ITorrentProps } from '../../state/torrent/actions/UpdateTorrentAction';
 
 export type Props = {
     film: IFilm;

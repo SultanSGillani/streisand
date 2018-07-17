@@ -2,13 +2,13 @@ import * as React from 'react';
 import { Link } from 'react-router';
 import { connect } from 'react-redux';
 
-import Store from '../../store';
+import Store from '../../state/store';
 import ForumPostCell from './ForumPostCell';
 import DeleteCell from '../generic/DeleteCell';
 import { ScreenSize } from '../../models/IDeviceInfo';
-import { IDispatch } from '../../state/actions/ActionTypes';
 import IForumTopic from '../../models/forums/IForumTopic';
-import { deleteForumTopic, IActionProps } from '../../actions/forums/topics/DeleteTopicAction';
+import { IDispatch } from '../../state/actions/ActionTypes';
+import { deleteForumTopic, IActionProps } from '../../state/forum/topic/actions/DeleteTopicAction';
 
 export type Props = {
     topic: IForumTopic;

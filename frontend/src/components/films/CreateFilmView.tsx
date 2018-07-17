@@ -1,11 +1,11 @@
 import * as React from 'react';
 import { connect } from 'react-redux';
 
-import Store from '../../store';
+import Store from '../../state/store';
 import { IFilmUpdate } from '../../models/IFilm';
-import { IDispatch } from '../../state/actions/ActionTypes';
 import FilmForm, { IFilmFormData } from './FilmForm';
-import { createFilm } from '../../actions/films/CreateFilmAction';
+import { IDispatch } from '../../state/actions/ActionTypes';
+import { createFilm } from '../../state/film/actions/CreateFilmAction';
 
 export type Props = {};
 

@@ -2,7 +2,7 @@ import * as React from 'react';
 import { connect } from 'react-redux';
 
 import Pager from '../Pager';
-import Store from '../../store';
+import Store from '../../state/store';
 import CommentRow from './CommentRow';
 import IFilm from '../../models/IFilm';
 import IUser from '../../models/IUser';
@@ -11,8 +11,8 @@ import NewPost from '../generic/NewPost';
 import { IComment } from '../../models/IComment';
 import { IDispatch } from '../../state/actions/ActionTypes';
 import ILoadingStatus from '../../models/base/ILoadingStatus';
-import { getComments } from '../../actions/comments/CommentsAction';
-import { createComment } from '../../actions/comments/CreateCommentAction';
+import { getComments } from '../../state/comment/actions/CommentsAction';
+import { createComment } from '../../state/comment/actions/CreateCommentAction';
 import { getNodeItems, getList, getItemPage, getItem } from '../../utilities/mapping';
 
 export type Props = {
@@ -89,7 +89,7 @@ const mapStateToProps = (state: Store.All, props: Props): ConnectedState => {
         status: page.status,
         pageSize: list.pageSize,
         currentUser: getItem({
-            id: state.sealed.currentUser.id,
+            id: state.sealed.user.current.id,
             byId: state.sealed.user.byId
         }),
         comments: getNodeItems({

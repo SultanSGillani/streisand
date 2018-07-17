@@ -4,7 +4,7 @@ import { Card, Form, FormGroup, Input, Label, CardBody, CardFooter, Button, Card
 
 import { IDispatch } from '../state/actions/ActionTypes';
 import { showError } from '../state/message/actions/MessageAction';
-import { changePassword } from '../actions/auth/ChangePasswordAction';
+import { changePassword } from '../state/auth/actions/ChangePasswordAction';
 
 export type Props = {};
 

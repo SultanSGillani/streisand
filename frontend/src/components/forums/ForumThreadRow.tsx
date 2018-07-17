@@ -1,17 +1,17 @@
 import * as React from 'react';
 import { connect } from 'react-redux';
 
-import Store from '../../store';
+import Store from '../../state/store';
 import IUser from '../../models/IUser';
 import UserLink from '../links/UserLink';
 import ForumPostCell from './ForumPostCell';
 import DeleteCell from '../generic/DeleteCell';
 import EmptyThreadCell from './EmptyThreadCell';
 import { getItem } from '../../utilities/mapping';
-import { IDispatch } from '../../state/actions/ActionTypes';
 import { ScreenSize } from '../../models/IDeviceInfo';
+import { IDispatch } from '../../state/actions/ActionTypes';
 import IForumThread from '../../models/forums/IForumThread';
-import { IActionProps, deleteForumThread } from '../../actions/forums/threads/DeleteThreadAction';
+import { IActionProps, deleteForumThread } from '../../state/forum/thread/actions/DeleteThreadAction';
 
 export type Props = {
     page: number;

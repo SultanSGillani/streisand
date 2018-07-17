@@ -2,12 +2,12 @@ import * as React from 'react';
 import { Link } from 'react-router';
 import { connect } from 'react-redux';
 
-import Store from '../../store';
+import Store from '../../state/store';
 import IFilm from '../../models/IFilm';
 import DeleteCell from '../generic/DeleteCell';
-import { IDispatch } from '../../state/actions/ActionTypes';
 import { ScreenSize } from '../../models/IDeviceInfo';
-import { deleteFilm, IActionProps } from '../../actions/films/DeleteFilmAction';
+import { IDispatch } from '../../state/actions/ActionTypes';
+import { deleteFilm, IActionProps } from '../../state/film/actions/DeleteFilmAction';
 
 export type Props = {
     film: IFilm;

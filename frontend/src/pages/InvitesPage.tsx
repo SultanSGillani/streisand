@@ -1,12 +1,12 @@
 import * as React from 'react';
 import { connect } from 'react-redux';
 
-import Store from '../store';
-import { IDispatch } from '../state/actions/ActionTypes';
+import Store from '../state/store';
 import { parsePageNumber } from '../utilities/shim';
 import Loading from '../components/generic/Loading';
+import { IDispatch } from '../state/actions/ActionTypes';
 import InvitesView from '../components/invites/InvitesView';
-import { getInvites } from '../actions/invites/InvitesAction';
+import { getInvites } from '../state/invite/actions/InvitesAction';
 import ILoadingStatus, { defaultStatus } from '../models/base/ILoadingStatus';
 
 export type Props = {

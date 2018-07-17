@@ -3,13 +3,13 @@ import { connect } from 'react-redux';
 import { Target } from 'react-popper';
 import { Dropdown, DropdownMenu, DropdownItem, Input } from 'reactstrap';
 
-import Store from '../../store';
+import Store from '../../state/store';
 import { debounce } from '../../utilities/async';
 import { IDispatch } from '../../state/actions/ActionTypes';
 import FilmResults, { hasFilmResults } from './FilmResults';
-import { IFilmSearchProps, searchFilm } from '../../actions/films/FilmsSearchAction';
-import { IThreadSearchProps, searchThread } from '../../actions/forums/threads/ThreadSearchAction';
 import ThreadResults, { hasThreadResults } from './ThreadResults';
+import { IFilmSearchProps, searchFilm } from '../../state/film/actions/FilmsSearchAction';
+import { IThreadSearchProps, searchThread } from '../../state/forum/thread/actions/ThreadSearchAction';
 
 export type Props = {};
 type State = {

@@ -3,15 +3,15 @@ import { Table } from 'reactstrap';
 import { connect } from 'react-redux';
 
 import Pager from '../Pager';
-import Store from '../../store';
 import PeerRow from './PeerRow';
 import Empty from '../generic/Empty';
+import Store from '../../state/store';
 import Loading from '../generic/Loading';
 import { ITorrent } from '../../models/ITorrent';
-import { IDispatch } from '../../state/actions/ActionTypes';
 import { ITrackerPeer } from '../../models/ITrackerPeer';
-import { getPeers } from '../../actions/peers/PeersAction';
+import { IDispatch } from '../../state/actions/ActionTypes';
 import ILoadingStatus from '../../models/base/ILoadingStatus';
+import { getPeers } from '../../state/peer/actions/PeersAction';
 import { getNodeItems, getItemPage, getList } from '../../utilities/mapping';
 
 export type Props = {

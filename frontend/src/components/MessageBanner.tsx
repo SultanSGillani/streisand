@@ -2,7 +2,7 @@ import * as React from 'react';
 import { connect } from 'react-redux';
 import { Alert, Badge } from 'reactstrap';
 
-import Store from '../store';
+import Store from '../state/store';
 import IMessage from '../models/IMessage';
 import { IDispatch } from '../state/actions/ActionTypes';
 import { removeError } from '../state/message/actions/MessageAction';

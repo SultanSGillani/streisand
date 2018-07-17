@@ -1,10 +1,10 @@
 import * as React from 'react';
 import { connect } from 'react-redux';
 
-import Store from '../../store';
+import Store from '../../state/store';
 import ForumGroup from './ForumGroup';
-import IForumGroup from '../../models/forums/IForumGroup';
 import ForumTopicCreator from './ForumTopicCreator';
+import IForumGroup from '../../models/forums/IForumGroup';
 
 export type Props = {};
 
@@ -30,9 +30,9 @@ class ForumViewComponent extends React.Component<CombinedProps> {
 }
 
 const mapStateToProps = (state: Store.All, props: Props): ConnectedState => {
-    const data = state.sealed.forums.groups;
+    const data = state.sealed.forum.group;
     const forumGroups = data.items.map((id: number) => {
-        return state.sealed.forums.groups.byId[id];
+        return state.sealed.forum.group.byId[id];
     });
 
     return { forumGroups };

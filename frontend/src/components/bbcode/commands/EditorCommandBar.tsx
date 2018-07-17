@@ -2,7 +2,7 @@ import * as React from 'react';
 import { connect } from 'react-redux';
 import { ButtonToolbar, ButtonGroup, ButtonDropdown, DropdownToggle, DropdownMenu } from 'reactstrap';
 
-import Store from '../../../store';
+import Store from '../../../state/store';
 import HelpModal from '../help/HelpModal';
 import { buildCommands } from './builders';
 import { ITextEditorHandle } from '../TextEditor';

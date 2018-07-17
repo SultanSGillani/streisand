@@ -3,9 +3,9 @@ import { Table } from 'reactstrap';
 import { connect } from 'react-redux';
 
 import Pager from '../Pager';
-import Store from '../../store';
 import FilmRow from './FilmRow';
 import Empty from '../generic/Empty';
+import Store from '../../state/store';
 import IFilm from '../../models/IFilm';
 import Loading from '../generic/Loading';
 import { getNodeItems } from '../../utilities/mapping';
