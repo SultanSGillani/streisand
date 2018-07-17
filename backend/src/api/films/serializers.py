@@ -48,7 +48,7 @@ class CollectionCommentSerializer(AllowFieldLimitingMixin, serializers.ModelSeri
             'id',
             'collection',
             'author',
-            'text',
+            'body',
             'created_at',
             'modified_at'
         )
