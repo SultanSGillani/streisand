@@ -153,10 +153,8 @@ class CollectionListSerializer(AllowFieldLimitingMixin, serializers.ModelSeriali
         try:
             films = paginator.page(page)
             serializer = PublicFilmSerializer(films, many=True)
-
         except (InvalidPage, PageNotAnInteger):
             # Page doesn't exist, so return them to page 1 results.
-
             films = paginator.page(1)
             serializer = PublicFilmSerializer(films, many=True)
 
