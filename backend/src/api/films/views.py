@@ -61,7 +61,7 @@ class FilmCommentViewSet(ModelViewSet):
 
 class CollectionViewSet(mixins.ListModelMixin, mixins.RetrieveModelMixin, GenericViewSet):
     """
-    API endpoint that allows film-collections to be viewed or edited.
+    API endpoint that allows film-collections to be viewed only.
     """
     permission_classes = [IsAuthenticated]
     serializer_class = CollectionListSerializer
@@ -81,7 +81,7 @@ class CollectionViewSet(mixins.ListModelMixin, mixins.RetrieveModelMixin, Generi
 class CollectionCreateViewSet(mixins.RetrieveModelMixin, mixins.UpdateModelMixin, mixins.CreateModelMixin,
                               mixins.DestroyModelMixin, GenericViewSet):
     """
-    API endpoint that allows film-collections to be viewed or edited.
+    API endpoint that allows film-collections to be created, edited, or deleted.
     """
     permission_classes = [IsAuthenticated]
     serializer_class = CollectionCreateSerializer

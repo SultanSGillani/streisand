@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 
-from django.core.paginator import Paginator
+from django.core.paginator import Paginator, InvalidPage, PageNotAnInteger
 from rest_framework import serializers
 
 from api.mixins import AllowFieldLimitingMixin
@@ -9,7 +9,6 @@ from films.models import Film, Collection, CollectionComment, FilmComment
 
 
 class FilmCommentSerializer(AllowFieldLimitingMixin, serializers.ModelSerializer):
-
     author = DisplayUserSerializer(read_only=True)
     body = serializers.CharField(source='text')
 
@@ -30,7 +29,6 @@ class FilmCommentSerializer(AllowFieldLimitingMixin, serializers.ModelSerializer
 
 
 class CollectionCommentSerializer(AllowFieldLimitingMixin, serializers.ModelSerializer):
-
     author = DisplayUserSerializer(read_only=True)
     body = serializers.CharField(source='text')
 
@@ -51,7 +49,6 @@ class CollectionCommentSerializer(AllowFieldLimitingMixin, serializers.ModelSeri
 
 
 class AdminFilmSerializer(AllowFieldLimitingMixin, serializers.ModelSerializer):
-
     film_comments = FilmCommentSerializer(
         read_only=True,
         many=True,
@@ -107,7 +104,6 @@ class PublicFilmSerializer(AdminFilmSerializer):
 
 
 class CollectionCreateSerializer(serializers.ModelSerializer):
-
     films_count = serializers.SerializerMethodField()
 
     class Meta:
@@ -127,13 +123,6 @@ class CollectionCreateSerializer(serializers.ModelSerializer):
 
     def get_films_count(self, obj):
         return obj.films.count()
-
-
-class PaginatedFilmSerializer(AllowFieldLimitingMixin, serializers.ModelSerializer):
-
-    class Meta:
-        model = Film
-        fields = ('id', )
 
 
 class CollectionListSerializer(AllowFieldLimitingMixin, serializers.ModelSerializer):
@@ -161,7 +150,14 @@ class CollectionListSerializer(AllowFieldLimitingMixin, serializers.ModelSeriali
         paginator = Paginator(obj.films.all(), page_size)
         page = self.context['request'].query_params.get('page') or 1
 
-        films = paginator.page(page)
-        serializer = PaginatedFilmSerializer(films, many=True)
+        try:
+            films = paginator.page(page)
+            serializer = PublicFilmSerializer(films, many=True)
+
+        except (InvalidPage, PageNotAnInteger):
+            # Page doesn't exist, so return them to page 1 results.
+
+            films = paginator.page(1)
+            serializer = PublicFilmSerializer(films, many=True)
 
         return serializer.data
