@@ -22,10 +22,12 @@ class FilmFilter(filters.FilterSet):
 
 
 class CollectionFilter(filters.FilterSet):
+    film_id = filters.NumberFilter(field_name='films__id', lookup_expr='exact')
+
     class Meta:
         model = Collection
         fields = {
-            'films__id': ['in', 'exact'],
+            'id': ['exact', 'in'],
             'films__title': ['iexact', 'istartswith', 'icontains'],
             'creator__username': ['icontains', 'istartswith'],
             'title': ['iexact', 'istartswith'],
