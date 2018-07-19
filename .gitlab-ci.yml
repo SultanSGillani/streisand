@@ -100,8 +100,10 @@ stop_review:
     - cd /code/$CI_BUILD_REF_SLUG
     - ./prod.sh stop
     - ./prod.sh m reset_db --noinput
-    - source ~/.bashrc
-    - docker-clean
+    - docker container prune -f
+    - docker image prune -f
+    - docker network prune -f
+    - docker volume prune -f
     - sudo rm -rf /code/$CI_BUILD_REF_SLUG
   variables:
     GIT_STRATEGY: none
