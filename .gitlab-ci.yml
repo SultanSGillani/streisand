@@ -78,6 +78,7 @@ review:
     - ./prod.sh build
     - ./prod.sh up --force-recreate
     - ./prod.sh i setup-db
+  when: manual
   environment:
     name: review/$CI_BUILD_REF_NAME
     url: https://$CI_BUILD_REF_SLUG.$REVIEW_APPS_DOMAIN
