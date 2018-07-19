@@ -71,8 +71,9 @@ review:
     - mkdir -p ~/.ssh
     - chmod 700 ~/.ssh
   script:
-    - rsync -av ./ --delete /code/$CI_BUILD_REF_SLUG
+    - echo "$SSH_REVIEW_DESTINATION"
     - ssh -i key "$SSH_REVIEW_DESTINATION"
+    - rsync -av ./ --delete /code/$CI_BUILD_REF_SLUG
   environment:
     name: review/$CI_BUILD_REF_NAME
     url: https://$CI_BUILD_REF_SLUG.$REVIEW_APPS_DOMAIN
