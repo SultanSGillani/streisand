@@ -60,16 +60,16 @@ test_react:
      - yarn run test
 review:
   stage: review
-   before_script:
-      - echo "$SSH_REVIEW_PRIVATE_KEY" | tr -d '\r' > key
-      - chmod 700 key
-      - mkdir -p ~/.ssh
-      - chmod 700 ~/.ssh
-      - echo "$SSH_REVIEW_KNOWN_HOSTS" > ~/.ssh/known_hosts
-      - chmod 644 ~/.ssh/known_hosts
-   script:
-      - rsync -av --delete /code/$CI_BUILD_REF_SLUG
-      - ssh -i key "$SSH_REVIEW_DESTINATION"
+  before_script:
+    - echo "$SSH_REVIEW_PRIVATE_KEY" | tr -d '\r' > key
+    - chmod 700 key
+    - mkdir -p ~/.ssh
+    - chmod 700 ~/.ssh
+    - echo "$SSH_REVIEW_KNOWN_HOSTS" > ~/.ssh/known_hosts
+    - chmod 644 ~/.ssh/known_hosts
+  script:
+    - rsync -av --delete /code/$CI_BUILD_REF_SLUG
+    - ssh -i key "$SSH_REVIEW_DESTINATION"
   environment:
     name: review/$CI_BUILD_REF_NAME
     url: https://$CI_BUILD_REF_SLUG.$REVIEW_APPS_DOMAIN
@@ -84,6 +84,8 @@ review:
     - dev
 stop_review:
   stage: review
+  before_script:
+    - echo "Removing Review Directory"
   script:
     - rm -rf /code/$CI_BUILD_REF_SLUG
   variables:
