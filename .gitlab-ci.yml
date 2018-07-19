@@ -75,6 +75,14 @@ review:
   script:
     - rsync -av . --delete /code/$CI_BUILD_REF_SLUG
     - ssh "$SSH_REVIEW_DESTINATION"
+    - cd /code/$CI_BUILD_REF_SLUG
+    - cp ./frontend/.env.review.template ./frontend/.env
+    - cp ./backend/.env.review.template ./backend/.env
+    - sudo cp -R /home/gitlab-runner/ssl /code/$CI_BUILD_REF_SLUG/frontend/nginx/ssl
+    - sudo cp -R /home/gitlab-runner/conf.d /code/$CI_BUILD_REF_SLUG/frontend/nginx/conf.d
+    - ./prod.sh build
+    - ./prod.sh up --force-recreate
+    - ./prod.sh i setup-db
   environment:
     name: review/$CI_BUILD_REF_NAME
     url: https://$CI_BUILD_REF_SLUG.$REVIEW_APPS_DOMAIN
@@ -92,6 +100,9 @@ stop_review:
   before_script:
     - echo "Removing Review Directory"
   script:
+    - cd /code/$CI_BUILD_REF_SLUG
+    - ./prod.sh stop
+    - ./prod.sh reset_db --noinput
     - rm -rf /code/$CI_BUILD_REF_SLUG
   variables:
     GIT_STRATEGY: none
