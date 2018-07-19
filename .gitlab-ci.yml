@@ -4,10 +4,10 @@ services:
  - docker:dind
  - redis:latest
 stages:
- - test_python
+ - test_api
  - test_react
  - review
- - release
+ - build
  - deploy
 variables:
   PIP_CACHE_DIR: "$CI_PROJECT_DIR/.cache"
@@ -21,7 +21,6 @@ variables:
   SECRET_KEY: "jumpcut"
   TESTING_DATABASE_URL: "postgres://postgres:postgres@postgres:5432/postgres"
   TESTING_WSGI_APPLICATION: "jumpcut.www_wsgi.application"
-  when: manual
 cache:
   paths:
     - .cache/
@@ -34,13 +33,11 @@ before_script:
   - pip install -r requirements.txt
   - pip install -r testing_requirements.txt
 python_linter:
-  stage: test_python
+  stage: test_api
   script:
     - invoke run-python-linter
-  allow_failure: true
-  when: manual
 python_tests:
-  stage: test_python
+  stage: test_api
   script:
     # Test for missing migrations
     - src/manage.py makemigrations --check --dry-run || (echo "Missing migrations"; false)
@@ -48,7 +45,6 @@ python_tests:
     - invoke foundation
     - invoke fixtures
     - invoke run-python-tests --coverage
-  allow_failure: true
 test_react:
   image: node:latest
   stage: test_react
@@ -60,7 +56,6 @@ test_react:
     - node_modules/
   script:
      - yarn run test
-  when: manual
 review:
   image: debian:stretch-slim
   stage: review
@@ -78,8 +73,8 @@ review:
     - cd /code/$CI_BUILD_REF_SLUG
     - cp ./frontend/.env.review.template ./frontend/.env
     - cp ./backend/.env.review.template ./backend/.env
-    - sudo cp -R /home/gitlab-runner/ssl /code/$CI_BUILD_REF_SLUG/frontend/nginx/ssl
-    - sudo cp -R /home/gitlab-runner/conf.d /code/$CI_BUILD_REF_SLUG/frontend/nginx/conf.d
+    - sudo cp -R /home/gitlab-runner/ssl/* /code/$CI_BUILD_REF_SLUG/frontend/nginx/ssl/
+    - sudo cp -R /home/gitlab-runner/conf.d/* /code/$CI_BUILD_REF_SLUG/frontend/nginx/conf.d/
     - ./prod.sh build
     - ./prod.sh up --force-recreate
     - ./prod.sh i setup-db
@@ -98,12 +93,13 @@ review:
 stop_review:
   stage: review
   before_script:
-    - echo "Removing Review Directory"
+    - echo "Removing Review app and Directory"
   script:
     - cd /code/$CI_BUILD_REF_SLUG
     - ./prod.sh stop
-    - ./prod.sh reset_db --noinput
-    - rm -rf /code/$CI_BUILD_REF_SLUG
+    - ./prod.sh m reset_db --noinput
+    - docker-clean
+    - sudo rm -rf /code/$CI_BUILD_REF_SLUG
   variables:
     GIT_STRATEGY: none
   when: manual
@@ -114,7 +110,7 @@ stop_review:
     - review
     - review-app
     - dev
-release_develop:
+build_staging:
   image: tmaier/docker-compose:latest
   variables:
     DOCKER_DRIVER: overlay2
@@ -131,8 +127,7 @@ release_develop:
     SECRET_KEY: "jumpcut"
     TESTING_DATABASE_URL: "postgres://postgres:postgres@postgres:5432/postgres"
     TESTING_WSGI_APPLICATION: "jumpcut.www_wsgi.application"
-
-  stage: release
+  stage: build
   cache: {}
   before_script:
       - docker-compose --version
@@ -153,9 +148,10 @@ release_develop:
     - latest
     - master
     - release
+    - staging
   only:
-    - master
-deploy-develop:
+    - master # TODO include staging as well.
+deploy_staging:
   stage: deploy
   cache: {}
   before_script:
@@ -170,3 +166,5 @@ deploy-develop:
     - ssh -i key "$SSH_DESTINATION"
   only:
     - master
+
+# TODO add deployment for production.
