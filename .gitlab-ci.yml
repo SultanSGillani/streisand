@@ -101,7 +101,10 @@ stop_review:
     - ./prod.sh stop
     - ./prod.sh m reset_db --noinput
     - docker container prune -f
+    - docker kill $(docker ps -q)
+    - docker rm $(docker ps -a -q)
     - docker image prune -f
+    - docker rmi $(docker images -q)
     - docker network prune -f
     - docker volume prune -f
     - sudo rm -rf /code/$CI_BUILD_REF_SLUG
