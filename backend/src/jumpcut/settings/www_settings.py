@@ -139,7 +139,7 @@ ELASTICSEARCH_DSL_SIGNAL_PROCESSOR = 'django_elasticsearch_dsl.signals.RealTimeS
 
 # Name of the Elasticsearch index
 ELASTICSEARCH_INDEX_NAMES = {
-    'search_indexes.documents.film': 'film',
+    'films.documents': 'film',
 }
 
 SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
