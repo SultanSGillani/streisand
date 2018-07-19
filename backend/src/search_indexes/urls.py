@@ -1,7 +1,7 @@
 from django.conf.urls import url, include
 from rest_framework_extensions.routers import ExtendedDefaultRouter
 
-from search_indexes.viewsets.film import FilmDocumentView
+from search_indexes.films.viewsets import FilmDocumentView
 
 router = ExtendedDefaultRouter()
 films = router.register(r'films',
