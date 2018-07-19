@@ -21,6 +21,7 @@ variables:
   SECRET_KEY: "jumpcut"
   TESTING_DATABASE_URL: "postgres://postgres:postgres@postgres:5432/postgres"
   TESTING_WSGI_APPLICATION: "jumpcut.www_wsgi.application"
+  when: manual
 cache:
   paths:
     - .cache/
@@ -58,6 +59,7 @@ test_react:
     - node_modules/
   script:
      - yarn run test
+  when: manual
 review:
   stage: review
   before_script:
@@ -68,7 +70,7 @@ review:
     - echo "$SSH_REVIEW_KNOWN_HOSTS" > ~/.ssh/known_hosts
     - chmod 644 ~/.ssh/known_hosts
   script:
-    - rsync -av --delete /code/$CI_BUILD_REF_SLUG
+    - rsync -av ./ --delete /code/$CI_BUILD_REF_SLUG
     - ssh -i key "$SSH_REVIEW_DESTINATION"
   environment:
     name: review/$CI_BUILD_REF_NAME
