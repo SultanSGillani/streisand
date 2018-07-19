@@ -65,16 +65,14 @@ review:
   stage: review
   before_script:
     - echo "$SSH_REVIEW_DESTINATION"
-    - echo "$SSH_REVIEW_PRIVATE_KEY" | tr -d '\r' | ssh-add - > key
-    - chmod 700 key
+    - echo "$SSH_REVIEW_PRIVATE_KEY" | tr -d '\r' | ssh-add - > /dev/null
     - mkdir -p ~/.ssh
     - chmod 700 ~/.ssh
-    - ssh-keyscan "$SSH_REVIEW_KNOWN_HOSTS" >> ~/.ssh/known_hosts
+    - ssh-keyscan ronzertnert.me >> ~/.ssh/known_hosts
     - chmod 644 ~/.ssh/known_hosts
   script:
-    - rsync -av . --exclude='key' --delete /code/$CI_BUILD_REF_SLUG
-    - echo $SSH_REVIEW_DESTINATION
-    - ssh -i key "$SSH_REVIEW_DESTINATION"
+    - rsync -av . --delete /code/$CI_BUILD_REF_SLUG
+    - ssh "$SSH_REVIEW_DESTINATION"
   environment:
     name: review/$CI_BUILD_REF_NAME
     url: https://$CI_BUILD_REF_SLUG.$REVIEW_APPS_DOMAIN
