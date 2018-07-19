@@ -37,7 +37,8 @@ python_linter:
   stage: test_python
   script:
     - invoke run-python-linter
-  allow_failure: false
+  allow_failure: true
+  when: manual
 python_tests:
   stage: test_python
   script:
@@ -47,7 +48,7 @@ python_tests:
     - invoke foundation
     - invoke fixtures
     - invoke run-python-tests --coverage
-  allow_failure: false
+  allow_failure: true
 test_react:
   image: node:latest
   stage: test_react
