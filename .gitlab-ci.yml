@@ -4,9 +4,10 @@ services:
  - docker:dind
  - redis:latest
 stages:
- - test_python
+ - test_api
  - test_react
- - release
+ - review
+ - build
  - deploy
 variables:
   PIP_CACHE_DIR: "$CI_PROJECT_DIR/.cache"
@@ -32,12 +33,11 @@ before_script:
   - pip install -r requirements.txt
   - pip install -r testing_requirements.txt
 python_linter:
-  stage: test_python
+  stage: test_api
   script:
     - invoke run-python-linter
-  allow_failure: false
 python_tests:
-  stage: test_python
+  stage: test_api
   script:
     # Test for missing migrations
     - src/manage.py makemigrations --check --dry-run || (echo "Missing migrations"; false)
@@ -45,7 +45,6 @@ python_tests:
     - invoke foundation
     - invoke fixtures
     - invoke run-python-tests --coverage
-  allow_failure: false
 test_react:
   image: node:latest
   stage: test_react
@@ -57,7 +56,67 @@ test_react:
     - node_modules/
   script:
      - yarn run test
-release_develop:
+start_review:
+  image: debian:stretch-slim
+  stage: review
+  before_script:
+    - 'which ssh-agent || ( apt-get update -y && apt-get install openssh-client git -y )'
+    - eval $(ssh-agent -s)
+    - echo "$SSH_REVIEW_PRIVATE_KEY" | tr -d '\r' | ssh-add - > /dev/null
+    - mkdir -p ~/.ssh
+    - chmod 700 ~/.ssh
+    - ssh-keyscan ronzertnert.me >> ~/.ssh/known_hosts
+    - chmod 644 ~/.ssh/known_hosts
+  script:
+    - rsync -av . --delete /code/$CI_BUILD_REF_SLUG
+    - ssh "$SSH_REVIEW_DESTINATION"
+    - cd /code/$CI_BUILD_REF_SLUG
+    - cp ./frontend/.env.review.template ./frontend/.env
+    - cp ./backend/.env.review.template ./backend/.env
+    - sudo cp -R /home/gitlab-runner/ssl/* /code/$CI_BUILD_REF_SLUG/frontend/nginx/ssl/
+    - sudo cp -R /home/gitlab-runner/conf.d/* /code/$CI_BUILD_REF_SLUG/frontend/nginx/conf.d/
+    - ./prod.sh build
+    - ./prod.sh up --force-recreate
+    - ./prod.sh i setup-db
+    - ./prod.sh m collectstatic --noinput
+  when: manual
+  environment:
+    name: review/$CI_BUILD_REF_NAME
+    url: https://$CI_BUILD_REF_SLUG.$REVIEW_APPS_DOMAIN
+    on_stop: stop_review
+  only:
+    - branches
+  except:
+    - master
+  tags:
+    - review
+    - review-app
+    - dev
+stop_review:
+  stage: review
+  before_script:
+    - echo "Removing Review app and Directory"
+  script:
+    - cd /code/$CI_BUILD_REF_SLUG
+    - ./prod.sh stop
+    - ./prod.sh m reset_db --noinput
+    - docker container prune -f
+    - docker image prune -f
+    - docker network prune -f
+    - docker volume prune -f
+    - sudo rm -rf /code/$CI_BUILD_REF_SLUG
+  variables:
+    GIT_STRATEGY: none
+  when: manual
+  environment:
+    name: review/$CI_BUILD_REF_NAME
+    action: stop
+  allow_failure: true
+  tags:
+    - review
+    - review-app
+    - dev
+build_staging:
   image: tmaier/docker-compose:latest
   variables:
     DOCKER_DRIVER: overlay2
@@ -74,8 +133,7 @@ release_develop:
     SECRET_KEY: "jumpcut"
     TESTING_DATABASE_URL: "postgres://postgres:postgres@postgres:5432/postgres"
     TESTING_WSGI_APPLICATION: "jumpcut.www_wsgi.application"
-
-  stage: release
+  stage: build
   cache: {}
   before_script:
       - docker-compose --version
@@ -96,10 +154,10 @@ release_develop:
     - latest
     - master
     - release
+    - staging
   only:
-    - master
-
-deploy-develop:
+    - master # TODO include staging as well.
+deploy_staging:
   stage: deploy
   cache: {}
   before_script:
@@ -114,3 +172,5 @@ deploy-develop:
     - ssh -i key "$SSH_DESTINATION"
   only:
     - master
+
+# TODO add deployment for production.
