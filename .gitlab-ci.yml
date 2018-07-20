@@ -5,7 +5,6 @@ services:
  - redis:latest
 stages:
  - test_api
- - variables
  - test_react
  - review
  - build
@@ -57,13 +56,6 @@ test_react:
     - node_modules/
   script:
      - yarn run test
-test_something:
-  stage: variables
-  before_script:
-    - echo $CI_BUILD_REF_SLUG
-    - chmod +x ./echo_script.sh
-  script:  
-    - ./echo_script.sh
 start_review:
   image: debian:stretch-slim
   stage: review
@@ -76,18 +68,8 @@ start_review:
     - ssh-keyscan ronzertnert.me >> ~/.ssh/known_hosts
     - chmod 644 ~/.ssh/known_hosts
   script:
-    - rsync -av . --delete /code/$CI_BUILD_REF_SLUG
-    - ssh "$SSH_REVIEW_DESTINATION"
-    - cd /code/$CI_BUILD_REF_SLUG
-    - cp ./frontend/.env.review.template ./frontend/.env
-    - cp ./backend/.env.review.template ./backend/.env
-    - sudo cp -R /home/gitlab-runner/ssl/* /code/$CI_BUILD_REF_SLUG/frontend/nginx/ssl/
-    - sudo cp -R /home/gitlab-runner/conf.d/* /code/$CI_BUILD_REF_SLUG/frontend/nginx/conf.d/
-    - docker-compose -f docker-compose.production.yml build
-    - docker-compose -f docker-compose.production.yml up -d --force-recreate
-    - docker-compose -f docker-compose.production.yml run --rm api invoke setup-db
-    - docker-compose -f docker-compose.production.yml run --rm api python src/manage.py collectstatic --noinput
-    - docker-compose -f docker-compose.production.yml run --rm api python src/manage.py loaddata films wiki
+    - chmod +x ./scripts/delete-review.sh
+    - ./scripts/delete-review.sh
   when: manual
   environment:
     name: review/$CI_BUILD_REF_NAME
@@ -106,17 +88,8 @@ stop_review:
   before_script:
     - echo "Removing Review app and Directory"
   script:
-    - cd /code/$CI_BUILD_REF_SLUG
-    - docker-compose -f docker-compose.production.yml stop
-    - docker container prune -f
-    - docker-compose -f docker-compose.production.yml kill
     - chmod +x ./scripts/delete-review.sh
     - ./scripts/delete-review.sh
-    - docker image prune -f
-    - docker network prune -f
-    - docker volume prune -f
-    - docker volume ls -qf dangling=true | xargs -r docker volume rm
-    - sudo rm -rf /code/$CI_BUILD_REF_SLUG
   variables:
     GIT_STRATEGY: none
   when: manual
