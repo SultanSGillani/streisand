@@ -75,10 +75,11 @@ start_review:
     - cp ./backend/.env.review.template ./backend/.env
     - sudo cp -R /home/gitlab-runner/ssl/* /code/$CI_BUILD_REF_SLUG/frontend/nginx/ssl/
     - sudo cp -R /home/gitlab-runner/conf.d/* /code/$CI_BUILD_REF_SLUG/frontend/nginx/conf.d/
-    - ./prod.sh build
-    - ./prod.sh up --force-recreate
-    - ./prod.sh i setup-db
-    - ./prod.sh m collectstatic --noinput
+    - docker-compose -f docker-compose.production.yml build
+    - docker-compose -f docker-compose.production.yml up -d --force-recreate
+    - docker-compose -f docker-compose.production.yml run --rm api invoke setup-db
+    - docker-compose -f docker-compose.production.yml run --rm api python src/manage.py collectstatic --noinput
+    - docker-compose -f docker-compose.production.yml run --rm api python src/manage.py loaddata films wiki
   when: manual
   environment:
     name: review/$CI_BUILD_REF_NAME
@@ -98,12 +99,15 @@ stop_review:
     - echo "Removing Review app and Directory"
   script:
     - cd /code/$CI_BUILD_REF_SLUG
-    - ./prod.sh stop
-    - ./prod.sh m reset_db --noinput
+    - docker-compose -f docker-compose.production.yml stop
     - docker container prune -f
+    - docker-compose -f docker-compose.production.yml kill
+    - chmod +x ./scripts/delete-review.sh
+    - ./scripts/delete-review.sh
     - docker image prune -f
     - docker network prune -f
     - docker volume prune -f
+    - docker volume ls -qf dangling=true | xargs -r docker volume rm
     - sudo rm -rf /code/$CI_BUILD_REF_SLUG
   variables:
     GIT_STRATEGY: none
