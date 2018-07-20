@@ -5,6 +5,7 @@ services:
  - redis:latest
 stages:
  - test_api
+ - variables
  - test_react
  - review
  - build
@@ -56,6 +57,13 @@ test_react:
     - node_modules/
   script:
      - yarn run test
+test_something:
+  stage: variables
+  before_script:
+    - echo $CI_BUILD_REF_SLUG
+    - chmod +x ./echo_script.sh
+  script:  
+    - ./echo_script.sh
 start_review:
   image: debian:stretch-slim
   stage: review
