@@ -76,7 +76,7 @@ start_review:
     - sudo cp -R /home/gitlab-runner/ssl/* /code/$CI_BUILD_REF_SLUG/frontend/nginx/ssl/
     - sudo cp -R /home/gitlab-runner/conf.d/* /code/$CI_BUILD_REF_SLUG/frontend/nginx/conf.d/
     - docker-compose -f docker-compose.production.yml build
-    - docker-compose -f docker-compose.production.yml up --force-recreate
+    - docker-compose -f docker-compose.production.yml up -d --force-recreate
     - docker-compose -f docker-compose.production.yml i setup-db
     - docker-compose -f docker-compose.production.yml m collectstatic --noinput
   when: manual
