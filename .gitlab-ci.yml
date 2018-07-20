@@ -126,7 +126,7 @@ build_staging:
   before_script:
       - docker-compose --version
       - docker version
-      - "docker login -u gitlab-ci-token -p $CI_JOB_TOKEN $CI_REGISTRY"
+      - "docker login -u gitlab-ci-token -p $CI_BUILD_TOKEN $CI_REGISTRY"
   script:
     - echo "$CONTAINER_COMMIT_IMAGE"
     - cd $FRONTEND_DIR
