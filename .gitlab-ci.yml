@@ -92,7 +92,7 @@ stop_review:
   script:
     - chmod +x ./scripts/delete-review.sh
     - ./scripts/delete-review.sh
-    - sudo rm -rf /code/$$CI_ENVIRONMENT_SLUG
+    - sudo rm -rf /code/$CI_ENVIRONMENT_SLUG
   variables:
     GIT_STRATEGY: none
   when: manual
