@@ -77,8 +77,8 @@ start_review:
     - sudo cp -R /home/gitlab-runner/conf.d/* /code/$CI_BUILD_REF_SLUG/frontend/nginx/conf.d/
     - docker-compose -f docker-compose.production.yml build
     - docker-compose -f docker-compose.production.yml up -d --force-recreate
-    - docker-compose -f docker-compose.production.yml i setup-db
-    - docker-compose -f docker-compose.production.yml m collectstatic --noinput
+    - docker-compose -f docker-compose.production.yml run --rm api invoke setup-db
+    - docker-compose -f docker-compose.production.yml run --rm api python src/manage.py collectstatic --noinput
   when: manual
   environment:
     name: review/$CI_BUILD_REF_NAME
