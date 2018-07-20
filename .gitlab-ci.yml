@@ -68,12 +68,14 @@ start_review:
     - ssh-keyscan ronzertnert.me >> ~/.ssh/known_hosts
     - chmod 644 ~/.ssh/known_hosts
   script:
-    - chmod +x ./scripts/delete-review.sh
-    - ./scripts/delete-review.sh
+    - rsync -av . --delete /code/$CI_ENVIRONMENT_SLUG
+    - ssh "$SSH_REVIEW_DESTINATION"
+    - chmod +x ./scripts/create-review.sh
+    - ./scripts/create-review.sh
   when: manual
   environment:
     name: review/$CI_BUILD_REF_NAME
-    url: https://$CI_BUILD_REF_SLUG.$REVIEW_APPS_DOMAIN
+    url: https://$CI_ENVIRONMENT_SLUG.$REVIEW_APPS_DOMAIN
     on_stop: stop_review
   only:
     - branches
@@ -90,6 +92,7 @@ stop_review:
   script:
     - chmod +x ./scripts/delete-review.sh
     - ./scripts/delete-review.sh
+    - sudo rm -rf /code/$$CI_ENVIRONMENT_SLUG
   variables:
     GIT_STRATEGY: none
   when: manual
