@@ -74,7 +74,7 @@ start_review:
     - ./scripts/create-review.sh
   when: manual
   environment:
-    name: review/$CI_BUILD_REF_NAME
+    name: review/$CI_COMMIT_REF_NAME
     url: https://$CI_ENVIRONMENT_SLUG.$REVIEW_APPS_DOMAIN
     on_stop: stop_review
   only:
@@ -97,7 +97,7 @@ stop_review:
     GIT_STRATEGY: none
   when: manual
   environment:
-    name: review/$CI_BUILD_REF_NAME
+    name: review/$CI_COMMIT_REF_NAME
     action: stop
   allow_failure: true
   tags:
@@ -126,7 +126,7 @@ build_staging:
   before_script:
       - docker-compose --version
       - docker version
-      - "docker login -u gitlab-ci-token -p $CI_BUILD_TOKEN $CI_REGISTRY"
+      - "docker login -u gitlab-ci-token -p $CI_JOB_TOKEN $CI_REGISTRY"
   script:
     - echo "$CONTAINER_COMMIT_IMAGE"
     - cd $FRONTEND_DIR
