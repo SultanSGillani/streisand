@@ -79,6 +79,7 @@ start_review:
     - docker-compose -f docker-compose.production.yml up -d --force-recreate
     - docker-compose -f docker-compose.production.yml run --rm api invoke setup-db
     - docker-compose -f docker-compose.production.yml run --rm api python src/manage.py collectstatic --noinput
+    - docker-compose -f docker-compose.production.yml run --rm api python src/manage.py loaddata films wiki
   when: manual
   environment:
     name: review/$CI_BUILD_REF_NAME
