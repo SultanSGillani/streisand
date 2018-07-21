@@ -18,6 +18,7 @@ THIRD_PARTY_APPS = [
     'django_filters',
     'django_su',
     'drf_yasg',
+    'elastic_panel',
     'knox',
     'raven.contrib.django.raven_compat',
     'rest_framework',
@@ -277,6 +278,22 @@ if DEBUG and not TESTING:
         'bandit',
         'debug_toolbar',
         'django_extensions',
+    ]
+    DEBUG_TOOLBAR_PANELS = [
+        'debug_toolbar.panels.versions.VersionsPanel',
+        'debug_toolbar.panels.timer.TimerPanel',
+        'debug_toolbar.panels.settings.SettingsPanel',
+        'debug_toolbar.panels.headers.HeadersPanel',
+        'debug_toolbar.panels.request.RequestPanel',
+        'debug_toolbar.panels.sql.SQLPanel',
+        'debug_toolbar.panels.templates.TemplatesPanel',
+        'debug_toolbar.panels.staticfiles.StaticFilesPanel',
+        'debug_toolbar.panels.cache.CachePanel',
+        'debug_toolbar.panels.signals.SignalsPanel',
+        'debug_toolbar.panels.logging.LoggingPanel',
+        'debug_toolbar.panels.redirects.RedirectsPanel',
+        'debug_toolbar.panels.profiling.ProfilingPanel',
+        'elastic_panel.panel.ElasticDebugPanel',
     ]
     BANDIT_EMAIL = config('BANDIT_EMAIL', default='')
 
