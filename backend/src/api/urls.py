@@ -48,7 +48,8 @@ router.register(r'film-comments', viewset=films_views.FilmCommentViewSet, base_n
 
 # Film Collections
 router.register(r'collection-comments', viewset=films_views.CollectionCommentViewSet, base_name='collection-comment')
-router.register(r'film-collections', viewset=films_views.CollectionViewSet, base_name='collection')
+router.register(r'film-collections', viewset=films_views.CollectionViewSet, base_name='film-collection')
+router.register(r'film-collection-items', viewset=films_views.CollectionCreateViewSet, base_name='film-collection-item')
 
 # Releases
 router.register(r'releases', viewset=releases_views.ReleaseViewSet, base_name='release')
