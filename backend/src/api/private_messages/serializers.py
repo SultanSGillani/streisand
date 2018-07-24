@@ -1,99 +1,49 @@
-# -*- coding: utf-8 -*-
 from rest_framework import serializers
-from rest_framework_recursive.fields import RecursiveField
-
-from private_messages.models import Message
-from users.models import User
-
-from ..mixins import AllowFieldLimitingMixin
-from ..users.serializers import DisplayUserSerializer
+from private_messages.models import Conversation, Message, Conversation_Participants
 
 
-class ReplyMessageSerializer(AllowFieldLimitingMixin, serializers.ModelSerializer):
-    """
-    Reply to the initial Message. We are selecting the parent message, and then
-    adding child messages to the initial message.
+class ParticipantsSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Conversation_Participants
+        fields = ('id', 'users', 'read_at', 'is_super_user')
 
-    /api/v1/messages/{parent_id}/reply/
 
-    """
-    sender = DisplayUserSerializer(read_only=True)
-    recipient = serializers.PrimaryKeyRelatedField(queryset=User.objects.all())
-    children = serializers.ListField(read_only=True, child=RecursiveField(), source='children.all')
+class ConversationSerializer(serializers.ModelSerializer):
+    creator = serializers.PrimaryKeyRelatedField(read_only=True)
 
     class Meta:
-        model = Message
-        fields = (
-            'id',
-            'parent',
-            'level',
-            'sender',
-            'recipient',
-            'body',
-            'sender_deleted_at',
-            'recipient_deleted_at',
-            'replied_at',
-            'children',
-        )
+        model = Conversation
+        fields = ('id', 'created_at', 'modified_at', 'creator', 'subject')
 
     def create(self, validated_data):
-        validated_data['sender'] = self.context['request'].user
+        validated_data['creator'] = self.context['request'].user
         return super().create(validated_data)
 
 
-class MessageSerializer(AllowFieldLimitingMixin, serializers.ModelSerializer):
-    sender = DisplayUserSerializer(read_only=True)
-    recipient = serializers.PrimaryKeyRelatedField(queryset=User.objects.all())
-    deleted_message = serializers.SerializerMethodField()
-    subject = serializers.CharField(allow_blank=False)
-    children = serializers.ListField(read_only=True, child=RecursiveField(), source='children.all')
+class MessageSerializer(serializers.ModelSerializer):
+    conversation = ConversationSerializer()
+    participant = ParticipantsSerializer()
 
     class Meta:
         model = Message
-        fields = (
-            'id',
-            'parent',
-            'children',
-            'level',
-            'sender',
-            'recipient',
-            'deleted_message',
-            'subject',
-            'body',
-            'sent_at',
-        )
-
-    def get_deleted_message(self, obj):
-        if obj.sender_deleted_at or obj.recipient_deleted_at is not None:
-            return True
-        return False
+        fields = ('id', 'conversation', 'participant', 'body')
 
     def create(self, validated_data):
-        validated_data['sender'] = self.context['request'].user
-        return super().create(validated_data)
+        """
+        Create and return a new `Message` instance, given the validated data.
+        """
+        conversation_data = validated_data.pop('conversation', None)
+        participant_data = validated_data.pop('participant', None)
+        if conversation_data:
+            conversation = Conversation.objects.create(**conversation_data)
+            validated_data['conversation'] = conversation
+        if participant_data:
+            participant = Conversation_Participants.objects.create(**participant_data)
+            validated_data['participant'] = participant
+        return Message.objects.create(**validated_data)
 
-
-class SenderTrashSerializer(serializers.ModelSerializer):
-    sender_deleted_date = serializers.DateTimeField(read_only=True, source='sender_deleted_at')
-
-    class Meta:
-        model = Message
-        fields = (
-            'id',
-            'parent',
-            'deleted_outbox',
-            'sender_deleted_date'
-        )
-
-
-class RecipientTrashSerializer(serializers.ModelSerializer):
-    recipient_deleted_date = serializers.DateTimeField(read_only=True, source='recipient_deleted_at')
-
-    class Meta:
-        model = Message
-        fields = (
-            'id',
-            'parent',
-            'deleted_inbox',
-            'recipient_deleted_date'
-        )
+    def save(self):
+        creator = serializers.CurrentUserDefault()
+        conversation = self.validated_data['conversation']
+        participant = self.validated_data['participant']
+        body = self.validated_data['body']
