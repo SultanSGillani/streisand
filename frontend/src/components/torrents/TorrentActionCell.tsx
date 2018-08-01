@@ -37,7 +37,7 @@ class TorrentActionCellComponent extends React.Component<CombinedProps> {
             });
         };
 
-        const downloadUrl = `${globals.baseUrl}${torrent.downloadUrl}`;
+        const downloadUrl = `${torrent.downloadUrl}`;
         return (
             <td>
                 <div className="row justify-content-end no-gutters">
