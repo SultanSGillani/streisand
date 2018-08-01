@@ -3,7 +3,6 @@ import { connect } from 'react-redux';
 import { push } from 'react-router-redux';
 import { Button, ButtonGroup } from 'reactstrap';
 
-import globals from '../../utilities/globals';
 import AwesomeIcon from '../generic/AwesomeIcon';
 import { ITorrent } from '../../models/ITorrent';
 import { IDispatch } from '../../state/actions/ActionTypes';
