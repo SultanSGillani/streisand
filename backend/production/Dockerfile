@@ -40,7 +40,7 @@ COPY . .
 
 RUN mkdir -p /code/frontend
 
-COPY --from=jumpcut_nginx_react /usr/share/nginx/html/* /code/frontend/
+COPY --from=nginx_react:latest /usr/share/nginx/html/* /code/frontend/
 
 
 EXPOSE 8000 7070

@@ -55,6 +55,7 @@ services:
       context: ./frontend
       dockerfile: ./production/Dockerfile
     container_name: nginx_react
+    image: nginx_react:latest
     env_file: ./frontend/.env
     ports:
     - 443:443
