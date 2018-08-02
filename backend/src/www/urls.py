@@ -2,7 +2,6 @@
 
 from django.conf import settings
 from django.conf.urls import include, url
-from django.views.generic import TemplateView
 
 from torrents.views import TorrentDownloadView
 
@@ -20,7 +19,6 @@ urlpatterns = [
 
     # Authentication
     url(r'^su/', include('django_su.urls')),
-    url(r'^frontend/', TemplateView.as_view(template_name="index.html")),
 
 ]
 
