@@ -18,6 +18,7 @@ services:
     depends_on:
     - postgres
     - redis
+    - nginx_react
     restart: always
   celerybeat:
     image: registry.pinigseu.xyz/jumpcut/jumpcut:latest
@@ -54,8 +55,6 @@ services:
       context: ./frontend
       dockerfile: ./production/Dockerfile
     container_name: nginx_react
-    depends_on:
-    - api
     env_file: ./frontend/.env
     ports:
     - 443:443

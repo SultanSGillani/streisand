@@ -37,7 +37,11 @@ RUN apk add --update --no-cache \
 && apk del .build-deps
 
 COPY . .
-ENV PYTHONPATH /code/src
+
+RUN mkdir -p /code/frontend
+
+COPY --from=jumpcut_nginx_react /usr/share/nginx/html/* /code/frontend/
+
 
 EXPOSE 8000 7070
 
