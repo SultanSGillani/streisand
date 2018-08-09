@@ -8,6 +8,7 @@ pipcache/
 *.env
 *.save
 *.pem
+backend/docs/_build/html
 
 # Byte-compiled / optimized / DLL files
 __pycache__/

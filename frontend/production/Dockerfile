@@ -17,9 +17,7 @@ FROM nginx:alpine
 
 MAINTAINER JumpCut
 
-COPY --from=builder /react/dist/index.html /usr/share/nginx/html/index.html
-
-COPY --from=builder /react/dist/app.bundle.js /usr/share/nginx/html/app.bundle.js
+COPY --from=builder /react/dist/* /usr/share/nginx/html/
 
 RUN apk add --update bash \
   certbot \
