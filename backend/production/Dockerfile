@@ -22,6 +22,7 @@ RUN apk add --update --no-cache \
     pcre-dev \
     mariadb-dev \
     mariadb-client-libs \
+    make \
 && addgroup -S nginx \
 && adduser -D -S -h /var/cache/nginx -s /sbin/nologin -G nginx nginx \
 && apk add --no-cache --virtual .build-deps \
