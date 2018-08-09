@@ -16,6 +16,7 @@ RUN apk add --update --no-cache \
     jpeg-dev \
     zlib-dev \
     bash \
+    git \
     libffi-dev \
     postgresql-dev \
     libmemcached-dev \

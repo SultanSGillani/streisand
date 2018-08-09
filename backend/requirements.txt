@@ -28,7 +28,7 @@ djangorestframework==3.8.2
 djangorestframework-camel-case==1.0b1
 djangorestframework-filters
 django-docs==0.3.0
-https://github.com/axnsan12/drf-yasg/archive/master.zip
+git+https://github.com/axnsan12/drf-yasg.git
 flex>=6.11.1
 swagger-spec-validator>=2.1.0
 kombu==4.2.1.0
