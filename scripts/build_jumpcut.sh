@@ -19,7 +19,7 @@ sudo cp /etc/nginx/ssl/dhparam.pem /code/jumpcut/frontend/nginx/ssl/dhparam.pem
 sudo docker-compose -f docker-compose.production.yml -f docker-compose.production.yml build
 
 # Build Docs
-sudo docker-compose -f docker-compose.production.yml run --rm api sphinx-build -b html /code/docs /code/docs/html
+sudo docker-compose -f docker-compose.production.yml run --rm api sphinx-build -b html /code/docs /code/docs/_build/html
 
 # Start Production
 sudo docker-compose -f docker-compose.production.yml up -d --force-recreate
