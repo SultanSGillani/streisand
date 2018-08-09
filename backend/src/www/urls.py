@@ -10,6 +10,9 @@ urlpatterns = [
     # API
     url(r'^api/v1/', include('api.urls')),
 
+    # Sphinx Documentation
+    url(r'^docs/', include('docs.urls')),
+
     # torrent urls
     url(
         regex=r'^torrent-download/(?P<torrent_id>\d+)/(?P<user_id>\d+)/(?P<unique_download_key>[0-9a-f]{64})/$',

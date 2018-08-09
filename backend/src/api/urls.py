@@ -95,6 +95,7 @@ urlpatterns = [
     url(r'^session/auth/', include('rest_framework.urls', namespace='rest_framework')),
     url(r'^swagger(?P<format>\.json|\.yaml)$', SchemaView.without_ui(cache_timeout=None), name='schema-json'),
     url(r'^swagger/$', SchemaView.with_ui('swagger', cache_timeout=None), name='schema-swagger-ui'),
+    url(r'^redoc/$', SchemaView.with_ui('redoc', cache_timeout=0), name='schema-redoc'),
 
     # API Core-Schema Docs TODO: Update this when better Api Docs come out and work.
     url(r'^schema/', include_docs_urls(title='streisand API v1', public=False)),

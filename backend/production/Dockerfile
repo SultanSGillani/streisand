@@ -16,12 +16,14 @@ RUN apk add --update --no-cache \
     jpeg-dev \
     zlib-dev \
     bash \
+    git \
     libffi-dev \
     postgresql-dev \
     libmemcached-dev \
     pcre-dev \
     mariadb-dev \
     mariadb-client-libs \
+    make \
 && addgroup -S nginx \
 && adduser -D -S -h /var/cache/nginx -s /sbin/nologin -G nginx nginx \
 && apk add --no-cache --virtual .build-deps \
