@@ -108,7 +108,7 @@ stop_review:
 pages:
   stage: docs
   script:
-  - make --directory docs/html
+  - make --directory docs html
   - mv docs/_build/html/ docs/public/
   artifacts:
     paths:
