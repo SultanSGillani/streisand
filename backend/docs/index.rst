@@ -10,6 +10,7 @@ Welcome to JumpCut's documentation!
    :maxdepth: 2
    :caption: Contents:
 
+   readme.rst
    modules/api/serializers.rst
    modules/api/views.rst
    modules/comments/models.rst
