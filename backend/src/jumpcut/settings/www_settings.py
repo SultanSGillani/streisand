@@ -53,7 +53,8 @@ MIDDLEWARE = [
 ROOT_URLCONF = 'www.urls'
 
 DOCS_ROOT = os.path.join(BASE_DIR, '../docs/_build/html')
-DOCS_ACCESS = 'staff'
+DOCS_ACCESS = 'login_required'
+
 PASSWORD_HASHERS = [
     'django.contrib.auth.hashers.Argon2PasswordHasher',
     'www.auth.OldSitePasswordHasher',
