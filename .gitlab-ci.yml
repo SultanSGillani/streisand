@@ -104,6 +104,16 @@ stop_review:
     - review
     - review-app
     - dev
+pages:
+  stage: docs
+  script:
+  - make --directory docs/html
+  - mv docs/_build/html/ docs/public/
+  artifacts:
+    paths:
+    - public
+  only:
+  - master
 build_staging:
   image: tmaier/docker-compose:latest
   variables:
