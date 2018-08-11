@@ -113,7 +113,7 @@ pages:
   - cp -r docs/_build/html/* docs/public/
   artifacts:
     paths:
-    - public
+    - docs/public
   only:
   - master
 build_staging:
