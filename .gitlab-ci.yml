@@ -31,22 +31,27 @@ before_script:
   - pip install virtualenv
   - virtualenv venv
   - source venv/bin/activate
-  - cd backend
-  - pip install -r requirements.txt
-  - pip install -r testing_requirements.txt
+  - pip install -r backend/requirements.txt
+  - pip install -r backend/testing_requirements.txt
 python_linter:
   stage: test_api
   script:
+    - cd backend
     - invoke run-python-linter
+    - cd .. 
+    - echo "done"!!
 python_tests:
   stage: test_api
   script:
     # Test for missing migrations
-    - src/manage.py makemigrations --check --dry-run || (echo "Missing migrations"; false)
+    - backend/src/manage.py makemigrations --check --dry-run || (echo "Missing migrations"; false)
+    - cd backend
     - invoke migrate
     - invoke foundation
     - invoke fixtures
     - invoke run-python-tests --coverage
+    - cd ..
+    - echo "done!!"
 test_react:
   image: node:latest
   stage: test_react
@@ -109,11 +114,13 @@ stop_review:
 pages:
   stage: docs
   script:
-  - make --directory docs html
-  - cp -r docs/_build/html/* docs/public/
+  - make --directory backend/docs html
+  - mkdir public
+  - cp README.rst backend/docs/readme.rst
+  - cp -r backend/docs/_build/html/* public/
   artifacts:
     paths:
-    - docs/public
+    - public
   only:
   - master
 build_staging:
