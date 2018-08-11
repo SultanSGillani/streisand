@@ -36,16 +36,22 @@ before_script:
 python_linter:
   stage: test_api
   script:
+    - cd backend
     - invoke run-python-linter
+    - cd .. 
+    - echo "done"!!
 python_tests:
   stage: test_api
   script:
     # Test for missing migrations
     - backend/src/manage.py makemigrations --check --dry-run || (echo "Missing migrations"; false)
+    - cd backend
     - invoke migrate
     - invoke foundation
     - invoke fixtures
     - invoke run-python-tests --coverage
+    - cd ..
+    - echo "done!!"
 test_react:
   image: node:latest
   stage: test_react
