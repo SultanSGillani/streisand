@@ -4,8 +4,8 @@ ignore =
         # line too long (> 79 characters)
         E501,
 
-        # line break before binary operator
-        W503,
+        # line break before and after binary operator
+        W503, W504
 
         # star imports confuse undefined name detection
         F403, F405
