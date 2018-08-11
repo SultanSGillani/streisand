@@ -11,6 +11,7 @@ stages:
  - build
  - deploy
 variables:
+  DOCKER_DRIVER: overlay2
   PIP_CACHE_DIR: "$CI_PROJECT_DIR/.cache"
   CONTAINER_COMMIT_IMAGE: $CI_REGISTRY_IMAGE:$CI_COMMIT_REF_NAME
   CONTAINER_RELEASE_IMAGE: $CI_REGISTRY_IMAGE:latest
@@ -109,10 +110,10 @@ pages:
   stage: docs
   script:
   - make --directory docs html
-  - mv docs/_build/html/ docs/public/
+  - cp -r docs/_build/html/* docs/public/
   artifacts:
     paths:
-    - public
+    - docs/public
   only:
   - master
 build_staging:
