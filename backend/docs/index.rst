@@ -11,24 +11,24 @@ Welcome to JumpCut's documentation!
    :caption: Contents:
 
    readme.rst
-   modules/api/serializers.rst
-   modules/api/views.rst
-   modules/comments/models.rst
-   modules/films/models.rst
-   modules/forums/models.rst
-   modules/imdb/models.rst
-   modules/invites/models.rst
-   modules/media_formats/models.rst
-   modules/releases/models.rst
-   modules/rotten_tomatoes/models.rst
-   modules/torrent_requests/models.rst
-   modules/torrent_stats/models.rst
-   modules/torrents/models.rst
-   modules/tracker/models.rst
-   modules/tracker/views.rst
-   modules/users/models.rst
-   modules/wiki/models.rst
-   modules/www/models.rst
+   modules/api/modules.rst
+   modules/comments/modules.rst
+   modules/films/modules.rst
+   modules/forums/modules.rst
+   modules/imdb/modules.rst
+   modules/invites/modules.rst
+   modules/jumpcut/modules.rst
+   modules/media_formats/modules.rst
+   modules/mediainfo/modules.rst
+   modules/releases/modules.rst
+   modules/rotten_tomatoes/modules.rst
+   modules/torrent_requests/modules.rst
+   modules/torrent_stats/modules.rst
+   modules/torrents/modules.rst
+   modules/tracker/modules.rst
+   modules/users/modules.rst
+   modules/wiki/modules.rst
+   modules/www/modules.rst
 
 Indices and tables
 ==================

@@ -13,6 +13,6 @@ ignore =
 
 
 include = kinetic, setup.py, install.py
-exclude = migrations, static, provision, .git, .idea, .vagrant, __pycache__, *.pyc, *.gz
+exclude = docs, migrations, static, provision, .git, .idea, .vagrant, __pycache__, *.pyc, *.gz
 
 max-line-length = 120
