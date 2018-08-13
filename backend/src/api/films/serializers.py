@@ -2,15 +2,16 @@
 
 from django.core.paginator import Paginator, InvalidPage, PageNotAnInteger
 from rest_framework import serializers
+from drf_queryfields import QueryFieldsMixin
 
-from api.mixins import AllowFieldLimitingMixin
 from api.users.serializers import DisplayUserSerializer
 from films.models import Film, Collection, CollectionComment, FilmComment
 
 
-class FilmCommentSerializer(AllowFieldLimitingMixin, serializers.ModelSerializer):
+class FilmCommentSerializer(QueryFieldsMixin, serializers.ModelSerializer):
     author = DisplayUserSerializer(read_only=True)
     body = serializers.CharField(source='text')
+    exclude_arg_name = 'omit'
 
     class Meta:
         model = FilmComment
@@ -28,9 +29,10 @@ class FilmCommentSerializer(AllowFieldLimitingMixin, serializers.ModelSerializer
         return super().create(validated_data)
 
 
-class CollectionCommentSerializer(AllowFieldLimitingMixin, serializers.ModelSerializer):
+class CollectionCommentSerializer(QueryFieldsMixin, serializers.ModelSerializer):
     author = DisplayUserSerializer(read_only=True)
     body = serializers.CharField(source='text')
+    exclude_arg_name = 'omit'
 
     class Meta:
         model = CollectionComment
@@ -48,7 +50,7 @@ class CollectionCommentSerializer(AllowFieldLimitingMixin, serializers.ModelSeri
         return super().create(validated_data)
 
 
-class AdminFilmSerializer(AllowFieldLimitingMixin, serializers.ModelSerializer):
+class AdminFilmSerializer(QueryFieldsMixin, serializers.ModelSerializer):
     film_comments = FilmCommentSerializer(
         read_only=True,
         many=True,
@@ -57,6 +59,7 @@ class AdminFilmSerializer(AllowFieldLimitingMixin, serializers.ModelSerializer):
     )
 
     imdb_id = serializers.SerializerMethodField()
+    exclude_arg_name = 'omit'
 
     class Meta(FilmCommentSerializer.Meta):
         model = Film
@@ -125,10 +128,11 @@ class CollectionCreateSerializer(serializers.ModelSerializer):
         return obj.films.count()
 
 
-class CollectionListSerializer(AllowFieldLimitingMixin, serializers.ModelSerializer):
+class CollectionListSerializer(QueryFieldsMixin, serializers.ModelSerializer):
 
     films = serializers.SerializerMethodField('paginated_films')
     films_count = serializers.SerializerMethodField()
+    exclude_arg_name = 'omit'
 
     class Meta:
         model = Collection

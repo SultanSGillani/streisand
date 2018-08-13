@@ -2,8 +2,8 @@
 
 from rest_framework import serializers
 from rest_framework.serializers import ModelSerializer
+from drf_queryfields import QueryFieldsMixin
 
-from api import mixins as api_mixins
 from api.utils import PaginatedRelationField, RelationPaginator
 from forums.models import ForumGroup, ForumPost, ForumThread, ForumTopic, ForumThreadSubscription, ForumReport
 
@@ -50,9 +50,10 @@ class ForumTopicForIndexSerializer(ModelSerializer):
         )
 
 
-class ForumIndexSerializer(api_mixins.AllowFieldLimitingMixin, ModelSerializer):
+class ForumIndexSerializer(QueryFieldsMixin, ModelSerializer):
     topics = ForumTopicForIndexSerializer(read_only=True, many=True)
     topic_count = serializers.SerializerMethodField()
+    exclude_arg_name = 'omit'
 
     class Meta:
         model = ForumGroup
@@ -121,11 +122,12 @@ class ForumGroupForTopicSerializer(ModelSerializer):
         )
 
 
-class ForumTopicIndexSerializer(api_mixins.AllowFieldLimitingMixin, ModelSerializer):
+class ForumTopicIndexSerializer(QueryFieldsMixin, ModelSerializer):
     groups = ForumGroupForTopicSerializer(source='group', read_only=True)
     threads = PaginatedRelationField(ForumThreadForTopicSerializer, paginator=RelationPaginator)
     number_of_posts = serializers.IntegerField(read_only=True)
     number_of_threads = serializers.IntegerField(read_only=True)
+    exclude_arg_name = 'omit'
 
     class Meta:
         model = ForumTopic
@@ -264,12 +266,13 @@ class ForumThreadItemSerializer(ModelSerializer):
         return super().update(instance, validated_data)
 
 
-class ForumThreadIndexSerializer(api_mixins.AllowFieldLimitingMixin, ModelSerializer):
+class ForumThreadIndexSerializer(QueryFieldsMixin, ModelSerializer):
     topics = ForumTopicForThreadSerializer(read_only=True, source='topic')
     groups = ForumGroupForTopicSerializer(read_only=True, source='topic.group')
     posts = PaginatedRelationField(ForumPostForThreadSerializer, paginator=RelationPaginator)
     created_by = serializers.PrimaryKeyRelatedField(read_only=True)
     modified_by = serializers.PrimaryKeyRelatedField(read_only=True)
+    exclude_arg_name = 'omit'
 
     class Meta:
         model = ForumThread
@@ -290,8 +293,9 @@ class ForumThreadIndexSerializer(api_mixins.AllowFieldLimitingMixin, ModelSerial
         )
 
 
-class NewsSerializer(api_mixins.AllowFieldLimitingMixin, ModelSerializer):
+class NewsSerializer(QueryFieldsMixin, ModelSerializer):
     thread_title = serializers.PrimaryKeyRelatedField(source='thread.title', read_only=True)
+    exclude_arg_name = 'omit'
 
     class Meta:
         model = ForumPost
@@ -310,8 +314,9 @@ class NewsSerializer(api_mixins.AllowFieldLimitingMixin, ModelSerializer):
         )
 
 
-class ForumThreadSubscriptionSerializer(api_mixins.AllowFieldLimitingMixin, ModelSerializer):
+class ForumThreadSubscriptionSerializer(QueryFieldsMixin, ModelSerializer):
     user = serializers.PrimaryKeyRelatedField(read_only=True)
+    exclude_arg_name = 'omit'
 
     class Meta:
         model = ForumThreadSubscription
@@ -326,7 +331,8 @@ class ForumThreadSubscriptionSerializer(api_mixins.AllowFieldLimitingMixin, Mode
         return super().create(validated_data)
 
 
-class ForumReportSerializer(api_mixins.AllowFieldLimitingMixin, ModelSerializer):
+class ForumReportSerializer(QueryFieldsMixin, ModelSerializer):
+    exclude_arg_name = 'omit'
 
     class Meta:
         model = ForumReport
