@@ -18,6 +18,7 @@ THIRD_PARTY_APPS = [
     'decouple',
     'django_filters',
     'django_su',
+    'docs',
     'drf_yasg',
     'knox',
     'raven.contrib.django.raven_compat',
@@ -50,6 +51,9 @@ MIDDLEWARE = [
 ]
 
 ROOT_URLCONF = 'www.urls'
+
+DOCS_ROOT = os.path.join(BASE_DIR, '../docs/_build/html')
+DOCS_ACCESS = 'login_required'
 
 PASSWORD_HASHERS = [
     'django.contrib.auth.hashers.Argon2PasswordHasher',
@@ -119,9 +123,9 @@ SWAGGER_SETTINGS = {
     'SUPPORTED_SUBMIT_METHODS': ['get', 'post', 'put', 'delete', 'patch'],
     'OPERATIONS_SORTER': 'alpha'
 }
-SWAGGER_SETTINGS.update({'VALIDATOR_URL': 'http://localhost:8189'})
+
 REDOC_SETTINGS = {
-    'LAZY_RENDERING': True,
+    'SPEC_URL': ('schema-json', {'format': '.json'}),
 }
 
 SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')

@@ -4,10 +4,11 @@ version: '3'
 
 services:
   api:
-    image: gitlab.pinigseu.xyz:4567/jumpcut/jumpcut:latest
+    image: registry.pinigseu.xyz/jumpcut/jumpcut:latest
     container_name: api
     volumes:
     - ./backend/src:/code/src/
+    - ./backend/docs:/code/docs/
     build:
       context: ./backend
       dockerfile: ./production/Dockerfile
@@ -20,7 +21,7 @@ services:
     - redis
     restart: always
   celerybeat:
-    image: gitlab.pinigseu.xyz:4567/jumpcut/jumpcut:latest
+    image: registry.pinigseu.xyz/jumpcut/jumpcut:latest
     command: bash -c "celery beat --workdir /code/src -A jumpcut -l info"
     container_name: celerybeat
     volumes:
@@ -35,7 +36,7 @@ services:
     - postgres
     - redis
   celeryworker:
-    image: gitlab.pinigseu.xyz:4567/jumpcut/jumpcut:latest
+    image: registry.pinigseu.xyz/jumpcut/jumpcut:latest
     command: bash -c "celery worker --workdir /code/src -A jumpcut -l info"
     container_name: celeryworker
     volumes:

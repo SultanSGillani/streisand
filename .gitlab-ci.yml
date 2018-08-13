@@ -7,9 +7,11 @@ stages:
  - test_api
  - test_react
  - review
+ - docs
  - build
  - deploy
 variables:
+  DOCKER_DRIVER: overlay2
   PIP_CACHE_DIR: "$CI_PROJECT_DIR/.cache"
   CONTAINER_COMMIT_IMAGE: $CI_REGISTRY_IMAGE:$CI_COMMIT_REF_NAME
   CONTAINER_RELEASE_IMAGE: $CI_REGISTRY_IMAGE:latest
@@ -29,22 +31,27 @@ before_script:
   - pip install virtualenv
   - virtualenv venv
   - source venv/bin/activate
-  - cd backend
-  - pip install -r requirements.txt
-  - pip install -r testing_requirements.txt
+  - pip install -r backend/requirements.txt
+  - pip install -r backend/testing_requirements.txt
 python_linter:
   stage: test_api
   script:
+    - cd backend
     - invoke run-python-linter
+    - cd .. 
+    - echo "done"!!
 python_tests:
   stage: test_api
   script:
     # Test for missing migrations
-    - src/manage.py makemigrations --check --dry-run || (echo "Missing migrations"; false)
+    - backend/src/manage.py makemigrations --check --dry-run || (echo "Missing migrations"; false)
+    - cd backend
     - invoke migrate
     - invoke foundation
     - invoke fixtures
     - invoke run-python-tests --coverage
+    - cd ..
+    - echo "done!!"
 test_react:
   image: node:latest
   stage: test_react
@@ -104,6 +111,18 @@ stop_review:
     - review
     - review-app
     - dev
+pages:
+  stage: docs
+  script:
+  - make --directory backend/docs html
+  - mkdir public
+  - cp README.rst backend/docs/readme.rst
+  - cp -r backend/docs/_build/html/* public/
+  artifacts:
+    paths:
+    - public
+  only:
+  - master
 build_staging:
   image: tmaier/docker-compose:latest
   variables:

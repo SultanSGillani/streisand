@@ -12,6 +12,7 @@ COPY ./requirements.txt ./requirements.txt
 COPY ./testing_requirements.txt ./testing_requirements.txt
 
 RUN apk add --no-cache \
+    git \
     jpeg-dev \
     zlib-dev \
     libffi-dev \
@@ -19,8 +20,8 @@ RUN apk add --no-cache \
     postgresql-dev \
     libmemcached-dev \
     mariadb-dev \
-    mariadb-client-libs
-
+    mariadb-client-libs \
+    make
 RUN apk add --no-cache --virtual .build-deps \
     build-base \
     python3-dev \

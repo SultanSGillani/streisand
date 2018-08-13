@@ -2,7 +2,9 @@
 
 from binascii import a2b_base64, b2a_hex
 from datetime import timedelta
+from urllib.parse import urljoin
 
+from django.conf import settings
 from django.contrib.postgres.fields import JSONField
 from django.db import models
 from django.urls import reverse
@@ -98,7 +100,7 @@ class TorrentFile(models.Model):
             user_download_key=user.torrent_download_key_id,
         )
 
-        return reverse(
+        download_path = reverse(
             viewname='torrent_download',
             kwargs={
                 'user_id': user.id,
@@ -106,6 +108,7 @@ class TorrentFile(models.Model):
                 'unique_download_key': unique_download_key,
             }
         )
+        return urljoin(settings.SITE_URL, download_path)
 
     @property
     def file_name_for_download(self):

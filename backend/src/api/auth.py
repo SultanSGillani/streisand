@@ -19,6 +19,7 @@ class UsernamePasswordAuthentication(BaseAuthentication):
         if not (username and password):
             raise exceptions.AuthenticationFailed("You must be joking.")
 
+        # TODO: send signals for success and failure; track IP and username (see www/signals)
         user = authenticate(request=request, username=username, password=password)
 
         if user is None:

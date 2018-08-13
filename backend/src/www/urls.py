@@ -2,7 +2,6 @@
 
 from django.conf import settings
 from django.conf.urls import include, url
-from django.views.generic import TemplateView
 
 from torrents.views import TorrentDownloadView
 
@@ -10,6 +9,9 @@ from torrents.views import TorrentDownloadView
 urlpatterns = [
     # API
     url(r'^api/v1/', include('api.urls')),
+
+    # Sphinx Documentation
+    url(r'^docs/', include('docs.urls')),
 
     # torrent urls
     url(
@@ -20,7 +22,6 @@ urlpatterns = [
 
     # Authentication
     url(r'^su/', include('django_su.urls')),
-    url(r'^frontend/', TemplateView.as_view(template_name="index.html")),
 
 ]
 
