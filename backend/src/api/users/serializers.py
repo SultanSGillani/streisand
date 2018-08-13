@@ -6,8 +6,8 @@ from django.db import transaction
 
 from knox.models import AuthToken
 from rest_framework import serializers, validators
+from drf_queryfields import QueryFieldsMixin
 
-from api.mixins import AllowFieldLimitingMixin
 from api.validators import invite_key_validator
 from invites.models import Invite
 from users.models import User, UserIPAddress, UserAnnounce
@@ -27,8 +27,9 @@ class GroupSerializer(serializers.ModelSerializer):
         fields = ('url', 'name')
 
 
-class UserIPSerializer(AllowFieldLimitingMixin, serializers.ModelSerializer):
+class UserIPSerializer(QueryFieldsMixin, serializers.ModelSerializer):
     ip_address = serializers.SerializerMethodField()
+    exclude_arg_name = 'omit'
 
     class Meta:
         model = UserIPAddress
@@ -47,13 +48,14 @@ class UserIPSerializer(AllowFieldLimitingMixin, serializers.ModelSerializer):
         return obj.ip_address
 
 
-class AdminUserSerializer(AllowFieldLimitingMixin, serializers.ModelSerializer):
+class AdminUserSerializer(QueryFieldsMixin, serializers.ModelSerializer):
 
     user_class_rank = serializers.PrimaryKeyRelatedField(source='user_class', read_only=True)
     ip_addresses = UserIPSerializer(many=True, read_only=True)
     user_class = serializers.StringRelatedField()
     username = serializers.StringRelatedField(read_only=True)
     watch_queue = serializers.StringRelatedField(source='watchlist_entries', many=True, read_only=True, required=False)
+    exclude_arg_name = 'omit'
 
     class Meta:
         model = User
@@ -142,8 +144,9 @@ class CurrentUserSerializer(AdminUserSerializer):
         )
 
 
-class PublicUserSerializer(CurrentUserSerializer, AllowFieldLimitingMixin):
+class PublicUserSerializer(CurrentUserSerializer, QueryFieldsMixin):
     username = serializers.StringRelatedField(read_only=True)
+    exclude_arg_name = 'omit'
 
     class Meta(CurrentUserSerializer.Meta):
         fields = (
@@ -163,7 +166,9 @@ class PublicUserSerializer(CurrentUserSerializer, AllowFieldLimitingMixin):
         )
 
 
-class DisplayUserSerializer(PublicUserSerializer, AllowFieldLimitingMixin):
+class DisplayUserSerializer(PublicUserSerializer, QueryFieldsMixin):
+    exclude_arg_name = 'omit'
+
     class Meta(PublicUserSerializer.Meta):
         fields = (
             'id',
