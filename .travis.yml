@@ -23,6 +23,7 @@ env:
       - REDIS_URL=redis://localhost:6379
       - SECRET_KEY=jumpcut
       - DATABASE_URL=postgres://postgres:postgres@localhost:5433/travis_ci
+      - TESTING_DATABASE_URL=postgres://postgres:postgres@localhost:5433/postgres
       - WSGI_APPLICATION=jumpcut.www_wsgi.application
       - PGPORT=5433
 before_install:
