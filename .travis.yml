@@ -37,13 +37,14 @@ install:
 script:
   - cp backend/.env.template.travis backend/.env
   - cd backend
-  - flake8 src
-  - src/manage.py makemigrations
-  - src/manage.py migrate
-  - coverage run src/manage.py test backend/src
-  - coverage report --include=src/*.*
+  - invoke run-python-linter
+  
+  
 
 after_success:
-    - coverage report --include=src/*.*
+    - src/manage.py migrate  
+    - invoke foundation
+    - invoke fixtures
+    - invoke run-python-tests --coverage
     - codecov --token=$CODECOV_TOKEN
  
