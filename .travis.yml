@@ -38,10 +38,18 @@ before_script:
 script:
    - cd backend
    - invoke run-python-linter
-after_success:
    - src/manage.py migrate  
    - invoke foundation
    - invoke fixtures
    - invoke run-python-tests --coverage
+after_success:
    - codecov --token=$CODECOV_TOKEN
+   - docker login -u $DOCKER_USER -p $DOCKER_PASS
+   - export REPO=streisandjumpcut/streisand
+   - export TAG=`if [ "$TRAVIS_BRANCH" == "master" ]; then echo "latest"; else echo $TRAVIS_BRANCH ; fi`
+   - docker build -f ../frontend/production/Dockerfile -t $REPO:$COMMIT .
+   - docker build -f ./production/Dockerfile -t $REPO:$COMMIT .
+   - docker tag $REPO:$COMMIT $REPO:$TAG
+   - docker tag $REPO:$COMMIT $REPO:travis-$TRAVIS_BUILD_NUMBER
+   - docker push $REPO
  
