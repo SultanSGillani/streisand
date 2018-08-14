@@ -22,8 +22,8 @@ env:
       - PRODUCTION=False
       - REDIS_URL=redis://localhost:6379
       - SECRET_KEY=jumpcut
-      - TESTING_DATABASE_URL=postgres://postgres:postgres@localhost:5433/travis_ci
-      - TESTING_WSGI_APPLICATION=jumpcut.www_wsgi.application
+      - DATABASE_URL=postgres://postgres:postgres@localhost:5433/travis_ci
+      - WSGI_APPLICATION=jumpcut.www_wsgi.application
       - PGPORT=5433
 before_install:
    - sudo sed -i -e '/local.*peer/s/postgres/all/' -e 's/peer\|md5/trust/g' /etc/postgresql/*/main/pg_hba.conf

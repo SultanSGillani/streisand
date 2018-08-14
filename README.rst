@@ -12,7 +12,7 @@ JumpCut
 A private BitTorrent tracker written with Python, Django, Redis, and React.
 
 
-|pipeline status|  |nbsp|  |coverage report|  |nbsp|  |jumpcut|
+|pipeline status| |nbsp| |travis build status| |nbsp| |coverage report| |nbsp| |codecov| |nbsp|  |jumpcut|
 
 Documentation:
 --------------
@@ -165,14 +165,14 @@ in **Windows 10**.
 
 
 Prerequisites and Configuration
-------------------------------
+--------------------------------
 
 -  Windows 10 Professional
 -  Windows Subsystem for Linux (WSL)
 -  Docker for Windows
 
 Installing the Windows Subsystem For Linux
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 Instructions for installing the Windows Subsystem for Linux on Windows
 10 and Ubuntu for Windows can be found at the official WSL website:
@@ -186,7 +186,7 @@ Windows from the start menu. This project also includes an example
 shortcut for starting Ubuntu Bash.
 
 Installing and Configuring Docker for Windows
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 Instructions for installing Docker for Windows can be found at the
 official Docker website:
@@ -428,15 +428,23 @@ to start the proxy server for the site api.
 
 .. |pipeline status| image:: https://gitlab.pinigseu.xyz/jumpcut/jumpcut/badges/master/pipeline.svg?private_token=NNrU7UKc6xRC_ffu9Zzu
    :target: https://gitlab.pinigseu.xyz/jumpcut/jumpcut/commits/master
-   :alt: Pipeline
+    :alt: Pipeline
+
+.. |travis build status| image:: https://travis-ci.org/jumpcut-dev/streisand.svg?branch=master
+   :target: https://travis-ci.org/jumpcut-dev/streisand
+    :alt: Travis
 
 .. |coverage report| image:: https://gitlab.pinigseu.xyz/jumpcut/jumpcut/badges/master/coverage.svg?private_token=NNrU7UKc6xRC_ffu9Zzu
    :target: https://gitlab.pinigseu.xyz/jumpcut/jumpcut/commits/master
-   :alt: Coverage
+    :alt: Coverage
+
+.. |codecov| image:: https://codecov.io/gh/jumpcut-dev/streisand/branch/master/graph/badge.svg
+  :target: https://codecov.io/gh/jumpcut-dev/streisand
+   :alt: CodeCov
 
 .. |jumpcut| image:: https://img.shields.io/badge/JumpCut-ComingSoon-blue.svg
    :target: https://gitlab.pinigseu.xyz/jumpcut/jumpcut/commits/master
-   :alt: JumpCut
+    :alt: JumpCut
 
 .. |nbsp| unicode:: 0xA0
    :trim:
