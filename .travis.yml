@@ -4,7 +4,7 @@ cache: pip
 python:
     - 3.6
 env:
-  - DJANGO=2.0.4
+  - DJANGO=2.0.8
   
 install:
     - pip install -r ./backend/requirements.txt
@@ -12,13 +12,15 @@ install:
     - pip install codecov
 
 script:
-  - flake8 backend
-  - backend/src/manage.py makemigrations
-  - backend/src/manage.py migrate
-  - coverage run backend/src/manage.py test backend/src
-  - coverage report --include=backend/*.*
+  - cp backend/.env.template backend/.env
+  - cd backend
+  - flake8 src
+  - src/manage.py makemigrations
+  - src/manage.py migrate
+  - coverage run src/manage.py test backend/src
+  - coverage report --include=src/*.*
 
 after_success:
-    - coverage report --include=backend/*.*
+    - coverage report --include=src/*.*
     - codecov --token=$CODECOV_TOKEN
  
