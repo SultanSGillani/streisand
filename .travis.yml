@@ -22,7 +22,8 @@ env:
       - PRODUCTION=False
       - REDIS_URL=redis://localhost:6379
       - SECRET_KEY=jumpcut
-      - DATABASE_URL=postgres://postgres:postgres@localhost:5433/travis_ci
+      - DATABASE_URL=postgres://postgres:postgres@localhost:5433/travis
+      - TESTING_DATABASE_URL=postgres://postgres:postgres@localhost:5433/travis_ci
       - WSGI_APPLICATION=jumpcut.www_wsgi.application
       - PGPORT=5433
 before_install:
