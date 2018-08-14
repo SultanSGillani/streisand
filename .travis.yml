@@ -3,8 +3,8 @@ language: python
 cache: pip
 services:
   - postgres
-  - docker:dind
-  - redis:latest
+  - docker
+  - redis
 python:
     - 3.6
 env:
