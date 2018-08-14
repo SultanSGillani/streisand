@@ -130,8 +130,10 @@ build_staging:
     FRONTEND_DIR: /builds/jumpcut/jumpcut/frontend
     BACKEND_DIR: /builds/jumpcut/jumpcut/backend
     PROD_DOCKER_FILE: production/Dockerfile
-    CONTAINER_COMMIT_IMAGE: $CI_REGISTRY_IMAGE:$CI_COMMIT_REF_NAME
+    CONTAINER_API_IMAGE: $CI_REGISTRY_IMAGE:$CI_COMMIT_REF_NAME
+    CONTAINER_REACT_IMAGE: streisandjumpcut/streisand-react:$CI_COMMIT_REF_NAME
     CONTAINER_RELEASE_IMAGE: $CI_REGISTRY_IMAGE:latest
+    CONTAINER_REACT_RELEASE_IMAGE: $CONTAINER_REACT_IMAGE:latest
     ALLOWED_HOSTS: "*"
     DATABASE_URL: "postgres://postgres:postgres@postgres:5432/postgres"
     DEBUG: "True"
@@ -146,16 +148,19 @@ build_staging:
       - docker-compose --version
       - docker version
       - "docker login -u gitlab-ci-token -p $CI_BUILD_TOKEN $CI_REGISTRY"
+      - "docker login -u $HUB_USER -p $HUB_PASSWORD"
   script:
     - echo "$CONTAINER_COMMIT_IMAGE"
     - cd $FRONTEND_DIR
     - cp .env.template .env
-    - docker build --pull -t $CONTAINER_COMMIT_IMAGE -f $PROD_DOCKER_FILE .
+    - docker build --pull -t $CONTAINER_REACT_IMAGE -f $PROD_DOCKER_FILE .
     - cd $BACKEND_DIR
     - cp .env.template .env
-    - docker build --pull -t $CONTAINER_COMMIT_IMAGE -f $PROD_DOCKER_FILE .
+    - docker build --pull -t $CONTAINER_API_IMAGE -f $PROD_DOCKER_FILE .
     - docker push $CI_REGISTRY_IMAGE:$CI_COMMIT_REF_NAME
-    - docker tag $CONTAINER_COMMIT_IMAGE $CONTAINER_RELEASE_IMAGE
+    - docker push $CONTAINER_REACT_IMAGE:$CI_COMMIT_REF_NAME
+    - docker tag $CONTAINER_API_IMAGE $CONTAINER_RELEASE_IMAGE
+    - docker tag $CONTAINER_REACT_RELEASE_IMAGE
     - docker push $CONTAINER_RELEASE_IMAGE
   tags:
     - latest
