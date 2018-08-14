@@ -13,10 +13,12 @@ addons:
     - postgresql-client-10
 python:
     - 3.6.5
+    - 3.7.0
 env:
+  - DJANGO=2.0.8
+  - DJANGO=2.1
   global:
       - DOCKER_DRIVER=overlay2
-      - DJANGO=2.0.8
       - ALLOWED_HOSTS=*
       - DATABASE_URL=postgres://postgres:postgres@localhost:5433/postgres
       - DEBUG=True
