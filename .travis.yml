@@ -1,9 +1,9 @@
-sudo: false
+dist: stretch
+sudo: required
 language: python
 cache: pip
 services:
-  - postgres
-  - docker
+  - postgresql
   - redis
 python:
     - 3.6
