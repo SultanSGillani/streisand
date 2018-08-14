@@ -12,7 +12,7 @@ install:
     - pip install codecov
 
 script:
-  - cp backend/.env.template backend/.env
+  - cp backend/.env.template.travis backend/.env
   - cd backend
   - flake8 src
   - src/manage.py makemigrations
