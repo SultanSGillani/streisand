@@ -49,6 +49,7 @@ after_success:
    - export REPO=streisandjumpcut/streisand
    - export TAG=latest
    - cd ../frontend
+   - cp env.template .env
    - docker build -f ./production/Dockerfile -t $REPO:$TAG .
    - cd ../backend
    - docker build -f ./production/Dockerfile -t $REPO:$TAG .
