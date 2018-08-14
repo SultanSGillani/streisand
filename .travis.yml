@@ -12,7 +12,7 @@ addons:
     - postgresql-10
     - postgresql-client-10
 python:
-    - 3.6
+    - 3.6.5
 env:
   global:
       - DOCKER_DRIVER=overlay2
