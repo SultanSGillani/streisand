@@ -1,10 +1,23 @@
 sudo: false
 language: python
 cache: pip
+services:
+  - postgres
+  - docker:dind
+  - redis:latest
 python:
     - 3.6
 env:
+  - DOCKER_DRIVER=overlay2
   - DJANGO=2.0.8
+  - ALLOWED_HOSTS=*
+  - DATABASE_URL=postgres://postgres:postgres@localhost:5432/postgres
+  - DEBUG=True
+  - PRODUCTION=False
+  - REDIS_URL=redis://redis:6379
+  - SECRET_KEY=jumpcut
+  - TESTING_DATABASE_URL=postgres://postgres:postgres@localhost:5432/postgres
+  - TESTING_WSGI_APPLICATION=jumpcut.www_wsgi.application
   
 install:
     - pip install -r ./backend/requirements.txt
