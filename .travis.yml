@@ -1,4 +1,4 @@
-dist: stretch
+dist: trusty
 sudo: required
 language: python
 cache: pip
@@ -18,13 +18,14 @@ env:
       - DOCKER_DRIVER=overlay2
       - DJANGO=2.0.8
       - ALLOWED_HOSTS=*
-      - DATABASE_URL=postgres://postgres:postgres@localhost:5432/postgres
+      - DATABASE_URL=postgres://postgres:postgres@localhost:5433/postgres
       - DEBUG=True
       - PRODUCTION=False
       - REDIS_URL=redis://redis:6379
       - SECRET_KEY=jumpcut
-      - TESTING_DATABASE_URL=postgres://postgres:postgres@localhost:5432/postgres
+      - TESTING_DATABASE_URL=postgres://postgres:postgres@localhost:5433/postgres
       - TESTING_WSGI_APPLICATION=jumpcut.www_wsgi.application
+      - PGPORT=5433
   
 install:
     - pip install -r ./backend/requirements.txt
