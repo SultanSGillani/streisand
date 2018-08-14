@@ -15,10 +15,9 @@ python:
     - 3.6.5
     - 3.7.0
 env:
-  - DJANGO=2.0.8
-  - DJANGO=2.1
   global:
       - DOCKER_DRIVER=overlay2
+      - DJANGO=2.0.8
       - ALLOWED_HOSTS=*
       - DATABASE_URL=postgres://postgres:postgres@postgres:5432/postgres
       - DEBUG=True
@@ -29,25 +28,22 @@ env:
       - TESTING_WSGI_APPLICATION=jumpcut.www_wsgi.application
       - PGPORT=5433
 before_install:
-    - sudo sed -i -e '/local.*peer/s/postgres/all/' -e 's/peer\|md5/trust/g' /etc/postgresql/*/main/pg_hba.conf
-    - sudo service postgresql restart
-    - sleep 1
+   - sudo sed -i -e '/local.*peer/s/postgres/all/' -e 's/peer\|md5/trust/g' /etc/postgresql/*/main/pg_hba.conf
+   - sudo service postgresql restart
+   - sleep 1
 install:
-    - pip install -r ./backend/requirements.txt
-    - pip install -r ./backend/testing_requirements.txt
-    - pip install codecov
+   - pip install -r ./backend/requirements.txt
+   - pip install -r ./backend/testing_requirements.txt
+   - pip install codecov
 before_script:
-    - psql -c 'create database travis_ci;' -U postgres
+   - psql -c 'create database travis_ci;' -U postgres
 script:
-    - cd backend
-    - invoke run-python-linter
-  
-  
-
+   - cd backend
+   - invoke run-python-linter
 after_success:
-    - src/manage.py migrate  
-    - invoke foundation
-    - invoke fixtures
-    - invoke run-python-tests --coverage
-    - codecov --token=$CODECOV_TOKEN
+   - src/manage.py migrate  
+   - invoke foundation
+   - invoke fixtures
+   - invoke run-python-tests --coverage
+   - codecov --token=$CODECOV_TOKEN
  
