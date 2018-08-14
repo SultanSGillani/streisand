@@ -48,6 +48,8 @@ after_success:
    - docker login -u $DOCKER_USER -p $DOCKER_PASS
    - export REPO=streisandjumpcut/streisand
    - export TAG=`if [ "$TRAVIS_BRANCH" == "master" ]; then echo "latest"; else echo $TRAVIS_BRANCH ; fi`
+   - ls -lA
+   - echo "REPO:$COMMIT $TAG"
    - docker build -f ../frontend/production/Dockerfile -t $REPO:$COMMIT .
    - docker build -f ./production/Dockerfile -t $REPO:$COMMIT .
    - docker tag $REPO:$COMMIT $REPO:$TAG
