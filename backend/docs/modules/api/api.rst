@@ -34,14 +34,6 @@ api.exceptions module
     :undoc-members:
     :show-inheritance:
 
-api.mixins module
------------------
-
-.. automodule:: api.mixins
-    :members:
-    :undoc-members:
-    :show-inheritance:
-
 api.pagination module
 ---------------------
 

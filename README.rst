@@ -14,6 +14,11 @@ A private BitTorrent tracker written with Python, Django, Redis, and React.
 
 |pipeline status|  |nbsp|  |coverage report|  |nbsp|  |jumpcut|
 
+Documentation:
+--------------
+
+- See Documentation Here: (`Documentation <https://jumpcut.tehjump.xyz/jumpcut/>`__)
+
 Getting Started:
 ----------------
 
@@ -396,9 +401,11 @@ update the site (usually) without you having to refresh the page.
 
 The following are links to various internal documentation pages that
 should be useful references while working on this project. - `API
-documentation <https://api.pinigseu.xyz/api/v1/schema/>`__ - `API
+Core Schema <https://api.pinigseu.xyz/api/v1/schema/>`__ - `API
 Swagger Schema
 documentation <https://api.pinigseu.xyz/api/v1/swagger/>`__
+- `API Redoc Schema
+documentation <https://api.pinigseu.xyz/api/v1/redoc/>`__
 
 Production
 ~~~~~~~~~~
