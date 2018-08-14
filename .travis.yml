@@ -4,7 +4,7 @@ language: python
 cache: pip
 services:
   - postgresql
-  - redis
+  - redis-server
 addons:
   postgresql: "10"
   apt:
@@ -21,7 +21,7 @@ env:
       - DATABASE_URL=postgres://postgres:postgres@localhost:5433/postgres
       - DEBUG=True
       - PRODUCTION=False
-      - REDIS_URL=redis://redis:6379
+      - REDIS_URL=redis://localhost:6379
       - SECRET_KEY=jumpcut
       - TESTING_DATABASE_URL=postgres://postgres:postgres@localhost:5433/postgres
       - TESTING_WSGI_APPLICATION=jumpcut.www_wsgi.application
