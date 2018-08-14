@@ -20,12 +20,12 @@ env:
   global:
       - DOCKER_DRIVER=overlay2
       - ALLOWED_HOSTS=*
-      - DATABASE_URL=postgres://postgres:postgres@localhost:5433/postgres
+      - DATABASE_URL=postgres://postgres:postgres@postgres:5432/postgres
       - DEBUG=True
       - PRODUCTION=False
       - REDIS_URL=redis://localhost:6379
       - SECRET_KEY=jumpcut
-      - TESTING_DATABASE_URL=postgres://postgres:postgres@localhost:5433/postgres
+      - TESTING_DATABASE_URL=postgres://postgres:postgres@localhost:5433/travis_ci
       - TESTING_WSGI_APPLICATION=jumpcut.www_wsgi.application
       - PGPORT=5433
 before_install:
@@ -36,8 +36,9 @@ install:
     - pip install -r ./backend/requirements.txt
     - pip install -r ./backend/testing_requirements.txt
     - pip install codecov
+before_script:
+  - psql -c 'create database travis_ci;' -U postgres
 script:
-  - cp backend/.env.template.travis backend/.env
   - cd backend
   - invoke run-python-linter
   
