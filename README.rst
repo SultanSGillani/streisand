@@ -440,3 +440,8 @@ to start the proxy server for the site api.
 
 .. |nbsp| unicode:: 0xA0
    :trim:
+
+
+.. image:: https://badges.greenkeeper.io/jumpcut-dev/streisand.svg
+   :alt: Greenkeeper badge
+   :target: https://greenkeeper.io/
