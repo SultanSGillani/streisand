@@ -7,12 +7,18 @@ set -x
 cd "${0%/*}"
 cd ..
 
-# Reformat config files for nginx
-./frontend/nginx/nginxfmt.py ./frontend/nginx/nginx.conf ./frontend/nginx/conf.d/jumpcut.conf ./frontend/nginx/conf.d/tracker.conf ./frontend/nginx/conf.d/frontend.conf ./frontend/nginx/uwsgi_params ./frontend/nginx/ssl/ssl_params
-
 # Copy ssl certs
-sudo cp /etc/letsencrypt/live/pinigseu.xyz/fullchain.pem /code/jumpcut/frontend/nginx/ssl/fullchain.pem
-sudo cp /etc/letsencrypt/live/pinigseu.xyz/privkey.pem /code/jumpcut/frontend/nginx/ssl/privkey.pem
+export NODE_ENV=${NODE_ENV}
+export APIURL=${APIURL}
+export LETSENCRYPT_USER_MAIL=${LETSENCRYPT_USER_MAIL}
+export LEXICON_PROVIDER=${LEXICON_PROVIDER}
+export LEXICON_NAMECHEAP_AUTH_TOKEN=${LEXICON_NAMECHEAP_AUTH_TOKEN}
+export LEXICON_NAMECHEAP_AUTH_CLIENT_IP=${LEXICON_NAMECHEAP_AUTH_CLIENT_IP}
+export LEXICON_NAMECHEAP_AUTH_USERNAME=${LEXICON_NAMECHEAP_AUTH_USERNAME}
+export LEXICON_PROVIDER_OPTIONS=${LEXICON_PROVIDER_OPTIONS}
+
+sudo cp domains.conf /etc/letsencrypt/domains.conf
+
 sudo cp /etc/nginx/ssl/dhparam.pem /code/jumpcut/frontend/nginx/ssl/dhparam.pem
 
 # Build production

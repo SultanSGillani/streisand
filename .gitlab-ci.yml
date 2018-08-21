@@ -141,6 +141,8 @@ build_staging:
     CONTAINER_TAG: "latest"
     CONTAINER_DEV_TAG: "dev"
     CONTAINER_PRODUCTION_TAG: "prod"
+    BUILD_DATE: 'date -u +"%Y-%m-%dT%H:%M:%SZ"'
+    VCS_REF: "git rev-parse --short HEAD"
     CONTAINER_API_RELEASE_IMAGE: "$CONTAINER_API_IMAGE:$CONTAINER_TAG"
     CONTAINER_REACT_RELEASE_IMAGE: "$CONTAINER_FRONTEND_IMAGE:$CONTAINER_PRODUCTION_TAG"
     CONTAINER_REACT_DEV_IMAGE: "$CONTAINER_FRONTEND_IMAGE:$CONTAINER_DEV_TAG"
@@ -162,11 +164,11 @@ build_staging:
     - echo "$CONTAINER_REACT_RELEASE_IMAGE"
     - cd $FRONTEND_DIR
     - cp .env.template .env
-    - docker build --pull -t $CONTAINER_REACT_RELEASE_IMAGE -f $PROD_DOCKER_FILE .
-    - docker build --pull -t $CONTAINER_REACT_DEV_IMAGE -f .
+    - docker build --build-arg $VCS_REF --build-arg $BUILD_DATE --pull -t $CONTAINER_REACT_RELEASE_IMAGE -f $PROD_DOCKER_FILE .
+    - docker build --build-arg $VCS_REF --build-arg $BUILD_DATE --pull -t $CONTAINER_REACT_DEV_IMAGE -f .
     - cd $BACKEND_DIR
     - cp .env.template .env
-    - docker build --pull -t $CONTAINER_API_RELEASE_IMAGE -f .
+    - docker build --build-arg $VCS_REF --build-arg $BUILD_DATE --pull -t $CONTAINER_API_RELEASE_IMAGE -f .
     - docker push $CONTAINER_API_RELEASE_IMAGE
     - docker push $CONTAINER_REACT_RELEASE_IMAGE
     - docker push $CONTAINER_REACT_DEV_IMAGE

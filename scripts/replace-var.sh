@@ -3,14 +3,14 @@ set -eu
  
 main() {
   local args=("$@")
-  local inFile=$(pwd)/docker-compose.yml
+  local inFile=$(pwd)/../frontend/.env
   local outFile=$(pwd)/$1
     
   if [[ $# -lt 2 ]]; then
   	usage
   fi
  
-  cp $inFile $outFile
+  rm $inFile $outFile
   for ((i=1; i<${#args[@]}; i++)); do
   	local pair=(${args[i]//=/ }) # tokenize by =
   	pair[1]="${pair[1]//\//\\/}" # escape paths
