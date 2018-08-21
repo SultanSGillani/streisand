@@ -1,15 +1,17 @@
 FROM python:3.6-alpine3.7
+ARG VERSION
+ARG ENVIRONMENT_FILE
 
-MAINTAINER JumpCut
+LABEL maintainer="admin@jumpcut.to"
 ENV PYTHONUNBUFFERED 1
 ENV PYTHONPATH /code/src
 
-RUN mkdir /code
+RUN mkdir -p /code/uwsgi
 
 WORKDIR /code
 
-COPY ./requirements.txt ./requirements.txt
-COPY ./testing_requirements.txt ./testing_requirements.txt
+COPY requirements.txt testing_requirements.txt uwsgi.sh ./uwsgi entrypoint.sh /code/
+COPY $ENVIRONMENT_FILE /code/.env
 
 RUN apk add --no-cache \
     git \
@@ -28,16 +30,29 @@ RUN apk add --no-cache --virtual .build-deps \
     linux-headers \
     gcc \
     libc-dev \
-    musl-dev
-
-RUN pip install pip --upgrade
-RUN pip install -r requirements.txt
-RUN pip install -r testing_requirements.txt
-
-RUN apk del .build-deps
+    musl-dev \
+&& addgroup -S nginx \
+&& adduser -D -S -h /var/cache/nginx -s /sbin/nologin -G nginx nginx \
+&& pip install pip --upgrade \
+&& pip install -r requirements.txt \
+&& pip install -r testing_requirements.txt \
+&& apk del .build-deps
 
 COPY . .
-ENV PYTHONPATH /code/src
+
+RUN chmod +x /code/entrypoint.sh
+RUN chmod +x /code/uwsgi.sh
+
+ARG BUILD_DATE
+ARG VCS_REF
+LABEL  org.label-schema.build-date=$BUILD_DATE \
+       org.label-schema.name="Jumpcut API" \
+       org.label-schema.description="A private BitTorrent tracker api written with Python, Django, & Redis" \
+       org.label-schema.url="https://jumpcut.to" \
+       org.label-schema.vcs-ref=$VCS_REF \
+       org.label-schema.vcs-url="https://gitlab.pinigseu.xyz/jumpcut/jumpcut" \
+       org.label-schema.vendor="Jumpcut.to" \
+       org.label-schema.schema-version="0.0.1"
 
 EXPOSE 8000 7070
-CMD ["python", "src/manage.py", "runserver_plus", "[::]:8000"]
+CMD ["/code/entrypoint.sh"]

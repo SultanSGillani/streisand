@@ -1,0 +1,6 @@
+/react/*node_modules/
+**/Dockerfile*
+**/.dockerignore
+dist/
+production/*
+.vscode

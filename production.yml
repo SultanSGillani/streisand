@@ -4,25 +4,26 @@ version: '3'
 
 services:
   api:
-    image: registry.pinigseu.xyz/jumpcut/jumpcut:latest
+    image: registry.pinigseu.xyz/jumpcut/jumpcut/api:latest
+    command: /code/uwsgi.sh
     container_name: api
     volumes:
-    - ./backend/src:/code/src/
+    - staticdata:/code/src/static/
+    - tempdata:/tmp/
     - ./backend/docs:/code/docs/
-    build:
-      context: ./backend
-      dockerfile: ./production/Dockerfile
     ports:
     - 7070:7070
     - 8000:8000
+    environment:
+      ENVIRONMENT_FILE: ./.env
     env_file: ./backend/.env
     depends_on:
     - postgres
     - redis
     restart: always
   celerybeat:
-    image: registry.pinigseu.xyz/jumpcut/jumpcut:latest
-    command: bash -c "celery beat --workdir /code/src -A jumpcut -l info"
+    image: registry.pinigseu.xyz/jumpcut/jumpcut/api:latest
+    command: celery beat --workdir /code/src -A jumpcut -l info
     container_name: celerybeat
     volumes:
     - ./backend/src:/code/src
@@ -36,8 +37,8 @@ services:
     - postgres
     - redis
   celeryworker:
-    image: registry.pinigseu.xyz/jumpcut/jumpcut:latest
-    command: bash -c "celery worker --workdir /code/src -A jumpcut -l info"
+    image: registry.pinigseu.xyz/jumpcut/jumpcut/api:latest
+    command: celery worker --workdir /code/src -A jumpcut -l info
     container_name: celeryworker
     volumes:
     - ./backend/src:/code/src
@@ -51,19 +52,39 @@ services:
     - postgres
     - redis
   nginx_react:
+    image: registry.pinigseu.xyz/jumpcut/jumpcut/react:prod
     build:
       context: ./frontend
       dockerfile: ./production/Dockerfile
     container_name: nginx_react
     depends_on:
     - api
+    - encrypt
     env_file: ./frontend/.env
+    environment:
+    - NODE_ENV=production
+    - APIURL=${APIURL}
+    - LETSENCRYPT_USER_MAIL=${LETSENCRYPT_USER_MAIL}
+    - LEXICON_PROVIDER=${LEXICON_PROVIDER}
+    - LEXICON_NAMECHEAP_AUTH_TOKEN=${LEXICON_NAMECHEAP_AUTH_TOKEN}
+    - LEXICON_NAMECHEAP_AUTH_CLIENT_IP=${LEXICON_NAMECHEAP_AUTH_CLIENT_IP}
+    - LEXICON_NAMECHEAP_AUTH_USERNAME=${LEXICON_NAMECHEAP_AUTH_USERNAME}
+    - LEXICON_PROVIDER_OPTIONS=${LEXICON_PROVIDER_OPTIONS}
+    - ENVIRONMENT_FILE=./.env
+
     ports:
     - 443:443
     - 80:80
     restart: always
     volumes:
-    - ./backend/src:/usr/share/nginx/src/
+    - staticdata:/static/
+    - tempdata:/usr/share/nginx/src/
+    - /etc/letsencrypt:/etc/nginx/ssl/letsencrypt/
+  encrypt:
+     image: adferrand/letsencrypt-dns:latest
+     env_file: ./frontend/.env
+     volumes:
+       - /etc/letsencrypt:/etc/letsencrypt
   postgres:
     image: postgres:alpine
     container_name: db
@@ -79,3 +100,6 @@ services:
     restart: always
 volumes:
   pgdata:
+  staticdata:
+  tempdata:
+  

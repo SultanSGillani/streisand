@@ -3,31 +3,36 @@ version: '3'
 services:
 
   api:
-    build: backend
+    image: registry.pinigseu.xyz/jumpcut/jumpcut/api:latest
     command: python src/manage.py runserver_plus [::]:8000
-    container_name: api_dev
+    container_name: api
     depends_on:
     - postgres
     - redis
     env_file: ./.env
     environment:
       DJANGO_SETTINGS_MODULE: jumpcut.settings.www_settings
+      ENVIRONMENT_FILE: ./.env.template
     ports:
     - 8000:8000
     volumes:
     - ./backend:/code
+    - staticdata:/code/src/static/
   frontend:
+    image: registry.pinigseu.xyz/jumpcut/jumpcut/react:dev
     build: frontend
     command: yarn run dev
     container_name: frontend
-    env_file: ./frontend/.env
+    environment:
+     - NODE_ENV=development
+     - APIURL=http://api:8000
     ports:
     - 8001:3000
     volumes:
     - ./frontend/src:/react/src
   postgres:
     image: postgres:alpine
-    container_name: db_dev
+    container_name: db
     volumes:
     - pgdata:/var/lib/postgresql/data/
     ports:
@@ -36,12 +41,11 @@ services:
     restart: always
   redis:
     image: redis:alpine
-    container_name: redis_dev
+    container_name: redis
   tracker:
-    build:
-      context: ./backend
+    image: registry.pinigseu.xyz/jumpcut/jumpcut/api:latest
     command: python src/manage.py runserver_plus 0.0.0.0:7070
-    container_name: tracker_dev
+    container_name: tracker
     depends_on:
     - api
     - postgres
@@ -49,9 +53,12 @@ services:
     env_file: ./.env
     environment:
       DJANGO_SETTINGS_MODULE: jumpcut.settings.tracker_settings
+      ENVIRONMENT_FILE: ./.env.template
     ports:
     - 7070:7070
     volumes:
     - ./backend:/code
+    - staticdata:/code/src/static/
 volumes:
   pgdata:
+  staticdata:

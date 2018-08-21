@@ -12,7 +12,7 @@ JumpCut
 A private BitTorrent tracker written with Python, Django, Redis, and React.
 
 
-|pipeline status|  |nbsp|  |coverage report|  |nbsp|  |jumpcut|
+|pipeline status|  |nbsp|  |coverage report|  |nbsp|  |jumpcut| |nbsp| |docker-api| |nbsp|  |docker-react|
 
 Documentation:
 --------------
@@ -165,7 +165,7 @@ in **Windows 10**.
 
 
 Prerequisites and Configuration
-------------------------------
+--------------------------------
 
 -  Windows 10 Professional
 -  Windows Subsystem for Linux (WSL)
@@ -437,6 +437,12 @@ to start the proxy server for the site api.
 .. |jumpcut| image:: https://img.shields.io/badge/JumpCut-ComingSoon-blue.svg
    :target: https://gitlab.pinigseu.xyz/jumpcut/jumpcut/commits/master
    :alt: JumpCut
+
+.. |docker-api| image:: https://images.microbadger.com/badges/image/streisandjumpcut/jumpcut-api.svg
+   :target: https://microbadger.com/images/streisandjumpcut/jumpcut-api
+
+.. |docker-react| image:: https://images.microbadger.com/badges/image/streisandjumpcut/jumpcut-react:prod.svg
+   :target: https://microbadger.com/images/streisandjumpcut/jumpcut-react:prod
 
 .. |nbsp| unicode:: 0xA0
    :trim:
