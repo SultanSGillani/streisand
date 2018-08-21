@@ -160,7 +160,8 @@ build_staging:
       - docker-compose --version
       - docker version
       - "docker login -u gitlab-ci-token -p $CI_BUILD_TOKEN $CI_REGISTRY"
-      - export
+      - echo $LEXICON_PROVIDER
+      - echo $APIURL
   script:
     - echo "$CONTAINER_REACT_RELEASE_IMAGE"
     - cd $FRONTEND_DIR
