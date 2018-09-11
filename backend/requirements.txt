@@ -29,7 +29,7 @@ djangorestframework-camel-case==1.0b1
 djangorestframework-filters
 djangorestframework-queryfields==1.0.0
 django-docs==0.3.0
-git+https://github.com/axnsan12/drf-yasg.git
+drf-yasg==1.10.1
 flex>=6.11.1
 swagger-spec-validator>=2.1.0
 kombu==4.2.1.0

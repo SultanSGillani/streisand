@@ -5,26 +5,28 @@ version: '3'
 services:
   api:
     image: registry.pinigseu.xyz/jumpcut/jumpcut/api:latest
-    command: /code/uwsgi.sh
+    build: ./backend
     container_name: api
+    networks:
+    - proxy
+    - db
     volumes:
     - staticdata:/code/src/static/
-    - tempdata:/tmp/
-    - ./backend/docs:/code/docs/
     ports:
     - 7070:7070
     - 8000:8000
-    environment:
-      ENVIRONMENT_FILE: ./.env
     env_file: ./backend/.env
     depends_on:
-    - postgres
+    - db
     - redis
     restart: always
   celerybeat:
     image: registry.pinigseu.xyz/jumpcut/jumpcut/api:latest
     command: celery beat --workdir /code/src -A jumpcut -l info
     container_name: celerybeat
+    networks:
+    - proxy
+    - db
     volumes:
     - ./backend/src:/code/src
     env_file: ./backend/.env
@@ -34,12 +36,15 @@ services:
       PYTHONPATH: /code/src
     depends_on:
     - celeryworker
-    - postgres
+    - db
     - redis
   celeryworker:
     image: registry.pinigseu.xyz/jumpcut/jumpcut/api:latest
     command: celery worker --workdir /code/src -A jumpcut -l info
     container_name: celeryworker
+    networks:
+    - proxy
+    - db
     volumes:
     - ./backend/src:/code/src
     env_file: ./backend/.env
@@ -49,7 +54,7 @@ services:
       PYTHONPATH: /code/src
     depends_on:
     - api
-    - postgres
+    - db
     - redis
   nginx_react:
     image: registry.pinigseu.xyz/jumpcut/jumpcut/react:prod
@@ -59,37 +64,25 @@ services:
     container_name: nginx_react
     depends_on:
     - api
-    - encrypt
-    env_file: ./frontend/.env
     environment:
-    - NODE_ENV=production
-    - APIURL=${APIURL}
-    - LETSENCRYPT_USER_MAIL=${LETSENCRYPT_USER_MAIL}
-    - LEXICON_PROVIDER=${LEXICON_PROVIDER}
-    - LEXICON_NAMECHEAP_AUTH_TOKEN=${LEXICON_NAMECHEAP_AUTH_TOKEN}
-    - LEXICON_NAMECHEAP_AUTH_CLIENT_IP=${LEXICON_NAMECHEAP_AUTH_CLIENT_IP}
-    - LEXICON_NAMECHEAP_AUTH_USERNAME=${LEXICON_NAMECHEAP_AUTH_USERNAME}
-    - LEXICON_PROVIDER_OPTIONS=${LEXICON_PROVIDER_OPTIONS}
-    - ENVIRONMENT_FILE=./.env
-
+     - NODE_ENV=production
+     - APIURL=https://api.pinigseu.xyz
     ports:
     - 443:443
     - 80:80
     restart: always
+    networks:
+    - proxy
     volumes:
+    - ./nginx/conf.d:/etc/nginx/conf.d
     - staticdata:/static/
-    - tempdata:/usr/share/nginx/src/
-    - /etc/letsencrypt:/etc/nginx/ssl/letsencrypt/
-  encrypt:
-     image: adferrand/letsencrypt-dns:latest
-     env_file: ./frontend/.env
-     volumes:
-       - /etc/letsencrypt:/etc/letsencrypt
-  postgres:
+  db:
     image: postgres:alpine
     container_name: db
     volumes:
     - pgdata:/var/lib/postgresql/data/
+    networks:
+    - db
     ports:
     - 5432:5432
     env_file: ./backend/.env
@@ -97,9 +90,17 @@ services:
   redis:
     image: redis:alpine
     container_name: redis
+    volumes:
+      - 'redisdata:/data'
     restart: always
+    networks:
+    - proxy
+networks:
+  proxy:
+    driver: bridge
+  db:
+    driver: bridge
 volumes:
   pgdata:
   staticdata:
-  tempdata:
-  
+  redisdata:  

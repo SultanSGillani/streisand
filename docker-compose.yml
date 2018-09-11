@@ -10,9 +10,11 @@ services:
     - postgres
     - redis
     env_file: ./.env
+    networks:
+    - backend
+    - frontend
     environment:
       DJANGO_SETTINGS_MODULE: jumpcut.settings.www_settings
-      ENVIRONMENT_FILE: ./.env.template
     ports:
     - 8000:8000
     volumes:
@@ -23,6 +25,8 @@ services:
     build: frontend
     command: yarn run dev
     container_name: frontend
+    networks:
+    - frontend
     environment:
      - NODE_ENV=development
      - APIURL=http://api:8000
@@ -32,9 +36,12 @@ services:
     - ./frontend/src:/react/src
   postgres:
     image: postgres:alpine
-    container_name: db
+    container_name: postgres
+    networks:
+    - backend
     volumes:
-    - pgdata:/var/lib/postgresql/data/
+    - pgdata-dev:/var/lib/postgresql/data/
+    - pgbackups:/pg_backups
     ports:
     - 5432:5432
     env_file: ./.env
@@ -42,10 +49,14 @@ services:
   redis:
     image: redis:alpine
     container_name: redis
+    networks:
+    - backend
   tracker:
     image: registry.pinigseu.xyz/jumpcut/jumpcut/api:latest
     command: python src/manage.py runserver_plus 0.0.0.0:7070
     container_name: tracker
+    networks:
+    - backend
     depends_on:
     - api
     - postgres
@@ -59,6 +70,12 @@ services:
     volumes:
     - ./backend:/code
     - staticdata:/code/src/static/
+networks:
+  frontend:
+    driver: bridge
+  backend:
+    driver: bridge
 volumes:
-  pgdata:
+  pgdata-dev:
   staticdata:
+  pgbackups:

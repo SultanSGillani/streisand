@@ -19,7 +19,7 @@ CMDS[shell-nginx_react]="docker exec -ti nginx_react bash"
 CMDS[log-api]="docker-compose -f production.yml logs api  "
 CMDS[log-celeryworker]="docker-compose -f production.yml logs celeryworker  "
 CMDS[log-celerybeat]="docker-compose -f production.yml logs celerybeat  "
-CMDS[log-postgres]="docker-compose -f production.yml logs postgres"
+CMDS[log-db]="docker-compose -f production.yml logs db"
 CMDS[log-nginx_react]="docker-compose -f production.yml logs nginx_react"
 CMDS[makemigrations]="docker-compose -f production.yml run --rm api invoke make-migrations"
 
