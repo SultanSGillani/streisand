@@ -1,15 +1,14 @@
 FROM python:3.6-alpine3.7
 
-MAINTAINER JumpCut
-ENV PYTHONUNBUFFERED 1
+LABEL maintainer="admin@jumpcut.to"
 ENV PYTHONPATH /code/src
 
-RUN mkdir /code
+RUN mkdir -p /code/uwsgi
 
 WORKDIR /code
 
-COPY ./requirements.txt ./requirements.txt
-COPY ./testing_requirements.txt ./testing_requirements.txt
+COPY requirements/* /code/requirements/
+
 
 RUN apk add --no-cache \
     git \
@@ -28,16 +27,19 @@ RUN apk add --no-cache --virtual .build-deps \
     linux-headers \
     gcc \
     libc-dev \
-    musl-dev
-
-RUN pip install pip --upgrade
-RUN pip install -r requirements.txt
-RUN pip install -r testing_requirements.txt
-
-RUN apk del .build-deps
+    musl-dev \
+    && addgroup -S nginx \
+    && adduser -D -S -h /var/cache/nginx -s /sbin/nologin -G nginx nginx \
+    && pip install pip --upgrade \
+    && pip install -r /code/requirements/base.txt \
+    && apk del .build-deps
 
 COPY . .
+RUN chmod +x /code/entrypoint.sh
+
+RUN python /code/src/manage.py collectstatic --noinput
+
+COPY entrypoint.sh /usr/local/bin/
 ENV PYTHONPATH /code/src
 
-EXPOSE 8000 7070
-CMD ["python", "src/manage.py", "runserver_plus", "[::]:8000"]
+CMD ["entrypoint.sh"]

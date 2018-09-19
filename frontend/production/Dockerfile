@@ -1,11 +1,10 @@
 # Dockerfile for production
-FROM node:alpine as builder
+FROM node:10.9.0-alpine as builder
 
-MAINTAINER JumpCut
-
+LABEL maintainer="admin@jumpcut.to"
 WORKDIR /react
 
-COPY package.json yarn.lock .env ./
+COPY package.json yarn.lock ./
 
 RUN yarn
 
@@ -15,9 +14,11 @@ RUN yarn run build
 
 FROM nginx:alpine
 
-MAINTAINER JumpCut
+LABEL maintainer="admin@jumpcut.to"
 
 COPY --from=builder /react/dist/* /usr/share/nginx/html/
+RUN mkdir -p /etc/nginx/ssl
+COPY ./nginx/ssl/* /etc/nginx/ssl/
 
 RUN apk add --update bash \
   certbot \
@@ -30,13 +31,5 @@ RUN ln -sf /dev/stderr /var/log/nginx/error.log
 COPY ./nginx/nginx.conf /etc/nginx/nginx.conf
 COPY ./nginx/mime.types /etc/nginx/mime.types
 COPY ./nginx/uwsgi_params /etc/nginx/uwsgi_params
-
-RUN mkdir -p /etc/nginx/ssl
-
-COPY ./nginx/ssl /etc/nginx/ssl
-
-COPY ./nginx/conf.d/frontend.conf /etc/nginx/conf.d/default.conf
-COPY ./nginx/conf.d/jumpcut.conf /etc/nginx/conf.d/jumpcut.conf
-COPY ./nginx/conf.d/tracker.conf /etc/nginx/conf.d/tracker.conf
 
 CMD ["nginx", "-g", "daemon off;"]

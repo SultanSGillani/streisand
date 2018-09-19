@@ -1,0 +1,11 @@
+Pygments==2.2.0
+Sphinx==1.8.0
+coreschema==0.0.4
+coreapi==2.3.3
+django-docs==0.3.0
+drf-yasg==1.10.2
+flex>=6.11.1
+swagger-spec-validator>=2.4.0
+sphinx_rtd_theme==0.4.1
+
+-r testing.txt

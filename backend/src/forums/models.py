@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 
-from positions import PositionField
+from django_positions_2 import PositionField
 
 from django.db import models
 from django.db.models import F

@@ -23,7 +23,6 @@ THIRD_PARTY_APPS = [
     'knox',
     'raven.contrib.django.raven_compat',
     'rest_framework',
-    'rest_framework_filters',
 ]
 
 DJANGO_APPS = [

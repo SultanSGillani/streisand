@@ -1,0 +1,5 @@
+# flake8==3.5.0
+git+https://gitlab.com/pycqa/flake8.git
+pep8==1.7.1
+pycodestyle==2.4.0
+pyflakes==2.0.0
