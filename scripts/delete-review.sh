@@ -4,9 +4,9 @@ set -x
 set -o errexit
 
 cd /code/$CI_ENVIRONMENT_SLUG
-docker-compose -f docker-compose.production.yml stop
+docker-compose -f production.yml stop
 docker container prune -f
-docker-compose -f docker-compose.production.yml kill
+docker-compose -f production.yml kill
 
 echo "Removing exited docker containers..."
 docker ps -a -f status=exited -q | xargs -r docker rm -v
